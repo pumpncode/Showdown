@@ -3,8 +3,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Counterpart Deck',
             ['text'] = {
-                [1] = 'All faces, aces, 2, 5 and',
-                [2] = '8 are replaced by their counterpart'
+                [1] = 'All faces, aces and',
+                [2] = 'numbers are replaced',
+                [3] = 'by their {C:bunco_exotic}counterpart{}'
             },
             ['unlock'] = {
                 [1] = 'Not implemented'
@@ -23,7 +24,48 @@ return  {
         }
     },
 
-    -- Consumables
+    ---- Ranks
+    
+    two_half = {
+        ['en-us'] = {
+            ['name'] = '2.5',
+            ['text'] = {
+                [1] = 'Counts as a 2'
+            }
+        }
+    },
+    five_half = {
+        ['en-us'] = {
+            ['name'] = '5.5'
+        }
+    },
+    eight_half = {
+        ['en-us'] = {
+            ['name'] = '8.5'
+        }
+    },
+    butler = {
+        ['en-us'] = {
+            ['name'] = 'Butler'
+        }
+    },
+    princess = {
+        ['en-us'] = {
+            ['name'] = 'Princess'
+        }
+    },
+    lord = {
+        ['en-us'] = {
+            ['name'] = 'Lord'
+        }
+    },
+    zero = {
+        ['en-us'] = {
+            ['name'] = '0'
+        }
+    },
+
+    ---- Consumables
 
     -- Tarots
 
@@ -76,11 +118,12 @@ return  {
         ['en-us'] = {
             ['name'] = 'Pinpoint',
             ['text'] = {
-                [1] = 'On discard, flip Joker to the other side',
-                [2] = '{C:attention}A side:{} Cards with light suit',
-                [3] = 'give {C:chips}+#1#{} Chips when scored',
-                [4] = '{C:attention}B side:{} Cards with dark suit',
-                [5] = 'give {C:mult}+#2#{} Mult when scored'
+                [1] = '{X:chips}x1.5{} for each 0 in hand',
+            },
+            ['unlock'] = {
+                [1] = 'Play a 5 card hand',
+                [2] = 'that contains only',
+                [3] = '{C:attention,E:1}0{} cards'
             }
         }
     },
@@ -88,14 +131,22 @@ return  {
         ['en-us'] = {
             ['name'] = 'Like Mother Like Daughter',
             ['text'] = {
-                [1] = 'Played {C:attention}Stone Cards',
-                [2] = 'give {C:mult}+#1#{} Mult',
-                [3] = 'when scored'
+                [1] = '{X:mult}x#1#{} for each pair of',
+                [2] = 'Princess scored and Queen in hand'
             },
             ['unlock'] = {
-                [1] = 'Play a 5 card hand',
-                [2] = 'that contains only',
-                [3] = '{C:attention,E:1}Stone{} cards'
+                [1] = 'Play a double pair hand',
+                [2] = 'that contains {C:attention}Queens{}',
+                [3] = 'and {C:attention}Princesses{}'
+            }
+        }
+    },
+    crouton = {
+        ['en-us'] = {
+            ['name'] = 'Crouton',
+            ['text'] = {
+                [1] = '{X:mult}x1.15{} for each',
+                [2] = 'card held in hand'
             }
         }
     }

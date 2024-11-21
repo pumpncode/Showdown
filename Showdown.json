@@ -1,10 +1,10 @@
 {
 	"id": "showdown",
 	"name": "Showdown",
-    "display_name": "Sd",
+    "display_name": "Showdown",
 	"author": ["Mistyk__"],
 	"description": "A balatro mod made for fun",
-	"prefix": "mistykShowdown",
+	"prefix": "showdown",
 	"main_file": "main.lua",
 	"priority": 0,
 	"badge_colour": "#4287f5",
@@ -13,7 +13,7 @@
 	"dependencies": [
 		{
 			"id": "Steamodded",
-			"min_version": "1.0.0~ALPHA-1030e"
+			"min_version": "1.0.0~ALPHA-0917a"
 		}
 	]
 }

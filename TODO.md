@@ -2,10 +2,8 @@
 A balatro mod made for fun
 
 ### Column Name
-- [ ] Special ranks ~3d #feat @max 2024-11-21
-  - [ ] 2.5, 5.5, 8.5
-  - [ ] Butler, Princess, Lord
-  - [ ] 0
+- [ ] Counterpart ranks ~3d #feat @max 2024-11-21
+  - [ ] Counterparts counts as originals (except 0)
   - [ ] Compatibility with Bunco's exotic suits
 - [ ] Tarot cards ~3d #feat @max 2024-11-21
   - [ ] The Reflection
@@ -21,8 +19,10 @@ A balatro mod made for fun
   - [ ] Gruyère
   - [ ] Seeing Double
 - [ ] Counterpart Deck ~3d #feat @max 2024-11-21
+- [ ] No counterpart in normal decks ~3d #bug @max 2024-11-21
 
-<!--
 ### Completed Column ✓
-- [x] Completed task title
---!>
+- [ ] Special ranks ~3d #feat @max 2024-11-21
+  - [x] 2.5, 5.5, 8.5
+  - [x] Butler, Princess, Lord
+  - [x] 0
