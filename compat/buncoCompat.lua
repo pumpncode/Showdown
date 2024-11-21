@@ -1,0 +1,1 @@
+sendTraceMessage("Bunco is loaded!", "Showdown")
