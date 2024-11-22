@@ -9,10 +9,6 @@ local function get_coordinates(position, width)
     return {x = (position) % width, y = math.floor((position) / width)}
 end
 
-local function coordinate(position)
-    return get_coordinates(position - 1)
-end
-
 local function coordinate(position, width)
     return get_coordinates(position - 1, width)
 end
@@ -41,7 +37,8 @@ SMODS.Back{ -- Counterpart Deck
 	atlas = "decks",
 	pos = coordinate(1),
 	loc_txt = loc.counterpart,
-	loc_vars = function() return {vars = {}} end,
+	config = {counterpart_replacing = true},
+	loc_vars = function(self) return {vars = {self.config.counterpart_replacing}} end,
 	apply = function()
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -73,6 +70,7 @@ SMODS.Rank({ -- 2.5 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.two_half, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
@@ -87,6 +85,7 @@ SMODS.Rank({ -- 5.5 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.five_half, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
@@ -101,6 +100,7 @@ SMODS.Rank({ -- 8.5 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.eight_half, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
@@ -116,6 +116,7 @@ SMODS.Rank({ -- Butler Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.butler, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
@@ -131,6 +132,7 @@ SMODS.Rank({ -- Princess Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.princess, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
@@ -146,6 +148,7 @@ SMODS.Rank({ -- Lord Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.lord, 'name')
 	end,
+	decimal = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
