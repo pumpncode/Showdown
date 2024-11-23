@@ -1,14 +1,15 @@
 return  {
     counterpart = {
         ['en-us'] = {
-            ['name'] = 'Counterpart Deck',
+            ['name'] = 'Mirror Deck',
             ['text'] = {
-                [1] = 'All faces, aces and',
-                [2] = 'numbers are replaced',
-                [3] = 'by their {C:bunco_exotic}counterpart{}'
+                [1] = 'All faces, 8s, 5s and',
+                [2] = '2s are replaced',
+                [3] = 'by their {C:counterpart_ranks}counterpart{}',
+                [4] = 'Aces are replaced by 0s',
             },
             ['unlock'] = {
-                [1] = 'Not implemented'
+                [1] = 'Unlocked by default'
             }
         }
     },
@@ -61,7 +62,10 @@ return  {
     },
     zero = {
         ['en-us'] = {
-            ['name'] = '0'
+            ['name'] = '0',
+            ['text'] = {
+                [1] = 'Counts as any suit'
+            }
         }
     },
 
@@ -107,7 +111,7 @@ return  {
             ['text'] = {
                 [1] = 'All cards held in hand converts into',
                 [2] = 'their higher or equal decimal counterpart,',
-                [3] = 'but loses their edition'
+                [3] = 'but loses their edition and seal'
             }
         }
     },

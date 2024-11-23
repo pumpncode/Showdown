@@ -3,16 +3,16 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
-# Counterpart ranks, part 1/2
+# Counterpart ranks color, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'globals.lua'
 pattern = "RENTAL = HEX('b18f43'),"
 position = 'after'
 match_indent = true
-payload = '''COUNTERPART_RANKS = HEX('ef9ae7'),'''
+payload = '''COUNTERPART_RANKS = HEX('485fab'),'''
 
-# Counterpart ranks, part 2/2
+# Counterpart ranks color, part 2/2
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -20,3 +20,101 @@ pattern = "legendary = G.C.RARITY[4],"
 position = 'after'
 match_indent = true
 payload = '''counterpart_ranks = G.C.COUNTERPART_RANKS,'''
+
+# Counterpart don't spawn in decks except the counterpart deck, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = "erratic_suits_and_ranks = false,"
+position = 'after'
+match_indent = true
+payload = '''
+    counterpart_replacing = false,
+'''
+
+# Counterpart don't spawn in decks except the counterpart deck, part 2/3
+[[patches]]
+[patches.pattern]
+target = 'back.lua'
+pattern = "if self.effect.config.spectral_rate then"
+position = 'before'
+match_indent = true
+payload = '''
+    if self.effect.config.counterpart_replacing then
+        G.GAME.starting_params.counterpart_replacing = true
+    end
+'''
+
+# Counterpart don't spawn in decks except the counterpart deck, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or _r == 'J') then keep = false end"
+position = 'after'
+match_indent = true
+payload = '''
+    print(self.GAME.starting_params.counterpart_replacing)
+    if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
+    or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
+        keep = false
+    end
+'''
+
+# Zero has wild card behavior by default, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
+position = 'before'
+match_indent = true
+payload = '''
+    if self.base.value == 'showdown_Zero' and not self.debuff then
+        return true
+    end
+'''
+
+# Zero has wild card behavior by default, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.ability.name == "Wild Card" then'
+position = 'before'
+match_indent = true
+payload = '''
+    if self.base.value == 'showdown_Zero' then
+        return true
+    end
+'''
+
+# Zero can't be turned into a wild card (not working)
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = "if self.ability.name == 'Judgement' or self.ability.name == 'The Soul' or self.ability.name == 'Wraith' then"
+position = 'before'
+match_indent = true
+payload = '''
+    if self.ability.name == 'The Lovers' then
+        if G.hand and G.hand.highlighted[1] then print(G.hand.highlighted[1].base.value == 'showdown_Zero') end
+        if G.hand and (#G.hand.highlighted == 1 or #G.hand.highlighted == 2) and (G.hand.highlighted[1] or G.hand.highlighted[2])
+        and (not G.hand.highlighted[1].base.value == 'showdown_Zero'
+        or (G.hand.highlighted[2] and not G.hand.highlighted[2].base.value == 'showdown_Zero')) then return true end
+    end
+'''
+
+# Zero can't change suit (not working)
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = "if self.ability.name == 'Judgement' or self.ability.name == 'The Soul' or self.ability.name == 'Wraith' then"
+position = 'before'
+match_indent = true
+payload = '''
+    if self.ability.name == 'The Star' or self.ability.name == 'The Moon' or self.ability.name == 'The Sun' or self.ability.name == 'The World' or self.ability.name == 'The Abyss' or self.ability.name == 'The Sky' then
+        if G.hand and G.hand.highlighted[1] then print(G.hand.highlighted[1].base.value == 'showdown_Zero') end
+        if G.hand and (#G.hand.highlighted >= 1 or #G.hand.highlighted <= 3) and (G.hand.highlighted[1] or G.hand.highlighted[2] or G.hand.highlighted[3])
+        and (not G.hand.highlighted[1].base.value == 'showdown_Zero'
+        or (G.hand.highlighted[2] and not G.hand.highlighted[2].base.value == 'showdown_Zero')
+        or (G.hand.highlighted[3] and not G.hand.highlighted[3].base.value == 'showdown_Zero')) then return true end
+    end
+'''

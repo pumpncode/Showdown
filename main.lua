@@ -38,20 +38,7 @@ SMODS.Back{ -- Counterpart Deck
 	pos = coordinate(1),
 	loc_txt = loc.counterpart,
 	config = {counterpart_replacing = true},
-	loc_vars = function(self) return {vars = {self.config.counterpart_replacing}} end,
-	apply = function()
-		G.E_MANAGER:add_event(Event({
-			func = function()
-				local ranksToDelete = {"Ace", "King", "Queen", "Jack", "8", "5", "2"}
-				for i = #G.playing_cards, 1, -1 do
-					if has_value(ranksToDelete, G.playing_cards[i].base.value) then
-						G.playing_cards[i]:remove()
-					end
-				end
-				return true
-			end
-		}))
-	end
+	loc_vars = function(self) return {vars = {self.config.counterpart_replacing}} end
 }
 
 ---- Counterpart Cards
@@ -153,7 +140,7 @@ SMODS.Rank({ -- Lord Card
 	lc_atlas = 'cards'
 })
 
-SMODS.Rank({ -- 0 Card
+SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card)
 	key = 'Zero',
 	card_key = 'Z',
 	shorthand = '0',
@@ -163,6 +150,13 @@ SMODS.Rank({ -- 0 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.zero, 'name')
 	end,
+	suit_map = {
+		Hearts = 0,
+		Clubs = 0,
+		Diamonds = 0,
+		Spades = 0,
+	},
+	straight_edge = true,
 	hc_atlas = 'cardsHC',
 	lc_atlas = 'cards'
 })
