@@ -12,8 +12,8 @@ position = 'after'
 match_indent = true
 payload = '''
     COUNTERPART_RANKS = HEX('485fab'),
-    SHOWDOWN_MATHEMATIC = HEX('9e7294'),
-    SHOWDOWN_MATHEMATIC_DARK = HEX('805c76'),
+    SHOWDOWN_MATHEMATIC = HEX('b84242'),
+    SHOWDOWN_MATHEMATIC_DARK = HEX('8a3434'),
 '''
 
 # Counterpart ranks and mathematic color, part 2/2
@@ -61,7 +61,6 @@ pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or 
 position = 'after'
 match_indent = true
 payload = '''
-    print(self.GAME.starting_params.counterpart_replacing)
     if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
     or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
         keep = false

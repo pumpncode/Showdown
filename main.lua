@@ -15,12 +15,29 @@ end
 
 local function modCompatibility(modName, filePath)
 	print("Showdown compatibility: "..modName.." is loaded!")
-	local mod = filesystem.load(showdown.path..filePath)()
-	mod.showdown = showdown
-	mod.filesystem = filesystem
-	mod.loc = loc
-	mod.get_coordinates = get_coordinates
-	mod.coordinate = coordinate
+	filesystem.load(showdown.path..filePath)()
+end
+
+local function event(config)
+    local e = Event(config)
+    G.E_MANAGER:add_event(e)
+    return e
+end
+
+local function getEnhancements()
+	local cen_pool = {}
+	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+		if v.key ~= 'm_stone' then 
+			cen_pool[#cen_pool+1] = v
+		end
+	end
+	return cen_pool
+end
+
+local function findInTable(e, t)
+	for k, v in pairs(t) do
+		if v == e then return k end
+	end
 end
 
 ---- Mod Icon
@@ -195,8 +212,10 @@ SMODS.Consumable({ -- The Vessel
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
     pos = coordinate(2),
 	can_use = function()
-		-- if a card is selected
-        return true
+		if G.hand and #G.hand.highlighted == 1 then
+            return true
+        end
+        return false
     end,
     use = function()
 		print("The Vessel card is used")
@@ -209,16 +228,30 @@ SMODS.Consumable({ -- The Genie
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.genie,
-	config = {max_highlighted = 1},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	config = { create = 1 },
+    loc_vars = function(self) return {vars = {self.config.create}} end,
     pos = coordinate(3),
-	can_use = function()
-		-- if there's still room for consumables
-        return true
+	can_use = function(self, card)
+		return #G.consumeables.cards < G.consumeables.config.card_limit or card.area == G.consumeables
     end,
-    use = function()
-		print("The Genie card is used")
-        -- create a random mathematic card
+    use = function(self, card, area, copier)
+		for i = 1, math.min(card.ability.consumeable.create, G.consumeables.config.card_limit - #G.consumeables.cards) do
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.4,
+				func = function()
+					if G.consumeables.config.card_limit > #G.consumeables.cards then
+						play_sound("timpani")
+						local _card = create_card("Mathematic", G.consumeables, nil, nil, nil, nil, nil, "showdown_genie")
+						_card:add_to_deck()
+						G.consumeables:emplace(_card)
+						card:juice_up(0.3, 0.5)
+					end
+					return true
+				end,
+			}))
+		end
+		delay(0.6)
     end
 })
 
@@ -260,7 +293,7 @@ SMODS.Consumable({ -- Vision
     end
 })
 
--- Mathematic (gives bonus for current ante)
+-- Mathematic (gives bonuses by sacrificing cards)
 
 SMODS.Atlas({key = 'showdown_mathematic_undiscovered', path = 'Consumables/MathematicsUndiscovered.png', px = 71, py = 95})
 SMODS.Atlas({key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', px = 71, py = 95})
@@ -333,13 +366,46 @@ SMODS.Consumable({ -- Shape
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.shape,
     pos = coordinate(4),
+	config = {max_highlighted = 4, toDestroy = 2},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
 	can_use = function()
-        -- idk
-        return true
+        if G.hand and #G.hand.highlighted == 4 then
+            return true
+        end
+        return false
     end,
-    use = function()
-		print("Shape card is used")
-        -- idk
+    use = function(self)
+        local destroyed_cards = {}
+		destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.hand.highlighted, pseudoseed('random_destroy'))
+		for i=1, #G.hand.highlighted do
+            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            event({trigger = 'after', delay = 0.15, func = function()
+                G.hand.highlighted[i]:flip(); play_sound('card1', percent); G.hand.highlighted[i]:juice_up(0.3, 0.3);
+            return true end })
+        end
+        delay(0.2)
+		for i=self.config.toDestroy, 1, -1 do
+            event({trigger = 'after', delay = 0.1, func = function()
+				--table.remove(G.hand.highlighted, findInTable(destroyed_cards[i], G.hand.highlighted));
+				destroyed_cards[i]:start_dissolve(nil, i ~= self.config.toDestroy);
+            return true end })
+        end
+		local cen_pool = getEnhancements()
+		for i=1, #G.hand.highlighted do
+            event({trigger = 'after', delay = 0.1, func = function()
+                G.hand.highlighted[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
+            return true end })
+        end
+        for i=1, #G.hand.highlighted do
+            local percent = 0.85 + ( i - 0.999 ) / ( #G.hand.highlighted - 0.998 ) * 0.3
+            event({trigger = 'after', delay = 0.15, func = function()
+                G.hand.highlighted[i]:flip(); play_sound('tarot2', percent, 0.6); G.hand.highlighted[i]:juice_up(0.3, 0.3);
+            return true end })
+		end
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
     end
 })
 
@@ -381,9 +447,13 @@ SMODS.Consumable({ -- Sequence
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.sequence,
     pos = coordinate(7),
+	config = {max_highlighted = 3},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
 	can_use = function()
-        -- idk
-        return true
+        if G.hand and #G.hand.highlighted <= 5 then
+            return true
+        end
+        return false
     end,
     use = function()
 		print("Sequence card is used")
@@ -391,18 +461,22 @@ SMODS.Consumable({ -- Sequence
     end
 })
 
-SMODS.Consumable({ -- ?
-	key = '?',
+SMODS.Consumable({ -- Operation
+	key = 'Operation',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.a,
+	loc_txt = loc.operation,
     pos = coordinate(8),
+	config = {max_highlighted = 2},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
 	can_use = function()
-        -- idk
-        return true
+        if G.hand and #G.hand.highlighted == 2 then
+            return true
+        end
+        return false
     end,
     use = function()
-		print("? card is used")
+		print("Operation card is used")
         -- idk
     end
 })

@@ -184,7 +184,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Shape',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select {C:attention}#1#{} cards, {C:attention}2{} will',
+                [2] = 'be {C:attention}destroyed{} and {C:attention}2{} will',
+                [3] = 'get random {C:attention}enhancements{}',
             }
         }
     },
@@ -208,15 +210,28 @@ return  {
         ['en-us'] = {
             ['name'] = 'Sequence',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Destroy selected cards and',
+                [2] = 'upgrade poker hand by {C:attention}#1#{}',
+                [3] = 'levels',
             }
         }
     },
-    a = {
+    operation = {
         ['en-us'] = {
-            ['name'] = '?',
+            ['name'] = 'Operation',
             ['text'] = {
-                [1] = 'bruh idk',
+                [1] = 'Destroy {C:attention}#1#{} selected cards and create a card',
+                [2] = 'that {C:attention}inherit{} the modifiers of the destroyed cards',
+                [3] = 'The value of the card is either the {C:attention}addition{} or',
+                [4] = 'the {C:attention}substraction{} of the destroyed cards',
+            }
+        }
+    },
+    theorem = {
+        ['en-us'] = {
+            ['name'] = 'Theorem',
+            ['text'] = {
+                [1] = 'idk',
             }
         }
     },
@@ -269,7 +284,7 @@ return  {
                 [1] = '{X:chips,C:white}x1.5{} Chips for each 0 in hand',
             },
             ['unlock'] = {
-                [1] = 'Play a 5 card hand',
+                [1] = 'Play a {C:attention}Five of a Kind{}',
                 [2] = 'that contains only',
                 [3] = '{C:attention,E:1}0{} cards',
             }
