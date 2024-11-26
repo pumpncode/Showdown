@@ -118,6 +118,17 @@ return  {
             }
         }
     },
+    beast = { -- Requires Bunco
+        ['en-us'] = {
+            ['name'] = 'The Beast',
+            ['text'] = {
+                [1] = 'Converts up to {C:attention}#1#{}',
+                [2] = 'selected cards to a',
+                [3] = 'random {C:bunc_fleurons}exotic{}',
+                [4] = '{C:counterpart_ranks}counterpart{}',
+            }
+        }
+    },
 
     -- Spectrals
 

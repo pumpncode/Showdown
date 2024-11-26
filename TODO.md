@@ -2,27 +2,61 @@
 A balatro mod made for fun
 
 ### Column Name
-- [ ] Counterpart ranks ~3d #feat @max 2024-11-21
+- [ ] Special ranks ~3d #feat @max 2024-11-21
   - [ ] Counterparts counts as originals (except 0)
   - [ ] Compatibility with Bunco's exotic suits
 - [ ] Tarot cards ~3d #feat @max 2024-11-21
   - [ ] The Reflection
   - [ ] The Vessel
+  - [ ] The Genie
+  - [ ] The Beast
 - [ ] Spectral cards ~3d #feat @max 2024-11-21
   - [ ] Mist
   - [ ] Vision
+- [ ] Mathematic cards ~3d #feat @max 2024-11-26
+  - [ ] Constant
+  - [ ] Variable
+  - [ ] Function
+  - [ ] Shape
+  - [ ] Vector
+  - [ ] Probability
+  - [ ] Sequence
+  - [ ] Operation
+- [ ] Vouchers ~3d #feat @max 2024-11-26
+  - [ ] Irrational Numbers
+  - [ ] Transcendant Numbers
+  - [ ] Complex Numbers
 - [ ] Jokers ~3d #feat @max 2024-11-21
   - [ ] Pinpoint
   - [ ] Like Mother Like Daughter
   - [ ] Math Teacher
   - [ ] Crouton
   - [ ] Gruyère
-  - [ ] Seeing Double
-- [ ] Counterpart Deck ~3d #feat @max 2024-11-21
-- [ ] No counterpart in normal decks ~3d #bug @max 2024-11-21
+  - [ ] Mirror
+  - [ ] Strainer
+  - [ ] Billiard
+  - [ ] Wicked Joker
+  - [ ] Patchwork Joker
+  - [ ] Crime Scene
+  - [ ] Ping Pong
+  - [ ] Color Splash
+  - [ ] Blue
+  - [ ] Spotted Joker
+  - [ ] Russian Roulette
+  - [ ] Bacteria
+  - [ ] Nailed It
+  - [ ] Null Formula
+  - [ ] Baby Jimbo
+  - [ ] Tête à Toto
+  - [ ] Encore
+- [ ] Blinds ~3d #feat @max 2024-11-26
+  - [ ] The Patient
+  - [ ] The Whole
 
 ### Completed Column ✓
 - [ ] Special ranks ~3d #feat @max 2024-11-21
   - [x] 2.5, 5.5, 8.5
   - [x] Butler, Princess, Lord
   - [x] 0
+- [x] Mirror Deck ~3d #feat @max 2024-11-21
+- [x] No counterpart in normal decks ~3d #bug @max 2024-11-21

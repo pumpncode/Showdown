@@ -13,6 +13,16 @@ local function coordinate(position, width)
     return get_coordinates(position - 1, width)
 end
 
+local function modCompatibility(modName, filePath)
+	print("Showdown compatibility: "..modName.." is loaded!")
+	local mod = filesystem.load(showdown.path..filePath)()
+	mod.showdown = showdown
+	mod.filesystem = filesystem
+	mod.loc = loc
+	mod.get_coordinates = get_coordinates
+	mod.coordinate = coordinate
+end
+
 ---- Mod Icon
 
 SMODS.Atlas({key = "showdown_modicon", path = "Mod_icon.png", px = 36, py = 36})
@@ -444,10 +454,8 @@ SMODS.Joker({
 })
 
 if (SMODS.Mods["Bunco"] or {}).can_load then
-	print("Showdown compatibility: Bunco is loaded!")
-    filesystem.load(showdown.path.."compat/buncoCompat.lua")()
+	modCompatibility("Bunco", "compat/buncoCompat.lua")
 end
 if (SMODS.Mods["Cryptid"] or {}).can_load then
-	print("Showdown compatibility: Cryptid is loaded!")
-    filesystem.load(showdown.path.."compat/cryptidCompat.lua")()
+	modCompatibility("Cryptid", "compat/cryptidCompat.lua")
 end
