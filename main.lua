@@ -387,6 +387,7 @@ SMODS.Consumable({ -- Shape
 		for i=self.config.toDestroy, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
 				--table.remove(G.hand.highlighted, findInTable(destroyed_cards[i], G.hand.highlighted));
+				print(destroyed_cards[i])
 				destroyed_cards[i]:start_dissolve(nil, i ~= self.config.toDestroy);
             return true end })
         end
