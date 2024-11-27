@@ -176,7 +176,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Function',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select {C:attention}#1#{} cards that will get',
+                [2] = 'random {C:attention}enhancements{}, then {C:attention}1{} random',
+                [3] = 'cards will be {C:attention}destroyed{}',
             }
         }
     },
@@ -184,9 +186,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Shape',
             ['text'] = {
-                [1] = 'Select {C:attention}#1#{} cards, {C:attention}2{} will',
-                [2] = 'be {C:attention}destroyed{} and {C:attention}2{} will',
-                [3] = 'get random {C:attention}enhancements{}',
+                [1] = 'Select {C:attention}#1#{} cards that will get',
+                [2] = 'random {C:attention}editions{}, then {C:attention}2{} random',
+                [3] = 'cards will be {C:attention}destroyed{}',
             }
         }
     },
@@ -194,7 +196,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Vector',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
+                [2] = 'For each destroyed card, {C:attention}one{} future booster',
+                [3] = 'will have an {C:attention}additional choice{}',
             }
         }
     },
@@ -202,7 +206,10 @@ return  {
         ['en-us'] = {
             ['name'] = 'Probability',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select up to {C:attention}#1#{} cards, each card has',
+                [2] = 'a {C:green}1 in 3{} chance to be {C:attention}destroyed{}',
+                [3] = 'Each destroyed card {C:attention}multiply{} the values of',
+                [4] = 'the leftest joker by {X:attention,C:white}x1.25{}',
             }
         }
     },
@@ -210,7 +217,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Sequence',
             ['text'] = {
-                [1] = 'Destroy selected cards and',
+                [1] = '{C:attention}Destroy{} selected cards and',
                 [2] = 'upgrade poker hand by {C:attention}#1#{}',
                 [3] = 'levels',
             }
@@ -286,7 +293,7 @@ return  {
             ['unlock'] = {
                 [1] = 'Play a {C:attention}Five of a Kind{}',
                 [2] = 'that contains only',
-                [3] = '{C:attention,E:1}0{} cards',
+                [3] = '{C:attention,E:1}#1#{} cards',
             }
         }
     },
@@ -294,7 +301,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Like Mother Like Daughter',
             ['text'] = {
-                [1] = '{X:mult}x#1#{} for each pair of',
+                [1] = '{X:mult,C:white}x#1#{} for each pair of',
                 [2] = 'Princess scored and Queen in hand',
             },
             ['unlock'] = {
@@ -308,7 +315,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Crouton',
             ['text'] = {
-                [1] = '{X:mult}x1.15{} for each',
+                [1] = '{X:mult,C:white}x1.15{} for each',
                 [2] = 'card held in hand',
             }
         }

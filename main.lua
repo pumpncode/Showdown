@@ -350,13 +350,44 @@ SMODS.Consumable({ -- Function
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.functio, -- no n because it fucks with lua
     pos = coordinate(3),
-	can_use = function()
-        -- idk
-        return true
+	config = {max_highlighted = 4, toDestroy = 1},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
+	can_use = function(self)
+        if G.hand and #G.hand.highlighted == self.config.max_highlighted then
+            return true
+        end
+        return false
     end,
-    use = function()
-		print("Function card is used")
-        -- idk
+    use = function(self)
+		for i=1, #G.hand.highlighted do
+            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            event({trigger = 'after', delay = 0.15, func = function()
+                G.hand.highlighted[i]:flip(); play_sound('card1', percent); G.hand.highlighted[i]:juice_up(0.3, 0.3);
+            return true end })
+        end
+		local cen_pool = getEnhancements()
+		for i=1, #G.hand.highlighted do
+            event({trigger = 'after', delay = 0.1, func = function()
+                G.hand.highlighted[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
+            return true end })
+        end
+        delay(0.2)
+		for i=self.config.toDestroy, 1, -1 do
+            event({trigger = 'after', delay = 0.1, func = function()
+				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed')); card:start_dissolve();
+				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
+            return true end })
+        end
+		for i=1, #G.hand.highlighted do
+            local percent = 0.85 + ( i - 0.999 ) / ( #G.hand.highlighted - 0.998 ) * 0.3
+            event({trigger = 'after', delay = 0.15, func = function()
+                if G.hand.highlighted[i] ~= nil then G.hand.highlighted[i]:flip(); play_sound('tarot2', percent, 0.6); G.hand.highlighted[i]:juice_up(0.3, 0.3); end
+            return true end })
+		end
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
     end
 })
 
@@ -368,41 +399,25 @@ SMODS.Consumable({ -- Shape
     pos = coordinate(4),
 	config = {max_highlighted = 4, toDestroy = 2},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
-	can_use = function()
-        if G.hand and #G.hand.highlighted == 4 then
+	can_use = function(self)
+        if G.hand and #G.hand.highlighted == self.config.max_highlighted then
             return true
         end
         return false
     end,
     use = function(self)
-        local destroyed_cards = {}
-		destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.hand.highlighted, pseudoseed('random_destroy'))
 		for i=1, #G.hand.highlighted do
-            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
-            event({trigger = 'after', delay = 0.15, func = function()
-                G.hand.highlighted[i]:flip(); play_sound('card1', percent); G.hand.highlighted[i]:juice_up(0.3, 0.3);
+            event({trigger = 'after', delay = 0.1, func = function()
+				local edition = poll_edition(nil, nil, nil, true); G.hand.highlighted[i]:set_edition(edition, true);
             return true end })
         end
         delay(0.2)
 		for i=self.config.toDestroy, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				--table.remove(G.hand.highlighted, findInTable(destroyed_cards[i], G.hand.highlighted));
-				print(destroyed_cards[i])
-				destroyed_cards[i]:start_dissolve(nil, i ~= self.config.toDestroy);
+				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed')); card:start_dissolve(nil, i == 1);
+				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
             return true end })
         end
-		local cen_pool = getEnhancements()
-		for i=1, #G.hand.highlighted do
-            event({trigger = 'after', delay = 0.1, func = function()
-                G.hand.highlighted[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
-            return true end })
-        end
-        for i=1, #G.hand.highlighted do
-            local percent = 0.85 + ( i - 0.999 ) / ( #G.hand.highlighted - 0.998 ) * 0.3
-            event({trigger = 'after', delay = 0.15, func = function()
-                G.hand.highlighted[i]:flip(); play_sound('tarot2', percent, 0.6); G.hand.highlighted[i]:juice_up(0.3, 0.3);
-            return true end })
-		end
 		event({trigger = 'after', delay = 0.2, func = function()
             G.hand:unhighlight_all();
         return true end })
@@ -416,9 +431,13 @@ SMODS.Consumable({ -- Vector
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.vector,
     pos = coordinate(5),
-	can_use = function()
-        -- idk
-        return true
+	config = {max_highlighted = 5},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	can_use = function(self)
+        if G.hand and #G.hand.highlighted <= self.config.max_highlighted then
+            return true
+        end
+        return false
     end,
     use = function()
 		print("Vector card is used")
@@ -432,9 +451,13 @@ SMODS.Consumable({ -- Probability
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.probability,
     pos = coordinate(6),
-	can_use = function()
-        -- idk
-        return true
+	config = {max_highlighted = 3, mult_joker = 1.25},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
+	can_use = function(self)
+        if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
+            return true
+        end
+        return false
     end,
     use = function()
 		print("Probability card is used")
@@ -451,14 +474,23 @@ SMODS.Consumable({ -- Sequence
 	config = {max_highlighted = 3},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
 	can_use = function()
-        if G.hand and #G.hand.highlighted <= 5 then
+        if G.hand and #G.hand.highlighted <= 5 and #G.hand.highlighted >= 1 then
             return true
         end
         return false
     end,
-    use = function()
-		print("Sequence card is used")
-        -- idk
+    use = function(self, card, area, copier)
+		local text, disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+		local used_consumable = copier or card
+		update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(text, 'poker_hands'),chips = G.GAME.hands[text].chips, mult = G.GAME.hands[text].mult, level=G.GAME.hands[text].level})
+		level_up_hand(used_consumable, text, nil, 3)
+		update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+		for i=#G.hand.highlighted, 1, -1 do
+            event({trigger = 'after', delay = 0.1, func = function()
+                if G.hand.highlighted ~= nil then G.hand.highlighted[i]:start_dissolve(nil, i == 1); end
+            return true end })
+        end
+		
     end
 })
 
@@ -483,7 +515,7 @@ SMODS.Consumable({ -- Operation
 })
 
 SMODS.Consumable({ -- I HAVE TO DELETE THIS (this is for undiscovered sprite)
-	key = 'test',
+	key = 'test2',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.a,
