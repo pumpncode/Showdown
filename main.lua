@@ -513,7 +513,7 @@ SMODS.Consumable({ -- Operation
         -- idk
     end
 })
-
+--[[
 SMODS.Consumable({ -- I HAVE TO DELETE THIS (this is for undiscovered sprite)
 	key = 'test2',
 	set = 'Mathematic',
@@ -521,9 +521,9 @@ SMODS.Consumable({ -- I HAVE TO DELETE THIS (this is for undiscovered sprite)
 	loc_txt = loc.a,
     pos = coordinate(9),
 })
-
+]]--
 ---- Vouchers
----
+
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
 
 SMODS.Voucher({ -- Irrational Numbers
@@ -543,33 +543,65 @@ SMODS.Voucher({ -- Transcendant Numbers
 	loc_txt = loc.transcendant,
     unlocked = false,
     requires = {'showdown_Irrational'},
-	pos = coordinate(2, 1),
+	pos = coordinate(3, 2),
 	check_for_unlock = function()
         -- if 10 counterpart cards in deck with one or more modifiers
     end,
 })
 
+SMODS.Voucher({ -- Number Theory
+	key = 'Number',
+	atlas = 'showdown_vouchers',
+	loc_txt = loc.numberTheory,
+    unlocked = true,
+	pos = coordinate(2),
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.math_rate = (G.GAME.math_rate or 0) + 4
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.math_rate = math.max(0, G.GAME.math_rate - 4)
+				return true
+			end,
+		}))
+	end,
+})
+
+SMODS.Voucher({ -- Axiom of Infinity
+	key = 'Axiom',
+	atlas = 'showdown_vouchers',
+	loc_txt = loc.axiomInfinity,
+    unlocked = true,
+    requires = {'showdown_Number'},
+	pos = coordinate(4, 2),
+})
+
 ---- Booster Packs
 
-SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'Boosters/BoostersMathematic.png', px = 71, py = 95})
+SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'BoostersMathematic.png', px = 71, py = 95})
 
 for i = 1, 4 do
     SMODS.Booster{
         key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'), loc_txt = loc.calculus,
 
-        config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 2 or 4},
+        config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
         draw_hand = true,
 
         create_card = function(self, card)
-            return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'cal')
-            -- return {set = 'Mathematic', area = G.pack_cards, skip_materialize = nil, soulable = nil, key_append = 'vir'}
+            return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'showdown_calculus')
         end,
-
+		--[[
         ease_background_colour = function(self)
             ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
-            ease_background_colour{new_colour = HEX('50506a'), special_colour = HEX('7e9999'), contrast = 2}
+            ease_background_colour{new_colour = G.C.RED, special_colour = G.C.BLACK, contrast = 2}
         end,
-
+		]]--
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
 

@@ -25,3 +25,12 @@ SMODS.Voucher({ -- Complex Numbers
     requires = {'showdown_Transcendant'},
 	pos = coordinate(1),
 })
+
+SMODS.Voucher({ -- Collatz Conjecture
+	key = 'Collatz',
+	atlas = 'showdown_cryptidVouchers',
+	loc_txt = loc.collatz,
+    unlocked = true,
+    requires = {'showdown_Axiom'},
+	pos = coordinate(2, 1),
+})

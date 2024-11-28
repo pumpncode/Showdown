@@ -273,7 +273,7 @@ return  {
             ['name'] = 'Mega Calculus Pack',
             ['text'] = {
                 [1] = 'Choose {C:attention}#1#{} of up to',
-                [2] = '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                [2] = '{C:attention}#2# {C:showdown_mathematic}Mathematic{} cards to',
                 [3] = 'be used immediately'
             }
         }
@@ -318,6 +318,32 @@ return  {
         }
     },
 
+    numberTheory = {
+        ['en-us'] = {
+            ['name'] = 'Number Theory',
+            ['text'] = {
+                [1] = '{C:showdown_mathematic}Mathematic{} cards can',
+                [2] = 'appear in the shop'
+            }
+        }
+    },
+    axiomInfinity = {
+        ['en-us'] = {
+            ['name'] = 'Axiom of Infinity',
+            ['text'] = {
+                [1] = 'idk'
+            }
+        }
+    },
+    collatz = {
+        ['en-us'] = {
+            ['name'] = 'Collatz Conjecture',
+            ['text'] = {
+                [1] = 'idk'
+            }
+        }
+    },
+
     ---- Jokers
 
     pinpoint = {
@@ -354,6 +380,14 @@ return  {
                 [1] = '{X:mult,C:white}x1.15{} for each',
                 [2] = 'card held in hand',
             }
+        }
+    },
+
+    ---- Misc
+    
+    b_pull = {
+        ['en-us'] = {
+            ['text'] = 'Pull'
         }
     }
 }
