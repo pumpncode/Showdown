@@ -549,6 +549,34 @@ SMODS.Voucher({ -- Transcendant Numbers
     end,
 })
 
+---- Booster Packs
+
+SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'Boosters/BoostersMathematic.png', px = 71, py = 95})
+
+for i = 1, 4 do
+    SMODS.Booster{
+        key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'), loc_txt = loc.calculus,
+
+        config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 2 or 4},
+        draw_hand = true,
+
+        create_card = function(self, card)
+            return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'cal')
+            -- return {set = 'Mathematic', area = G.pack_cards, skip_materialize = nil, soulable = nil, key_append = 'vir'}
+        end,
+
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
+            ease_background_colour{new_colour = HEX('50506a'), special_colour = HEX('7e9999'), contrast = 2}
+        end,
+
+        pos = coordinate(i),
+        atlas = 'showdown_booster_packs_mathematic',
+
+        in_pool = function() return (pseudorandom('calculus'..G.SEED) < 0.5) end
+    }
+end
+
 ---- Jokers
 
 --SMODS.Atlas({key = "showdown_jokers", path = "Ranks/Cards.png", px = 71, py = 95})

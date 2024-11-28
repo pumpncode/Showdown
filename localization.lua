@@ -243,6 +243,42 @@ return  {
         }
     },
 
+    ---- Booster Packs
+    
+    calculus = {
+        ['en-us'] = {
+            ['group_name'] = 'Calculus Pack',
+            ['name'] = 'Calculus Pack',
+            ['text'] = {
+                [1] = 'Choose {C:attention}#1#{} of up to',
+                [2] = '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                [3] = 'be used immediately'
+            }
+        }
+    },
+    calculus_jumbo = {
+        ['en-us'] = {
+            ['group_name'] = 'Calculus Pack',
+            ['name'] = 'Jumbo Calculus Pack',
+            ['text'] = {
+                [1] = 'Choose {C:attention}#1#{} of up to',
+                [2] = '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                [3] = 'be used immediately'
+            }
+        }
+    },
+    calculus_mega = {
+        ['en-us'] = {
+            ['group_name'] = 'Calculus Pack',
+            ['name'] = 'Mega Calculus Pack',
+            ['text'] = {
+                [1] = 'Choose {C:attention}#1#{} of up to',
+                [2] = '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                [3] = 'be used immediately'
+            }
+        }
+    },
+
     ---- Vouchers
 
     irrational = {
