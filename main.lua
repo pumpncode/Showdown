@@ -24,6 +24,8 @@ local function event(config)
     return e
 end
 
+---Gives the list of all enhancements
+---@return table
 local function getEnhancements()
 	local cen_pool = {}
 	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
@@ -34,15 +36,59 @@ local function getEnhancements()
 	return cen_pool
 end
 
+---Finds the index of a value in a table
+---@param e any
+---@param t table
+---@return number|nil
 local function findInTable(e, t)
 	for k, v in pairs(t) do
 		if v == e then return k end
 	end
 end
 
+---Gives the closest value joker to the specified number, starting from the specified side
+---@param order string|nil left by default or if something else
+---@param number number|nil 1 by default or if inferior
+---@return table|nil joker
+local function getValueJoker(order, number)
+	if (not number) or number < 1 then number = 1 end
+	if (not order) or order ~= "right" then order = "left" end
+	local joker = nil
+	if order == "left" then
+		for i = #G.jokers.cards, 1, -1 do
+			if not Card.no(G.jokers.cards[i], "immune_to_chemach", true) and not Card.no(G.jokers.cards[i], "immutable", true) then
+				joker = G.jokers.cards[i]
+			end
+		end
+	elseif order == "right" then
+		for i = 1, #G.jokers.cards do
+			if not Card.no(G.jokers.cards[i], "immune_to_chemach", true) and not Card.no(G.jokers.cards[i], "immutable", true) then
+				joker = G.jokers.cards[i]
+			end
+		end
+	end
+	return joker
+end
+
 ---- Mod Icon
 
 SMODS.Atlas({key = "showdown_modicon", path = "Mod_icon.png", px = 36, py = 36})
+
+---- Deck Skin
+
+SMODS.Atlas({key = "showdown_deck_skin", path = "DeckSkins/test.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_deck_skinhc", path = "DeckSkins/testhc.png", px = 71, py = 95})
+
+SMODS.DeckSkin({
+	key = "test_skin",
+	suit = "Hearts",
+	ranks = {
+		"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"
+	},
+	lc_atlas = "showdown_deck_skin",
+	hc_atlas = "showdown_deck_skinhc",
+	loc_txt = { ['en-us'] = "test" }
+})
 
 ---- Decks
 
@@ -72,6 +118,7 @@ SMODS.Rank({ -- 2.5 Card
 	next = { '3' },
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.two_half, 'name')
+		--SMODS.process_loc_text(G.localization.misc.labels, self.key, loc.two_half, 'label')
 	end,
 	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
@@ -114,6 +161,7 @@ SMODS.Rank({ -- Butler Card
 	shorthand = 'B',
 	pos = { x = 3 },
 	nominal = 10.5,
+	face_nominal = 0.1,
 	next = { 'Princess' },
 	face = true,
 	process_loc_text = function(self)
@@ -130,6 +178,7 @@ SMODS.Rank({ -- Princess Card
 	shorthand = 'P',
 	pos = { x = 4 },
 	nominal = 10.5,
+	face_nominal = 0.2,
 	next = { 'Lord' },
 	face = true,
 	process_loc_text = function(self)
@@ -146,6 +195,7 @@ SMODS.Rank({ -- Lord Card
 	shorthand = 'L',
 	pos = { x = 5 },
 	nominal = 10.5,
+	face_nominal = 0.3,
 	next = { 'Ace' },
 	face = true,
 	process_loc_text = function(self)
@@ -178,6 +228,8 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
 })
+
+--SMODS.Card.take_ownership()
 
 ---- Consumables
 
@@ -218,6 +270,7 @@ SMODS.Consumable({ -- The Vessel
         return false
     end,
     use = function()
+		--print("id: "..G.hand.highlighted[1]:get_id())
 		print("The Vessel card is used")
         -- convert selected card to a 0 with a random enhancement or seal
     end
@@ -451,7 +504,7 @@ SMODS.Consumable({ -- Probability
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.probability,
     pos = coordinate(6),
-	config = {max_highlighted = 3, mult_joker = 1.25},
+	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
@@ -459,9 +512,16 @@ SMODS.Consumable({ -- Probability
         end
         return false
     end,
-    use = function()
-		print("Probability card is used")
-        -- idk
+    use = function(self, card, area, copier)
+		local first_dissolved = true
+		for i=#G.hand.highlighted, 1, -1 do
+            event({trigger = 'after', delay = 0.1, func = function()
+				if G.hand.highlighted ~= nil and (pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
+                	G.hand.highlighted[i]:start_dissolve(nil, first_dissolved)
+					first_dissolved = false
+				end
+            return true end })
+        end
     end
 })
 

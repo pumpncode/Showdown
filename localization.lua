@@ -27,7 +27,7 @@ return  {
     two_half = {
         ['en-us'] = {
             ['name'] = '2.5',
-            ['text'] = {
+            ['label'] = {
                 [1] = 'Counts as a 2',
             }
         }
@@ -209,7 +209,7 @@ return  {
                 [1] = 'Select up to {C:attention}#1#{} cards, each card has',
                 [2] = 'a {C:green}1 in 3{} chance to be {C:attention}destroyed{}',
                 [3] = 'Each destroyed card {C:attention}multiply{} the values of',
-                [4] = 'the leftest joker by {X:attention,C:white}x1.25{}',
+                [4] = 'the leftest joker by {X:attention,C:white}x#2#{}',
             }
         }
     },
