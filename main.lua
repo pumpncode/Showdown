@@ -24,18 +24,6 @@ local function event(config)
     return e
 end
 
----Gives the list of all enhancements
----@return table
-local function getEnhancements()
-	local cen_pool = {}
-	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
-		if v.key ~= 'm_stone' then 
-			cen_pool[#cen_pool+1] = v
-		end
-	end
-	return cen_pool
-end
-
 ---Finds the index of a value in a table
 ---@param e any
 ---@param t table
@@ -44,6 +32,19 @@ local function findInTable(e, t)
 	for k, v in pairs(t) do
 		if v == e then return k end
 	end
+end
+
+---Gives the list of all enhancements
+---@param blacklist table|nil Enhancements that cannot be selected
+---@return table
+local function getEnhancements(blacklist)
+	local cen_pool = {}
+	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+		if not findInTable(v.key, blacklist) then 
+			cen_pool[#cen_pool+1] = v
+		end
+	end
+	return cen_pool
 end
 
 ---Gives the closest value joker to the specified number, starting from the specified side
@@ -68,6 +69,24 @@ local function getValueJoker(order, number)
 		end
 	end
 	return joker
+end
+
+local function flipCard(card, i, setSize)
+	if not card then return end
+	if not i then i = 1 end
+	local percent = 1.15 - (i-0.999)/(setSize-0.998)*0.3
+	event({trigger = 'after', delay = 0.15, func = function()
+		card:flip(); play_sound('card1', percent); card:juice_up(0.3, 0.3);
+	return true end })
+end
+
+local function unflipCard(card, i, setSize)
+	if not card then return end
+	if not i then i = 1 end
+	local percent = 0.85 + ( i - 0.999 ) / ( setSize - 0.998 ) * 0.3
+	event({trigger = 'after', delay = 0.15, func = function()
+		card:flip(); play_sound('tarot2', percent, 0.6); card:juice_up(0.3, 0.3);
+	return true end })
 end
 
 ---- Mod Icon
@@ -120,10 +139,9 @@ SMODS.Rank({ -- 2.5 Card
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.two_half, 'name')
 		--SMODS.process_loc_text(G.localization.misc.labels, self.key, loc.two_half, 'label')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 15
 
 SMODS.Rank({ -- 5.5 Card
 	key = '5.5',
@@ -135,10 +153,9 @@ SMODS.Rank({ -- 5.5 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.five_half, 'name')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 16
 
 SMODS.Rank({ -- 8.5 Card
 	key = '8.5',
@@ -150,10 +167,9 @@ SMODS.Rank({ -- 8.5 Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.eight_half, 'name')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 17
 
 SMODS.Rank({ -- Butler Card
 	key = 'Butler',
@@ -162,15 +178,14 @@ SMODS.Rank({ -- Butler Card
 	pos = { x = 3 },
 	nominal = 10.5,
 	face_nominal = 0.1,
-	next = { 'Princess' },
+	next = { 'showdown_Princess', 'Queen' },
 	face = true,
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.butler, 'name')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 18
 
 SMODS.Rank({ -- Princess Card
 	key = 'Princess',
@@ -179,15 +194,14 @@ SMODS.Rank({ -- Princess Card
 	pos = { x = 4 },
 	nominal = 10.5,
 	face_nominal = 0.2,
-	next = { 'Lord' },
+	next = { 'showdown_Lord', 'King' },
 	face = true,
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.princess, 'name')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 19
 
 SMODS.Rank({ -- Lord Card
 	key = 'Lord',
@@ -201,10 +215,9 @@ SMODS.Rank({ -- Lord Card
 	process_loc_text = function(self)
 		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.lord, 'name')
 	end,
-	decimal = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 20
 
 SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card)
 	key = 'Zero',
@@ -221,13 +234,22 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 		Clubs = 0,
 		Diamonds = 0,
 		Spades = 0,
-		Halberds = 0,
-		Fleurons = 0,
+		bunco_Halberds = 0,
+		bunco_Fleurons = 0,
 	},
 	straight_edge = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
-})
+}) -- id: 1
+
+-- These are for making straights with counterparts and normal cards
+table.insert(SMODS.Ranks["Ace"].next, "showdown_2.5")
+table.insert(SMODS.Ranks["4"].next, "showdown_5.5")
+table.insert(SMODS.Ranks["7"].next, "showdown_8.5")
+table.insert(SMODS.Ranks["10"].next, "showdown_Butler")
+table.insert(SMODS.Ranks["Jack"].next, "showdown_Princess")
+table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
+--
 
 --SMODS.Card.take_ownership()
 
@@ -237,6 +259,15 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 
 SMODS.Atlas({key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95})
 
+local counterparts = {
+	["showdown_2.5"] = "2", ["2"] = "showdown_2.5",
+	["showdown_5.5"] = "5", ["5"] = "showdown_5.5",
+	["showdown_8.5"] = "8", ["8"] = "showdown_8.5",
+	["showdown_Butler"] = "Jack", ["Jack"] = "showdown_Butler",
+	["showdown_Princess"] = "Queen", ["Queen"] = "showdown_Princess",
+	["showdown_Lord"] = "King", ["King"] = "showdown_Lord",
+}
+
 SMODS.Consumable({ -- The Reflection
 	key = 'Reflection',
 	set = 'Tarot',
@@ -245,13 +276,28 @@ SMODS.Consumable({ -- The Reflection
 	config = {max_highlighted = 2},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
     pos = coordinate(1),
-	can_use = function()
-		-- if up to 2 cards are selected and have counterparts
-        return true
+	can_use = function(self)
+		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
+            for i=1, #G.hand.highlighted do
+				if not counterparts[G.hand.highlighted[i].base.value] then return false end
+			end
+			return true
+        end
+        return false
     end,
     use = function()
-		print("The Reflection card is used")
-        -- convert selected cards into their counterparts
+		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
+        delay(0.2)
+		for i=1, #G.hand.highlighted do
+            event({trigger = 'after', delay = 0.1, func = function()
+				assert(SMODS.change_base(G.hand.highlighted[i], nil, counterparts[G.hand.highlighted[i].base.value]))
+            return true end })
+        end
+		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
     end
 })
 
@@ -270,9 +316,26 @@ SMODS.Consumable({ -- The Vessel
         return false
     end,
     use = function()
-		--print("id: "..G.hand.highlighted[1]:get_id())
-		print("The Vessel card is used")
-        -- convert selected card to a 0 with a random enhancement or seal
+		flipCard(G.hand.highlighted[1], nil, #G.hand.highlighted)
+        delay(0.2)
+		event({trigger = 'after', delay = 0.1, func = function()
+			assert(SMODS.change_base(G.hand.highlighted[1], nil, "showdown_Zero"))
+		return true end })
+		if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+			local cen_pool = getEnhancements({"m_wild"})
+			event({trigger = 'after', delay = 0.1, func = function()
+				G.hand.highlighted[1]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
+			return true end })
+		else
+			event({trigger = 'after', delay = 0.1, func = function()
+				G.hand.highlighted[1]:set_seal(SMODS.poll_seal({guaranteed = true}))
+			return true end })
+		end
+		unflipCard(G.hand.highlighted[1], nil, #G.hand.highlighted)
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
     end
 })
 
@@ -317,16 +380,28 @@ SMODS.Consumable({ -- Mist
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
 	loc_txt = loc.mist,
-	config = {max_highlighted = 6},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	config = { change = 6 },
+    loc_vars = function(self) return {vars = {self.config.change}} end,
     pos = coordinate(1),
 	can_use = function()
-		-- if hand has at least 6 cards
-        return true
+		return #G.hand.cards >= 6
     end,
-    use = function()
-		print("Mist card is used")
-        -- select 6 random cards and converts them into either an ace or a 0
+    use = function(self)
+		local temp_hand = {}
+		for k, v in ipairs(G.hand.cards) do temp_hand[#temp_hand+1] = v end
+		table.sort(temp_hand, function (a, b) return not a.playing_card or not b.playing_card or a.playing_card < b.playing_card end)
+		pseudoshuffle(temp_hand, pseudoseed('immolate'))
+		for i=1, self.config.change do flipCard(temp_hand[i], i, self.config.change) end
+		for i=1, self.config.change do
+			local rank = "Ace"
+			if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+				rank = "showdown_Zero"
+			end
+			event({trigger = 'after', delay = 0.1, func = function()
+				assert(SMODS.change_base(temp_hand[i], nil, rank))
+			return true end })
+		end
+		for i=1, self.config.change do unflipCard(temp_hand[i], i, self.config.change) end
     end
 })
 
@@ -412,12 +487,7 @@ SMODS.Consumable({ -- Function
         return false
     end,
     use = function(self)
-		for i=1, #G.hand.highlighted do
-            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
-            event({trigger = 'after', delay = 0.15, func = function()
-                G.hand.highlighted[i]:flip(); play_sound('card1', percent); G.hand.highlighted[i]:juice_up(0.3, 0.3);
-            return true end })
-        end
+		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i) end
 		local cen_pool = getEnhancements()
 		for i=1, #G.hand.highlighted do
             event({trigger = 'after', delay = 0.1, func = function()
@@ -431,12 +501,7 @@ SMODS.Consumable({ -- Function
 				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
             return true end })
         end
-		for i=1, #G.hand.highlighted do
-            local percent = 0.85 + ( i - 0.999 ) / ( #G.hand.highlighted - 0.998 ) * 0.3
-            event({trigger = 'after', delay = 0.15, func = function()
-                if G.hand.highlighted[i] ~= nil then G.hand.highlighted[i]:flip(); play_sound('tarot2', percent, 0.6); G.hand.highlighted[i]:juice_up(0.3, 0.3); end
-            return true end })
-		end
+		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i) end
 		event({trigger = 'after', delay = 0.2, func = function()
             G.hand:unhighlight_all();
         return true end })
@@ -487,7 +552,7 @@ SMODS.Consumable({ -- Vector
 	config = {max_highlighted = 5},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
 	can_use = function(self)
-        if G.hand and #G.hand.highlighted <= self.config.max_highlighted then
+        if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             return true
         end
         return false
@@ -569,6 +634,8 @@ SMODS.Consumable({ -- Operation
         return false
     end,
     use = function()
+		local card1 = G.hand.highlighted[1]
+		local card2 = G.hand.highlighted[2]
 		print("Operation card is used")
         -- idk
     end

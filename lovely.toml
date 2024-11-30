@@ -126,18 +126,18 @@ payload = '''
     end
 '''
 
-# Counterparts counts as original
-#[[patches]]
-#[patches.pattern]
-#target = 'card.lua'
-#pattern = 'return self.base.id'
-#position = 'before'
-#match_indent = true
-#payload = '''
-#    if self.base.value == "showdown_2.5" and not self.debuff then return 2 end
-#    if self.base.value == "showdown_5.5" and not self.debuff then return 5 end
-#    if self.base.value == "showdown_8.5" and not self.debuff then return 8 end
-#    if self.base.value == "showdown_Butler" and not self.debuff then return 11 end
-#    if self.base.value == "showdown_Princess" and not self.debuff then return 12 end
-#    if self.base.value == "showdown_Lord" and not self.debuff then return 13 end
-#'''
+# Counterparts counts as original, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'return self.base.id'
+position = 'before'
+match_indent = true
+payload = '''
+    if self.base.id == 15 and not self.debuff then return 2 end
+    if self.base.id == 16 and not self.debuff then return 5 end
+    if self.base.id == 17 and not self.debuff then return 8 end
+    if self.base.id == 18 and not self.debuff then return 11 end
+    if self.base.id == 19 and not self.debuff then return 12 end
+    if self.base.id == 20 and not self.debuff then return 13 end
+'''
