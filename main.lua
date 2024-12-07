@@ -9,6 +9,10 @@ local function get_coordinates(position, width)
     return {x = (position) % width, y = math.floor((position) / width)}
 end
 
+---Get card texture coordinates on the atlas
+---@param position integer
+---@param width integer|nil
+---@return table
 local function coordinate(position, width)
     return get_coordinates(position - 1, width)
 end
@@ -27,7 +31,7 @@ end
 ---Finds the index of a value in a table
 ---@param e any
 ---@param t table
----@return number|nil
+---@return integer|nil
 local function findInTable(e, t)
 	for k, v in pairs(t) do
 		if v == e then return k end
@@ -38,9 +42,10 @@ end
 ---@param blacklist table|nil Enhancements that cannot be selected
 ---@return table
 local function getEnhancements(blacklist)
+	if not blacklist then blacklist = {} end
 	local cen_pool = {}
 	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
-		if not findInTable(v.key, blacklist) then 
+		if not findInTable(v.key, blacklist) then
 			cen_pool[#cen_pool+1] = v
 		end
 	end
@@ -49,7 +54,7 @@ end
 
 ---Gives the closest value joker to the specified number, starting from the specified side
 ---@param order string|nil left by default or if something else
----@param number number|nil 1 by default or if inferior
+---@param number integer|nil 1 by default or if inferior
 ---@return table|nil joker
 local function getValueJoker(order, number)
 	if (not number) or number < 1 then number = 1 end
@@ -71,6 +76,34 @@ local function getValueJoker(order, number)
 	return joker
 end
 
+---Gives the content of a table (if table is to big, Balatro can crash)
+---@param tbl table
+---@param indent integer|nil
+local function tprint(tbl, indent)
+	if not indent then indent = 0 end
+	local toprint = string.rep(" ", indent) .. "{\r\n"
+	indent = indent + 2
+	for k, v in pairs(tbl) do
+		toprint = toprint .. string.rep(" ", indent)
+		if (type(k) == "number") then
+			toprint = toprint .. "[" .. k .. "] = "
+		elseif (type(k) == "string") then
+			toprint = toprint  .. k ..  "= "   
+		end
+		if (type(v) == "number") then
+			toprint = toprint .. v .. ",\r\n"
+		elseif (type(v) == "string") then
+			toprint = toprint .. "\"" .. v .. "\",\r\n"
+		elseif (type(v) == "table") then
+			toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
+		else
+			toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
+		end
+	end
+	toprint = toprint .. string.rep(" ", indent-2) .. "}"
+	return toprint
+end
+
 local function flipCard(card, i, setSize)
 	if not card then return end
 	if not i then i = 1 end
@@ -89,9 +122,104 @@ local function unflipCard(card, i, setSize)
 	return true end })
 end
 
+local function create_joker(joker) -- Thanks Bunco
+	-- Sprite atlas
+    local atlas
+	if not joker.atlas then 
+		atlas = "showdown_placeholders"
+	end
+
+    -- Key generation from name
+    local key = string.gsub(string.lower(joker.name), '%s', '_') -- Removes spaces and uppercase letters
+
+    -- Rarity conversion
+    if joker.rarity == 'Common' then
+        joker.rarity = 1
+    elseif joker.rarity == 'Uncommon' then
+        joker.rarity = 2
+    elseif joker.rarity == 'Rare' then
+        joker.rarity = 3
+    elseif joker.rarity == 'Legendary' then
+        joker.rarity = 4
+    end
+
+    -- Soul sprite
+	if joker.rarity == 'Legendary' then
+		joker.soul = joker.pos -- Calculates coordinates based on the position variable
+	end
+
+    -- Config values
+    if joker.vars == nil then joker.vars = {} end
+    joker.config = {extra = {}}
+    for _, kv_pair in ipairs(joker.vars) do
+        -- kv_pair is {a = 1}
+        local k, v = next(kv_pair)
+        joker.config.extra[k] = v
+    end
+
+    -- Joker creation
+    SMODS.Joker{
+        name = joker.name,
+        key = key,
+
+        atlas = joker.atlas or atlas,
+        pos = joker.pos,
+        soul_pos = joker.soul,
+
+        rarity = joker.rarity,
+        cost = joker.cost,
+
+        unlocked = joker.unlocked,
+        check_for_unlock = joker.check_for_unlock,
+        unlock_condition = joker.unlock_condition,
+        discovered = false,
+
+        blueprint_compat = joker.blueprint,
+        eternal_compat = joker.eternal,
+        perishable_compat = joker.perishable,
+
+        loc_txt = joker.loc_txt,
+        process_loc_text = joker.process_loc_text,
+
+        config = joker.custom_config or joker.config,
+        loc_vars = joker.custom_vars or function(self, info_queue, card)
+
+            -- Localization values
+            local vars = {}
+
+            for _, kv_pair in ipairs(joker.vars) do
+                -- kv_pair is {a = 1}
+                local k, v = next(kv_pair)
+                -- k is `a`, v is `1`
+                table.insert(vars, card.ability.extra[k])
+            end
+
+            return {vars = vars}
+        end,
+
+        calculate = joker.calculate,
+        update = joker.update,
+        remove_from_deck = joker.remove,
+        add_to_deck = joker.add,
+        set_ability = joker.set_ability,
+        set_sprites = joker.set_sprites,
+        load = joker.load,
+        in_pool = joker.custom_in_pool or pool,
+
+        effect = joker.effect
+	}
+end
+
+---- Dictionary wrapper
+
+function showdown.process_loc_text()
+    SMODS.process_loc_text(G.localization.descriptions.Other, 'counterpart_ranks', loc.counterpart_ranks)
+    G.P_CENTERS['counterpart_ranks'] = {key = 'counterpart_ranks', set = 'Other'}
+end
+
 ---- Mod Icon
 
-SMODS.Atlas({key = "showdown_modicon", path = "Mod_icon.png", px = 36, py = 36})
+SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
 ---- Deck Skin
 
@@ -116,11 +244,15 @@ SMODS.Atlas({key = "showdown_decks", path = "Decks.png", px = 71, py = 95})
 SMODS.Back{ -- Counterpart Deck
 	name = "Counterpart Deck",
 	key = "counterpart",
-	atlas = "showdown_decks",
-	pos = coordinate(1),
+	--atlas = "showdown_decks",
+	atlas = "showdown_placeholders",
+	--pos = coordinate(1),
+	pos = coordinate(15, 5),
 	loc_txt = loc.counterpart,
 	config = {counterpart_replacing = true},
-	loc_vars = function(self) return {vars = {self.config.counterpart_replacing}} end
+	loc_vars = function(self)
+		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
+	end
 }
 
 ---- Counterpart Cards
@@ -135,10 +267,7 @@ SMODS.Rank({ -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.two_half, 'name')
-		--SMODS.process_loc_text(G.localization.misc.labels, self.key, loc.two_half, 'label')
-	end,
+	loc_txt = loc.two_half,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards'
 }) -- id: 15
@@ -274,7 +403,10 @@ SMODS.Consumable({ -- The Reflection
 	atlas = 'showdown_tarots',
 	loc_txt = loc.reflection,
 	config = {max_highlighted = 2},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	loc_vars = function(self, info_queue)
+		info_queue[#info_queue+1] = { key = 'my_mod_example_text', set = 'Other' }
+		return {vars = {self.config.max_highlighted}}
+	end,
     pos = coordinate(1),
 	can_use = function(self)
 		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
@@ -412,8 +544,7 @@ SMODS.Consumable({ -- Vision
 	loc_txt = loc.vision,
     pos = coordinate(2),
 	can_use = function()
-		-- if hand contains card
-        return true
+		return #G.hand.cards and #G.hand.cards >= 1
     end,
     use = function()
 		print("Vision card is used")
@@ -446,13 +577,36 @@ SMODS.Consumable({ -- Constant
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.constant,
     pos = coordinate(1),
-	can_use = function()
-        -- idk
-        return true
+	config = {max_highlighted = 1},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	can_use = function(self)
+        return G.hand and #G.hand.highlighted == self.config.max_highlighted and #G.hand.cards >= 2
     end,
     use = function()
-		print("Constant card is used")
-        -- idk
+		local card = G.hand.highlighted[1]
+		local rank = card:get_id()
+		local toEnhance = {}
+		for i=1, #G.hand.cards do
+			local iCard = G.hand.cards[i]
+			if
+				iCard ~= card
+				and iCard:get_id() == rank
+				--and iCard.ability.effect == "Base"
+			then
+				toEnhance[#toEnhance+1] = iCard
+			end
+		end
+		event({trigger = 'after', delay = 0.1, func = function() card:start_dissolve() return true end })
+        delay(0.2)
+		for i=1, #toEnhance do flipCard(toEnhance[i], i, #toEnhance) end
+        delay(0.2)
+		local cen_pool = getEnhancements()
+		for i=1, #toEnhance do
+            event({trigger = 'after', delay = 0.1, func = function()
+				toEnhance[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true)
+            return true end })
+        end
+		for i=1, #toEnhance do unflipCard(toEnhance[i], i, #toEnhance) end
     end
 })
 
@@ -481,10 +635,7 @@ SMODS.Consumable({ -- Function
 	config = {max_highlighted = 4, toDestroy = 1},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
 	can_use = function(self)
-        if G.hand and #G.hand.highlighted == self.config.max_highlighted then
-            return true
-        end
-        return false
+        return G.hand and #G.hand.highlighted == self.config.max_highlighted
     end,
     use = function(self)
 		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i) end
@@ -584,6 +735,30 @@ SMODS.Consumable({ -- Probability
 				if G.hand.highlighted ~= nil and (pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
                 	G.hand.highlighted[i]:start_dissolve(nil, first_dissolved)
 					first_dissolved = false
+					local joker = G.jokers.cards[1]
+					for k, v in pairs(joker.ability) do
+						if
+							(type(v) == "number" or type(v) == "table")
+							and not (k == "id")
+							and not (k == "colour")
+							and not (k == "suit_nominal")
+							and not (k == "base_nominal")
+							and not (k == "face_nominal")
+							and not (k == "qty")
+							and not ((k == "x_mult" or k == "Xmult") and v == 1 and not joker.ability.override_x_mult_check)
+							and not (k == "selected_d6_face")
+						then
+							if type(v) == "table" then
+								print(tprint(v))
+								for kk, vv in pairs(v) do
+									if type(vv) == "number" then
+										print(kk..": "..vv)
+										v[kk] = vv * 1.25
+									end
+								end
+							elseif not ((k == "x_mult" or k == "Xmult") and v == 1) then joker.ability[k] = v * 1.25 end
+						end
+					end
 				end
             return true end })
         end
@@ -738,13 +913,77 @@ end
 
 ---- Jokers
 
---SMODS.Atlas({key = "showdown_jokers", path = "Ranks/Cards.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
 
-SMODS.Joker({
-	key = 'Pinpoint',
-	rarity = 2,
-	--atlas = 'showdown_jokers',
-	loc_txt = loc.pinpoint,
+SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
+
+local function debuffedCard(card) return { message = localize('k_debuffed'), colour = G.C.RED, card = card, } end
+
+create_joker({ -- Crouton
+    name = 'Crouton', loc_txt = loc.crouton,
+	atlas = "showdown_jokers", pos = coordinate(1), soul = coordinate(2),
+    vars = {{x_mult = 1.2}},
+    rarity = 'Legendary', --cost = 5,
+    blueprint = true, eternal = true, perishable = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    calculate = function(self, card, context)
+        if
+			context.individual
+			and context.cardarea == G.hand
+			and context.other_card
+			and not context.before
+			and not context.after
+		then
+			if context.other_card.debuff then return debuffedCard(card)
+			else
+				return {
+					x_mult = card.ability.extra.x_mult,
+					card = card
+				}
+			end
+        end
+    end
+})
+
+create_joker({ -- Pinpoint
+    name = 'Pinpoint', loc_txt = loc.pinpoint,
+	pos = coordinate(3),
+    vars = {{x_chips = 1.5}},
+    rarity = 'Rare', --cost = 5,
+    blueprint = true, eternal = true, perishable = true,
+	unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'hand_contents' then
+            local zero = 0
+            for j = 1, #args.cards do
+                if args.cards[j].base.value == "showdown_Zero" then
+                    zero = zero + 1
+                end
+            end
+            if zero >= 5 then
+                unlock_card(self)
+            end
+        end
+    end,
+    calculate = function(self, card, context)
+        if
+			context.individual
+			and context.cardarea == G.hand
+			and context.other_card
+			and context.other_card.base.value == "showdown_Zero"
+			and not context.before
+			and not context.after
+		then
+			if context.other_card.debuff then return debuffedCard(card)
+			else
+				return {
+					x_chips = card.ability.extra.x_chips,
+					card = card
+				}
+			end
+        end
+    end
 })
 
 if (SMODS.Mods["Bunco"] or {}).can_load then

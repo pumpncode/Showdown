@@ -26,7 +26,7 @@ SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsH
 
 ---- Consumables
 
---Tarot
+-- Tarot
 
 SMODS.Atlas({key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95})
 

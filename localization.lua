@@ -5,19 +5,19 @@ return  {
             ['text'] = {
                 [1] = 'All faces, 8s, 5s and',
                 [2] = '2s are replaced',
-                [3] = 'by their {C:counterpart_ranks}counterpart{}',
+                [3] = 'by their {C:counterpart_ranks,T:counterpart_ranks}counterpart{}',
                 [4] = 'Aces are replaced by 0s',
             }
         }
     },
 
-    counterpart_cards = {
+    counterpart_ranks = {
         ['en-us'] = {
-            ['name'] = 'Counterpart cards',
+            ['name'] = 'Counterparts',
             ['text'] = {
-                [1] = 'Cards with rank',
-                [2] = '2.5, 5.5, 8.5,',
-                [3] = 'Butler, Princess and Lord',
+                [1] = 'Cards with rank 2.5,',
+                [2] = '5.5, 8.5, Butler,',
+                [3] = 'Princess and Lord',
             }
         }
     },
@@ -114,7 +114,7 @@ return  {
             ['text'] = {
                 [1] = "Creates up to {C:attention}#1#",
                 [2] = "random {C:showdown_mathematic}Mathematic{} card",
-                [3] = "{C:inactive}(Must have room)",
+                [3] = "{C:inactive}(Must have room){}",
             }
         }
     },
@@ -160,7 +160,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Constant',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select {C:attention}#1#{} card that will get {C:attention}destroyed{}',
+                [2] = 'All cards with {C:attention}equal{} rank will get',
+                [3] = 'random {C:attention}enhancements{}',
             }
         }
     },
@@ -168,7 +170,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Variable',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
+                [2] = 'and creates a {C:attention}joker{} based on {C:attention}ranks{} and',
+                [3] = '{C:attention}amount{} of cards destroyed',
             }
         }
     },
@@ -199,6 +203,7 @@ return  {
                 [1] = 'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
                 [2] = 'For each destroyed card, {C:attention}one{} future booster',
                 [3] = 'will have an {C:attention}additional choice{}',
+                [4] = '{C:inactive}(currently {C:attention}#2#{C:inactive} boosters){}',
             }
         }
     },
@@ -234,11 +239,16 @@ return  {
             }
         }
     },
-    theorem = {
+
+    -- Unique (Requires Cryptid)
+
+    strange = {
         ['en-us'] = {
-            ['name'] = 'Theorem',
+            ['name'] = 'Strange Thing',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'Creates a {C:attention}special joker{}',
+                [2] = 'with a random value',
+                [3] = 'from {C:attention}#1#{} to {C:attention}#2#{}',
             }
         }
     },
@@ -350,12 +360,12 @@ return  {
         ['en-us'] = {
             ['name'] = 'Pinpoint',
             ['text'] = {
-                [1] = '{X:chips,C:white}x1.5{} Chips for each 0 in hand',
+                [1] = '{X:chips,C:white}x#1#{} Chips for each {C:attention}0{} in hand',
             },
             ['unlock'] = {
                 [1] = 'Play a {C:attention}Five of a Kind{}',
                 [2] = 'that contains only',
-                [3] = '{C:attention,E:1}#1#{} cards',
+                [3] = '{C:attention}0{} cards',
             }
         }
     },
@@ -377,8 +387,22 @@ return  {
         ['en-us'] = {
             ['name'] = 'Crouton',
             ['text'] = {
-                [1] = '{X:mult,C:white}x1.15{} for each',
+                [1] = '{X:mult,C:white}x#1#{} for each',
                 [2] = 'card held in hand',
+            },
+            ['unlock'] = {
+                [1] = '{E:1,s:1.3}?????'
+            }
+        }
+    },
+    infection = { -- Requires Cryptid
+        ['en-us'] = {
+            ['name'] = 'Infection',
+            ['text'] = {
+                [1] = '{C:attention}x#1#{} mult, {C:red}self-destruct{}',
+                [2] = 'future cards in shop and boosters can be {C:attention}replaced{}',
+                [3] = 'by {C:attention}Strange Thing{}',
+                [4] = 'future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
             }
         }
     },
