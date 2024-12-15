@@ -4,7 +4,7 @@ local loc = filesystem.load(showdown.path..'localization.lua')()
 
 ---- Functions
 
-local function get_coordinates(position, width)
+function get_coordinates(position, width)
     if width == nil then width = 10 end
     return {x = (position) % width, y = math.floor((position) / width)}
 end
@@ -13,16 +13,16 @@ end
 ---@param position integer
 ---@param width integer|nil
 ---@return table
-local function coordinate(position, width)
+function coordinate(position, width)
     return get_coordinates(position - 1, width)
 end
 
-local function modCompatibility(modName, filePath)
+function modCompatibility(modName, filePath)
 	print("Showdown compatibility: "..modName.." is loaded!")
 	filesystem.load(showdown.path..filePath)()
 end
 
-local function event(config)
+function event(config)
     local e = Event(config)
     G.E_MANAGER:add_event(e)
     return e
@@ -32,7 +32,7 @@ end
 ---@param e any
 ---@param t table
 ---@return integer|nil
-local function findInTable(e, t)
+function findInTable(e, t)
 	for k, v in pairs(t) do
 		if v == e then return k end
 	end
@@ -41,10 +41,11 @@ end
 ---Gives the list of all enhancements
 ---@param blacklist table|nil Enhancements that cannot be selected
 ---@return table
-local function getEnhancements(blacklist)
+function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
 	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+		print(v.key)
 		if not findInTable(v.key, blacklist) then
 			cen_pool[#cen_pool+1] = v
 		end
@@ -52,34 +53,10 @@ local function getEnhancements(blacklist)
 	return cen_pool
 end
 
----Gives the closest value joker to the specified number, starting from the specified side
----@param order string|nil left by default or if something else
----@param number integer|nil 1 by default or if inferior
----@return table|nil joker
-local function getValueJoker(order, number)
-	if (not number) or number < 1 then number = 1 end
-	if (not order) or order ~= "right" then order = "left" end
-	local joker = nil
-	if order == "left" then
-		for i = #G.jokers.cards, 1, -1 do
-			if not Card.no(G.jokers.cards[i], "immune_to_chemach", true) and not Card.no(G.jokers.cards[i], "immutable", true) then
-				joker = G.jokers.cards[i]
-			end
-		end
-	elseif order == "right" then
-		for i = 1, #G.jokers.cards do
-			if not Card.no(G.jokers.cards[i], "immune_to_chemach", true) and not Card.no(G.jokers.cards[i], "immutable", true) then
-				joker = G.jokers.cards[i]
-			end
-		end
-	end
-	return joker
-end
-
 ---Gives the content of a table (if table is to big, Balatro can crash)
 ---@param tbl table
 ---@param indent integer|nil
-local function tprint(tbl, indent)
+function tprint(tbl, indent)
 	if not indent then indent = 0 end
 	local toprint = string.rep(" ", indent) .. "{\r\n"
 	indent = indent + 2
@@ -104,7 +81,7 @@ local function tprint(tbl, indent)
 	return toprint
 end
 
-local function flipCard(card, i, setSize)
+function flipCard(card, i, setSize)
 	if not card then return end
 	if not i then i = 1 end
 	local percent = 1.15 - (i-0.999)/(setSize-0.998)*0.3
@@ -113,7 +90,7 @@ local function flipCard(card, i, setSize)
 	return true end })
 end
 
-local function unflipCard(card, i, setSize)
+function unflipCard(card, i, setSize)
 	if not card then return end
 	if not i then i = 1 end
 	local percent = 0.85 + ( i - 0.999 ) / ( setSize - 0.998 ) * 0.3
@@ -122,7 +99,7 @@ local function unflipCard(card, i, setSize)
 	return true end })
 end
 
-local function create_joker(joker) -- Thanks Bunco
+function create_joker(joker) -- Thanks Bunco
 	-- Sprite atlas
     local atlas
 	if not joker.atlas then 
@@ -223,32 +200,33 @@ SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
 ---- Deck Skin
 
-SMODS.Atlas({key = "showdown_deck_skin", path = "DeckSkins/test.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_deck_skinhc", path = "DeckSkins/testhc.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_jean_paul", path = "DeckSkins/jean_paul.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png", px = 71, py = 95})
 
 SMODS.DeckSkin({
-	key = "test_skin",
-	suit = "Hearts",
+	key = "JeanPaul",
+	suit = "Clubs",
 	ranks = {
-		"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"
+		"Jack", "Queen", "King"
 	},
-	lc_atlas = "showdown_deck_skin",
-	hc_atlas = "showdown_deck_skinhc",
-	loc_txt = { ['en-us'] = "test" }
+	lc_atlas = "showdown_jean_paul",
+	hc_atlas = "showdown_jean_paul_hc",
+	loc_txt = loc.jean_paul,
+	posStyle = 'collab'
 })
 
 ---- Decks
 
 SMODS.Atlas({key = "showdown_decks", path = "Decks.png", px = 71, py = 95})
 
-SMODS.Back{ -- Counterpart Deck
-	name = "Counterpart Deck",
-	key = "counterpart",
+SMODS.Back{ -- Mirror Deck
+	name = "Mirror Deck",
+	key = "Mirror",
 	--atlas = "showdown_decks",
 	atlas = "showdown_placeholders",
 	--pos = coordinate(1),
 	pos = coordinate(15, 5),
-	loc_txt = loc.counterpart,
+	loc_txt = loc.mirror_deck,
 	config = {counterpart_replacing = true},
 	loc_vars = function(self)
 		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
@@ -259,6 +237,32 @@ SMODS.Back{ -- Counterpart Deck
 
 SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95})
+
+local baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
+extraSuits = {}
+
+local function inject_p_card_suit_compat(suit, rank)
+	local card = {
+		name = rank.key .. ' of ' .. suit.key,
+		value = rank.key,
+		suit = suit.key,
+		pos = { x = rank.pos.x, y = rank.suit_map[suit.key] or suit.pos.y },
+		lc_atlas = rank.suit_map[suit.key] and rank.lc_atlas or suit.lc_atlas,
+		hc_atlas = rank.suit_map[suit.key] and rank.hc_atlas or suit.hc_atlas,
+	}
+	if not findInTable(card.suit, baseSuits) then
+		if not extraSuits[card.suit] then
+			card.lc_atlas = 'showdown_unknownSuit'
+			card.hc_atlas = 'showdown_unknownSuit'
+			card.pos = {x = 0, y = 0}
+		else
+			card.lc_atlas = extraSuits[card.suit].lc_atlas
+			card.hc_atlas = extraSuits[card.suit].hc_atlas
+		end
+	end
+	G.P_CARDS[suit.card_key .. '_' .. rank.card_key] = card
+end
 
 SMODS.Rank({ -- 2.5 Card
 	key = '2.5',
@@ -267,10 +271,22 @@ SMODS.Rank({ -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
+	max_id = {
+		value = -3,
+	},
 	loc_txt = loc.two_half,
+	process_loc_text = function(self)
+		SMODS.process_loc_text(G.localization.misc.ranks, self.key, self.loc_txt, 'name')
+		--SMODS.process_loc_text(G.localization.descriptions.Other[self.set], self.key, self.loc_txt, 'label')
+	end,
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 15
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -2
 
 SMODS.Rank({ -- 5.5 Card
 	key = '5.5',
@@ -279,12 +295,18 @@ SMODS.Rank({ -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.five_half, 'name')
-	end,
+	loc_txt = loc.five_half,
+	max_id = {
+		value = -6,
+	},
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 16
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -5
 
 SMODS.Rank({ -- 8.5 Card
 	key = '8.5',
@@ -293,12 +315,18 @@ SMODS.Rank({ -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.eight_half, 'name')
-	end,
+	loc_txt = loc.eight_half,
+	max_id = {
+		value = -9,
+	},
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 17
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -8
 
 SMODS.Rank({ -- Butler Card
 	key = 'Butler',
@@ -309,12 +337,18 @@ SMODS.Rank({ -- Butler Card
 	face_nominal = 0.1,
 	next = { 'showdown_Princess', 'Queen' },
 	face = true,
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.butler, 'name')
-	end,
+	loc_txt = loc.butler,
+	max_id = {
+		value = -12,
+	},
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 18
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -11
 
 SMODS.Rank({ -- Princess Card
 	key = 'Princess',
@@ -325,12 +359,18 @@ SMODS.Rank({ -- Princess Card
 	face_nominal = 0.2,
 	next = { 'showdown_Lord', 'King' },
 	face = true,
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.princess, 'name')
-	end,
+	loc_txt = loc.princess,
+	max_id = {
+		value = -13,
+	},
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 19
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -12
 
 SMODS.Rank({ -- Lord Card
 	key = 'Lord',
@@ -341,12 +381,18 @@ SMODS.Rank({ -- Lord Card
 	face_nominal = 0.3,
 	next = { 'Ace' },
 	face = true,
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.lord, 'name')
-	end,
+	loc_txt = loc.lord,
+	max_id = {
+		value = -14,
+	},
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 20
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: -13
 
 SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card)
 	key = 'Zero',
@@ -355,21 +401,25 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 	pos = { x = 6 },
 	nominal = 0,
 	next = { 'Ace' },
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, loc.zero, 'name')
-	end,
+	loc_txt = loc.zero,
 	suit_map = {
 		Hearts = 0,
 		Clubs = 0,
 		Diamonds = 0,
 		Spades = 0,
-		bunco_Halberds = 0,
-		bunco_Fleurons = 0,
+	},
+	max_id = {
+		value = -1,
 	},
 	straight_edge = true,
 	hc_atlas = 'showdown_cardsHC',
-	lc_atlas = 'showdown_cards'
-}) -- id: 1
+	lc_atlas = 'showdown_cards',
+	inject = function(self)
+		for _, suit in pairs(SMODS.Suits) do
+			inject_p_card_suit_compat(suit, self)
+		end
+	end,
+}) -- id: 0
 
 -- These are for making straights with counterparts and normal cards
 table.insert(SMODS.Ranks["Ace"].next, "showdown_2.5")
@@ -380,7 +430,37 @@ table.insert(SMODS.Ranks["Jack"].next, "showdown_Princess")
 table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 --
 
---SMODS.Card.take_ownership()
+function SMODS.is_counterpart(card)
+	return card.base.value < 0
+end
+
+SMODS.Consumable:take_ownership('lovers', {
+	can_use = function(self, card, area, copier)
+		if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
+			for j=1, #G.hand.highlighted do
+				if G.hand.highlighted[j].base.value == 'showdown_Zero' then return false end
+			end
+			return true
+		end
+		return false
+	end,
+})
+
+local suit_tarot = {'star', 'moon', 'sun', 'world'}
+
+for i=1, #suit_tarot do
+	SMODS.Consumable:take_ownership(suit_tarot[i], {
+		can_use = function(self, card, area, copier)
+			if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
+				for j=1, #G.hand.highlighted do
+					if G.hand.highlighted[j].base.value == 'showdown_Zero' then return false end
+				end
+				return true
+			end
+			return false
+		end,
+	})
+end
 
 ---- Consumables
 
@@ -404,7 +484,7 @@ SMODS.Consumable({ -- The Reflection
 	loc_txt = loc.reflection,
 	config = {max_highlighted = 2},
 	loc_vars = function(self, info_queue)
-		info_queue[#info_queue+1] = { key = 'my_mod_example_text', set = 'Other' }
+		info_queue[#info_queue+1] = { key = 'counterpart_ranks', set = 'Other' }
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(1),
@@ -503,6 +583,46 @@ SMODS.Consumable({ -- The Genie
     end
 })
 
+SMODS.Consumable({ -- The Lost
+	key = 'Lost',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	loc_txt = loc.lost,
+	config = { max_highlighted = 2, mod_conv = "showdown_Ghost" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.showdown_ghost
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(4),
+	can_use = function(self)
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end,--[[
+    use = function(self, card, area, copier)
+		print("The Lost is used")
+		-- enhance up to 2 cards into ghost cards
+    end]]
+})
+
+SMODS.Consumable({ -- The Angel
+	key = 'Angel',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	loc_txt = loc.angel,
+	config = { max_highlighted = 2, mod_conv = "showdown_Holy" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.showdown_holy
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(5),
+	can_use = function(self)
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end,--[[
+		use = function(self, card, area, copier)
+			print("The Angel is used")
+			-- enhance up to 2 cards into holy cards
+		end]]
+})
+
 -- Spectral
 
 SMODS.Atlas({key = "showdown_spectrals", path = "Consumables/Spectrals.png", px = 71, py = 95})
@@ -546,9 +666,29 @@ SMODS.Consumable({ -- Vision
 	can_use = function()
 		return #G.hand.cards and #G.hand.cards >= 1
     end,
-    use = function()
-		print("Vision card is used")
-        -- convert all cards in hand into their higher/equal counterpart and removes their enhancement, edition or seal
+    use = function(self)
+		for _, v in ipairs(SMODS.Rank.obj_buffer) do
+			print(v)
+			--local r = SMODS.Ranks[v]
+			--if r.face then table.insert(faces, r) end
+		end
+		local temp_hand = {}
+		for k, v in ipairs(G.hand.cards) do temp_hand[#temp_hand+1] = v end
+		for i=1, #G.hand.cards do flipCard(temp_hand[i], i, #G.hand.cards) end--[[
+		for i=1, #G.hand.cards do
+			local inte, fract = 0, 0
+			local rank = SMODS.Ranks[temp_hand[i].base.nominal]
+			while fract == 0 do
+				rank = SMODS.Ranks[findInTable(e, SMODS.Ranks) + 1]
+				nominal = rank.nominal
+				inte, fract = math.modf(nominal)
+			end
+			event({trigger = 'after', delay = 0.1, func = function()
+				assert(SMODS.change_base(temp_hand[i], nil, rank))
+			return true end })
+		end]]--
+		delay(0.2)
+		for i=1, #G.hand.cards do unflipCard(temp_hand[i], i, #G.hand.cards) end
     end
 })
 
@@ -559,8 +699,8 @@ SMODS.Atlas({key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', 
 
 SMODS.ConsumableType{
     key = 'Mathematic',
-    primary_colour = G.C.SHOWDOWN_MATHEMATIC,
-    secondary_colour = G.C.SHOWDOWN_MATHEMATIC_DARK,
+    primary_colour = G.C.SHOWDOWN_CALCULUS,
+    secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
     loc_txt = loc.mathematic,
     collection_rows = {4, 4}
 }
@@ -616,9 +756,10 @@ SMODS.Consumable({ -- Variable
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.variable,
     pos = coordinate(2),
-	can_use = function()
-        -- idk
-        return true
+	config = {max_highlighted = 5},
+    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+	can_use = function(self)
+        return #G.jokers.cards < G.jokers.config.card_limit and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,
     use = function()
 		print("Variable card is used")
@@ -710,6 +851,10 @@ SMODS.Consumable({ -- Vector
     end,
     use = function()
 		print("Vector card is used")
+		for i=1, #G.hand.highlighted do
+			print(G.hand.highlighted[i].base.value..": "..G.hand.highlighted[i].base.id.." | "..G.hand.highlighted[i]:get_id())
+		end
+		print(tprint(G.hand.highlighted[1].ability))
         -- idk
     end
 })
@@ -723,19 +868,19 @@ SMODS.Consumable({ -- Probability
 	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
 	can_use = function(self)
-        if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
+        if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 and #G.jokers.cards >= 1 then
             return true
         end
         return false
     end,
     use = function(self, card, area, copier)
 		local first_dissolved = true
+		local joker = G.jokers.cards[1]
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
 				if G.hand.highlighted ~= nil and (pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
                 	G.hand.highlighted[i]:start_dissolve(nil, first_dissolved)
 					first_dissolved = false
-					local joker = G.jokers.cards[1]
 					for k, v in pairs(joker.ability) do
 						if
 							(type(v) == "number" or type(v) == "table")
@@ -808,22 +953,59 @@ SMODS.Consumable({ -- Operation
         end
         return false
     end,
-    use = function()
+    use = function(self)
 		local card1 = G.hand.highlighted[1]
 		local card2 = G.hand.highlighted[2]
-		print("Operation card is used")
-        -- idk
+		event({trigger = 'after', delay = 0.1, func = function()
+			card1:start_dissolve(nil, true); card2:start_dissolve();
+		return true end })
+		delay(0.2)
+		event({trigger = 'after', delay = 0.7, func = function()
+			local function randomValue(value1, value2)
+				if not value1 then return value2
+				elseif not value2 then return value1
+				elseif pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+					return value1
+				else
+					return value2
+				end
+			end
+			local cardValues1 = {
+				ability = card1.ability,
+				edition = card1.edition,
+				seal = card1:get_seal()
+			}
+			local cardValues2 = {
+				ability = card2.ability,
+				edition = card2.edition, -- Done
+				seal = card2:get_seal() -- Done
+			}
+			local _rank = pseudorandom_element({'0', '2', '2.5', '3', '4', '5', '5.5', '6', '7', '8', '8.5', '9', 'T', 'J', 'B', 'Q', 'P', 'K', 'L', 'A'}, pseudoseed('showdown_Probability'))
+			local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('showdown_Probability'))
+			local center = G.P_CENTERS.c_base
+			---- This is horrendous
+			local enhancements = {}
+			for k, v in pairs(G.P_CENTERS) do if v.set == "Enhanced" then enhancements[v.name] = k end end
+			enhancements["Default Base"] = "c_base"
+			if enhancements[cardValues1.ability.name] == "Default Base" then center = G.P_CENTERS[enhancements[cardValues2.ability.name]]
+			elseif enhancements[cardValues2.ability.name] == "Default Base" then center = G.P_CENTERS[enhancements[cardValues1.ability.name]]
+			elseif pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+				center = G.P_CENTERS[enhancements[cardValues2.ability.name]]
+			else
+				center = G.P_CENTERS[enhancements[cardValues1.ability.name]]
+			end
+			----
+			local edition = randomValue(cardValues1.edition, cardValues2.edition)
+			local seal = randomValue(cardValues1.seal, cardValues2.seal)
+			local card = create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = center}, G.hand, true)
+			if edition then card:set_edition(edition) end
+			if seal then card:set_seal(seal) end
+			card:start_materialize()
+			playing_card_joker_effects(card)
+		return true end })
     end
 })
---[[
-SMODS.Consumable({ -- I HAVE TO DELETE THIS (this is for undiscovered sprite)
-	key = 'test2',
-	set = 'Mathematic',
-	atlas = 'showdown_mathematic',
-	loc_txt = loc.a,
-    pos = coordinate(9),
-})
-]]--
+
 ---- Vouchers
 
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
@@ -898,12 +1080,12 @@ for i = 1, 4 do
         create_card = function(self, card)
             return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'showdown_calculus')
         end,
-		--[[
+		
         ease_background_colour = function(self)
             ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
-            ease_background_colour{new_colour = G.C.RED, special_colour = G.C.BLACK, contrast = 2}
+            ease_background_colour{new_colour = G.C.SHOWDOWN_CALCULUS, special_colour = G.C.BLACK, contrast = 2}
         end,
-		]]--
+		
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
 
@@ -911,13 +1093,60 @@ for i = 1, 4 do
     }
 end
 
+---- Enhancements
+
+SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95})
+
+local function debuffedCard(card) return { message = localize('k_debuffed'), colour = G.C.RED, card = card, } end
+
+SMODS.Enhancement({
+	key = 'Ghost',
+	atlas = 'showdown_enhancements',
+	loc_txt = loc.ghost,
+	pos = coordinate(1),
+	--replace_base_card = true,
+	config = {extra = {x_mult = 1.25, x_chips = 1.25, shatter_chance = 8}},
+    loc_vars = function(self, info_queue, center) return {vars = {center.ability.extra.x_mult, center.ability.extra.x_chips, center.ability.extra.shatter_chance}} end,
+	calculate = function(self, card, context, effect)
+		if context.cardarea == G.play and not context.repetition then
+			effect.x_mult = card.ability.extra.x_mult
+			effect.x_chips = card.ability.extra.x_chips
+			if
+				pseudorandom("showdown_ghost") > G.GAME.probabilities.normal * (card.ability.extra.shatter_chance - 1) / card.ability.extra.shatter_chance
+				and not card.ability.eternal
+			then
+				card.will_shatter = true
+				G.E_MANAGER:add_event(Event({
+					trigger = "after", func = function()
+						card:shatter(); return true
+					end,
+				}))
+			end
+		end
+	end
+})
+
+SMODS.Enhancement({
+	key = 'Holy',
+	atlas = 'showdown_enhancements',
+	loc_txt = loc.holy,
+	pos = coordinate(2, 7),
+	--replace_base_card = true,
+	config = {extra = {x_mult = 1, x_mult_gain = 0.05}},
+    loc_vars = function(self, info_queue, center) return {vars = {center.ability.extra.x_mult, center.ability.extra.x_mult_gain}} end,
+	calculate = function(self, card, context, effect)
+		if context.cardarea == G.play and not context.repetition then
+			card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
+			effect.x_mult = card.ability.extra.x_mult
+		end
+	end
+})
+
 ---- Jokers
 
 SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
 
 SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
-
-local function debuffedCard(card) return { message = localize('k_debuffed'), colour = G.C.RED, card = card, } end
 
 create_joker({ -- Crouton
     name = 'Crouton', loc_txt = loc.crouton,
@@ -985,6 +1214,49 @@ create_joker({ -- Pinpoint
         end
     end
 })
+
+create_joker({ -- Math Teacher
+    name = 'MathTeacher', loc_txt = loc.mathTeacher,
+	--atlas = "showdown_jokers",
+	pos = coordinate(1),
+    vars = { extra = { chips = 0, chip_mod = 2.5 } },
+    custom_vars = function(self, info_queue, center)
+		return { vars = { center.ability.extra.chips, center.ability.extra.chip_mod } }
+	end,
+    rarity = 'Common', --cost = 5,
+    blueprint = true, eternal = true, perishable = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    calculate = function(self, card, context)
+		--[[if context.buying_card and not context.blueprint and not (context.card == card) then
+			card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
+			card_eval_status_text(
+				card,
+				"extra",
+				nil,
+				nil,
+				nil,
+				{
+					message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
+					colour = G.C.CHIPS,
+				}
+			)
+			return nil, true
+		end]]--
+		if
+			context.cardarea == G.jokers
+			and not context.before
+			and not context.after
+		then
+			return {
+				message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
+				chip_mod = card.ability.extra.chips,
+			}
+		end
+    end
+})
+
+---- Mod Compatibility
 
 if (SMODS.Mods["Bunco"] or {}).can_load then
 	modCompatibility("Bunco", "compat/buncoCompat.lua")

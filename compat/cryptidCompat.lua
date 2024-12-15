@@ -2,17 +2,6 @@ local showdown = SMODS.current_mod
 local filesystem = NFS or love.filesystem
 local loc = filesystem.load(showdown.path..'localization.lua')()
 
----- Functions
-
-local function get_coordinates(position, width)
-    if width == nil then width = 10 end
-    return {x = (position) % width, y = math.floor((position) / width)}
-end
-
-local function coordinate(position, width)
-    return get_coordinates(position - 1, width)
-end
-
 ---- Consumables
 
 -- Unique

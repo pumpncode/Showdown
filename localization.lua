@@ -1,13 +1,7 @@
 return  {
-    counterpart = {
+    dictionary = {
         ['en-us'] = {
-            ['name'] = 'Mirror Deck',
-            ['text'] = {
-                [1] = 'All faces, 8s, 5s and',
-                [2] = '2s are replaced',
-                [3] = 'by their {C:counterpart_ranks,T:counterpart_ranks}counterpart{}',
-                [4] = 'Aces are replaced by 0s',
-            }
+            mysterious_tarot = 'Tarot?',
         }
     },
 
@@ -18,6 +12,34 @@ return  {
                 [1] = 'Cards with rank 2.5,',
                 [2] = '5.5, 8.5, Butler,',
                 [3] = 'Princess and Lord',
+            }
+        }
+    },
+
+    ---- Decks Skins
+    
+    jean_paul = {
+        ['en-us'] = 'Jean-Paul'
+    },
+
+    ---- Decks
+    
+    mirror_deck = {
+        ['en-us'] = {
+            ['name'] = 'Mirror Deck',
+            ['text'] = {
+                [1] = 'All faces, 8s, 5s and',
+                [2] = '2s are replaced',
+                [3] = 'by their {C:counterpart_ranks,T:counterpart_ranks}counterpart{}',
+                [4] = 'Aces are replaced by 0s',
+            }
+        }
+    },
+    calculus_deck = {
+        ['en-us'] = {
+            ['name'] = 'Calculus Deck',
+            ['text'] = {
+                [1] = 'idk',
             }
         }
     },
@@ -118,6 +140,24 @@ return  {
             }
         }
     },
+    lost = {
+        ['en-us'] = {
+            ['name'] = 'The Lost',
+            ['text'] = {
+                [1] = "Enhances {C:attention}#1#{} selected card",
+                [2] = "into a {C:attention}Ghost Card{}"
+            }
+        }
+    },
+    angel = {
+        ['en-us'] = {
+            ['name'] = 'The Angel',
+            ['text'] = {
+                [1] = "Enhances {C:attention}#1#{} selected card",
+                [2] = "into a {C:attention}Holy Card{}"
+            }
+        }
+    },
     beast = { -- Requires Bunco
         ['en-us'] = {
             ['name'] = 'The Beast',
@@ -214,7 +254,7 @@ return  {
                 [1] = 'Select up to {C:attention}#1#{} cards, each card has',
                 [2] = 'a {C:green}1 in 3{} chance to be {C:attention}destroyed{}',
                 [3] = 'Each destroyed card {C:attention}multiply{} the values of',
-                [4] = 'the leftest joker by {X:attention,C:white}x#2#{}',
+                [4] = 'the leftest joker by {X:attention,C:white}X#2#{}',
             }
         }
     },
@@ -234,8 +274,7 @@ return  {
             ['text'] = {
                 [1] = 'Destroy {C:attention}#1#{} selected cards and create a card',
                 [2] = 'that {C:attention}inherit{} the modifiers of the destroyed cards',
-                [3] = 'The value of the card is either the {C:attention}addition{} or',
-                [4] = 'the {C:attention}substraction{} of the destroyed cards',
+                [3] = 'The {C:attention}rank{} and {C:attention}suit{} of the card is {C:attention}randomized{}',
             }
         }
     },
@@ -354,13 +393,36 @@ return  {
         }
     },
 
+    ---- Enhancements
+    
+    ghost = {
+        ['en-us'] = {
+            ['name'] = 'Ghost Card',
+            ['text'] = {
+                [1] = '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
+                [2] = '{C:green}1 in #3#{} chance to disappear',
+                [3] = 'after all scoring is finished',
+            }
+        }
+    },
+    holy = {
+        ['en-us'] = {
+            ['name'] = 'Holy Card',
+            ['text'] = {
+                [1] = '{X:mult,C:white}X#1#{} Mult',
+                [2] = 'Gains {X:mult,C:white}X#2#{} Mult',
+                [3] = 'when scored',
+            }
+        }
+    },
+
     ---- Jokers
 
     pinpoint = {
         ['en-us'] = {
             ['name'] = 'Pinpoint',
             ['text'] = {
-                [1] = '{X:chips,C:white}x#1#{} Chips for each {C:attention}0{} in hand',
+                [1] = '{X:chips,C:white}X#1#{} Chips for each {C:attention}0{} in hand',
             },
             ['unlock'] = {
                 [1] = 'Play a {C:attention}Five of a Kind{}',
@@ -373,7 +435,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Like Mother Like Daughter',
             ['text'] = {
-                [1] = '{X:mult,C:white}x#1#{} for each pair of',
+                [1] = '{X:mult,C:white}X#1#{} for each pair of',
                 [2] = 'Princess scored and Queen in hand',
             },
             ['unlock'] = {
@@ -387,7 +449,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Crouton',
             ['text'] = {
-                [1] = '{X:mult,C:white}x#1#{} for each',
+                [1] = '{X:mult,C:white}X#1#{} Mult for each',
                 [2] = 'card held in hand',
             },
             ['unlock'] = {
@@ -399,10 +461,25 @@ return  {
         ['en-us'] = {
             ['name'] = 'Infection',
             ['text'] = {
-                [1] = '{C:attention}x#1#{} mult, {C:red}self-destruct{}',
+                [1] = '{C:attention}X#1#{} mult, {C:red}self-destruct{}',
                 [2] = 'future cards in shop and boosters can be {C:attention}replaced{}',
                 [3] = 'by {C:attention}Strange Thing{}',
                 [4] = 'future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
+            }
+        }
+    },
+    mathTeacher = {
+        ['en-us'] = {
+            ['name'] = 'Math Teacher',
+            ['text'] = {
+                [1] = 'This Joker gains {C:chips}+#2#{} Chips',
+                [2] = 'for each {C:counterpart_ranks}counterpart{} card {C:attention}scored{}',
+                [3] = '{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)',
+            },
+            ['unlock'] = {
+                [1] = 'Play a {C:attention}Three of a Kind{}',
+                [2] = 'with only {C:counterpart_ranks}counterpart{}',
+                [3] = 'cards',
             }
         }
     },
