@@ -1,7 +1,3 @@
-local showdown = SMODS.current_mod
-local filesystem = NFS or love.filesystem
-local loc = filesystem.load(showdown.path..'localization.lua')()
-
 ---- Consumables
 
 -- Unique

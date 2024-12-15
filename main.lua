@@ -1,6 +1,6 @@
-local showdown = SMODS.current_mod
-local filesystem = NFS or love.filesystem
-local loc = filesystem.load(showdown.path..'localization.lua')()
+showdown = SMODS.current_mod
+filesystem = NFS or love.filesystem
+loc = filesystem.load(showdown.path..'localization.lua')()
 
 ---- Functions
 
@@ -126,7 +126,7 @@ function create_joker(joker) -- Thanks Bunco
 	end
 
     -- Config values
-    if joker.vars == nil then joker.vars = {} end
+    if not joker.vars then joker.vars = {} end
     joker.config = {extra = {}}
     for _, kv_pair in ipairs(joker.vars) do
         -- kv_pair is {a = 1}
@@ -185,6 +185,27 @@ function create_joker(joker) -- Thanks Bunco
 
         effect = joker.effect
 	}
+end
+
+function forced_message(message, card, color, delay, juice) -- Thanks Bunco
+    if delay == true then
+        delay = 0.7 * 1.25
+    elseif delay == nil then
+        delay = 0
+    end
+
+    event({trigger = 'before', delay = delay, func = function()
+
+        if juice then juice:juice_up(0.7) end
+
+        card_eval_status_text(
+            card,
+            'extra',
+            nil, nil, nil,
+            {message = message, colour = color, instant = true}
+        )
+        return true
+    end})
 end
 
 ---- Dictionary wrapper
@@ -431,7 +452,7 @@ table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 --
 
 function SMODS.is_counterpart(card)
-	return card.base.value < 0
+	return card.base.id < 0
 end
 
 SMODS.Consumable:take_ownership('lovers', {
@@ -1144,117 +1165,7 @@ SMODS.Enhancement({
 
 ---- Jokers
 
-SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
-
-SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
-
-create_joker({ -- Crouton
-    name = 'Crouton', loc_txt = loc.crouton,
-	atlas = "showdown_jokers", pos = coordinate(1), soul = coordinate(2),
-    vars = {{x_mult = 1.2}},
-    rarity = 'Legendary', --cost = 5,
-    blueprint = true, eternal = true, perishable = true,
-    unlocked = false,
-    unlock_condition = {hidden = true},
-    calculate = function(self, card, context)
-        if
-			context.individual
-			and context.cardarea == G.hand
-			and context.other_card
-			and not context.before
-			and not context.after
-		then
-			if context.other_card.debuff then return debuffedCard(card)
-			else
-				return {
-					x_mult = card.ability.extra.x_mult,
-					card = card
-				}
-			end
-        end
-    end
-})
-
-create_joker({ -- Pinpoint
-    name = 'Pinpoint', loc_txt = loc.pinpoint,
-	pos = coordinate(3),
-    vars = {{x_chips = 1.5}},
-    rarity = 'Rare', --cost = 5,
-    blueprint = true, eternal = true, perishable = true,
-	unlocked = false,
-    check_for_unlock = function(self, args)
-        if args.type == 'hand_contents' then
-            local zero = 0
-            for j = 1, #args.cards do
-                if args.cards[j].base.value == "showdown_Zero" then
-                    zero = zero + 1
-                end
-            end
-            if zero >= 5 then
-                unlock_card(self)
-            end
-        end
-    end,
-    calculate = function(self, card, context)
-        if
-			context.individual
-			and context.cardarea == G.hand
-			and context.other_card
-			and context.other_card.base.value == "showdown_Zero"
-			and not context.before
-			and not context.after
-		then
-			if context.other_card.debuff then return debuffedCard(card)
-			else
-				return {
-					x_chips = card.ability.extra.x_chips,
-					card = card
-				}
-			end
-        end
-    end
-})
-
-create_joker({ -- Math Teacher
-    name = 'MathTeacher', loc_txt = loc.mathTeacher,
-	--atlas = "showdown_jokers",
-	pos = coordinate(1),
-    vars = { extra = { chips = 0, chip_mod = 2.5 } },
-    custom_vars = function(self, info_queue, center)
-		return { vars = { center.ability.extra.chips, center.ability.extra.chip_mod } }
-	end,
-    rarity = 'Common', --cost = 5,
-    blueprint = true, eternal = true, perishable = true,
-    unlocked = false,
-    unlock_condition = {hidden = true},
-    calculate = function(self, card, context)
-		--[[if context.buying_card and not context.blueprint and not (context.card == card) then
-			card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
-			card_eval_status_text(
-				card,
-				"extra",
-				nil,
-				nil,
-				nil,
-				{
-					message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
-					colour = G.C.CHIPS,
-				}
-			)
-			return nil, true
-		end]]--
-		if
-			context.cardarea == G.jokers
-			and not context.before
-			and not context.after
-		then
-			return {
-				message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
-				chip_mod = card.ability.extra.chips,
-			}
-		end
-    end
-})
+filesystem.load(showdown.path.."jokers.lua")()
 
 ---- Mod Compatibility
 

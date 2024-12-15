@@ -473,13 +473,68 @@ return  {
             ['name'] = 'Math Teacher',
             ['text'] = {
                 [1] = 'This Joker gains {C:chips}+#2#{} Chips',
-                [2] = 'for each {C:counterpart_ranks}counterpart{} card {C:attention}scored{}',
+                [2] = 'for each {C:counterpart_ranks}counterpart{} card scored',
                 [3] = '{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)',
             },
             ['unlock'] = {
                 [1] = 'Play a {C:attention}Three of a Kind{}',
                 [2] = 'with only {C:counterpart_ranks}counterpart{}',
                 [3] = 'cards',
+            }
+        }
+    },
+    gruyere = {
+        ['en-us'] = {
+            ['name'] = 'Gruyère',
+            ['text'] = {
+                [1] = 'This Joker gains {C:mult}+#2#{} Mult',
+                [2] = 'for each {C:attention}0{} scored',
+                [3] = '{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)',
+            }
+        }
+    },
+    mirror = {
+        ['en-us'] = {
+            ['name'] = 'Mirror',
+            ['text'] = {
+                [1] = 'All {C:counterpart_ranks}counterpart{} and {C:attention}0{} card',
+                [2] = 'are {C:attention}retriggered{}',
+            }
+        }
+    },
+    billiard = {
+        ['en-us'] = {
+            ['name'] = 'Billiard',
+            ['text'] = {
+                [1] = '{C:attention}Retrigger{} cards next',
+                [2] = ' to{C:attention}0{}',
+            },
+            ['unlock'] = {
+                [1] = 'Trigger a {C:attention}0{}',
+                [2] = 'card {C:attention}5{} times',
+            }
+        }
+    },
+    crime_scene = {
+        ['en-us'] = {
+            ['name'] = 'Crime Scene',
+            ['text'] = {
+                [1] = 'This Joker gains {X:mult,C:white}X#2#{} Mult',
+                [2] = 'for each {C:attention}debuffed{} card scored',
+                [3] = '{C:inactive}(Currently {X:mult,C:white}X#1#{C:inactive} Mult)',
+            },
+            ['unlock'] = {
+                [1] = 'Play a hand with',
+                [2] = '{C:attention}5{} debuffed card',
+            }
+        }
+    },
+    ping_pong = {
+        ['en-us'] = {
+            ['name'] = 'Ping Pong',
+            ['text'] = {
+                [1] = 'Scored {C:attention}Aces{} becomes {C:attention}7s{}',
+                [2] = 'Scored {C:attention}7s{} becomes {C:attention}Aces{}',
             }
         }
     },
