@@ -5,7 +5,7 @@
 --SMODS.Atlas({key = "showdown_cryptidUnique", path = "CrossMod/Cryptid/Unique.png", px = 71, py = 95})
 
 SMODS.Consumable({ -- Strange Thing
-	key = 'Strange',
+	key = 'strange',
 	set = 'Unique',
 	atlas = 'showdown_placeholders',
 	loc_txt = loc.strange,
@@ -26,20 +26,20 @@ SMODS.Consumable({ -- Strange Thing
 SMODS.Atlas({key = "showdown_cryptidVouchers", path = "CrossMod/Cryptid/Vouchers.png", px = 71, py = 95})
 
 SMODS.Voucher({ -- Complex Numbers
-	key = 'Complex',
+	key = 'complex',
 	atlas = 'showdown_cryptidVouchers',
 	loc_txt = loc.complex,
     unlocked = true,
-    requires = {'showdown_Transcendant'},
+    requires = {'showdown_transcendant'},
 	pos = coordinate(1),
 })
 
 SMODS.Voucher({ -- Collatz Conjecture
-	key = 'Collatz',
+	key = 'collatz',
 	atlas = 'showdown_cryptidVouchers',
 	loc_txt = loc.collatz,
     unlocked = true,
-    requires = {'showdown_Axiom'},
+    requires = {'showdown_axiom'},
 	pos = coordinate(2, 1),
 })
 
@@ -48,7 +48,7 @@ SMODS.Voucher({ -- Collatz Conjecture
 --SMODS.Atlas({key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95})
 
 SMODS.Joker({
-	key = 'Infection',
+	key = 'infection',
 	rarity = 'cry_cursed',
 	atlas = 'showdown_placeholders',
 	pos = coordinate(9, 5),

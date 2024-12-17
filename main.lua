@@ -45,7 +45,6 @@ function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
 	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
-		print(v.key)
 		if not findInTable(v.key, blacklist) then
 			cen_pool[#cen_pool+1] = v
 		end
@@ -430,7 +429,7 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 		Spades = 0,
 	},
 	max_id = {
-		value = -1,
+		value = 0,
 	},
 	straight_edge = true,
 	hc_atlas = 'showdown_cardsHC',
@@ -440,7 +439,7 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: 0
+}) -- id: 1
 
 -- These are for making straights with counterparts and normal cards
 table.insert(SMODS.Ranks["Ace"].next, "showdown_2.5")
@@ -459,7 +458,7 @@ SMODS.Consumable:take_ownership('lovers', {
 	can_use = function(self, card, area, copier)
 		if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
 			for j=1, #G.hand.highlighted do
-				if G.hand.highlighted[j].base.value == 'showdown_Zero' then return false end
+				if G.hand.highlighted[j]:get_id() == 1 then return false end
 			end
 			return true
 		end
@@ -474,7 +473,7 @@ for i=1, #suit_tarot do
 		can_use = function(self, card, area, copier)
 			if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
 				for j=1, #G.hand.highlighted do
-					if G.hand.highlighted[j].base.value == 'showdown_Zero' then return false end
+					if G.hand.highlighted[j]:get_id() == 1 then return false end
 				end
 				return true
 			end
@@ -499,7 +498,7 @@ local counterparts = {
 }
 
 SMODS.Consumable({ -- The Reflection
-	key = 'Reflection',
+	key = 'reflection',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.reflection,
@@ -535,7 +534,7 @@ SMODS.Consumable({ -- The Reflection
 })
 
 SMODS.Consumable({ -- The Vessel
-	key = 'Vessel',
+	key = 'vessel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.vessel,
@@ -573,7 +572,7 @@ SMODS.Consumable({ -- The Vessel
 })
 
 SMODS.Consumable({ -- The Genie
-	key = 'Genie',
+	key = 'genie',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.genie,
@@ -605,43 +604,32 @@ SMODS.Consumable({ -- The Genie
 })
 
 SMODS.Consumable({ -- The Lost
-	key = 'Lost',
+	key = 'lost',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.lost,
-	config = { max_highlighted = 2, mod_conv = "showdown_Ghost" },
+	config = { max_highlighted = 2, mod_conv = "m_showdown_ghost" },
     loc_vars = function(self, info_queue)
-        info_queue[#info_queue+1] = G.P_CENTERS.showdown_ghost
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_ghost
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(4),
-	can_use = function(self)
-		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
-    end,--[[
-    use = function(self, card, area, copier)
-		print("The Lost is used")
-		-- enhance up to 2 cards into ghost cards
-    end]]
 })
 
 SMODS.Consumable({ -- The Angel
-	key = 'Angel',
+	key = 'angel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
 	loc_txt = loc.angel,
-	config = { max_highlighted = 2, mod_conv = "showdown_Holy" },
+	config = { max_highlighted = 2, mod_conv = "m_showdown_holy" },
     loc_vars = function(self, info_queue)
-        info_queue[#info_queue+1] = G.P_CENTERS.showdown_holy
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_holy
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(5),
 	can_use = function(self)
 		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
-    end,--[[
-		use = function(self, card, area, copier)
-			print("The Angel is used")
-			-- enhance up to 2 cards into holy cards
-		end]]
+    end
 })
 
 -- Spectral
@@ -649,7 +637,7 @@ SMODS.Consumable({ -- The Angel
 SMODS.Atlas({key = "showdown_spectrals", path = "Consumables/Spectrals.png", px = 71, py = 95})
 
 SMODS.Consumable({ -- Mist
-	key = 'Mist',
+	key = 'mist',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
 	loc_txt = loc.mist,
@@ -679,7 +667,7 @@ SMODS.Consumable({ -- Mist
 })
 
 SMODS.Consumable({ -- Vision
-	key = 'Vision',
+	key = 'vision',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
 	loc_txt = loc.vision,
@@ -733,7 +721,7 @@ SMODS.UndiscoveredSprite{
 }
 
 SMODS.Consumable({ -- Constant
-	key = 'Constant',
+	key = 'constant',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.constant,
@@ -772,7 +760,7 @@ SMODS.Consumable({ -- Constant
 })
 
 SMODS.Consumable({ -- Variable
-	key = 'Variable',
+	key = 'variable',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.variable,
@@ -789,7 +777,7 @@ SMODS.Consumable({ -- Variable
 })
 
 SMODS.Consumable({ -- Function
-	key = 'Function',
+	key = 'function',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.functio, -- no n because it fucks with lua
@@ -800,7 +788,7 @@ SMODS.Consumable({ -- Function
         return G.hand and #G.hand.highlighted == self.config.max_highlighted
     end,
     use = function(self)
-		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i) end
+		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
 		local cen_pool = getEnhancements()
 		for i=1, #G.hand.highlighted do
             event({trigger = 'after', delay = 0.1, func = function()
@@ -814,7 +802,7 @@ SMODS.Consumable({ -- Function
 				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
             return true end })
         end
-		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i) end
+		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
 		event({trigger = 'after', delay = 0.2, func = function()
             G.hand:unhighlight_all();
         return true end })
@@ -823,7 +811,7 @@ SMODS.Consumable({ -- Function
 })
 
 SMODS.Consumable({ -- Shape
-	key = 'Shape',
+	key = 'shape',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.shape,
@@ -857,7 +845,7 @@ SMODS.Consumable({ -- Shape
 })
 
 SMODS.Consumable({ -- Vector
-	key = 'Vector',
+	key = 'vector',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.vector,
@@ -881,7 +869,7 @@ SMODS.Consumable({ -- Vector
 })
 
 SMODS.Consumable({ -- Probability
-	key = 'Probability',
+	key = 'probability',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.probability,
@@ -899,7 +887,7 @@ SMODS.Consumable({ -- Probability
 		local joker = G.jokers.cards[1]
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				if G.hand.highlighted ~= nil and (pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
+				if G.hand.highlighted ~= nil and (pseudorandom("showdown_probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
                 	G.hand.highlighted[i]:start_dissolve(nil, first_dissolved)
 					first_dissolved = false
 					for k, v in pairs(joker.ability) do
@@ -932,7 +920,7 @@ SMODS.Consumable({ -- Probability
 })
 
 SMODS.Consumable({ -- Sequence
-	key = 'Sequence',
+	key = 'sequence',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.sequence,
@@ -961,7 +949,7 @@ SMODS.Consumable({ -- Sequence
 })
 
 SMODS.Consumable({ -- Operation
-	key = 'Operation',
+	key = 'operation',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.operation,
@@ -1032,7 +1020,7 @@ SMODS.Consumable({ -- Operation
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
 
 SMODS.Voucher({ -- Irrational Numbers
-	key = 'Irrational',
+	key = 'irrational',
 	atlas = 'showdown_vouchers',
 	loc_txt = loc.irrational,
     unlocked = false,
@@ -1043,11 +1031,11 @@ SMODS.Voucher({ -- Irrational Numbers
 })
 
 SMODS.Voucher({ -- Transcendant Numbers
-	key = 'Transcendant',
+	key = 'transcendant',
 	atlas = 'showdown_vouchers',
 	loc_txt = loc.transcendant,
     unlocked = false,
-    requires = {'showdown_Irrational'},
+    requires = {'showdown_irrational'},
 	pos = coordinate(3, 2),
 	check_for_unlock = function()
         -- if 10 counterpart cards in deck with one or more modifiers
@@ -1055,7 +1043,7 @@ SMODS.Voucher({ -- Transcendant Numbers
 })
 
 SMODS.Voucher({ -- Number Theory
-	key = 'Number',
+	key = 'number',
 	atlas = 'showdown_vouchers',
 	loc_txt = loc.numberTheory,
     unlocked = true,
@@ -1079,11 +1067,11 @@ SMODS.Voucher({ -- Number Theory
 })
 
 SMODS.Voucher({ -- Axiom of Infinity
-	key = 'Axiom',
+	key = 'axiom',
 	atlas = 'showdown_vouchers',
 	loc_txt = loc.axiomInfinity,
     unlocked = true,
-    requires = {'showdown_Number'},
+    requires = {'showdown_number'},
 	pos = coordinate(4, 2),
 })
 
@@ -1118,16 +1106,19 @@ end
 
 SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95})
 
-local function debuffedCard(card) return { message = localize('k_debuffed'), colour = G.C.RED, card = card, } end
-
 SMODS.Enhancement({
-	key = 'Ghost',
+	key = 'ghost',
 	atlas = 'showdown_enhancements',
 	loc_txt = loc.ghost,
 	pos = coordinate(1),
 	--replace_base_card = true,
 	config = {extra = {x_mult = 1.25, x_chips = 1.25, shatter_chance = 8}},
-    loc_vars = function(self, info_queue, center) return {vars = {center.ability.extra.x_mult, center.ability.extra.x_chips, center.ability.extra.shatter_chance}} end,
+    loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips, card.ability.extra.shatter_chance}}
+		end
+		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips, self.config.extra.shatter_chance}}
+	end,
 	calculate = function(self, card, context, effect)
 		if context.cardarea == G.play and not context.repetition then
 			effect.x_mult = card.ability.extra.x_mult
@@ -1148,13 +1139,18 @@ SMODS.Enhancement({
 })
 
 SMODS.Enhancement({
-	key = 'Holy',
+	key = 'holy',
 	atlas = 'showdown_enhancements',
 	loc_txt = loc.holy,
 	pos = coordinate(2, 7),
 	--replace_base_card = true,
 	config = {extra = {x_mult = 1, x_mult_gain = 0.05}},
-    loc_vars = function(self, info_queue, center) return {vars = {center.ability.extra.x_mult, center.ability.extra.x_mult_gain}} end,
+    loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_mult_gain}}
+		end
+		return {vars = {self.config.extra.x_mult, self.config.extra.x_mult_gain}}
+	end,
 	calculate = function(self, card, context, effect)
 		if context.cardarea == G.play and not context.repetition then
 			card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain

@@ -47,7 +47,7 @@ local randomCounterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "sho
 local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
 
 SMODS.Consumable({ -- The Beast
-	key = 'Beast',
+	key = 'beast',
 	set = 'Tarot',
 	atlas = 'showdown_buncoTarots',
 	loc_txt = loc.beast,

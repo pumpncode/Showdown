@@ -6,7 +6,7 @@ SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 
 ---- Jokers
 
 create_joker({ -- Crouton
-    name = 'Crouton', loc_txt = loc.crouton,
+    name = 'crouton', loc_txt = loc.crouton,
 	atlas = "showdown_jokers", pos = coordinate(1), soul = coordinate(2),
     vars = {{x_mult = 1.2}},
     rarity = 'Legendary', --cost = 5,
@@ -24,7 +24,7 @@ create_joker({ -- Crouton
 })
 
 create_joker({ -- Pinpoint
-    name = 'Pinpoint', loc_txt = loc.pinpoint,
+    name = 'pinpoint', loc_txt = loc.pinpoint,
 	pos = coordinate(3),
     vars = {{x_chips = 1.5}},
     rarity = 'Rare', --cost = 5,
@@ -34,7 +34,7 @@ create_joker({ -- Pinpoint
         if args.type == 'hand_contents' then
             local zero = 0
             for j = 1, #args.cards do
-                if args.cards[j].base.value == "showdown_Zero" then
+                if args.cards[j]:get_id() == 1 then
                     zero = zero + 1
                 end
             end
@@ -48,7 +48,7 @@ create_joker({ -- Pinpoint
 			context.individual
 			and context.cardarea == G.hand
 			and context.other_card
-			and context.other_card.base.value == "showdown_Zero"
+			and context.other_card:get_id() == 1
 			and not context.before
 			and not context.after
 		then
@@ -64,7 +64,7 @@ create_joker({ -- Pinpoint
 })
 
 create_joker({ -- Math Teacher
-    name = 'MathTeacher', loc_txt = loc.mathTeacher,
+    name = 'math_teacher', loc_txt = loc.mathTeacher,
 	--atlas = "showdown_jokers",
 	pos = coordinate(1),
     vars = {{chips = 0}, {chip_mod = 2.5}},
@@ -103,7 +103,7 @@ create_joker({ -- Math Teacher
 })
 
 create_joker({ -- Gruyère
-    name = 'Gruyere', loc_txt = loc.gruyere,
+    name = 'gruyere', loc_txt = loc.gruyere,
 	--atlas = "showdown_jokers",
 	pos = coordinate(1),
     vars = {{mult = 0}, {mult_mod = 2}},
@@ -113,7 +113,7 @@ create_joker({ -- Gruyère
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and context.other_card:get_id() == 0 then
+        if context.individual and context.cardarea == G.play and context.other_card:get_id() == 1 then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.MULT, true)
         end
@@ -127,7 +127,7 @@ create_joker({ -- Gruyère
 })
 
 create_joker({ -- Mirror
-    name = 'Mirror', loc_txt = loc.mirror,
+    name = 'mirror', loc_txt = loc.mirror,
 	--atlas = "showdown_jokers",
 	pos = coordinate(3),
     custom_config = {extra = {retrigger = 1}},
@@ -138,7 +138,7 @@ create_joker({ -- Mirror
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play then
-			if context.other_card.base.id <= 0 then
+			if context.other_card:get_id() == 1 or SMODS.is_counterpart(context.other_card) then
 				return {
 					message = localize("k_again_ex"),
 					repetitions = card.ability.extra.retrigger,
@@ -150,7 +150,7 @@ create_joker({ -- Mirror
 })
 --[[
 create_joker({ -- Billiard
-    name = 'Billiard', loc_txt = loc.billiard,
+    name = 'billiard', loc_txt = loc.billiard,
 	--atlas = "showdown_jokers",
 	pos = coordinate(3),
     custom_config = {extra = {retrigger = 1}},
@@ -185,7 +185,7 @@ create_joker({ -- Billiard
 })
 
 create_joker({ -- Crime Scene
-    name = 'CrimeScene', loc_txt = loc.crime_scene,
+    name = 'crime_scene', loc_txt = loc.crime_scene,
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     vars = {{x_mult = 1}, {x_mult_mod = 0.1}},
@@ -209,7 +209,7 @@ create_joker({ -- Crime Scene
 })
 ]]--
 create_joker({ -- Ping Pong
-    name = 'PingPong', loc_txt = loc.ping_pong,
+    name = 'ping_pong', loc_txt = loc.ping_pong,
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
