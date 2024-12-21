@@ -103,3 +103,14 @@ match_indent = true
 payload = '''
     return math.abs(self.base.id)
 '''
+
+# 0 cards counts in Even Steven scoring
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'context.other_card:get_id()%2 == 0'
+position = 'at'
+match_indent = true
+payload = '''
+    (context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
+'''

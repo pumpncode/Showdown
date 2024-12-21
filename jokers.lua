@@ -218,7 +218,6 @@ create_joker({ -- Ping Pong
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
             for i=1, #context.scoring_hand do
                 local _card = context.scoring_hand[i]
-                print(_card:get_id())
                 if _card:get_id() == 7 or _card:get_id() == 14 then
                     flipCard(_card, i, #context.scoring_hand)
                     delay(0.2)
@@ -231,6 +230,188 @@ create_joker({ -- Ping Pong
                     delay(0.2)
                 end
             end
+        end
+    end
+})
+
+create_joker({ -- Color Splash
+    name = 'color_splash', loc_txt = loc.color_splash,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        if args.type == 'hand_contents' then
+            local text,disp_text,poker_hands,scoring_hand,non_loc_disp_text = G.FUNCS.get_poker_hand_info(args.cards)
+            local suits = {}
+            for i = 1, #args.cards do
+                if not findInTable(args.cards[i], scoring_hand) and not findInTable(args.cards[i].base.suit, suits) then
+                    table.insert(suits, args.cards[i].base.suit)
+                end
+            end
+            if #suits >= 4 then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            for i=1, #G.play.cards do
+                local _card = G.play.cards[i]
+                if _card:get_id() ~= 1 and not findInTable(_card, context.scoring_hand) then
+                    flipCard(_card, i, #G.play.cards)
+                    delay(0.2)
+                    event({trigger = 'after', delay = 0.15, func = function()
+                        assert(SMODS.change_base(_card, baseSuits[math.random(#baseSuits)], nil)) -- Put modded suits but include Bunco's ones only if exotics are enabled
+                    return true end})
+                    unflipCard(_card, i, #G.play.cards)
+                    delay(0.6)
+                end
+            end
+        end
+    end
+})
+
+create_joker({ -- Blue
+    name = 'blue', loc_txt = loc.blue,
+    atlas = "showdown_jokers",
+    pos = coordinate(11),
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        if args.type == 'chip_score' then
+            if args.chips < 10 then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main then
+			return {
+				message = localize({ type = "variable", key = "a_chips", vars = { 1 } }),
+				chip_mod = 1,
+			}
+		end
+    end
+})
+
+create_joker({ -- Spotted Joker
+    name = 'spotted_joker', loc_txt = loc.spotted_joker,
+	atlas = "showdown_jokers",
+	pos = coordinate(12),
+    vars = {{chips = 0}, {chip_mod = 0.5}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.chips, card.ability.extra.chip_mod } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = false, eternal = true,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play then
+            if context.other_card:get_id() == 1 then
+                card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
+                return {
+                    message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
+                    chips = card.ability.extra.chips,
+                }
+            end
+        end
+    end
+})
+
+create_joker({ -- Golden Roulette
+    name = 'golden_roulette', loc_txt = loc.golden_roulette,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    vars = {{money = 6}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.money } }
+	end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = true, perishable = true, eternal = false,
+    calculate = function(self, card, context)
+        if context.end_of_round then
+            if pseudorandom('golden_roulette') < G.GAME.probabilities.normal / 6 then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        play_sound('tarot1')
+                        card.T.r = -0.2
+                        card:juice_up(0.3, 0.4)
+                        card.states.drag.is = true
+                        card.children.center.pinch.x = true
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                            func = function()
+                                    G.jokers:remove_card(card)
+                                    card:remove()
+                                    card = nil
+                                return true; end})) 
+                        return true
+                    end
+                }))
+                return {
+                    message = localize('k_extinct_ex')
+                }
+            else
+                ease_dollars(card.ability.extra.money)
+                return {
+                    message = localize('$')..card.ability.extra.money,
+                    colour = G.C.MONEY,
+                    delay = 0.45,
+                    card = card
+                }
+            end
+		end
+    end
+})
+
+create_joker({ -- Bacteria
+    name = 'bacteria', loc_txt = loc.bacteria,
+    --atlas = "showdown_jokers",
+    pos = coordinate(1),
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            local eval = evaluate_poker_hand(context.scoring_hand)
+            if next(eval['Flush']) then
+                local notZeros = {}
+                for i=1, #context.scoring_hand do
+                    local _card = context.scoring_hand[i]
+                    if _card:get_id() ~= 1 then table.insert(notZeros, _card) end
+                end
+                if #notZeros > 0 and #notZeros < #context.scoring_hand then
+                    local _card = notZeros[math.random(#notZeros)]
+                    flipCard(_card, nil, #context.scoring_hand)
+                    delay(0.2)
+                    event({trigger = 'after', delay = 0.15, func = function() assert(SMODS.change_base(_card, nil, 'showdown_Zero')); return true end})
+                    unflipCard(_card, nil, #context.scoring_hand)
+                    delay(0.6)
+                end
+            end
+        end
+    end
+})
+
+create_joker({ -- Empty Joker
+    name = 'empty_joker', loc_txt = loc.empty_joker,
+    atlas = "showdown_jokers",
+    pos = coordinate(15),
+    vars = {{mult = 12}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.mult } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            for i=1, #context.scoring_hand do
+                if context.scoring_hand[i]:get_id() == 1 then
+                    return {
+                        message = localize({ type = "variable", key = "a_mult", vars = { card.ability.extra.mult } }),
+                        mult_mod = card.ability.extra.mult,
+                    }
+                end
+            end
+            
         end
     end
 })

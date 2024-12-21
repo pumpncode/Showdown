@@ -259,7 +259,7 @@ SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95}
 SMODS.Atlas({key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95})
 
-local baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
+baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
 extraSuits = {}
 
 local function inject_p_card_suit_compat(suit, rank)
@@ -736,20 +736,20 @@ SMODS.Consumable({ -- Constant
 		local rank = card:get_id()
 		local toEnhance = {}
 		for i=1, #G.hand.cards do
-			local iCard = G.hand.cards[i]
+			local _card = G.hand.cards[i]
 			if
-				iCard ~= card
-				and iCard:get_id() == rank
-				--and iCard.ability.effect == "Base"
+				_card ~= card
+				and _card:get_id() == rank
+				--and _card.ability.effect == "Base"
 			then
-				toEnhance[#toEnhance+1] = iCard
+				toEnhance[#toEnhance+1] = _card
 			end
 		end
 		event({trigger = 'after', delay = 0.1, func = function() card:start_dissolve() return true end })
         delay(0.2)
 		for i=1, #toEnhance do flipCard(toEnhance[i], i, #toEnhance) end
         delay(0.2)
-		local cen_pool = getEnhancements()
+		local cen_pool = getEnhancements(rank == 1 and {"m_wild"} or {})
 		for i=1, #toEnhance do
             event({trigger = 'after', delay = 0.1, func = function()
 				toEnhance[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true)
@@ -790,9 +790,11 @@ SMODS.Consumable({ -- Function
     use = function(self)
 		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
 		local cen_pool = getEnhancements()
+		local cen_pool_zero = getEnhancements({"m_wild"})
 		for i=1, #G.hand.highlighted do
+			local _card = G.hand.highlighted[i]
             event({trigger = 'after', delay = 0.1, func = function()
-                G.hand.highlighted[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
+				_card:set_ability(pseudorandom_element(_card:get_id() == 1 and cen_pool_zero or cen_pool, pseudoseed('spe_card')), true);
             return true end })
         end
         delay(0.2)

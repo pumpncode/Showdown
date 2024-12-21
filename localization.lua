@@ -538,6 +538,69 @@ return  {
             }
         }
     },
+    color_splash = {
+        ['en-us'] = {
+            ['name'] = 'Color Splash',
+            ['text'] = {
+                [1] = 'Unscored card get',
+                [2] = 'a {C:attention}random{} suit',
+            },
+            ['unlock'] = {
+                [1] = 'Have 4 {C:attention}unscored{} card',
+                [2] = 'of {C:attention}different{} suits',
+            }
+        }
+    },
+    blue = {
+        ['en-us'] = {
+            ['name'] = 'Blue',
+            ['text'] = {
+                [1] = '{C:chips}+1{} Chip'
+            },
+            ['unlock'] = {
+                [1] = 'Score less than {C:attention}10{}',
+                [2] = 'chips in one hand',
+            }
+        }
+    },
+    spotted_joker = {
+        ['en-us'] = {
+            ['name'] = 'Spotted Joker',
+            ['text'] = {
+                [1] = 'Played {C:attention}0{} card gives {C:chips}+#1#{} Chips',
+                [2] = 'when scored and add',
+                [3] = '{C:chips}+#2#{} Chips to this joker',
+            }
+        }
+    },
+    golden_roulette = {
+        ['en-us'] = {
+            ['name'] = 'Golden Roulette',
+            ['text'] = {
+                [1] = 'Has a {C:green}5 in 6{} chance to give',
+                [2] = '{C:money}#1#${} at the end of each',
+                [3] = 'round, otherwise {C:red}self-destruct{}',
+            }
+        }
+    },
+    bacteria = {
+        ['en-us'] = {
+            ['name'] = 'Bacteria',
+            ['text'] = {
+                [1] = 'If hand contains a {C:attention}flush{} and',
+                [2] = '{C:attention}at least one 0{}, convert',
+                [3] = 'a {C:attention}non 0{} card to a {C:attention}0{}',
+            }
+        }
+    },
+    empty_joker = {
+        ['en-us'] = {
+            ['name'] = 'Empty Joker',
+            ['text'] = {
+                [1] = '{C:mult}+#1#{} if hand contains a {C:attention}0{}',
+            }
+        }
+    },
 
     ---- Misc
     
