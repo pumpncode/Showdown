@@ -18,7 +18,7 @@ function coordinate(position, width)
 end
 
 function modCompatibility(modName, filePath)
-	print("Showdown compatibility: "..modName.." is loaded!")
+	sendInfoMessage("Mod Compatibility: "..modName.." is loaded!", "Showdown")
 	filesystem.load(showdown.path..filePath)()
 end
 
@@ -286,6 +286,7 @@ local function inject_p_card_suit_compat(suit, rank)
 	}
 	if not findInTable(card.suit, baseSuits) then
 		if not extraSuits[card.suit] then
+			sendWarnMessage("Unknown suit for "..card.name, "Showdown")
 			card.lc_atlas = 'showdown_unknownSuit'
 			card.hc_atlas = 'showdown_unknownSuit'
 			card.pos = {x = 0, y = 0}
