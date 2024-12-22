@@ -207,7 +207,20 @@ function forced_message(message, card, color, delay, juice) -- Thanks Bunco
     end})
 end
 
----- Dictionary wrapper
+if not (SMODS.Mods["Paperback"] or {}).can_load then
+	local start_dissolve_ref = Card.start_dissolve
+	function Card:start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice) -- Thanks Paperback
+		if self.getting_sliced then
+			for i = 1, #G.jokers.cards do
+				G.jokers.cards[i]:calculate_joker({ destroying_cards = true, destroyed_card = self })
+			end
+		end
+
+		start_dissolve_ref(self, dissolve_colours, silent, dissolve_time_fac, no_juice)
+	end
+end
+
+-- Dictionary wrapper
 
 function showdown.process_loc_text()
     SMODS.process_loc_text(G.localization.descriptions.Other, 'counterpart_ranks', loc.counterpart_ranks)

@@ -601,6 +601,19 @@ return  {
             }
         }
     },
+    baby_jimbo = {
+        ['en-us'] = {
+            ['name'] = 'Baby Jimbo',
+            ['text'] = {
+                [1] = 'Creates a {C:dark_edition}Negative{} {C:spectral}Spectral{} card',
+                [2] = 'when a joker is {C:attention}destroyed{}',
+            },
+            ['unlock'] = {
+                [1] = 'Have {C:attention}two times{} your maximum',
+                [2] = 'amount of {C:attention}consumables{}',
+            }
+        }
+    },
 
     ---- Misc
     

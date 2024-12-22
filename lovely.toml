@@ -114,3 +114,29 @@ match_indent = true
 payload = '''
     (context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
 '''
+
+# Addition of removing_cards context
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.area then self.area:remove_card(self) end'
+position = 'before'
+match_indent = true
+payload = '''
+    if G.jokers and G.jokers.cards then
+        for i = 1, #G.jokers.cards do
+            G.jokers.cards[i]:calculate_joker({ removing_cards = true, destroyed_card = self })
+        end
+    end
+'''
+
+# This is for Baby Jimbo
+[[patches]]
+[patches.pattern]
+target = 'cardarea.lua'
+pattern = 'if self.cards[i] == card then'
+position = 'after'
+match_indent = true
+payload = '''
+    G.latest_area_baby_jimbo = self
+'''

@@ -415,3 +415,48 @@ create_joker({ -- Empty Joker
         end
     end
 })
+
+create_joker({ -- Baby Jimbo
+    name = 'baby_jimbo', loc_txt = loc.baby_jimbo,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        -- 2 times the maximum amount of consumables
+    end,
+    calculate = function(self, card, context)
+        if not context.blueprint
+            and (context.destroying_cards or context.removing_cards)
+            and context.destroyed_card
+            and context.destroyed_card ~= card
+            and context.destroyed_card.ability.set == "Joker"
+            and G.latest_area_baby_jimbo
+            and G.latest_area_baby_jimbo == G.jokers
+            and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit
+        then
+            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.0,
+                func = (function()
+                        local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'baby_jimbo')
+                        card:set_edition({negative = true}, true)
+                        card:add_to_deck()
+                        G.consumeables:emplace(card)
+                        G.GAME.consumeable_buffer = 0
+                        return true
+                    end
+                )
+            }))
+            G.latest_area_baby_jimbo = nil
+            return {
+                message = localize('k_plus_spectral'),
+                colour = G.C.SECONDARY_SET.Spectral,
+                card = self
+            }
+        end
+    end
+})
