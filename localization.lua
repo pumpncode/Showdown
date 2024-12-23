@@ -614,6 +614,93 @@ return  {
             }
         }
     },
+    parmesan = {
+        ['en-us'] = {
+            ['name'] = 'Parmesan',
+            ['text'] = {
+                [1] = 'Every played {C:attention}card{} permanently',
+                [2] = 'gains {C:chips}chips{} equal to the {C:attention}lowest{}',
+                [3] = 'played rank when scored',
+            }
+        }
+    },
+    chaos_card = {
+        ['en-us'] = {
+            ['name'] = 'Chaos Card',
+            ['text'] = {
+                [1] = 'After scoring, {C:attention}rank{} and {C:attention}suit{} of',
+                [2] = 'every scored card is {C:attention}randomized{}',
+            },
+            ['unlock'] = {
+                [1] = 'Play a {C:attention}Flush{}, a {C:attention}Straight{} and a',
+                [2] = '{C:attention}Five of a Kind{} in a single round',
+            }
+        }
+    },
+    sim_card = {
+        ['en-us'] = {
+            ['name'] = 'SIM Card',
+            ['text'] = {
+                [1] = '{C:counterpart_ranks}Counterpart{} ranks counts',
+                [2] = 'as {C:attention}every{} suit',
+            }
+        }
+    },
+    wall = {
+        ['en-us'] = {
+            ['name'] = 'Wall',
+            ['text'] = {
+                [1] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [2] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [3] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [4] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [5] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [6] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [7] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [8] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [9] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [10] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [11] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [12] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [13] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [14] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [15] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [16] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [17] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [18] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [19] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [20] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [21] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [22] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [23] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+            },
+            ['unlock'] = {
+                [1] = 'Beat {C:attention}The Wall{} in {C:attention}one{} hand',
+            }
+        }
+    },
+    one_doller = {
+        ['en-us'] = {
+            ['name'] = 'one doller',
+            ['text'] = {
+                [1] = 'Buying something let you keep',
+                [2] = '{C:money}1${} of the money you used',
+            },
+            ['unlock'] = {
+                [1] = 'Buy something for {C:attention}free{}',
+            }
+        }
+    },
+    revolution = {
+        ['en-us'] = {
+            ['name'] = 'Revolution',
+            ['text'] = {
+                [1] = 'Scored {C:attention}face{} cards transforms',
+                [2] = 'into {C:attention}non-face{} cards',
+                [3] = '{C:inactive}(No effect with Pareidolia)',
+            }
+        }
+    },
 
     ---- Misc
     

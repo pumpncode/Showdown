@@ -80,25 +80,37 @@ function tprint(tbl, indent)
 	return toprint
 end
 
-function flipCard(card, i, setSize)
-	if not card then return end
-	if not i then i = 1 end
-	local percent = 1.15 - (i-0.999)/(setSize-0.998)*0.3
+---Flip a given card
+---@param card table
+---@param index number|nil
+---@param setSize number 
+function flipCard(card, index, setSize)
+	if not card then printWarnMessage("No card can be flipped", "Showdown") return end
+	if not setSize then printWarnMessage("No set given", "Showdown") return end
+	if not index then index = 1 end
+	local percent = 1.15 - (index-0.999)/(setSize-0.998)*0.3
 	event({trigger = 'after', delay = 0.15, func = function()
 		card:flip(); play_sound('card1', percent); card:juice_up(0.3, 0.3);
 	return true end })
 end
 
-function unflipCard(card, i, setSize)
-	if not card then return end
-	if not i then i = 1 end
-	local percent = 0.85 + ( i - 0.999 ) / ( setSize - 0.998 ) * 0.3
+---Unflip a given card
+---@param card table
+---@param index number|nil
+---@param setSize number
+function unflipCard(card, index, setSize)
+	if not card then printWarnMessage("No card can be unflipped", "Showdown") return end
+	if not setSize then printWarnMessage("No set given", "Showdown") return end
+	if not index then index = 1 end
+	local percent = 0.85 - (index-0.999)/(setSize-0.998)*0.3
 	event({trigger = 'after', delay = 0.15, func = function()
 		card:flip(); play_sound('tarot2', percent, 0.6); card:juice_up(0.3, 0.3);
 	return true end })
 end
 
-function create_joker(joker) -- Thanks Bunco
+---Creates a joker given the passed arguments
+---@param joker table
+function create_joker(joker) -- (Thanks Bunco)
 	-- Sprite atlas
     local atlas
 	if not joker.atlas then 
@@ -220,6 +232,72 @@ if not (SMODS.Mods["Paperback"] or {}).can_load then
 	end
 end
 
+baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
+extraSuits = {}
+
+---Returns all vanilla and modded suits. Args can be passed to have more control over the suits:
+---- noModded: Exclude Modded suits
+---- noVanilla: Exclude Vanilla suits
+---- exotic: Include Halberds and Fleurons (Bunco)
+---@param args table|nil
+---@return table
+function get_all_suits(args)
+	if not args then args = { exotic = true } end
+	local suits = {}
+	for i=1, #SMODS.Suit.obj_buffer do
+		local suit = SMODS.Suit.obj_table[SMODS.Suit.obj_buffer[i]]
+		if (not args.noVanilla and findInTable(suit.key, baseSuits)) or
+			(not args.noModded and
+				((suit.key == "bunc_Fleurons"
+					or suit.key == "bunc_Halberds"
+				) and args.exotic)
+			)
+		then
+			table.insert(suits, suit.key)
+		end
+	end
+	return suits
+end
+
+local baseRanks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'}
+
+---Returns all vanilla and modded ranks. Args can be passed to have more control over the ranks:
+---- noModded: Exclude Modded ranks
+---- noVanilla: Exclude Vanilla ranks
+---- noFace: Exclude face cards
+---- noCounterpart: Exclude 0, 2.5, 5.5, 8.5, Butler, Princess and Lord (Showdown)
+---@param args table|nil
+---@return table
+function get_all_ranks(args)
+	if not args then args = { counterpart = true } end
+	local ranks = {}
+	for i=1, #SMODS.Rank.obj_buffer do
+		local rank = SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[i]]
+		if not args.noVanilla then -- Vanilla
+			if findInTable(rank.key, baseRanks)
+				and (args.noFace and not rank.face)
+			then
+				table.insert(ranks, rank.key)
+			end
+		end
+		if not args.noModded then -- Modded
+			if ((rank.key == "showdown_Zero"
+					or rank.key == "showdown_2.5"
+					or rank.key == "showdown_5.5"
+					or rank.key == "showdown_8.5"
+					or rank.key == "showdown_Butler"
+					or rank.key == "showdown_Princess"
+					or rank.key == "showdown_Lord")
+				and not args.noCounterpart)
+				and (args.noFace and not rank.face)
+			then
+				table.insert(ranks, rank.key)
+			end
+		end
+	end
+	return ranks
+end
+
 -- Dictionary wrapper
 
 function showdown.process_loc_text()
@@ -271,9 +349,6 @@ SMODS.Back{ -- Mirror Deck
 SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95})
-
-baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
-extraSuits = {}
 
 local function inject_p_card_suit_compat(suit, rank)
 	local card = {
@@ -785,7 +860,7 @@ SMODS.Consumable({ -- Variable
         return #G.jokers.cards < G.jokers.config.card_limit and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,
     use = function()
-		print("Variable card is used")
+		printDebugMessage("Variable card is used", "Showdown")
         -- idk
     end
 })
@@ -875,7 +950,7 @@ SMODS.Consumable({ -- Vector
         return false
     end,
     use = function()
-		print("Vector card is used")
+		printDebugMessage("Vector card is used", "Showdown")
 		for i=1, #G.hand.highlighted do
 			print(G.hand.highlighted[i].base.value..": "..G.hand.highlighted[i].base.id.." | "..G.hand.highlighted[i]:get_id())
 		end
@@ -919,10 +994,8 @@ SMODS.Consumable({ -- Probability
 							and not (k == "selected_d6_face")
 						then
 							if type(v) == "table" then
-								print(tprint(v))
 								for kk, vv in pairs(v) do
 									if type(vv) == "number" then
-										print(kk..": "..vv)
 										v[kk] = vv * 1.25
 									end
 								end

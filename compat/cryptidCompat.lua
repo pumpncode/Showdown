@@ -59,3 +59,9 @@ SMODS.Joker({
         return false
     end,
 })
+
+-- Food
+
+if Cryptid and Cryptid.food then
+	table.insert(Cryptid.food, 'j_showdown_gruyere')
+end

@@ -140,3 +140,40 @@ match_indent = true
 payload = '''
     G.latest_area_baby_jimbo = self
 '''
+
+# SIM Card behavior by default, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
+position = 'before'
+match_indent = true
+payload = '''
+    if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
+        return true
+    end
+'''
+
+# SIM Card behavior by default, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.ability.name == "Wild Card" then'
+position = 'before'
+match_indent = true
+payload = '''
+    if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
+        return true
+    end
+'''
+
+# Check unlock for free item (one doller)
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'if c1.cost ~= 0 then'
+position = 'before'
+match_indent = true
+payload = '''
+    check_for_unlock({type = 'buying_card', price = c1.cost})
+'''

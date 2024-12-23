@@ -256,13 +256,14 @@ create_joker({ -- Color Splash
     end,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
             for i=1, #G.play.cards do
                 local _card = G.play.cards[i]
                 if _card:get_id() ~= 1 and not findInTable(_card, context.scoring_hand) then
                     flipCard(_card, i, #G.play.cards)
                     delay(0.2)
                     event({trigger = 'after', delay = 0.15, func = function()
-                        assert(SMODS.change_base(_card, baseSuits[math.random(#baseSuits)], nil)) -- Put modded suits but include Bunco's ones only if exotics are enabled
+                        assert(SMODS.change_base(_card, suits[math.random(#suits)], nil))
                     return true end})
                     unflipCard(_card, i, #G.play.cards)
                     delay(0.6)
@@ -457,6 +458,130 @@ create_joker({ -- Baby Jimbo
                 colour = G.C.SECONDARY_SET.Spectral,
                 card = self
             }
+        end
+    end
+})
+
+create_joker({ -- Parmesan
+    name = 'parmesan', loc_txt = loc.parmesan,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play then
+            local lowestRank = 11
+            for i=1, #context.scoring_hand do
+                if context.scoring_hand[i].base.nominal < lowestRank then
+                    lowestRank = context.scoring_hand[i].base.nominal
+                end
+            end
+            context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+            context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + lowestRank
+            return {
+                extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
+                colour = G.C.CHIPS,
+                card = card
+            }
+        end
+    end
+})
+
+create_joker({ -- Chaos Card
+    name = 'chaos_card', loc_txt = loc.chaos_card,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+            local ranks = get_all_ranks()
+            for i=1, #context.scoring_hand do
+                local _card = context.scoring_hand[i]
+                flipCard(_card, i, #context.scoring_hand)
+                delay(0.2)
+                event({trigger = 'after', delay = 0.15, func = function()
+                    assert(SMODS.change_base(_card, suits[math.random(#suits)], ranks[math.random(#ranks)]))
+                return true end})
+                unflipCard(_card, i, #context.scoring_hand)
+                delay(0.6)
+            end
+        end
+    end
+})
+
+create_joker({ -- SIM Card
+    name = 'sim_card', loc_txt = loc.sim_card,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    custom_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+	end,
+    rarity = 'Rare', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+})
+
+create_joker({ -- Wall
+    name = 'wall', loc_txt = loc.wall,
+    atlas = "showdown_jokers",
+    pos = coordinate(20),
+    rarity = 'Rare', cost = 1,
+    blueprint = false, perishable = false, eternal = true,
+})
+
+create_joker({ -- one doller
+    name = 'one_doller', loc_txt = loc.one_doller,
+    --atlas = "showdown_jokers",
+    pos = coordinate(1),
+    rarity = 'Common', cost = 1,
+    blueprint = false, perishable = false, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        if args.type == 'buying_card' then
+            if args.price <= 0 then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.buying_card then
+            ease_dollars(1)
+            return {
+                message = localize('$')..1,
+                colour = G.C.MONEY,
+                delay = 0.45,
+                card = card
+            }
+        end
+    end
+})
+
+create_joker({ -- Revolution
+    name = 'revolution', loc_txt = loc.revolution,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker and not next(find_joker('Pareidolia')) then
+            local ranks = get_all_ranks({noFace = true})
+            for i=1, #context.scoring_hand do
+                local _card = context.scoring_hand[i]
+                if _card:is_face() then
+                    flipCard(_card, i, #context.scoring_hand)
+                    delay(0.2)
+                    event({trigger = 'after', delay = 0.15, func = function()
+                        assert(SMODS.change_base(_card, nil, ranks[math.random(#ranks)]))
+                    return true end})
+                    unflipCard(_card, i, #context.scoring_hand)
+                    delay(0.6)
+                end
+            end
         end
     end
 })
