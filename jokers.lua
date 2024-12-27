@@ -1,3 +1,18 @@
+---- Final Rarity
+
+SMODS.Rarity{
+    key = "Final",
+    loc_txt = loc.final,
+    default_weight = 0,
+    badge_colour = HEX("b5a653"),
+    get_weight = function(self, weight, object_type)
+        return weight
+    end,
+    gradient = function(self, dt)
+        --
+    end
+}
+
 ---- Atlases
 
 SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
@@ -44,21 +59,11 @@ create_joker({ -- Pinpoint
         end
     end,
     calculate = function(self, card, context)
-        if
-			context.individual
-			and context.cardarea == G.hand
-			and context.other_card
-			and context.other_card:get_id() == 1
-			and not context.before
-			and not context.after
-		then
-			if context.other_card.debuff then return debuffedCard(card)
-			else
-				return {
-					x_chips = card.ability.extra.x_chips,
-					card = card
-				}
-			end
+        if context.individual and context.cardarea == G.hand and context.other_card:get_id() == 1 then
+            return {
+                x_chips = card.ability.extra.x_chips,
+                card = card
+            }
         end
     end
 })
@@ -89,7 +94,7 @@ create_joker({ -- Math Teacher
         end
     end,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and SMODS.is_counterpart(context.other_card) then
+        if context.individual and context.cardarea == G.play and SMODS.is_counterpart(context.other_card) and not context.blueprint then
             card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.CHIPS, true)
         end
@@ -113,7 +118,7 @@ create_joker({ -- Gruyère
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and context.other_card:get_id() == 1 then
+        if context.individual and context.cardarea == G.play and context.other_card:get_id() == 1 and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.MULT, true)
         end
@@ -215,7 +220,7 @@ create_joker({ -- Ping Pong
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
             for i=1, #context.scoring_hand do
                 local _card = context.scoring_hand[i]
                 if _card:get_id() == 7 or _card:get_id() == 14 then
@@ -255,7 +260,7 @@ create_joker({ -- Color Splash
         end
     end,
     calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
             local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
             for i=1, #G.play.cards do
                 local _card = G.play.cards[i]
@@ -499,7 +504,7 @@ create_joker({ -- Chaos Card
         --
     end,
     calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
             local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
             local ranks = get_all_ranks()
             for i=1, #context.scoring_hand do
@@ -518,8 +523,8 @@ create_joker({ -- Chaos Card
 
 create_joker({ -- SIM Card
     name = 'sim_card', loc_txt = loc.sim_card,
-    --atlas = "showdown_jokers",
-    pos = coordinate(3),
+    atlas = "showdown_jokers",
+    pos = coordinate(19),
     custom_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
@@ -549,7 +554,7 @@ create_joker({ -- one doller
         end
     end,
     calculate = function(self, card, context)
-        if context.buying_card then
+        if context.buying_card and not context.blueprint then
             ease_dollars(1)
             return {
                 message = localize('$')..1,
@@ -568,7 +573,7 @@ create_joker({ -- Revolution
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker and not next(find_joker('Pareidolia')) then
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker and not next(find_joker('Pareidolia')) then
             local ranks = get_all_ranks({noFace = true})
             for i=1, #context.scoring_hand do
                 local _card = context.scoring_hand[i]
@@ -582,6 +587,192 @@ create_joker({ -- Revolution
                     delay(0.6)
                 end
             end
+        end
+    end
+})
+
+create_joker({ -- Fruit Sticker (doesn't work)
+    name = 'fruit_sticker', loc_txt = loc.fruit_sticker,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    vars = {{x_mult = 2.5}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.x_mult } }
+	end,
+    rarity = 'Rare', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        -- Have stickers on your maximum amount or higher of jokers (no stake stickers)
+    end,
+    calculate = function(self, card, context)
+        if (context.other_joker or context.joker_main) or (context.individual and context.cardarea == G.hand) then -- It also work on held cards but that's the secret of this joker ;)
+            local _card = context.other_joker or context.joker_main or context.other_card
+            local mult = 1
+            if type(_card) == 'table' and _card.ability then
+                for k, _ in pairs(_card.ability) do
+                    if findInTable(k, SMODS.Sticker.obj_buffer) then
+                        mult = mult * card.ability.extra.x_mult
+                    end
+                end
+            end
+            if mult > 1 then
+                return {
+                    x_mult = mult,
+                    card = card
+                }
+            end
+        end
+    end
+})
+
+create_joker({ -- Sinful Joker
+    name = 'sinful_joker', loc_txt = loc.sinful_joker,
+    atlas = "showdown_jokers",
+    pos = coordinate(24),
+    vars = {{scaling = 3}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.scaling } }
+	end,
+    rarity = 'Rare', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Egg Drawing
+    name = 'egg_drawing', loc_txt = loc.egg_drawing,
+    atlas = "showdown_jokers",
+    pos = coordinate(25),
+    vars = {{money = 4}},
+    custom_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.money } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        if args.type == 'selling_card' then
+            if args.sell_cost > 10 then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.end_of_round and not context.blueprint then
+            local joker = G.jokers.cards[math.random(#G.jokers.cards)]
+            joker.ability.extra_value = joker.ability.extra_value + card.ability.extra.money
+            joker:set_cost()
+            return {
+                message = localize('k_val_up'),
+                colour = G.C.MONEY,
+                card = joker
+            }
+        end
+    end
+})
+
+create_joker({ -- Jimbo's Makeup
+    name = 'jimbo_makeup', loc_txt = loc.jimbo_makeup,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare',
+    blueprint = false, perishable = false, eternal = false,
+})
+
+create_joker({ -- Jimbo's Hat
+    name = 'jimbo_hat', loc_txt = loc.jimbo_hat,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare',
+    blueprint = false, perishable = false, eternal = false,
+})
+
+create_joker({ -- Jimbo's Bells
+    name = 'jimbo_bells', loc_txt = loc.jimbo_bells,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare',
+    blueprint = false, perishable = false, eternal = false,
+})
+
+create_joker({ -- Jimbo's Collar
+    name = 'jimbo_collar', loc_txt = loc.jimbo_collar,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare',
+    blueprint = false, perishable = false, eternal = false,
+})
+
+create_joker({ -- Gary McCready
+    name = 'gary_mccready', loc_txt = loc.gary_mccready,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    vars = {{created = false}},
+    rarity = 'Rare',
+    blueprint = false, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if not context.blueprint and not card.ability.extra.created then
+            local makeup, hat, bells, collar = find_joker('jimbo_makeup'), find_joker('jimbo_hat'), find_joker('jimbo_bells'), find_joker('jimbo_collar')
+            if next(makeup) and next(hat) and next(bells) and next(collar) then
+                card.ability.extra.created = true
+                if not G.GAME.won then
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'immediate',
+                        blocking = false,
+                        blockable = false,
+                        func = (function()
+                            win_game()
+                            G.GAME.won = true
+                            return true
+                        end)
+                    }))
+                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.2,
+                    func = function()
+                        local jokers = {card, makeup[1], hat[1], bells[1], collar[1]}
+                        for i=1, #jokers do
+                            jokers[i]:start_dissolve(nil, i == #jokers)
+                        end
+                        local _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_showdown_ultimate_joker', no_edition = true})
+                        _card:add_to_deck()
+                        G.jokers:emplace(_card)
+                        return true
+                    end
+                }))
+            end
+        end
+    end
+})
+
+create_joker({ -- Ultimate Joker
+    name = 'ultimate_joker', loc_txt = loc.ultimate_joker,
+    --atlas = "showdown_jokers",
+    pos = coordinate(9, 5),
+    custom_vars = function(self, info_queue, card)
+		return { vars = { G.GAME.round } }
+	end,
+    rarity = 'showdown_Final', cost = 20,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.joker_main and G.GAME.round > 1 then
+            return {
+                message = 'X' .. G.GAME.round,
+                Xchip_mod = G.GAME.round,
+                Xmult_mod = G.GAME.round,
+                --x_chips = G.GAME.round,
+                --x_mult = G.GAME.round,
+                colour = G.C.PURPLE,
+                card = card
+            }
         end
     end
 })

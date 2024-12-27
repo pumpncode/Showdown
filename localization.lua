@@ -50,40 +50,62 @@ return  {
         ['en-us'] = {
             ['name'] = '2.5',
             ['label'] = {
-                [1] = 'Counts as a 2',
+                [1] = 'Counts as',
+                [2] = 'a 2',
             }
         }
     },
     five_half = {
         ['en-us'] = {
-            ['name'] = '5.5'
+            ['name'] = '5.5',
+            ['label'] = {
+                [1] = 'Counts as',
+                [2] = 'a 5',
+            }
         }
     },
     eight_half = {
         ['en-us'] = {
-            ['name'] = '8.5'
+            ['name'] = '8.5',
+            ['label'] = {
+                [1] = 'Counts as',
+                [2] = 'a 8',
+            }
         }
     },
     butler = {
         ['en-us'] = {
-            ['name'] = 'Butler'
+            ['name'] = 'Butler',
+            ['label'] = {
+                [1] = 'Counts as',
+                [2] = 'a Jack',
+            }
         }
     },
     princess = {
         ['en-us'] = {
-            ['name'] = 'Princess'
+            ['name'] = 'Princess',
+            ['label'] = {
+                [1] = 'Counts as',
+                [2] = 'a Queen',
+            }
         }
     },
     lord = {
         ['en-us'] = {
-            ['name'] = 'Lord'
+            ['name'] = 'Lord',
+            ['label'] = {
+                [1] = 'Counts as',
+                [2] = 'a King',
+            }
         }
     },
     zero = {
         ['en-us'] = {
             ['name'] = '0',
             ['text'] = {
-                [1] = 'Counts as any suit',
+                [1] = 'Counts as',
+                [2] = 'any suit',
             }
         }
     },
@@ -96,6 +118,22 @@ return  {
         ['en-us'] = {
             ['name'] = 'Mathematic',
             ['collection'] = 'Mathematic Cards',
+            ['undiscovered'] = {
+                ['name'] = 'Not Discovered',
+                ['text'] = {
+                    [1] = 'Purchase or use',
+                    [2] = 'this card in an',
+                    [3] = 'unseeded run to',
+                    [4] = 'learn what it does',
+                }
+            }
+        }
+    },
+
+    test = {
+        ['en-us'] = {
+            ['name'] = 'test',
+            ['collection'] = 'test Cards',
             ['undiscovered'] = {
                 ['name'] = 'Not Discovered',
                 ['text'] = {
@@ -461,7 +499,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Infection',
             ['text'] = {
-                [1] = '{C:attention}X#1#{} mult, {C:red}self-destruct{}',
+                [1] = '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{}',
                 [2] = 'future cards in shop and boosters can be {C:attention}replaced{}',
                 [3] = 'by {C:attention}Strange Thing{}',
                 [4] = 'future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
@@ -701,12 +739,99 @@ return  {
             }
         }
     },
-
-    ---- Misc
-    
-    b_pull = {
+    fruit_sticker = {
         ['en-us'] = {
-            ['text'] = 'Pull'
+            ['name'] = 'Fruit Sticker',
+            ['text'] = {
+                [1] = '{X:mult,C:white}X#1#{} for each {C:attention}stickers{}',
+                [2] = '{C:inactive}(Stake stickers excluded)',
+            },
+            ['unlock'] = {
+                [1] = 'Have {C:attention}at least one{} sticker on your',
+                [2] = '{C:attention}maximum{} amount of jokers (or higher)',
+                [3] = '{C:inactive}(Stake stickers excluded)',
+            }
         }
-    }
+    },
+    sinful_joker = {
+        ['en-us'] = {
+            ['name'] = 'Sinful Joker',
+            ['text'] = {
+                [1] = 'insert text',
+            },
+            ['unlock'] = {
+                [1] = 'insert text',
+            }
+        }
+    },
+    egg_drawing = {
+        ['en-us'] = {
+            ['name'] = 'Egg Drawing',
+            ['text'] = {
+                [1] = 'A random joker gains {C:money}4${} of {C:attention}sell{}',
+                [2] = '{C:attention}value{} at the end of round',
+            },
+            ['unlock'] = {
+                [1] = 'Sell a card for',
+                [2] = 'more than {C:money}10${}',
+            }
+        }
+    },
+    jimbo_makeup = {
+        ['en-us'] = {
+            ['name'] = "Jimbo's Makeup",
+            ['text'] = {
+                [1] = 'insert text',
+            },
+        }
+    },
+    jimbo_hat = {
+        ['en-us'] = {
+            ['name'] = "Jimbo's Hat",
+            ['text'] = {
+                [1] = 'insert text',
+            },
+        }
+    },
+    jimbo_bells = {
+        ['en-us'] = {
+            ['name'] = "Jimbo's Bells",
+            ['text'] = {
+                [1] = 'insert text',
+            },
+        }
+    },
+    jimbo_collar = {
+        ['en-us'] = {
+            ['name'] = "Jimbo's Collar",
+            ['text'] = {
+                [1] = 'insert text',
+            },
+        }
+    },
+    gary_mccready = {
+        ['en-us'] = {
+            ['name'] = 'Gary McCready',
+            ['text'] = {
+                [1] = 'insert text',
+            },
+        }
+    },
+    ultimate_joker = {
+        ['en-us'] = {
+            ['name'] = 'Ultimate Joker',
+            ['text'] = {
+                [1] = '{X:purple,C:white}X#1#{} Mult and Chips',
+                [2] = 'Value equald to round',
+            },
+        }
+    },
+
+    ---- Rarity
+    
+    final = {
+        ['en-us'] = {
+            ['name'] = 'Final'
+        }
+    },
 }

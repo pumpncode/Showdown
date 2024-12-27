@@ -5,7 +5,7 @@ local function enable_exotics()
 	sendDebugMessage('[BUNCO] - Triggered Exotic System enabling.')
 end
 
----- Exotic Cards
+---- Exotic Suit
 
 SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})

@@ -177,3 +177,14 @@ match_indent = true
 payload = '''
     check_for_unlock({type = 'buying_card', price = c1.cost})
 '''
+
+# Check unlock for sold card (egg drawing)
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'ease_dollars(self.sell_cost)'
+position = 'before'
+match_indent = true
+payload = '''
+    check_for_unlock({type = 'selling_card', sell_cost = self.sell_cost})
+'''

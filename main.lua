@@ -52,34 +52,6 @@ function getEnhancements(blacklist)
 	return cen_pool
 end
 
----Gives the content of a table (if table is to big, Balatro can crash)
----@param tbl table
----@param indent integer|nil
-function tprint(tbl, indent)
-	if not indent then indent = 0 end
-	local toprint = string.rep(" ", indent) .. "{\r\n"
-	indent = indent + 2
-	for k, v in pairs(tbl) do
-		toprint = toprint .. string.rep(" ", indent)
-		if (type(k) == "number") then
-			toprint = toprint .. "[" .. k .. "] = "
-		elseif (type(k) == "string") then
-			toprint = toprint  .. k ..  "= "   
-		end
-		if (type(v) == "number") then
-			toprint = toprint .. v .. ",\r\n"
-		elseif (type(v) == "string") then
-			toprint = toprint .. "\"" .. v .. "\",\r\n"
-		elseif (type(v) == "table") then
-			toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
-		else
-			toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
-		end
-	end
-	toprint = toprint .. string.rep(" ", indent-2) .. "}"
-	return toprint
-end
-
 ---Flip a given card
 ---@param card table
 ---@param index number|nil
@@ -384,12 +356,11 @@ SMODS.Rank({ -- 2.5 Card
 		value = -3,
 	},
 	loc_txt = loc.two_half,
-	process_loc_text = function(self)
-		SMODS.process_loc_text(G.localization.misc.ranks, self.key, self.loc_txt, 'name')
-		--SMODS.process_loc_text(G.localization.descriptions.Other[self.set], self.key, self.loc_txt, 'label')
-	end,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards',
+	loc_vars = function (self, info_queue, center)
+		--info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+	end,
 	inject = function(self)
 		for _, suit in pairs(SMODS.Suits) do
 			inject_p_card_suit_compat(suit, self)
@@ -1170,23 +1141,19 @@ SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'BoostersMathemat
 
 for i = 1, 4 do
     SMODS.Booster{
-        key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'), loc_txt = loc.calculus,
-
+        key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
+		loc_txt = loc.calculus,
         config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
         draw_hand = true,
-
         create_card = function(self, card)
             return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'showdown_calculus')
         end,
-		
         ease_background_colour = function(self)
             ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
             ease_background_colour{new_colour = G.C.SHOWDOWN_CALCULUS, special_colour = G.C.BLACK, contrast = 2}
         end,
-		
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
-
         in_pool = function() return (pseudorandom('calculus'..G.SEED) < 0.5) end
     }
 end
@@ -1260,3 +1227,31 @@ end
 if (SMODS.Mods["Cryptid"] or {}).can_load then
 	modCompatibility("Cryptid", "compat/cryptidCompat.lua")
 end
+if (SMODS.Mods["MusicalSuit"] or {}).can_load then
+	modCompatibility("MusicalSuit", "compat/musicalSuitCompat.lua")
+end
+if (SMODS.Mods["InkAndColor"] or {}).can_load then
+	modCompatibility("InkAndColor", "compat/inkAndColorCompat.lua")
+end
+
+--[[
+SMODS.ConsumableType{
+    key = 'test',
+    primary_colour = G.C.SHOWDOWN_CALCULUS,
+    secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
+    loc_txt = loc.test,
+    collection_rows = {},
+	inject = function(self)
+		SMODS.ObjectType.inject(self)
+		SMODS.ConsumableTypes[self.key] = self
+		G.localization.descriptions[self.key] = G.localization.descriptions[self.key] or {}
+		G.C.SET[self.key] = self.primary_colour
+		G.C.SECONDARY_SET[self.key] = self.secondary_colour
+		G.FUNCS['your_collection_' .. string.lower(self.key) .. 's'] = function(e)
+			--
+		end
+		G.FUNCS['your_collection_' .. string.lower(self.key) .. '_page'] = function(args)
+			--
+		end
+	end,
+}]]--
