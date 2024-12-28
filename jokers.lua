@@ -153,43 +153,8 @@ create_joker({ -- Mirror
 		end
     end
 })
---[[
-create_joker({ -- Billiard
-    name = 'billiard', loc_txt = loc.billiard,
-	--atlas = "showdown_jokers",
-	pos = coordinate(3),
-    custom_config = {extra = {retrigger = 1}},
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    unlocked = false,
-    unlock_condition = {hidden = true},
-    check_for_unlock = function(self, args)
-        if args.type == 'hand_contents' then
-            local eval = evaluate_poker_hand(args.cards)
-            if next(eval['Three of a Kind']) then
-                local counterpart = 0
-                for j = 1, #args.cards do
-                    if SMODS.is_counterpart(args.cards[j]) then counterpart = counterpart + 1 end
-                end
-                if counterpart >= 3 then unlock_card(self) end
-            end
-        end
-    end,
-    calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and SMODS.is_counterpart(context.other_card) then
-            card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
-            forced_message(localize('k_upgrade_ex'), card, G.C.CHIPS, true)
-        end
-		if context.joker_main then
-			return {
-				message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
-				chip_mod = card.ability.extra.chips,
-			}
-		end
-    end
-})
 
-create_joker({ -- Crime Scene
+--[[create_joker({ -- Crime Scene
     name = 'crime_scene', loc_txt = loc.crime_scene,
     --atlas = "showdown_jokers",
     pos = coordinate(3),
@@ -211,8 +176,8 @@ create_joker({ -- Crime Scene
             }
         end
     end
-})
-]]--
+})]]--
+
 create_joker({ -- Ping Pong
     name = 'ping_pong', loc_txt = loc.ping_pong,
     --atlas = "showdown_jokers",
@@ -554,7 +519,7 @@ create_joker({ -- one doller
         end
     end,
     calculate = function(self, card, context)
-        if context.buying_card and not context.blueprint then
+        if context.buying_card or context.open_booster and not context.blueprint then
             ease_dollars(1)
             return {
                 message = localize('$')..1,
@@ -640,10 +605,28 @@ create_joker({ -- Sinful Joker
     unlocked = false,
     unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
-        --
+        if next(find_joker('Greedy Joker')) and next(find_joker('Lusty Joker')) and next(find_joker('Wrathful Joker')) and next(find_joker('Gluttonous Joker')) then
+            unlock_card(self)
+        end
     end,
     calculate = function(self, card, context)
-        --
+        if context.cardarea == G.jokers and context.before then
+            local jokers = {}
+            for i=1, #G.jokers.cards do
+                local name = G.jokers.cards[i].ability.name
+                if name == 'Greedy Joker' or name == 'Lusty Joker' or name == 'Wrathful Joker' or name == 'Gluttonous Joker' then
+                    table.insert(jokers, G.jokers.cards[i])
+                end
+            end
+            for i=1, #jokers do
+                jokers[i].ability.extra.s_mult = jokers[i].ability.extra.s_mult + card.ability.extra.scaling
+            end
+            if #jokers > 0 then
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            end
+        end
     end
 })
 
@@ -768,11 +751,70 @@ create_joker({ -- Ultimate Joker
                 message = 'X' .. G.GAME.round,
                 Xchip_mod = G.GAME.round,
                 Xmult_mod = G.GAME.round,
-                --x_chips = G.GAME.round,
-                --x_mult = G.GAME.round,
                 colour = G.C.PURPLE,
                 card = card
             }
         end
+    end
+})
+
+create_joker({ -- Strainer
+    name = 'strainer', --loc_txt = loc.strainer,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    vars = {{money = 0}},
+    custom_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+        if G.GAME and G.GAME.blind and G.GAME.blind.boss then
+            return { key = "active", vars = { card.ability.extra.money } }
+        end
+        return { key = "inactive" }
+	end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = true, perishable = true, eternal = false,
+    calculate = function(self, card, context)
+        if G.GAME and G.GAME.blind and G.GAME.blind.boss then
+            if context.buying_card and context.card.cost > 0 then
+                card.ability.extra.money = card.ability.extra.money + context.card.cost
+            end
+            if context.ending_shop then
+                while card.ability.extra.money >= 5 do
+                    card.ability.extra.money = card.ability.extra.money - 5
+                    local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
+                    -- creates a card
+                    print("Created a "..ranks[math.random(#ranks)].." card")
+                end
+            end
+        end
+    end
+})
+
+create_joker({ -- Billiard
+    name = 'billiard', loc_txt = loc.billiard,
+    --atlas = "showdown_jokers",
+    pos = coordinate(3),
+    rarity = 'Rare', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        if context.scoring_hand and context.cardarea == G.play then
+            local idx = findInTable(context.card, G.play.cards)
+            print(idx)
+            local rep = 0
+            if idx and ((idx > 1 and G.play.cards[idx-1]:get_id() == 1) or (idx < #G.play.cards and G.play.cards[idx+1]:get_id() == 1)) then
+                rep = rep + 1
+            end
+            if rep > 0 then
+                return {
+                    message = localize("k_again_ex"),
+                    repetitions = rep,
+                    card = context.card,
+                }
+            end
+		end
     end
 })

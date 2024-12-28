@@ -234,36 +234,45 @@ end
 local baseRanks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'}
 
 ---Returns all vanilla and modded ranks. Args can be passed to have more control over the ranks:
----- noModded: Exclude Modded ranks
----- noVanilla: Exclude Vanilla ranks
----- noFace: Exclude face cards
----- noCounterpart: Exclude 0, 2.5, 5.5, 8.5, Butler, Princess and Lord (Showdown)
+---- blacklist: 		Manually excluded ranks
+---- whitelist: 		Manually included ranks
+---- noModded: 			Exclude Modded ranks
+---- noVanilla: 		Exclude Vanilla ranks
+---- noFace:			Exclude face cards (incompatible with onlyFace)
+---- onlyFace: 			Exclude all cards that aren't faces (incompatible with noFace)
+---- noCounterpart: 	Exclude 2.5, 5.5, 8.5, Butler, Princess and Lord (Showdown, incompatible with onlyCounterpart)
+---- onlyCounterpart: 	Exclude all cards that aren't counterparts (Showdown, incompatible with noCounterpart)
+---- noZero: 			Exclude 0 (Showdown)
 ---@param args table|nil
 ---@return table
 function get_all_ranks(args)
 	if not args then args = { counterpart = true } end
 	local ranks = {}
+	local counterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "showdown_Butler", "showdown_Princess", "showdown_Lord", }
 	for i=1, #SMODS.Rank.obj_buffer do
 		local rank = SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[i]]
 		if not args.noVanilla then -- Vanilla
 			if findInTable(rank.key, baseRanks)
-				and (args.noFace and not rank.face)
+				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face))
+				and not args.onlyCounterpart
+				and (args.blacklist and not findInTable(rank.key, args.blacklist))
 			then
 				table.insert(ranks, rank.key)
 			end
 		end
 		if not args.noModded then -- Modded
-			if ((rank.key == "showdown_Zero"
-					or rank.key == "showdown_2.5"
-					or rank.key == "showdown_5.5"
-					or rank.key == "showdown_8.5"
-					or rank.key == "showdown_Butler"
-					or rank.key == "showdown_Princess"
-					or rank.key == "showdown_Lord")
-				and not args.noCounterpart)
-				and (args.noFace and not rank.face)
+			if ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart))
+				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face))
+				and (args.blacklist and not findInTable(rank.key, args.blacklist))
 			then
 				table.insert(ranks, rank.key)
+			end
+		end
+	end
+	if args.whitelist then
+		for i=1, #args.whitelist do
+			if not findInTable(args.whitelist[i], ranks) then
+				table.insert(ranks, args.whitelist[i])
 			end
 		end
 	end
@@ -967,10 +976,10 @@ SMODS.Consumable({ -- Probability
 							if type(v) == "table" then
 								for kk, vv in pairs(v) do
 									if type(vv) == "number" then
-										v[kk] = vv * 1.25
+										v[kk] = vv * card.ability.mult_joker
 									end
 								end
-							elseif not ((k == "x_mult" or k == "Xmult") and v == 1) then joker.ability[k] = v * 1.25 end
+							elseif not ((k == "x_mult" or k == "Xmult") and v == 1) then joker.ability[k] = v * card.ability.mult_joker end
 						end
 					end
 				end

@@ -540,19 +540,6 @@ return  {
             }
         }
     },
-    billiard = {
-        ['en-us'] = {
-            ['name'] = 'Billiard',
-            ['text'] = {
-                [1] = '{C:attention}Retrigger{} cards next',
-                [2] = ' to{C:attention}0{}',
-            },
-            ['unlock'] = {
-                [1] = 'Trigger a {C:attention}0{}',
-                [2] = 'card {C:attention}5{} times',
-            }
-        }
-    },
     crime_scene = {
         ['en-us'] = {
             ['name'] = 'Crime Scene',
@@ -757,10 +744,14 @@ return  {
         ['en-us'] = {
             ['name'] = 'Sinful Joker',
             ['text'] = {
-                [1] = 'insert text',
+                [1] = '{C:mult}+#1#{} Mult to {C:attention}Greedy Joker{}, {C:attention}Lusty Joker{}',
+                [2] = '{C:attention}Wrathful Joker{} and {C:attention}Gluttonous Joker{}',
+                [3] = 'every time a hand is played',
             },
             ['unlock'] = {
-                [1] = 'insert text',
+                [1] = 'Have {C:attention}Greedy Joker{}, {C:attention}Lusty Joker{},',
+                [2] = '{C:attention}Wrathful Joker{} and {C:attention}Gluttonous{}',
+                [3] = '{C:attention}Joker{} at the same time',
             }
         }
     },
@@ -824,6 +815,36 @@ return  {
                 [1] = '{X:purple,C:white}X#1#{} Mult and Chips',
                 [2] = 'Value equald to round',
             },
+        }
+    },
+    strainer = {
+        ['en-us'] = {
+            ['name'] = 'Strainer',
+            ['inactive'] = {
+                [1] = 'For each {C:money}5${} spend in next {C:attention}boss blind{}',
+                [2] = 'creates a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
+                [3] = '{C:attention}0{} card after the shop then {C:red}self-destruct{}',
+                [4] = '{C:inactive}(Currently {C:money}#1#${C:inactive})',
+            },
+            ['active'] = {
+                [1] = 'For each {C:money}5${} spend in next {C:attention}boss blind{}',
+                [2] = 'creates a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
+                [3] = '{C:attention}0{} card after the shop then {C:red}self-destruct{}',
+                [4] = '{C:inactive}(Currently {C:money}#1#${C:inactive})',
+            },
+        }
+    },
+    billiard = {
+        ['en-us'] = {
+            ['name'] = 'Billiard',
+            ['text'] = {
+                [1] = '{C:attention}Retrigger{} cards',
+                [2] = 'next to {C:attention}0{} cards',
+            },
+            ['unlock'] = {
+                [1] = 'Trigger a {C:attention}0{}',
+                [2] = 'card {C:attention}5{} times',
+            }
         }
     },
 
