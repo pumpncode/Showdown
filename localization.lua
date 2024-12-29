@@ -183,7 +183,7 @@ return  {
             ['name'] = 'The Lost',
             ['text'] = {
                 [1] = "Enhances {C:attention}#1#{} selected card",
-                [2] = "into a {C:attention}Ghost Card{}"
+                [2] = "into {C:attention}Ghost Cards{}"
             }
         }
     },
@@ -192,7 +192,7 @@ return  {
             ['name'] = 'The Angel',
             ['text'] = {
                 [1] = "Enhances {C:attention}#1#{} selected card",
-                [2] = "into a {C:attention}Holy Card{}"
+                [2] = "into {C:attention}Holy Cards{}"
             }
         }
     },
@@ -215,8 +215,7 @@ return  {
             ['name'] = 'Mist',
             ['text'] = {
                 [1] = 'Converts {C:attention}#1#{} random cards',
-                [2] = 'into either an {C:attention}Ace{}',
-                [3] = 'or a {C:attention}0{}',
+                [2] = 'into either an {C:attention}Ace{} or a {C:attention}0{}',
             }
         }
     },
@@ -224,10 +223,10 @@ return  {
         ['en-us'] = {
             ['name'] = 'Vision',
             ['text'] = {
-                [1] = 'All cards held in hand {C:attention}converts{}',
-                [2] = 'into their higher or equal,',
-                [3] = 'decimal {C:counterpart_ranks}counterpart{} but loses',
-                [4] = 'their {C:attention}edition{} and {C:attention}seal{}',
+                [1] = 'All cards held in hand {C:attention}converts{} into',
+                [2] = 'their higher or equal decimal {C:counterpart_ranks}counterpart{}',
+                [3] = 'but loses their {C:attention}enhancement{}, {C:attention}edition{}',
+                [4] = 'or {C:attention}seal{}',
             }
         }
     },

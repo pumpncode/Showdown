@@ -188,3 +188,32 @@ match_indent = true
 payload = '''
     check_for_unlock({type = 'selling_card', sell_cost = self.sell_cost})
 '''
+
+# Add choices in booster with Vector
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'G.GAME.pack_choices = self.config.center.config.choose or 1'
+position = "after"
+match_indent = true
+payload = '''
+if G.GAME.showdown_vector and G.GAME.showdown_vector > 0 then
+    self.ability.extra = self.ability.extra + 1
+    G.GAME.pack_choices = G.GAME.pack_choices + 1
+    G.GAME.showdown_vector = G.GAME.showdown_vector - 1
+    G.GAME.pack_size = self.ability.extra
+end
+'''
+
+# Ghost card destroying
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "if scoring_hand[i].ability.name == 'Glass Card' and not scoring_hand[i].debuff and pseudorandom('glass') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra then"
+position = "before"
+match_indent = true
+payload = '''
+    if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
+        destroyed = true
+    end
+'''

@@ -246,24 +246,24 @@ local baseRanks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen'
 ---@param args table|nil
 ---@return table
 function get_all_ranks(args)
-	if not args then args = { counterpart = true } end
+	if not args then args = {} end
 	local ranks = {}
 	local counterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "showdown_Butler", "showdown_Princess", "showdown_Lord", }
 	for i=1, #SMODS.Rank.obj_buffer do
 		local rank = SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[i]]
 		if not args.noVanilla then -- Vanilla
 			if findInTable(rank.key, baseRanks)
-				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face))
+				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
 				and not args.onlyCounterpart
-				and (args.blacklist and not findInTable(rank.key, args.blacklist))
+				and ((args.blacklist and not findInTable(rank.key, args.blacklist)) or not args.blacklist)
 			then
 				table.insert(ranks, rank.key)
 			end
 		end
 		if not args.noModded then -- Modded
-			if ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart))
-				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face))
-				and (args.blacklist and not findInTable(rank.key, args.blacklist))
+			if ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
+				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
+				and ((args.blacklist and not findInTable(rank.key, args.blacklist)) or not args.blacklist)
 			then
 				table.insert(ranks, rank.key)
 			end
@@ -277,6 +277,18 @@ function get_all_ranks(args)
 		end
 	end
 	return ranks
+end
+
+function get_counterpart(rank)
+	local counterparts = {
+		["showdown_2.5"] = "2", ["2"] = "showdown_2.5",
+		["showdown_5.5"] = "5", ["5"] = "showdown_5.5",
+		["showdown_8.5"] = "8", ["8"] = "showdown_8.5",
+		["showdown_Butler"] = "Jack", ["Jack"] = "showdown_Butler",
+		["showdown_Princess"] = "Queen", ["Queen"] = "showdown_Princess",
+		["showdown_Lord"] = "King", ["King"] = "showdown_Lord",
+	}
+	return counterparts[rank]
 end
 
 -- Dictionary wrapper
@@ -557,15 +569,6 @@ end
 
 SMODS.Atlas({key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95})
 
-local counterparts = {
-	["showdown_2.5"] = "2", ["2"] = "showdown_2.5",
-	["showdown_5.5"] = "5", ["5"] = "showdown_5.5",
-	["showdown_8.5"] = "8", ["8"] = "showdown_8.5",
-	["showdown_Butler"] = "Jack", ["Jack"] = "showdown_Butler",
-	["showdown_Princess"] = "Queen", ["Queen"] = "showdown_Princess",
-	["showdown_Lord"] = "King", ["King"] = "showdown_Lord",
-}
-
 SMODS.Consumable({ -- The Reflection
 	key = 'reflection',
 	set = 'Tarot',
@@ -580,7 +583,7 @@ SMODS.Consumable({ -- The Reflection
 	can_use = function(self)
 		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             for i=1, #G.hand.highlighted do
-				if not counterparts[G.hand.highlighted[i].base.value] then return false end
+				if not get_counterpart(G.hand.highlighted[i].base.value) then return false end
 			end
 			return true
         end
@@ -591,7 +594,7 @@ SMODS.Consumable({ -- The Reflection
         delay(0.2)
 		for i=1, #G.hand.highlighted do
             event({trigger = 'after', delay = 0.1, func = function()
-				assert(SMODS.change_base(G.hand.highlighted[i], nil, counterparts[G.hand.highlighted[i].base.value]))
+				assert(SMODS.change_base(G.hand.highlighted[i], nil, get_counterpart(G.hand.highlighted[i].base.value)))
             return true end })
         end
 		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
@@ -740,33 +743,47 @@ SMODS.Consumable({ -- Vision
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
 	loc_txt = loc.vision,
+	loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+	end,
     pos = coordinate(2),
 	can_use = function()
 		return #G.hand.cards and #G.hand.cards >= 1
     end,
     use = function(self)
-		for _, v in ipairs(SMODS.Rank.obj_buffer) do
-			print(v)
-			--local r = SMODS.Ranks[v]
-			--if r.face then table.insert(faces, r) end
-		end
-		local temp_hand = {}
-		for k, v in ipairs(G.hand.cards) do temp_hand[#temp_hand+1] = v end
-		for i=1, #G.hand.cards do flipCard(temp_hand[i], i, #G.hand.cards) end--[[
+		for i=1, #G.hand.cards do flipCard(G.hand.cards[i], i, #G.hand.cards) end
 		for i=1, #G.hand.cards do
-			local inte, fract = 0, 0
-			local rank = SMODS.Ranks[temp_hand[i].base.nominal]
-			while fract == 0 do
-				rank = SMODS.Ranks[findInTable(e, SMODS.Ranks) + 1]
-				nominal = rank.nominal
-				inte, fract = math.modf(nominal)
-			end
 			event({trigger = 'after', delay = 0.1, func = function()
-				assert(SMODS.change_base(temp_hand[i], nil, rank))
+				local _card = G.hand.cards[i]
+				local changed = false
+				while not changed do
+					local rawRank = _card.base.value
+					if get_counterpart(rawRank) then
+						assert(SMODS.change_base(_card, nil, get_counterpart(rawRank)))
+						local upgrades = {}
+						if _card.config.center.name ~= "Default Base" then table.insert(upgrades, "enhancement") end
+						if _card.edition then table.insert(upgrades, "edition") end
+						if _card.seal then table.insert(upgrades, "seal") end
+						if next(upgrades) then
+							local toRemove = upgrades[math.random(#upgrades)]
+							if toRemove == "enhancement" then
+								_card:set_ability(G.P_CENTERS["c_base"])
+							elseif toRemove == "edition" then
+								_card.edition = nil
+							elseif toRemove == "seal" then
+								_card.seal = nil
+							end
+						end
+						changed = true
+					else
+						local rank = SMODS.Rank.obj_table[rawRank]
+						assert(SMODS.change_base(_card, nil, rank.next[1]))
+					end
+				end
 			return true end })
-		end]]--
+		end
 		delay(0.2)
-		for i=1, #G.hand.cards do unflipCard(temp_hand[i], i, #G.hand.cards) end
+		for i=1, #G.hand.cards do unflipCard(G.hand.cards[i], i, #G.hand.cards) end
     end
 })
 
@@ -922,7 +939,7 @@ SMODS.Consumable({ -- Vector
 	loc_txt = loc.vector,
     pos = coordinate(5),
 	config = {max_highlighted = 5},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+    loc_vars = function(self) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             return true
@@ -930,12 +947,10 @@ SMODS.Consumable({ -- Vector
         return false
     end,
     use = function()
-		printDebugMessage("Vector card is used", "Showdown")
-		for i=1, #G.hand.highlighted do
-			print(G.hand.highlighted[i].base.value..": "..G.hand.highlighted[i].base.id.." | "..G.hand.highlighted[i]:get_id())
-		end
-		print(tprint(G.hand.highlighted[1].ability))
-        -- idk
+		G.GAME.showdown_vector = (G.GAME.showdown_vector or 0) + #G.hand.highlighted
+		for i=#G.hand.highlighted, 1, -1 do
+            event({trigger = 'after', delay = 0.1, func = function() G.hand.highlighted[i]:start_dissolve(nil, i == #G.hand.highlighted) return true end })
+        end
     end
 })
 
@@ -1049,17 +1064,17 @@ SMODS.Consumable({ -- Operation
 				end
 			end
 			local cardValues1 = {
-				ability = card1.ability,
+				ability = card1.config.center,
 				edition = card1.edition,
-				seal = card1:get_seal()
+				seal = card1.seal
 			}
 			local cardValues2 = {
-				ability = card2.ability,
+				ability = card2.config.center,
 				edition = card2.edition, -- Done
-				seal = card2:get_seal() -- Done
+				seal = card2.seal -- Done
 			}
-			local _rank = pseudorandom_element({'0', '2', '2.5', '3', '4', '5', '5.5', '6', '7', '8', '8.5', '9', 'T', 'J', 'B', 'Q', 'P', 'K', 'L', 'A'}, pseudoseed('showdown_Probability'))
-			local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('showdown_Probability'))
+			local _rank = pseudorandom_element(get_all_ranks(), pseudoseed('showdown_Probability'))
+			local _suit = pseudorandom_element(get_all_suits({exotic = G.GAME and G.GAME.Exotic}), pseudoseed('showdown_Probability'))
 			local center = G.P_CENTERS.c_base
 			---- This is horrendous
 			local enhancements = {}
@@ -1188,17 +1203,6 @@ SMODS.Enhancement({
 		if context.cardarea == G.play and not context.repetition then
 			effect.x_mult = card.ability.extra.x_mult
 			effect.x_chips = card.ability.extra.x_chips
-			if
-				pseudorandom("showdown_ghost") > G.GAME.probabilities.normal * (card.ability.extra.shatter_chance - 1) / card.ability.extra.shatter_chance
-				and not card.ability.eternal
-			then
-				card.will_shatter = true
-				G.E_MANAGER:add_event(Event({
-					trigger = "after", func = function()
-						card:shatter(); return true
-					end,
-				}))
-			end
 		end
 	end
 })
