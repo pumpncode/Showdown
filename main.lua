@@ -337,6 +337,23 @@ SMODS.Back{ -- Mirror Deck
 	end
 }
 
+SMODS.Back{ -- Calculus Deck
+	name = "Calculus Deck",
+	key = "Calculus",
+	--atlas = "showdown_decks",
+	atlas = "showdown_placeholders",
+	--pos = coordinate(2),
+	pos = coordinate(15, 5),
+	loc_txt = loc.calculus_deck,
+	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
+}
+
+local Backapply_to_runRef = Back.apply_to_run
+function Back.apply_to_run(self)
+	Backapply_to_runRef(self)
+	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
+end
+
 ---- Counterpart Cards
 
 SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
@@ -532,7 +549,7 @@ table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 --
 
 function SMODS.is_counterpart(card)
-	return card.base.id < 0
+	return (next(find_joker("hiding_details")) and not find_joker("hiding_details").debuff) or card.base.id < 0
 end
 
 SMODS.Consumable:take_ownership('lovers', {
@@ -806,6 +823,35 @@ SMODS.UndiscoveredSprite{
     pos = coordinate(1)
 }
 
+function mathDestroyCard(card, args)
+	if not card then print("mathDestroyCard function used without referencing a card") return end
+	if not args then args = {} end
+	if
+		not G.GAME.mathematic_no_destroy_chance
+		or (G.GAME.mathematic_no_destroy_chance and pseudorandom('mathematic_no_destroy_chance') < G.GAME.probabilities.normal / 3)
+	then
+		card:start_dissolve(args.dissolve_colours, args.silent, args.dissolve_time_fac, args.no_juice)
+		return true
+	else
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+			attention_text({
+				text = localize('k_nope_ex'),
+				scale = 1.3,
+				hold = 1.4,
+				major = card,
+				backdrop_colour = G.C.RED,
+				align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or 'cm',
+				offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -2.2 or -2},
+				silent = true
+				})
+				G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+					play_sound('tarot2', 0.76, 0.4);return true end}))
+				play_sound('tarot2', 1, 0.4)
+				card:juice_up(0.3, 0.5)
+		return true end }))
+	end
+end
+
 SMODS.Consumable({ -- Constant
 	key = 'constant',
 	set = 'Mathematic',
@@ -831,7 +877,7 @@ SMODS.Consumable({ -- Constant
 				toEnhance[#toEnhance+1] = _card
 			end
 		end
-		event({trigger = 'after', delay = 0.1, func = function() card:start_dissolve() return true end })
+		event({trigger = 'after', delay = 0.1, func = function() mathDestroyCard(card) return true end })
         delay(0.2)
 		for i=1, #toEnhance do flipCard(toEnhance[i], i, #toEnhance) end
         delay(0.2)
@@ -886,8 +932,8 @@ SMODS.Consumable({ -- Function
         delay(0.2)
 		for i=self.config.toDestroy, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed')); card:start_dissolve();
-				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
+				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed'))
+				if mathDestroyCard(card) then table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted)) end
             return true end })
         end
 		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
@@ -921,8 +967,8 @@ SMODS.Consumable({ -- Shape
         delay(0.2)
 		for i=self.config.toDestroy, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed')); card:start_dissolve(nil, i == 1);
-				table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted))
+				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed'))
+				if mathDestroyCard(card, {nil, i == 1}) then table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted)) end
             return true end })
         end
 		event({trigger = 'after', delay = 0.2, func = function()
@@ -938,7 +984,7 @@ SMODS.Consumable({ -- Vector
 	atlas = 'showdown_mathematic',
 	loc_txt = loc.vector,
     pos = coordinate(5),
-	config = {max_highlighted = 5},
+	config = {max_highlighted = 3},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
@@ -949,7 +995,7 @@ SMODS.Consumable({ -- Vector
     use = function()
 		G.GAME.showdown_vector = (G.GAME.showdown_vector or 0) + #G.hand.highlighted
 		for i=#G.hand.highlighted, 1, -1 do
-            event({trigger = 'after', delay = 0.1, func = function() G.hand.highlighted[i]:start_dissolve(nil, i == #G.hand.highlighted) return true end })
+            event({trigger = 'after', delay = 0.1, func = function() mathDestroyCard(G.hand.highlighted[i], {nil, i == #G.hand.highlighted}) return true end })
         end
     end
 })
@@ -974,8 +1020,7 @@ SMODS.Consumable({ -- Probability
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
 				if G.hand.highlighted ~= nil and (pseudorandom("showdown_probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
-                	G.hand.highlighted[i]:start_dissolve(nil, first_dissolved)
-					first_dissolved = false
+                	if mathDestroyCard(G.hand.highlighted[i], {nil, first_dissolved}) then first_dissolved = false end
 					for k, v in pairs(joker.ability) do
 						if
 							(type(v) == "number" or type(v) == "table")
@@ -1025,7 +1070,7 @@ SMODS.Consumable({ -- Sequence
 		update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-                if G.hand.highlighted ~= nil then G.hand.highlighted[i]:start_dissolve(nil, i == 1); end
+                if G.hand.highlighted ~= nil then mathDestroyCard(G.hand.highlighted[i], {nil, i == 1}); end
             return true end })
         end
 		
@@ -1050,7 +1095,8 @@ SMODS.Consumable({ -- Operation
 		local card1 = G.hand.highlighted[1]
 		local card2 = G.hand.highlighted[2]
 		event({trigger = 'after', delay = 0.1, func = function()
-			card1:start_dissolve(nil, true); card2:start_dissolve();
+			mathDestroyCard(card1, {nil, true})
+			mathDestroyCard(card2)
 		return true end })
 		delay(0.2)
 		event({trigger = 'after', delay = 0.7, func = function()
@@ -1110,7 +1156,7 @@ SMODS.Voucher({ -- Irrational Numbers
     unlocked = false,
 	pos = coordinate(1),
 	check_for_unlock = function()
-        -- if 20 counterpart cards in deck
+        --
     end,
 })
 
@@ -1122,7 +1168,7 @@ SMODS.Voucher({ -- Transcendant Numbers
     requires = {'showdown_irrational'},
 	pos = coordinate(3, 2),
 	check_for_unlock = function()
-        -- if 10 counterpart cards in deck with one or more modifiers
+        --
     end,
 })
 
@@ -1135,7 +1181,7 @@ SMODS.Voucher({ -- Number Theory
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				G.GAME.math_rate = (G.GAME.math_rate or 0) + 4
+				G.GAME.mathematic_rate = (G.GAME.mathematic_rate or 0) + 4
 				return true
 			end,
 		}))
@@ -1143,7 +1189,7 @@ SMODS.Voucher({ -- Number Theory
 	unredeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				G.GAME.math_rate = math.max(0, G.GAME.math_rate - 4)
+				G.GAME.mathematic_rate = math.max(0, G.GAME.mathematic_rate - 4)
 				return true
 			end,
 		}))
@@ -1178,6 +1224,7 @@ for i = 1, 4 do
         end,
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
+		kind = 'booster_calculus',
         in_pool = function() return (pseudorandom('calculus'..G.SEED) < 0.5) end
     }
 end

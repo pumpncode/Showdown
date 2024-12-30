@@ -101,7 +101,8 @@ pattern = 'return self.base.id'
 position = 'at'
 match_indent = true
 payload = '''
-    return math.abs(self.base.id)
+    if self.base.id then return math.abs(self.base.id) end
+    return -9999999
 '''
 
 # 0 cards counts in Even Steven scoring
@@ -216,4 +217,48 @@ payload = '''
     if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
         destroyed = true
     end
+'''
+
+# Calculus deck forces first booster in shop to be a Calculus booster, part 1/3
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
+position = "at"
+match_indent = true
+payload = '''
+    G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+'''
+
+# Calculus deck forces first booster in shop to be a Calculus booster, part 2/3
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then"
+position = "at"
+match_indent = true
+payload = '''
+    if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
+'''
+
+# Calculus deck forces first booster in shop to be a Calculus booster, part 3/3
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
+position = "at"
+match_indent = true
+payload = '''
+    G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+'''
+
+# Hands check for Chaos Card unlock
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+match_indent = true
+payload = '''
+    self.GAME.chaos_card_hands = {flush = false, straight = false, five = false}
 '''

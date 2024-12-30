@@ -39,7 +39,10 @@ return  {
         ['en-us'] = {
             ['name'] = 'Calculus Deck',
             ['text'] = {
-                [1] = 'idk',
+                [1] = 'First booster in the shop is',
+                [2] = 'always a {C:showdown_mathematic}Calculus Booster{}',
+                [3] = 'You start with a {C:attention}Genie{} tarot',
+                [4] = 'card and with {C:attention}Number Theory{}',
             }
         }
     },
@@ -371,12 +374,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Irrational Numbers',
             ['text'] = {
-                [1] = '{C:counterpart_ranks}Counterpart{} cards may',
-                [2] = 'appear with an {C:attention}enhancement{}',
-            },
-            ['unlock'] = {
-                [1] = 'Have at least {C:attention}20{} {C:counterpart_ranks}counterpart{}',
-                [2] = 'cards in your deck',
+                [1] = 'idk',
             }
         }
     },
@@ -384,13 +382,10 @@ return  {
         ['en-us'] = {
             ['name'] = 'Transcendant Numbers',
             ['text'] = {
-                [1] = '{C:counterpart_ranks}Counterpart{} cards may',
-                [2] = 'appear with an {C:attention}edition{}',
+                [1] = 'idk',
             },
             ['unlock'] = {
-                [1] = 'Have at least {C:attention}10{} {C:counterpart_ranks}counterpart{}',
-                [2] = 'cards with one or more',
-                [3] = '{C:attention}modifiers{} in your deck',
+                [1] = 'idk',
             }
         }
     },
@@ -398,8 +393,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'Complex Numbers',
             ['text'] = {
-                [1] = '{C:counterpart_ranks}Counterpart{} cards trigger',
-                [2] = '{C:attention}one additional time{}',
+                [1] = 'idk',
             }
         }
     },
@@ -417,7 +411,10 @@ return  {
         ['en-us'] = {
             ['name'] = 'Axiom of Infinity',
             ['text'] = {
-                [1] = 'idk'
+                [1] = 'idk',
+            },
+            ['unlock'] = {
+                [1] = 'idk',
             }
         }
     },
@@ -425,7 +422,9 @@ return  {
         ['en-us'] = {
             ['name'] = 'Collatz Conjecture',
             ['text'] = {
-                [1] = 'idk'
+                [1] = 'Cards destroyed by {C:showdown_mathematic}mathematic{}',
+                [2] = 'cards have a {C:green}1 in 3{} chance of',
+                [3] = '{C:attention}not{} getting destroyed',
             }
         }
     },
@@ -665,7 +664,7 @@ return  {
         ['en-us'] = {
             ['name'] = 'SIM Card',
             ['text'] = {
-                [1] = '{C:counterpart_ranks}Counterpart{} ranks counts',
+                [1] = '{C:counterpart_ranks}Counterpart{} cards counts',
                 [2] = 'as {C:attention}every{} suit',
             }
         }
@@ -843,6 +842,15 @@ return  {
             ['unlock'] = {
                 [1] = 'Trigger a {C:attention}0{}',
                 [2] = 'card {C:attention}5{} times',
+            }
+        }
+    },
+    hiding_details = {
+        ['en-us'] = {
+            ['name'] = 'Hiding in the Details',
+            ['text'] = {
+                [1] = 'All cards are considered',
+                [2] = '{C:counterpart_ranks}counterpart{} cards',
             }
         }
     },

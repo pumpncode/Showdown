@@ -253,7 +253,12 @@ create_joker({ -- Blue
     unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'chip_score' then
-            if args.chips < 10 then unlock_card(self) end
+            if
+                (type(args.chips) == 'number' and args.chips < 10)
+                or (type(args.chips) == 'table' and args.chips.array[1] < 10)
+            then
+                unlock_card(self)
+            end
         end
     end,
     calculate = function(self, card, context)
@@ -393,11 +398,6 @@ create_joker({ -- Baby Jimbo
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
-    unlocked = false,
-    unlock_condition = {hidden = true},
-    check_for_unlock = function(self, args)
-        -- 2 times the maximum amount of consumables
-    end,
     calculate = function(self, card, context)
         if not context.blueprint
             and (context.destroying_cards or context.removing_cards)
@@ -466,7 +466,19 @@ create_joker({ -- Chaos Card
     unlocked = false,
     unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
-        --
+        if args.type == 'hand_contents' then
+            local hands = G.GAME.chaos_card_hands
+            local eval = evaluate_poker_hand(args.cards)
+            hands.flush = hands.flush or next(eval['Flush'])
+            hands.straight = hands.straight or next(eval['Straight'])
+            hands.five = hands.five or next(eval['Five of a Kind'])
+            if hands.flush and hands.straight and hands.five then unlock_card(self) end
+        elseif args.type == 'round_win' then
+            local hands = G.GAME.chaos_card_hands
+            hands.flush = false
+            hands.straight = false
+            hands.five = false
+        end
     end,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
@@ -648,8 +660,9 @@ create_joker({ -- Egg Drawing
         end
     end,
     calculate = function(self, card, context)
-        if context.end_of_round and not context.blueprint then
-            local joker = G.jokers.cards[math.random(#G.jokers.cards)]
+        if context.end_of_round and not context.repetition and not context.blueprint then
+            print("egg drawing")
+            local joker = pseudorandom_element(G.jokers.cards, pseudoseed('egg_drawing'))
             joker.ability.extra_value = joker.ability.extra_value + card.ability.extra.money
             joker:set_cost()
             return {
@@ -817,4 +830,15 @@ create_joker({ -- Billiard
             end
 		end
     end
+})
+
+create_joker({ -- Hiding in the Details
+    name = 'hiding_details', loc_txt = loc.hiding_details,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    custom_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+	end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
 })
