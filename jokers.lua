@@ -842,3 +842,51 @@ create_joker({ -- Hiding in the Details
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
 })
+
+create_joker({ -- What a Steel!
+    name = 'what_a_steel', loc_txt = loc.what_a_steel,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    vars = {{steel_tally = 0}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.steel_tally, G.GAME.discount_percent } }
+	end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    unlock_condition = {hidden = true},
+    check_for_unlock = function(self, args)
+        if args.type == 'playing_card_added' then
+            if args.card.config.center == G.P_CENTERS.m_steel then
+                unlock_card(self)
+            end
+        end
+    end,
+    calculate = function(self, card, context)
+        if not context.blueprint then
+            G.GAME.discount_percent = G.GAME.used_vouchers.v_liquidation and 50 or G.GAME.used_vouchers.v_clearance_sale and 25 or 0 -- There's no compatibility if mods change the discount
+            card.ability.extra.steel_tally = 0
+            for k, v in pairs(G.playing_cards) do
+                if v.config.center == G.P_CENTERS.m_steel then
+                    card.ability.extra.steel_tally = card.ability.extra.steel_tally+1
+                    G.GAME.discount_percent = G.GAME.discount_percent + 1
+                end
+            end
+            card.ability.extra.steel_tally = math.min(card.ability.extra.steel_tally, 80)
+            G.GAME.discount_percent = math.min(G.GAME.discount_percent, 80)
+            G.E_MANAGER:add_event(Event({func = function()
+                for k, v in pairs(G.I.CARD) do
+                    if v.set_cost then v:set_cost() end
+                end
+            return true end }))
+        end
+    end
+})
+
+create_joker({ -- Diplomatic Immunity
+    name = 'diplomatic_immunity', loc_txt = loc.diplomatic_immunity,
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true
+})

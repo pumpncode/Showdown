@@ -854,6 +854,29 @@ return  {
             }
         }
     },
+    what_a_steel = {
+        ['en-us'] = {
+            ['name'] = 'What a Steel!',
+            ['text'] = {
+                [1] = 'Each {C:attention}Steel Card{} in your {C:attention}full deck{}',
+                [2] = 'add a {C:attention}1%{} reduction on shop items',
+                [3] = '{C:inactive}(Currently {C:attention}#1#%{}{C:inactive}, {C:attention}#2#%{}{C:inactive} with vouchers)',
+            },
+            ['unlock'] = {
+                [1] = 'Buy a {C:attention}Steel Card{}',
+                [2] = 'from the shop',
+            }
+        }
+    },
+    diplomatic_immunity = {
+        ['en-us'] = {
+            ['name'] = 'Diplomatic Immunity',
+            ['text'] = {
+                [1] = 'Last {C:attention}scored{} card',
+                [2] = '{C:attention}cannot{} be debuffed',
+            }
+        }
+    },
 
     ---- Rarity
     

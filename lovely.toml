@@ -262,3 +262,27 @@ match_indent = true
 payload = '''
     self.GAME.chaos_card_hands = {flush = false, straight = false, five = false}
 '''
+
+# Check unlock for buying card (what a steel)
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = "playing_card_joker_effects({c1})"
+position = "after"
+match_indent = true
+payload = '''
+    check_for_unlock({type = 'playing_card_added', card = c1})
+'''
+
+# Debuff last scored card (diplomatic immunity)
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "for i=1, #pures do"
+position = "before"
+match_indent = true
+payload = '''
+    if next(find_joker('diplomatic_immunity')) and scoring_hand[#scoring_hand].debuff then
+        scoring_hand[#scoring_hand]:set_debuff(false)
+    end
+'''
