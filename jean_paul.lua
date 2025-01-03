@@ -1,18 +1,35 @@
+local function lookFor(card)
+    local jokers = find_joker(card.ability.name)
+    if G.shop_jokers then
+        for _, v in pairs(G.shop_jokers) do
+            if v and type(v) == 'table' and v.ability and v.ability.name == card.ability.name and not v.debuff then
+                table.insert(jokers, v)
+            end
+        end
+    end
+    for k,v in pairs(jokers) do
+        if v == card then return k end
+    end
+    return 0
+end
+
 function say(card, args)
     if not card.hasSpeech then print(card.ability.name.." tried to speak. But sadly, he remembers that he does not have any mouth...") return end
     if not args.prob and not args.guaranteed then print(card.ability.name.." tried to speak. But sadly, he doesn't know how to count...") return end
     if not args then args = {} end
     if args.guaranteed or math.random(args.prob) == 1 then
-        card.add_speech_bubble(args.blabla or '', args.align, {quip = true}, args.direction or 'down')
-        card.say_stuff(5)
+        card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true}, args.direction or 'down')
+        card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5))
+        local queue = card.ability.name..'_'..lookFor(card)
+        if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {} end
         G.E_MANAGER:add_event(Event({
             trigger = 'after',
-            delay = args.delay or G.SETTINGS.GAMESPEED * 2,
+            delay = args.delay or G.SETTINGS.GAMESPEED * 5,
             func = function()
                 card:remove_speech_bubble()
               return true
             end
-        }), 'other')
+        }), queue)
         card.ability.extra.talk = math.random(500, 2500)
     end
 end
@@ -36,11 +53,6 @@ function speech_bubble(text_key, loc_vars, card)
     return t
 end
 
-local dir = {
-    ['down'] = "bm",
-    ['up'] = "tm",
-}
-
 -- Taken from card_character
 -- I originally used card_character to make Jean-Paul speak, but on top of being annoying to use here, I couldn't load it when reloading a game
 -- So I decided to give speech directly to the card :3
@@ -49,9 +61,9 @@ local dir = {
 function giveSpeech(card)
     card.hasSpeech = true
 
-    card.add_speech_bubble = function(text_key, align, loc_vars)
+    card.add_speech_bubble = function(text_key, loc_vars)
         if card.children.speech_bubble then card.children.speech_bubble:remove() end
-        card.config.speech_bubble_align = {align=dir[align] or 'bm', offset = {x=0,y=0},parent = card}
+        card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
         card.children.speech_bubble = UIBox{
             definition = speech_bubble(text_key, loc_vars, card),
             config = card.config.speech_bubble_align
@@ -82,7 +94,8 @@ function giveSpeech(card)
             }))
         else
             if n <= 0 then return end
-            play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
+            --play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
+            play_sound('voice'..math.random(1, 11), (math.random()*0.2+1), 0.5)
             card:juice_up(nil, 0.05)
             G.E_MANAGER:add_event(Event({
                 trigger = 'after',
@@ -103,15 +116,27 @@ function giveSpeech(card)
         end
         drawRef(layer)
     end
+    
+    local moveRef = card.move
+    card.move = function(self, dt)
+        moveRef(self, dt)
+        if self.children.speech_bubble then
+            self.children.speech_bubble:set_alignment(self:align_h_popup())
+        end
+    end
 end
 
 local create_cardRef = create_card
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 	local _card = create_cardRef(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-    if _card.ability.name == 'jean_paul' then
-        giveSpeech(_card)
-        --_card.ability.extra.character = Card_Character({card = _card})
-    end
+    if _card.ability.name == 'jean_paul' then giveSpeech(_card) end
+    return _card
+end
+
+local copy_cardRef = copy_card
+function copy_card(other, new_card, card_scale, playing_card, strip_edition)
+	local _card = copy_cardRef(other, new_card, card_scale, playing_card, strip_edition)
+    if _card.ability.name == 'jean_paul' then giveSpeech(_card) end
     return _card
 end
 
@@ -127,22 +152,52 @@ create_joker({ -- Jean-Paul
     calculate = function(self, card, context)
         if not context.blueprint and not context.repetition then
             if context.end_of_round and not context.individual then
-                say(card, {blabla = ('end_of_round_'..math.random(4)), prob = 2})
+                say(card, {blabla = ('end_of_round'), prob = 2})
             elseif context.open_booster then
-                say(card, {blabla = ('open_booster_'..math.random(3)), prob = 3})
+                say(card, {blabla = ('open_booster'), prob = 3})
             elseif context.buying_card then
-                say(card, {blabla = ('buying_card_'..math.random(5)), prob = 2})
+                if context.card == card then
+                    say(card, {blabla = ('buying_self'), guaranteed = true})
+                elseif context.card.ability.name == 'jean_paul' and context.card ~= card then
+                    say(card, {blabla = ('buying_other_self'), guaranteed = true})
+                else
+                    say(card, {blabla = ('buying_card'), prob = 2})
+                end
             elseif context.selling_card then
-                say(card, {blabla = ('selling_card_'..math.random(3)), prob = 3})
+                if context.card.ability.name == 'jean_paul' and context.card ~= card then
+                    say(card, {blabla = ('selling_other_self'), guaranteed = true})
+                else
+                    say(card, {blabla = ('selling_card'), prob = 3})
+                end
             elseif context.reroll_shop then
-                say(card, {blabla = ('reroll_shop_'..math.random(4)), prob = 3})
+                say(card, {blabla = ('reroll_shop'), prob = 4})
+            elseif context.ending_shop then
+                say(card, {blabla = ('ending_shop'), prob = 2})
+            elseif context.skip_blind then
+                say(card, {blabla = ('skip_blind'), prob = 2})
+            elseif context.skipping_booster then
+                say(card, {blabla = ('skipping_booster'), prob = 3})
+            elseif context.setting_blind and not self.getting_sliced then
+                say(card, {blabla = ('setting_blind'), prob = 3})
+            elseif context.using_consumeable then
+                if context.consumeable.ability.set == 'Tarot' then
+                    say(card, {blabla = ('using_tarot'), prob = 2, quotesNb = context.consumeable.ability.name == 'The World' and 11})
+                elseif context.consumeable.ability.set == 'Planet' then
+                    say(card, {blabla = ('using_planet'), prob = 2})
+                elseif context.consumeable.ability.set == 'Spectral' then
+                    say(card, {blabla = ('using_spectral'), prob = 2})
+                elseif context.consumeable.ability.set == 'Mathematic' then
+                    say(card, {blabla = ('using_mathematic'), prob = 2})
+                else
+                    say(card, {blabla = ('using_unknown'), prob = 2})
+                end
             end
         end
     end,
     update = function(self, card, dt)
         if card.ability.extra.talk <= 0 then
             if card.area == G.shop_jokers then
-                say(card, {blabla = ('shop_jokers_'..math.random(3)), prob = 250, align = 'up'})
+                say(card, {blabla = ('shop_jokers'), prob = 250, align = 'up'})
             end
         else
             card.ability.extra.talk = card.ability.extra.talk - 1
