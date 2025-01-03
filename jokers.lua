@@ -660,7 +660,7 @@ create_joker({ -- Egg Drawing
         end
     end,
     calculate = function(self, card, context)
-        if context.end_of_round and not context.repetition and not context.blueprint then
+        if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
             print("egg drawing")
             local joker = pseudorandom_element(G.jokers.cards, pseudoseed('egg_drawing'))
             joker.ability.extra_value = joker.ability.extra_value + card.ability.extra.money

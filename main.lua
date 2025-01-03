@@ -114,7 +114,7 @@ function create_joker(joker) -- (Thanks Bunco)
     for _, kv_pair in ipairs(joker.vars) do
         -- kv_pair is {a = 1}
         local k, v = next(kv_pair)
-        joker.config.extra[k] = v
+		if k then joker.config.extra[k] = v end
     end
 
     -- Joker creation
@@ -330,7 +330,7 @@ SMODS.Back{ -- Mirror Deck
 	atlas = "showdown_placeholders",
 	--pos = coordinate(1),
 	pos = coordinate(15, 5),
-	loc_txt = loc.mirror_deck,
+	--loc_txt = loc.mirror_deck,
 	config = {counterpart_replacing = true},
 	loc_vars = function(self)
 		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
@@ -344,7 +344,7 @@ SMODS.Back{ -- Calculus Deck
 	atlas = "showdown_placeholders",
 	--pos = coordinate(2),
 	pos = coordinate(15, 5),
-	loc_txt = loc.calculus_deck,
+	--loc_txt = loc.calculus_deck,
 	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
 }
 
@@ -1277,6 +1277,7 @@ SMODS.Enhancement({
 
 ---- Jokers
 
+filesystem.load(showdown.path.."jean_paul.lua")()
 filesystem.load(showdown.path.."jokers.lua")()
 
 ---- Mod Compatibility

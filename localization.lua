@@ -673,8 +673,8 @@ return  {
         ['en-us'] = {
             ['name'] = 'Wall',
             ['text'] = {
-                [1] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                [2] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
+                [1] = 'Hello young man or woman. It seems that i was included into this wonderful and everlasting game called "Balatro" and made by indie',
+                [2] = 'developper Localthunk. text text text text text text text text text text text text text text text text text text text text text text',
                 [3] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
                 [4] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
                 [5] = 'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
@@ -877,12 +877,42 @@ return  {
             }
         }
     },
+    jean_paul_joker = {
+        ['en-us'] = {
+            ['name'] = 'Jean-Paul',
+            ['text'] = {
+                [1] = 'tehe :3',
+            }
+        }
+    },
 
     ---- Rarity
     
     final = {
         ['en-us'] = {
             ['name'] = 'Final'
+        }
+    },
+
+    ---- Jean-Paul
+    
+    jean_paul_say = {
+        ['en-us'] = {
+            ['round_1'] = {
+                [1] = 'You did it!',
+            },
+            ['round_2'] = {
+                [1] = 'Congrats!',
+            },
+            ['round_3'] = {
+                [1] = 'You won\'t fail',
+                [2] = 'next time, I\'m',
+                [3] = 'sure.',
+            },
+            ['round_4'] = {
+                [1] = 'Aaaaaand you win',
+                [2] = 'again.',
+            },
         }
     },
 }

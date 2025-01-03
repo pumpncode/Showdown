@@ -11,9 +11,9 @@ pattern = "RENTAL = HEX('b18f43'),"
 position = 'after'
 match_indent = true
 payload = '''
-    COUNTERPART_RANKS = HEX('485fab'),
-    SHOWDOWN_CALCULUS = HEX('b84242'),
-    SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
+COUNTERPART_RANKS = HEX('485fab'),
+SHOWDOWN_CALCULUS = HEX('b84242'),
+SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
 '''
 
 # Counterpart ranks and mathematic color, part 2/2
@@ -24,9 +24,9 @@ pattern = "legendary = G.C.RARITY[4],"
 position = 'after'
 match_indent = true
 payload = '''
-    counterpart_ranks = G.C.COUNTERPART_RANKS,
-    showdown_calculus = G.C.SHOWDOWN_CALCULUS,
-    showdown_calculus_dark = G.C.SHOWDOWN_CALCULUS_DARK,
+counterpart_ranks = G.C.COUNTERPART_RANKS,
+showdown_calculus = G.C.SHOWDOWN_CALCULUS,
+showdown_calculus_dark = G.C.SHOWDOWN_CALCULUS_DARK,
 '''
 
 # Counterpart don't spawn in decks except the counterpart deck, part 1/3
@@ -37,7 +37,7 @@ pattern = "erratic_suits_and_ranks = false,"
 position = 'after'
 match_indent = true
 payload = '''
-    counterpart_replacing = false,
+counterpart_replacing = false,
 '''
 
 # Counterpart don't spawn in decks except the counterpart deck, part 2/3
@@ -48,9 +48,9 @@ pattern = "if self.effect.config.spectral_rate then"
 position = 'before'
 match_indent = true
 payload = '''
-    if self.effect.config.counterpart_replacing then
-        G.GAME.starting_params.counterpart_replacing = true
-    end
+if self.effect.config.counterpart_replacing then
+    G.GAME.starting_params.counterpart_replacing = true
+end
 '''
 
 # Counterpart don't spawn in decks except the counterpart deck, part 3/3
@@ -61,10 +61,10 @@ pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or 
 position = 'after'
 match_indent = true
 payload = '''
-    if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
-    or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
-        keep = false
-    end
+if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
+or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
+    keep = false
+end
 '''
 
 # Zero has wild card behavior by default, part 1/2
@@ -75,9 +75,9 @@ pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
 position = 'before'
 match_indent = true
 payload = '''
-    if self.base.value == 'showdown_Zero' and not self.debuff then
-        return true
-    end
+if self.base.value == 'showdown_Zero' and not self.debuff then
+    return true
+end
 '''
 
 # Zero has wild card behavior by default, part 2/2
@@ -88,9 +88,9 @@ pattern = 'if self.ability.name == "Wild Card" then'
 position = 'before'
 match_indent = true
 payload = '''
-    if self.base.value == 'showdown_Zero' then
-        return true
-    end
+if self.base.value == 'showdown_Zero' then
+    return true
+end
 '''
 
 # Counterparts counts as original
@@ -101,8 +101,8 @@ pattern = 'return self.base.id'
 position = 'at'
 match_indent = true
 payload = '''
-    if self.base.id then return math.abs(self.base.id) end
-    return -9999999
+if self.base.id then return math.abs(self.base.id) end
+return -9999999
 '''
 
 # 0 cards counts in Even Steven scoring
@@ -113,7 +113,7 @@ pattern = 'context.other_card:get_id()%2 == 0'
 position = 'at'
 match_indent = true
 payload = '''
-    (context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
+(context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
 '''
 
 # Addition of removing_cards context
@@ -124,11 +124,11 @@ pattern = 'if self.area then self.area:remove_card(self) end'
 position = 'before'
 match_indent = true
 payload = '''
-    if G.jokers and G.jokers.cards then
-        for i = 1, #G.jokers.cards do
-            G.jokers.cards[i]:calculate_joker({ removing_cards = true, destroyed_card = self })
-        end
+if G.jokers and G.jokers.cards then
+    for i = 1, #G.jokers.cards do
+        G.jokers.cards[i]:calculate_joker({ removing_cards = true, destroyed_card = self })
     end
+end
 '''
 
 # This is for Baby Jimbo
@@ -139,7 +139,7 @@ pattern = 'if self.cards[i] == card then'
 position = 'after'
 match_indent = true
 payload = '''
-    G.latest_area_baby_jimbo = self
+G.latest_area_baby_jimbo = self
 '''
 
 # SIM Card behavior by default, part 1/2
@@ -150,9 +150,9 @@ pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
 position = 'before'
 match_indent = true
 payload = '''
-    if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
-        return true
-    end
+if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
+    return true
+end
 '''
 
 # SIM Card behavior by default, part 2/2
@@ -163,9 +163,9 @@ pattern = 'if self.ability.name == "Wild Card" then'
 position = 'before'
 match_indent = true
 payload = '''
-    if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
-        return true
-    end
+if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
+    return true
+end
 '''
 
 # Check unlock for free item (one doller)
@@ -176,7 +176,7 @@ pattern = 'if c1.cost ~= 0 then'
 position = 'before'
 match_indent = true
 payload = '''
-    check_for_unlock({type = 'buying_card', price = c1.cost})
+check_for_unlock({type = 'buying_card', price = c1.cost})
 '''
 
 # Check unlock for sold card (egg drawing)
@@ -187,7 +187,7 @@ pattern = 'ease_dollars(self.sell_cost)'
 position = 'before'
 match_indent = true
 payload = '''
-    check_for_unlock({type = 'selling_card', sell_cost = self.sell_cost})
+check_for_unlock({type = 'selling_card', sell_cost = self.sell_cost})
 '''
 
 # Add choices in booster with Vector
@@ -214,9 +214,9 @@ pattern = "if scoring_hand[i].ability.name == 'Glass Card' and not scoring_hand[
 position = "before"
 match_indent = true
 payload = '''
-    if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
-        destroyed = true
-    end
+if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
+    destroyed = true
+end
 '''
 
 # Calculus deck forces first booster in shop to be a Calculus booster, part 1/3
@@ -227,7 +227,7 @@ pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
 position = "at"
 match_indent = true
 payload = '''
-    G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
 '''
 
 # Calculus deck forces first booster in shop to be a Calculus booster, part 2/3
@@ -238,7 +238,7 @@ pattern = "if not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoo
 position = "at"
 match_indent = true
 payload = '''
-    if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
+if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
 '''
 
 # Calculus deck forces first booster in shop to be a Calculus booster, part 3/3
@@ -249,7 +249,7 @@ pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
 position = "at"
 match_indent = true
 payload = '''
-    G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
 '''
 
 # Hands check for Chaos Card unlock
@@ -260,7 +260,7 @@ pattern = "self.GAME.selected_back_key = selected_back"
 position = "after"
 match_indent = true
 payload = '''
-    self.GAME.chaos_card_hands = {flush = false, straight = false, five = false}
+self.GAME.chaos_card_hands = {flush = false, straight = false, five = false}
 '''
 
 # Check unlock for buying card (what a steel)
@@ -271,7 +271,7 @@ pattern = "playing_card_joker_effects({c1})"
 position = "after"
 match_indent = true
 payload = '''
-    check_for_unlock({type = 'playing_card_added', card = c1})
+check_for_unlock({type = 'playing_card_added', card = c1})
 '''
 
 # Debuff last scored card (diplomatic immunity)
@@ -282,7 +282,19 @@ pattern = "for i=1, #pures do"
 position = "before"
 match_indent = true
 payload = '''
-    if next(find_joker('diplomatic_immunity')) and scoring_hand[#scoring_hand].debuff then
-        scoring_hand[#scoring_hand]:set_debuff(false)
-    end
+if next(find_joker('diplomatic_immunity')) and scoring_hand[#scoring_hand].debuff then
+    scoring_hand[#scoring_hand]:set_debuff(false)
+end
+'''
+
+# Reloading speeching abilities of Jean-Paul into a game
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'elseif self.config.center.name == "Square Joker" then'
+position = "before"
+match_indent = true
+payload = '''
+elseif self.config.center.name == "jean_paul" then
+    giveSpeech(self)
 '''
