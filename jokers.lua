@@ -323,7 +323,7 @@ create_joker({ -- Golden Roulette
                     end
                 }))
                 return {
-                    message = localize('k_extinct_ex')
+                    message = localize('k_BAM')
                 }
             else
                 ease_dollars(card.ability.extra.money)
@@ -412,8 +412,9 @@ create_joker({ -- Baby Jimbo
                 trigger = 'after',
                 delay = 0.0,
                 func = (function()
-                        local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'baby_jimbo')
-                        card:set_edition({negative = true}, true)
+                        --local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'baby_jimbo')
+                        local card = SMODS.create_card({set = 'Spectral', area = G.consumeables, edition = {negative = true}})
+                        --card:set_edition({negative = true}, true)
                         card:add_to_deck()
                         G.consumeables:emplace(card)
                         G.GAME.consumeable_buffer = 0
@@ -567,7 +568,7 @@ create_joker({ -- Revolution
     end
 })
 
-create_joker({ -- Fruit Sticker (doesn't work)
+create_joker({ -- Fruit Sticker
     name = 'fruit_sticker',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
@@ -583,21 +584,16 @@ create_joker({ -- Fruit Sticker (doesn't work)
         -- Have stickers on your maximum amount or higher of jokers (no stake stickers)
     end,
     calculate = function(self, card, context)
-        if (context.other_joker or context.joker_main) or (context.individual and context.cardarea == G.hand) then -- It also work on held cards but that's the secret of this joker ;)
-            local _card = context.other_joker or context.joker_main or context.other_card
-            local mult = 1
-            if type(_card) == 'table' and _card.ability then
-                for k, _ in pairs(_card.ability) do
-                    if findInTable(k, SMODS.Sticker.obj_buffer) then
-                        mult = mult * card.ability.extra.x_mult
-                    end
+        --if context.joker_main or context.other_joker or (context.individual and context.cardarea == G.hand) then
+        if context.other_joker then
+            for k, v in pairs(context.other_joker.ability) do
+                print(k)
+                if findInTable(k, SMODS.Sticker.obj_buffer) and v then
+                    return {
+                        x_mult = card.ability.extra.x_mult,
+                        card = context.other_joker
+                    }
                 end
-            end
-            if mult > 1 then
-                return {
-                    x_mult = mult,
-                    card = card
-                }
             end
         end
     end
@@ -774,33 +770,79 @@ create_joker({ -- Strainer
     name = 'strainer',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
-    vars = {{money = 0}},
+    vars = {{money = 0}, {moneyRequirement = 10}, {boss_shop = false}},
     custom_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
-        if G.GAME and G.GAME.blind and G.GAME.blind.boss then
-            return { key = "active", vars = { card.ability.extra.money } }
+        if card.ability.extra.boss_shop then
+            return { key = "j_showdown_strainer_active", vars = { card.ability.extra.moneyRequirement, card.ability.extra.money } }
+        else
+            return { key = "j_showdown_strainer", vars = { card.ability.extra.moneyRequirement } }
         end
-        return { key = "inactive" }
 	end,
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = false,
     calculate = function(self, card, context)
-        if G.GAME and G.GAME.blind and G.GAME.blind.boss then
-            if context.buying_card and context.card.cost > 0 then
-                card.ability.extra.money = card.ability.extra.money + context.card.cost
-            end
-            if context.ending_shop then
-                while card.ability.extra.money >= 5 do
-                    card.ability.extra.money = card.ability.extra.money - 5
-                    local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
-                    -- creates a card
-                    print("Created a "..ranks[math.random(#ranks)].." card")
+        if G.GAME and G.GAME.blind and G.GAME.blind.boss and not context.blueprint then
+            card.ability.extra.boss_shop = true
+        end
+        if card.ability.extra.boss_shop then
+            if (context.buying_card or context.open_booster) and not context.blueprint then
+                card.ability.extra.money = card.ability.extra.money + math.max(context.card.cost, 0)
+            elseif context.reroll_shop and not context.blueprint then
+                card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost, 0)
+            elseif context.ending_shop then
+                local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
+                local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+                while card.ability.extra.money >= card.ability.extra.moneyRequirement do
+                    card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
+                    local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
+                    local suit = pseudorandom_element(suits, pseudoseed('strainer'))
+                    local created_card = get_card_from_rank_suit(rank, suit)
+                    if created_card then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                                local _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, get_card_from_rank_suit(rank, suit), G.P_CENTERS.c_base, {playing_card = G.playing_card})
+                                _card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+                                G.play:emplace(_card)
+                                table.insert(G.playing_cards, _card)
+                                return true
+                        end}))
+                        delay(0.6)
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                G.deck.config.card_limit = G.deck.config.card_limit + 1
+                                return true
+                        end}))
+                        draw_card(G.play,G.deck, 90,'up', nil)
+                        playing_card_joker_effects({true})
+                        delay(0.2)
+                    end
                 end
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        play_sound('tarot1')
+                        card.T.r = -0.2
+                        card:juice_up(0.3, 0.4)
+                        card.states.drag.is = true
+                        card.children.center.pinch.x = true
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                            func = function()
+                                    G.jokers:remove_card(card)
+                                    card:remove()
+                                    card = nil
+                                return true; end}))
+                        return true
+                    end
+                }))
+                return {
+                    message = localize('k_strainer_broke')
+                }
             end
         end
     end
 })
-
+--[[
 create_joker({ -- Billiard
     name = 'billiard',
     --atlas = "showdown_jokers",
@@ -830,7 +872,7 @@ create_joker({ -- Billiard
 		end
     end
 })
-
+]]
 create_joker({ -- Hiding in the Details
     name = 'hiding_details',
     --atlas = "showdown_jokers",

@@ -276,7 +276,8 @@ return {
             j_showdown_fruit_sticker = {
                 name = 'Fruit Sticker',
                 text = {
-                    '{X:mult,C:white}X#1#{} for each {C:attention}stickers{}',
+                    '{X:mult,C:white}X#1#{} for each card with',
+                    'at least one {C:attention}sticker{}',
                     '{C:inactive}(Stake stickers excluded)',
                 },
                 unlock = {
@@ -349,25 +350,19 @@ return {
             j_showdown_strainer = {
                 name = 'Strainer',
                 text = {
-                    'For each {C:money}5${} spend in next {C:attention}boss blind{}',
-                    'creates a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
-                    '{C:attention}0{} card after the shop then {C:red}self-destruct{}',
-                    '{C:inactive}(Currently {C:money}#1#${C:inactive})',
-                },
-                active = {
-                    'For each {C:money}5${} spend in next {C:attention}boss blind{}',
-                    'creates a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
-                    '{C:attention}0{} card after the shop then {C:red}self-destruct{}',
-                    '{C:inactive}(Currently {C:money}#1#${C:inactive})',
+                    'For each {C:money}#1#${} spend in next {C:attention}boss shop{}',
+                    'adds a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
+                    '{C:attention}0{} card to your deck then {C:red}self-destruct{}',
+                    '{C:inactive}(Inactive)',
                 },
             },
             j_showdown_strainer_active = {
                 name = 'Strainer',
                 text = {
-                    'For each {C:money}5${} spend in next {C:attention}boss blind{}',
-                    'creates a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
-                    '{C:attention}0{} card after the shop then {C:red}self-destruct{}',
-                    '{C:inactive}(Currently {C:money}#1#${C:inactive})',
+                    'For each {C:money}#1#${} spend in next {C:attention}boss shop{}',
+                    'adds a {C:attention}non-face{} {C:counterpart_ranks}counterpart{} or',
+                    '{C:attention}0{} card to your deck then {C:red}self-destruct{}',
+                    '{C:inactive}(Currently {C:money}#2#${C:inactive})',
                 },
             },
             j_showdown_billiard = {
@@ -663,10 +658,12 @@ return {
         collabs={},
         dictionary={
             k_showdown_final = 'Final',
+            k_BAM = "BAM!",
+            k_strainer_broke = "Broken",
             k_showdown_mysterious_tarot = 'Tarot?',
             k_mathematic = "Mathematic",
             b_mathematic_cards = "Mathematic Cards",
-            b_flip = "FLIP",
+            b_pull = "PULL",
         },
         high_scores={},
         labels={},

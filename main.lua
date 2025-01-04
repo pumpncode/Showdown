@@ -250,21 +250,24 @@ function get_all_ranks(args)
 	local counterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "showdown_Butler", "showdown_Princess", "showdown_Lord", }
 	for i=1, #SMODS.Rank.obj_buffer do
 		local rank = SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[i]]
-		if not args.noVanilla then -- Vanilla
-			if findInTable(rank.key, baseRanks)
-				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
-				and not args.onlyCounterpart
-				and ((args.blacklist and not findInTable(rank.key, args.blacklist)) or not args.blacklist)
-			then
-				table.insert(ranks, rank.key)
+		if not args.blacklist or (args.blacklist and not findInTable(rank.key, args.blacklist)) then
+			if not args.noVanilla then -- Vanilla
+				if
+					findInTable(rank.key, baseRanks)
+					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
+					and not args.onlyCounterpart
+				then
+					table.insert(ranks, rank.key)
+				end
 			end
-		end
-		if not args.noModded then -- Modded
-			if ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
-				and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
-				and ((args.blacklist and not findInTable(rank.key, args.blacklist)) or not args.blacklist)
-			then
-				table.insert(ranks, rank.key)
+			if not args.noModded then -- Modded
+				if
+					not findInTable(rank.key, baseRanks)
+					and ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
+					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
+				then
+					table.insert(ranks, rank.key)
+				end
 			end
 		end
 	end
@@ -276,6 +279,18 @@ function get_all_ranks(args)
 		end
 	end
 	return ranks
+end
+
+---Returns the card table associated with given rank and suit, return nil if rank or suit is unknown
+---@param rank string
+---@param suit string
+---@return table|nil
+function get_card_from_rank_suit(rank, suit)
+	if not rank or not suit then return end
+	for _, v in pairs(G.P_CARDS) do
+		if v.value == rank and v.suit == suit then return v end
+	end
+	print(rank.." of "..suit.." does not exist")
 end
 
 function get_counterpart(rank)
@@ -801,7 +816,7 @@ SMODS.UndiscoveredSprite{
 }
 
 function mathDestroyCard(card, args)
-	if not card then print("mathDestroyCard function used without referencing a card") return end
+	if not card then return end
 	if not args then args = {} end
 	if
 		not G.GAME.mathematic_no_destroy_chance
@@ -1114,6 +1129,88 @@ SMODS.Consumable({ -- Operation
     end
 })
 
+local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
+function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
+	if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
+		if card.ability.set == "Mathematic" then
+			return {
+				n = G.UIT.ROOT,
+				config = { padding = -0.1, colour = G.C.CLEAR },
+				nodes = {
+					{
+						n = G.UIT.R,
+						config = {
+							ref_table = card,
+							r = 0.08,
+							padding = 0.1,
+							align = "bm",
+							minw = 0.5 * card.T.w - 0.15,
+							minh = 0.7 * card.T.h,
+							maxw = 0.7 * card.T.w - 0.15,
+							hover = true,
+							shadow = true,
+							colour = G.C.UI.BACKGROUND_INACTIVE,
+							one_press = true,
+							button = "use_card",
+							func = "can_reserve_card",
+						},
+						nodes = {
+							{
+								n = G.UIT.T,
+								config = {
+									text = localize("b_pull"),
+									colour = G.C.UI.TEXT_LIGHT,
+									scale = 0.55,
+									shadow = true,
+								},
+							},
+						},
+					},
+				},
+			}
+		end
+	end
+	return G_UIDEF_use_and_sell_buttons_ref(card)
+end
+if not (SMODS.Mods["Cryptid"] or {}).can_load then
+	--Code from Betmma's Vouchers
+	G.FUNCS.can_reserve_card = function(e)
+		if #G.consumeables.cards < G.consumeables.config.card_limit then
+			e.config.colour = G.C.GREEN
+			e.config.button = "reserve_card"
+		else
+			e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+			e.config.button = nil
+		end
+	end
+	G.FUNCS.reserve_card = function(e)
+		local c1 = e.config.ref_table
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0.1,
+			func = function()
+				c1.area:remove_card(c1)
+				c1:add_to_deck()
+				if c1.children.price then
+					c1.children.price:remove()
+				end
+				c1.children.price = nil
+				if c1.children.buy_button then
+					c1.children.buy_button:remove()
+				end
+				c1.children.buy_button = nil
+				remove_nils(c1.children)
+				G.consumeables:emplace(c1)
+				G.GAME.pack_choices = G.GAME.pack_choices - 1
+				if G.GAME.pack_choices <= 0 then
+					G.FUNCS.end_consumeable(nil, delay_fac)
+				end
+				return true
+			end,
+		}))
+	end
+end
+
 ---- Vouchers
 
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
@@ -1178,7 +1275,6 @@ for i = 1, 4 do
     SMODS.Booster{
         key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
         config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
-        draw_hand = true,
         create_card = function(self, card)
             return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'showdown_calculus')
         end,
@@ -1256,24 +1352,3 @@ end
 if (SMODS.Mods["InkAndColor"] or {}).can_load then
 	modCompatibility("InkAndColor", "compat/inkAndColorCompat.lua")
 end
-
---[[
-SMODS.ConsumableType{
-    key = 'test',
-    primary_colour = G.C.SHOWDOWN_CALCULUS,
-    secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
-    collection_rows = {},
-	inject = function(self)
-		SMODS.ObjectType.inject(self)
-		SMODS.ConsumableTypes[self.key] = self
-		G.localization.descriptions[self.key] = G.localization.descriptions[self.key] or {}
-		G.C.SET[self.key] = self.primary_colour
-		G.C.SECONDARY_SET[self.key] = self.secondary_colour
-		G.FUNCS['your_collection_' .. string.lower(self.key) .. 's'] = function(e)
-			--
-		end
-		G.FUNCS['your_collection_' .. string.lower(self.key) .. '_page'] = function(args)
-			--
-		end
-	end,
-}]]--
