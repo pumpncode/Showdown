@@ -18,10 +18,11 @@ function say(card, args)
     if not args.prob and not args.guaranteed then print(card.ability.name.." tried to speak. But sadly, he doesn't know how to count...") return end
     if not args then args = {} end
     if args.guaranteed or math.random(args.prob) == 1 then
-        card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true}, args.direction or 'down')
-        card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5))
+        card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true})
         local queue = card.ability.name..'_'..lookFor(card)
-        if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {} end
+        if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {}
+        else G.E_MANAGER:clear_queue(queue) end
+        card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5), nil, queue)
         G.E_MANAGER:add_event(Event({
             trigger = 'after',
             delay = args.delay or G.SETTINGS.GAMESPEED * 5,
@@ -30,11 +31,11 @@ function say(card, args)
               return true
             end
         }), queue)
-        card.ability.extra.talk = math.random(500, 2500)
+        card.ability.extra.talk = math.random(750, 2500)
     end
 end
 
-function speech_bubble(text_key, loc_vars, card)
+function speech_bubble(text_key, loc_vars)
     local text = {}
     if loc_vars and loc_vars.quip then
       localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
@@ -81,7 +82,7 @@ function giveSpeech(card)
         if card.children.speech_bubble then card.children.speech_bubble:remove(); card.children.speech_bubble = nil end
     end
 
-    card.say_stuff = function(n, not_first)
+    card.say_stuff = function(n, not_first, queue)
         if not not_first then
             G.E_MANAGER:add_event(Event({
                 trigger = 'after',
@@ -91,7 +92,7 @@ function giveSpeech(card)
                     card.say_stuff(n, true)
                   return true
                 end
-            }))
+            }), queue)
         else
             if n <= 0 then return end
             --play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
@@ -105,7 +106,7 @@ function giveSpeech(card)
                     card.say_stuff(n-1, true)
                 return true
                 end
-            }), 'other')
+            }), queue)
         end
     end
 
@@ -143,15 +144,16 @@ end
 SMODS.Atlas({key = "showdown_jean_paul_joker", path = "Jokers/JeanPaul.png", px = 71, py = 95})
 
 create_joker({ -- Jean-Paul
-    name = 'jean_paul', loc_txt = loc.jean_paul_joker,
+    name = 'jean_paul',
     atlas = "showdown_jean_paul_joker",
     pos = coordinate(1),
-    vars = {{talk = 0}},
+    vars = {{talk = 0}, {inBlind = false}},
     rarity = 'Common', cost = 2,
     blueprint = false, perishable = false, eternal = true,
     calculate = function(self, card, context)
         if not context.blueprint and not context.repetition then
             if context.end_of_round and not context.individual then
+                card.ability.extra.inBlind = false
                 say(card, {blabla = ('end_of_round'), prob = 2})
             elseif context.open_booster then
                 say(card, {blabla = ('open_booster'), prob = 3})
@@ -177,7 +179,8 @@ create_joker({ -- Jean-Paul
                 say(card, {blabla = ('skip_blind'), prob = 2})
             elseif context.skipping_booster then
                 say(card, {blabla = ('skipping_booster'), prob = 3})
-            elseif context.setting_blind and not self.getting_sliced then
+            elseif context.setting_blind and not card.getting_sliced then
+                card.ability.extra.inBlind = true
                 say(card, {blabla = ('setting_blind'), prob = 3})
             elseif context.using_consumeable then
                 if context.consumeable.ability.set == 'Tarot' then
@@ -188,6 +191,8 @@ create_joker({ -- Jean-Paul
                     say(card, {blabla = ('using_spectral'), prob = 2})
                 elseif context.consumeable.ability.set == 'Mathematic' then
                     say(card, {blabla = ('using_mathematic'), prob = 2})
+                elseif context.consumeable.ability.set == 'Code' then
+                    say(card, {blabla = ('using_code'), prob = 2})
                 else
                     say(card, {blabla = ('using_unknown'), prob = 2})
                 end
@@ -195,9 +200,15 @@ create_joker({ -- Jean-Paul
         end
     end,
     update = function(self, card, dt)
-        if card.ability.extra.talk <= 0 then
+        if card.hasSpeech and card.ability.extra.talk <= 0 then
             if card.area == G.shop_jokers then
-                say(card, {blabla = ('shop_jokers'), prob = 250, align = 'up'})
+                say(card, {blabla = ('shop_jokers'), prob = 250})
+            elseif card.area == G.jokers and card.ability.extra.inBlind then
+                say(card, {blabla = ('in_blind'), prob = 250})
+            elseif card.area == G.pack_cards then
+                say(card, {blabla = ('in_booster'), prob = 250})
+            else
+                say(card, {blabla = ('random'), prob = 1000, quotesNb = 20})
             end
         else
             card.ability.extra.talk = card.ability.extra.talk - 1

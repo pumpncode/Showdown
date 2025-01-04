@@ -2,7 +2,6 @@
 
 SMODS.Rarity{
     key = "Final",
-    loc_txt = loc.final,
     default_weight = 0,
     badge_colour = HEX("b5a653"),
     get_weight = function(self, weight, object_type)
@@ -21,7 +20,7 @@ SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 
 ---- Jokers
 
 create_joker({ -- Crouton
-    name = 'crouton', loc_txt = loc.crouton,
+    name = 'crouton',
 	atlas = "showdown_jokers", pos = coordinate(1), soul = coordinate(2),
     vars = {{x_mult = 1.2}},
     rarity = 'Legendary', --cost = 5,
@@ -39,7 +38,7 @@ create_joker({ -- Crouton
 })
 
 create_joker({ -- Pinpoint
-    name = 'pinpoint', loc_txt = loc.pinpoint,
+    name = 'pinpoint',
 	pos = coordinate(3),
     vars = {{x_chips = 1.5}},
     rarity = 'Rare', --cost = 5,
@@ -69,7 +68,7 @@ create_joker({ -- Pinpoint
 })
 
 create_joker({ -- Math Teacher
-    name = 'math_teacher', loc_txt = loc.mathTeacher,
+    name = 'math_teacher',
 	--atlas = "showdown_jokers",
 	pos = coordinate(1),
     vars = {{chips = 0}, {chip_mod = 2.5}},
@@ -108,7 +107,7 @@ create_joker({ -- Math Teacher
 })
 
 create_joker({ -- Gruyère
-    name = 'gruyere', loc_txt = loc.gruyere,
+    name = 'gruyere',
 	--atlas = "showdown_jokers",
 	pos = coordinate(1),
     vars = {{mult = 0}, {mult_mod = 2}},
@@ -132,7 +131,7 @@ create_joker({ -- Gruyère
 })
 
 create_joker({ -- Mirror
-    name = 'mirror', loc_txt = loc.mirror,
+    name = 'mirror',
 	--atlas = "showdown_jokers",
 	pos = coordinate(3),
     custom_config = {extra = {retrigger = 1}},
@@ -155,7 +154,7 @@ create_joker({ -- Mirror
 })
 
 --[[create_joker({ -- Crime Scene
-    name = 'crime_scene', loc_txt = loc.crime_scene,
+    name = 'crime_scene',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     vars = {{x_mult = 1}, {x_mult_mod = 0.1}},
@@ -179,7 +178,7 @@ create_joker({ -- Mirror
 })]]--
 
 create_joker({ -- Ping Pong
-    name = 'ping_pong', loc_txt = loc.ping_pong,
+    name = 'ping_pong',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
@@ -205,7 +204,7 @@ create_joker({ -- Ping Pong
 })
 
 create_joker({ -- Color Splash
-    name = 'color_splash', loc_txt = loc.color_splash,
+    name = 'color_splash',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
@@ -244,7 +243,7 @@ create_joker({ -- Color Splash
 })
 
 create_joker({ -- Blue
-    name = 'blue', loc_txt = loc.blue,
+    name = 'blue',
     atlas = "showdown_jokers",
     pos = coordinate(11),
     rarity = 'Common', --cost = 4,
@@ -272,7 +271,7 @@ create_joker({ -- Blue
 })
 
 create_joker({ -- Spotted Joker
-    name = 'spotted_joker', loc_txt = loc.spotted_joker,
+    name = 'spotted_joker',
 	atlas = "showdown_jokers",
 	pos = coordinate(12),
     vars = {{chips = 0}, {chip_mod = 0.5}},
@@ -295,7 +294,7 @@ create_joker({ -- Spotted Joker
 })
 
 create_joker({ -- Golden Roulette
-    name = 'golden_roulette', loc_txt = loc.golden_roulette,
+    name = 'golden_roulette',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     vars = {{money = 6}},
@@ -340,7 +339,7 @@ create_joker({ -- Golden Roulette
 })
 
 create_joker({ -- Bacteria
-    name = 'bacteria', loc_txt = loc.bacteria,
+    name = 'bacteria',
     --atlas = "showdown_jokers",
     pos = coordinate(1),
     rarity = 'Common', --cost = 4,
@@ -368,7 +367,7 @@ create_joker({ -- Bacteria
 })
 
 create_joker({ -- Empty Joker
-    name = 'empty_joker', loc_txt = loc.empty_joker,
+    name = 'empty_joker',
     atlas = "showdown_jokers",
     pos = coordinate(15),
     vars = {{mult = 12}},
@@ -393,7 +392,7 @@ create_joker({ -- Empty Joker
 })
 
 create_joker({ -- Baby Jimbo
-    name = 'baby_jimbo', loc_txt = loc.baby_jimbo,
+    name = 'baby_jimbo',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
@@ -433,7 +432,7 @@ create_joker({ -- Baby Jimbo
 })
 
 create_joker({ -- Parmesan
-    name = 'parmesan', loc_txt = loc.parmesan,
+    name = 'parmesan',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
@@ -458,7 +457,7 @@ create_joker({ -- Parmesan
 })
 
 create_joker({ -- Chaos Card
-    name = 'chaos_card', loc_txt = loc.chaos_card,
+    name = 'chaos_card',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare', --cost = 4,
@@ -499,7 +498,7 @@ create_joker({ -- Chaos Card
 })
 
 create_joker({ -- SIM Card
-    name = 'sim_card', loc_txt = loc.sim_card,
+    name = 'sim_card',
     atlas = "showdown_jokers",
     pos = coordinate(19),
     custom_vars = function(self, info_queue, card)
@@ -510,7 +509,7 @@ create_joker({ -- SIM Card
 })
 
 create_joker({ -- Wall
-    name = 'wall', loc_txt = loc.wall,
+    name = 'wall',
     atlas = "showdown_jokers",
     pos = coordinate(20),
     rarity = 'Rare', cost = 1,
@@ -518,7 +517,7 @@ create_joker({ -- Wall
 })
 
 create_joker({ -- one doller
-    name = 'one_doller', loc_txt = loc.one_doller,
+    name = 'one_doller',
     --atlas = "showdown_jokers",
     pos = coordinate(1),
     rarity = 'Common', cost = 1,
@@ -544,7 +543,7 @@ create_joker({ -- one doller
 })
 
 create_joker({ -- Revolution
-    name = 'revolution', loc_txt = loc.revolution,
+    name = 'revolution',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
@@ -569,7 +568,7 @@ create_joker({ -- Revolution
 })
 
 create_joker({ -- Fruit Sticker (doesn't work)
-    name = 'fruit_sticker', loc_txt = loc.fruit_sticker,
+    name = 'fruit_sticker',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     vars = {{x_mult = 2.5}},
@@ -605,7 +604,7 @@ create_joker({ -- Fruit Sticker (doesn't work)
 })
 
 create_joker({ -- Sinful Joker
-    name = 'sinful_joker', loc_txt = loc.sinful_joker,
+    name = 'sinful_joker',
     atlas = "showdown_jokers",
     pos = coordinate(24),
     vars = {{scaling = 3}},
@@ -643,7 +642,7 @@ create_joker({ -- Sinful Joker
 })
 
 create_joker({ -- Egg Drawing
-    name = 'egg_drawing', loc_txt = loc.egg_drawing,
+    name = 'egg_drawing',
     atlas = "showdown_jokers",
     pos = coordinate(25),
     vars = {{money = 4}},
@@ -675,7 +674,7 @@ create_joker({ -- Egg Drawing
 })
 
 create_joker({ -- Jimbo's Makeup
-    name = 'jimbo_makeup', loc_txt = loc.jimbo_makeup,
+    name = 'jimbo_makeup',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare',
@@ -683,7 +682,7 @@ create_joker({ -- Jimbo's Makeup
 })
 
 create_joker({ -- Jimbo's Hat
-    name = 'jimbo_hat', loc_txt = loc.jimbo_hat,
+    name = 'jimbo_hat',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare',
@@ -691,7 +690,7 @@ create_joker({ -- Jimbo's Hat
 })
 
 create_joker({ -- Jimbo's Bells
-    name = 'jimbo_bells', loc_txt = loc.jimbo_bells,
+    name = 'jimbo_bells',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare',
@@ -699,7 +698,7 @@ create_joker({ -- Jimbo's Bells
 })
 
 create_joker({ -- Jimbo's Collar
-    name = 'jimbo_collar', loc_txt = loc.jimbo_collar,
+    name = 'jimbo_collar',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare',
@@ -707,7 +706,7 @@ create_joker({ -- Jimbo's Collar
 })
 
 create_joker({ -- Gary McCready
-    name = 'gary_mccready', loc_txt = loc.gary_mccready,
+    name = 'gary_mccready',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     vars = {{created = false}},
@@ -750,7 +749,7 @@ create_joker({ -- Gary McCready
 })
 
 create_joker({ -- Ultimate Joker
-    name = 'ultimate_joker', loc_txt = loc.ultimate_joker,
+    name = 'ultimate_joker',
     --atlas = "showdown_jokers",
     pos = coordinate(9, 5),
     custom_vars = function(self, info_queue, card)
@@ -772,7 +771,7 @@ create_joker({ -- Ultimate Joker
 })
 
 create_joker({ -- Strainer
-    name = 'strainer', --loc_txt = loc.strainer,
+    name = 'strainer',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     vars = {{money = 0}},
@@ -803,7 +802,7 @@ create_joker({ -- Strainer
 })
 
 create_joker({ -- Billiard
-    name = 'billiard', loc_txt = loc.billiard,
+    name = 'billiard',
     --atlas = "showdown_jokers",
     pos = coordinate(3),
     rarity = 'Rare', --cost = 4,
@@ -833,7 +832,7 @@ create_joker({ -- Billiard
 })
 
 create_joker({ -- Hiding in the Details
-    name = 'hiding_details', loc_txt = loc.hiding_details,
+    name = 'hiding_details',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     custom_vars = function(self, info_queue, card)
@@ -844,7 +843,7 @@ create_joker({ -- Hiding in the Details
 })
 
 create_joker({ -- What a Steel!
-    name = 'what_a_steel', loc_txt = loc.what_a_steel,
+    name = 'what_a_steel',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     vars = {{steel_tally = 0}},
@@ -884,7 +883,7 @@ create_joker({ -- What a Steel!
 })
 
 create_joker({ -- Diplomatic Immunity
-    name = 'diplomatic_immunity', loc_txt = loc.diplomatic_immunity,
+    name = 'diplomatic_immunity',
     --atlas = "showdown_jokers",
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,

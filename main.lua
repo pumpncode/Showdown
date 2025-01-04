@@ -1,6 +1,5 @@
 showdown = SMODS.current_mod
 filesystem = NFS or love.filesystem
-loc = filesystem.load(showdown.path..'localization.lua')()
 
 ---- Functions
 
@@ -291,13 +290,6 @@ function get_counterpart(rank)
 	return counterparts[rank]
 end
 
--- Dictionary wrapper
-
-function showdown.process_loc_text()
-    SMODS.process_loc_text(G.localization.descriptions.Other, 'counterpart_ranks', loc.counterpart_ranks)
-    G.P_CENTERS['counterpart_ranks'] = {key = 'counterpart_ranks', set = 'Other'}
-end
-
 ---- Mod Icon
 
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
@@ -315,7 +307,9 @@ SMODS.DeckSkin({
 	},
 	lc_atlas = "showdown_jean_paul",
 	hc_atlas = "showdown_jean_paul_hc",
-	loc_txt = loc.jean_paul,
+	loc_txt = {
+        ['en-us'] = 'Jean-Paul'
+    },
 	posStyle = 'collab'
 })
 
@@ -330,7 +324,6 @@ SMODS.Back{ -- Mirror Deck
 	atlas = "showdown_placeholders",
 	--pos = coordinate(1),
 	pos = coordinate(15, 5),
-	--loc_txt = loc.mirror_deck,
 	config = {counterpart_replacing = true},
 	loc_vars = function(self)
 		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
@@ -344,7 +337,6 @@ SMODS.Back{ -- Calculus Deck
 	atlas = "showdown_placeholders",
 	--pos = coordinate(2),
 	pos = coordinate(15, 5),
-	--loc_txt = loc.calculus_deck,
 	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
 }
 
@@ -393,7 +385,6 @@ SMODS.Rank({ -- 2.5 Card
 	max_id = {
 		value = -3,
 	},
-	loc_txt = loc.two_half,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards',
 	loc_vars = function (self, info_queue, center)
@@ -413,7 +404,6 @@ SMODS.Rank({ -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
-	loc_txt = loc.five_half,
 	max_id = {
 		value = -6,
 	},
@@ -433,7 +423,6 @@ SMODS.Rank({ -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
-	loc_txt = loc.eight_half,
 	max_id = {
 		value = -9,
 	},
@@ -455,7 +444,6 @@ SMODS.Rank({ -- Butler Card
 	face_nominal = 0.1,
 	next = { 'showdown_Princess', 'Queen' },
 	face = true,
-	loc_txt = loc.butler,
 	max_id = {
 		value = -12,
 	},
@@ -477,7 +465,6 @@ SMODS.Rank({ -- Princess Card
 	face_nominal = 0.2,
 	next = { 'showdown_Lord', 'King' },
 	face = true,
-	loc_txt = loc.princess,
 	max_id = {
 		value = -13,
 	},
@@ -499,7 +486,6 @@ SMODS.Rank({ -- Lord Card
 	face_nominal = 0.3,
 	next = { 'Ace' },
 	face = true,
-	loc_txt = loc.lord,
 	max_id = {
 		value = -14,
 	},
@@ -519,7 +505,6 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 	pos = { x = 6 },
 	nominal = 0,
 	next = { 'Ace' },
-	loc_txt = loc.zero,
 	suit_map = {
 		Hearts = 0,
 		Clubs = 0,
@@ -590,7 +575,6 @@ SMODS.Consumable({ -- The Reflection
 	key = 'reflection',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	loc_txt = loc.reflection,
 	config = {max_highlighted = 2},
 	loc_vars = function(self, info_queue)
 		info_queue[#info_queue+1] = { key = 'counterpart_ranks', set = 'Other' }
@@ -626,7 +610,6 @@ SMODS.Consumable({ -- The Vessel
 	key = 'vessel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	loc_txt = loc.vessel,
 	config = {max_highlighted = 1},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
     pos = coordinate(2),
@@ -664,7 +647,6 @@ SMODS.Consumable({ -- The Genie
 	key = 'genie',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	loc_txt = loc.genie,
 	config = { create = 1 },
     loc_vars = function(self) return {vars = {self.config.create}} end,
     pos = coordinate(3),
@@ -696,7 +678,6 @@ SMODS.Consumable({ -- The Lost
 	key = 'lost',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	loc_txt = loc.lost,
 	config = { max_highlighted = 2, mod_conv = "m_showdown_ghost" },
     loc_vars = function(self, info_queue)
         info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_ghost
@@ -709,7 +690,6 @@ SMODS.Consumable({ -- The Angel
 	key = 'angel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	loc_txt = loc.angel,
 	config = { max_highlighted = 2, mod_conv = "m_showdown_holy" },
     loc_vars = function(self, info_queue)
         info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_holy
@@ -729,7 +709,6 @@ SMODS.Consumable({ -- Mist
 	key = 'mist',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
-	loc_txt = loc.mist,
 	config = { change = 6 },
     loc_vars = function(self) return {vars = {self.config.change}} end,
     pos = coordinate(1),
@@ -759,7 +738,6 @@ SMODS.Consumable({ -- Vision
 	key = 'vision',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
-	loc_txt = loc.vision,
 	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
@@ -813,7 +791,6 @@ SMODS.ConsumableType{
     key = 'Mathematic',
     primary_colour = G.C.SHOWDOWN_CALCULUS,
     secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
-    loc_txt = loc.mathematic,
     collection_rows = {4, 4}
 }
 
@@ -856,7 +833,6 @@ SMODS.Consumable({ -- Constant
 	key = 'constant',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.constant,
     pos = coordinate(1),
 	config = {max_highlighted = 1},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
@@ -895,7 +871,6 @@ SMODS.Consumable({ -- Variable
 	key = 'variable',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.variable,
     pos = coordinate(2),
 	config = {max_highlighted = 5},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
@@ -912,7 +887,6 @@ SMODS.Consumable({ -- Function
 	key = 'function',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.functio, -- no n because it fucks with lua
     pos = coordinate(3),
 	config = {max_highlighted = 4, toDestroy = 1},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
@@ -948,7 +922,6 @@ SMODS.Consumable({ -- Shape
 	key = 'shape',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.shape,
     pos = coordinate(4),
 	config = {max_highlighted = 4, toDestroy = 2},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
@@ -982,7 +955,6 @@ SMODS.Consumable({ -- Vector
 	key = 'vector',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.vector,
     pos = coordinate(5),
 	config = {max_highlighted = 3},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
@@ -1004,7 +976,6 @@ SMODS.Consumable({ -- Probability
 	key = 'probability',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.probability,
     pos = coordinate(6),
 	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
     loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
@@ -1052,7 +1023,6 @@ SMODS.Consumable({ -- Sequence
 	key = 'sequence',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.sequence,
     pos = coordinate(7),
 	config = {max_highlighted = 3},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
@@ -1081,7 +1051,6 @@ SMODS.Consumable({ -- Operation
 	key = 'operation',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
-	loc_txt = loc.operation,
     pos = coordinate(8),
 	config = {max_highlighted = 2},
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
@@ -1152,7 +1121,6 @@ SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 
 SMODS.Voucher({ -- Irrational Numbers
 	key = 'irrational',
 	atlas = 'showdown_vouchers',
-	loc_txt = loc.irrational,
     unlocked = false,
 	pos = coordinate(1),
 	check_for_unlock = function()
@@ -1163,9 +1131,8 @@ SMODS.Voucher({ -- Irrational Numbers
 SMODS.Voucher({ -- Transcendant Numbers
 	key = 'transcendant',
 	atlas = 'showdown_vouchers',
-	loc_txt = loc.transcendant,
     unlocked = false,
-    requires = {'showdown_irrational'},
+    requires = {'v_showdown_irrational'},
 	pos = coordinate(3, 2),
 	check_for_unlock = function()
         --
@@ -1175,7 +1142,6 @@ SMODS.Voucher({ -- Transcendant Numbers
 SMODS.Voucher({ -- Number Theory
 	key = 'number',
 	atlas = 'showdown_vouchers',
-	loc_txt = loc.numberTheory,
     unlocked = true,
 	pos = coordinate(2),
 	redeem = function(self)
@@ -1199,9 +1165,8 @@ SMODS.Voucher({ -- Number Theory
 SMODS.Voucher({ -- Axiom of Infinity
 	key = 'axiom',
 	atlas = 'showdown_vouchers',
-	loc_txt = loc.axiomInfinity,
     unlocked = true,
-    requires = {'showdown_number'},
+    requires = {'v_showdown_number'},
 	pos = coordinate(4, 2),
 })
 
@@ -1212,7 +1177,6 @@ SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'BoostersMathemat
 for i = 1, 4 do
     SMODS.Booster{
         key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
-		loc_txt = loc.calculus,
         config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
         draw_hand = true,
         create_card = function(self, card)
@@ -1236,8 +1200,7 @@ SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, 
 SMODS.Enhancement({
 	key = 'ghost',
 	atlas = 'showdown_enhancements',
-	loc_txt = loc.ghost,
-	pos = coordinate(1),
+	pos = coordinate(1, 7),
 	--replace_base_card = true,
 	config = {extra = {x_mult = 1.25, x_chips = 1.25, shatter_chance = 8}},
     loc_vars = function(self, info_queue, card)
@@ -1257,7 +1220,6 @@ SMODS.Enhancement({
 SMODS.Enhancement({
 	key = 'holy',
 	atlas = 'showdown_enhancements',
-	loc_txt = loc.holy,
 	pos = coordinate(2, 7),
 	--replace_base_card = true,
 	config = {extra = {x_mult = 1, x_mult_gain = 0.05}},
@@ -1300,7 +1262,6 @@ SMODS.ConsumableType{
     key = 'test',
     primary_colour = G.C.SHOWDOWN_CALCULUS,
     secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
-    loc_txt = loc.test,
     collection_rows = {},
 	inject = function(self)
 		SMODS.ObjectType.inject(self)

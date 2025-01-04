@@ -2,7 +2,7 @@
 
 local function enable_exotics()
     if G.GAME then G.GAME.Exotic = true end
-	sendDebugMessage('[BUNCO] - Triggered Exotic System enabling.')
+	sendDebugMessage('[SHOWDOWN] - Triggered Exotic System enabling.')
 end
 
 ---- Exotic Suit
@@ -50,9 +50,8 @@ SMODS.Consumable({ -- The Beast
 	key = 'beast',
 	set = 'Tarot',
 	atlas = 'showdown_buncoTarots',
-	loc_txt = loc.beast,
     set_card_type_badge = function(self, card, badges)
-        badges[1] = create_badge(loc.dictionary.mysterious_tarot, get_type_colour(self or card.config, card), nil, 1.2)
+        badges[1] = create_badge(localize("k_showdown_mysterious_tarot"), get_type_colour(self or card.config, card), nil, 1.2)
     end,
 	config = {max_highlighted = 2},
     loc_vars = function(self, info_queue)
