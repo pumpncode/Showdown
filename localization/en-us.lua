@@ -14,7 +14,7 @@ return {
                 name = 'Calculus Deck',
                 text = {
                         'First booster in the shop is',
-                        'always a {C:showdown_mathematic}Calculus Booster{}',
+                        'always a {C:showdown_calculus}Calculus Booster{}',
                         'You start with a {C:attention}Genie{} tarot',
                         'card and with {C:attention}Number Theory{}',
                 }
@@ -402,6 +402,22 @@ return {
                     '{C:attention}cannot{} be debuffed',
                 }
             },
+            j_showdown_sick_trick = {
+                name = 'Sick Trick',
+                text = {
+                    'Copy the {C:attention}leftest lowest',
+                    'rank card onto the card',
+                    'on its {C:attention}left',
+                }
+            },
+            j_showdown_nitroglycerin = {
+                name = 'Nitroglycerin',
+                text = {
+                    'Held cards are {C:attention}destroyed{}',
+                    'when this card is sold',
+                    '{C:inactive}(Does not work in Booster Packs)',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -425,7 +441,7 @@ return {
                 name = 'Calculus Pack',
                 text = {
                     'Choose {C:attention}#1#{} of up to',
-                    '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                    '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
                     'be used immediately'
                 }
             },
@@ -433,7 +449,7 @@ return {
                 name = 'Calculus Pack',
                 text = {
                     'Choose {C:attention}#1#{} of up to',
-                    '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                    '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
                     'be used immediately'
                 }
             },
@@ -441,7 +457,7 @@ return {
                 name = 'Jumbo Calculus Pack',
                 text = {
                     'Choose {C:attention}#1#{} of up to',
-                    '{C:attention}#2#{C:showdown_mathematic} Mathematic{} cards to',
+                    '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
                     'be used immediately'
                 }
             },
@@ -449,9 +465,25 @@ return {
                 name = 'Mega Calculus Pack',
                 text = {
                     'Choose {C:attention}#1#{} of up to',
-                    '{C:attention}#2# {C:showdown_mathematic}Mathematic{} cards to',
+                    '{C:attention}#2# {C:showdown_calculus}Mathematic{} cards to',
                     'be used immediately'
                 }
+            },
+            playing_card_zero={
+                text={
+                    " {C:light_black}#1# of {C:black}Nothing ",
+                },
+            },
+            act_as={
+                text={
+                    'Act as a #1#',
+                },
+            },
+            default_wild={
+                text={
+                    'Can be used',
+                    'as any suit',
+                },
             },
         },
         Planet={},
@@ -496,7 +528,7 @@ return {
                 name = 'The Genie',
                 text = {
                     "Creates up to {C:attention}#1#",
-                    "random {C:showdown_mathematic}Mathematic{} card",
+                    "random {C:showdown_calculus}Mathematic{} card",
                     "{C:inactive}(Must have room){}",
                 }
             },
@@ -546,26 +578,28 @@ return {
                     'idk',
                 }
             },
-            v_showdown_numberTheory = {
+            v_showdown_number = {
                 name = 'Number Theory',
                 text = {
-                    '{C:showdown_mathematic}Mathematic{} cards can',
+                    '{C:showdown_calculus}Mathematic{} cards can',
                     'appear in the shop'
                 }
             },
-            v_showdown_axiomInfinity = {
+            v_showdown_axiom = {
                 name = 'Axiom of Infinity',
                 text = {
-                    'idk',
+                    '{C:showdown_calculus}Mathematic{} cards can',
+                    'be used in boosters'
                 },
                 unlock = {
-                    'idk',
+                    'Open {C:attention}10{} {C:showdown_calculus}Calculus',
+                    '{C:showdown_calculus}Pack{} in one run',
                 }
             },
             v_showdown_collatz = {
                 name = 'Collatz Conjecture',
                 text = {
-                    'Cards destroyed by {C:showdown_mathematic}mathematic{}',
+                    'Cards destroyed by {C:showdown_calculus}mathematic{}',
                     'cards have a {C:green}1 in 3{} chance of',
                     '{C:attention}not{} getting destroyed',
                 }
@@ -583,9 +617,10 @@ return {
             c_showdown_variable = {
                 name = 'Variable',
                 text = {
-                    'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
-                    'and creates a {C:attention}joker{} based on {C:attention}ranks{} and',
-                    '{C:attention}amount{} of cards destroyed',
+                    'Select up to {C:attention}#1#{} cards',
+                    'that will get {C:attention}destroyed{}',
+                    'Each card gives between',
+                    '{C:money}$#2#{} and {C:money}$#3#',
                 }
             },
             c_showdown_function = {

@@ -890,6 +890,7 @@ create_joker({ -- What a Steel!
     pos = coordinate(2),
     vars = {{steel_tally = 0}},
     custom_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS['m_steel']
         return { vars = { card.ability.extra.steel_tally, G.GAME.discount_percent } }
 	end,
     rarity = 'Uncommon', --cost = 4,
@@ -930,4 +931,32 @@ create_joker({ -- Diplomatic Immunity
     pos = coordinate(2),
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true
+})
+--[[
+create_joker({ -- Sick Trick
+    name = 'sick_trick',
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if not context.blueprint then
+            --
+        end
+    end
+})
+]]--
+create_joker({ -- Nitroglycerin
+    name = 'nitroglycerin',
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if context.selling_self and not context.blueprint then
+            for i=#G.hand.cards, 1, -1 do
+                G.hand.cards[i]:start_dissolve(nil, i == #G.hand.cards)
+            end
+        end
+    end
 })

@@ -298,3 +298,64 @@ payload = '''
 elseif self.config.center.name == "jean_paul" then
     giveSpeech(self)
 '''
+
+# Counterpart and 0 card descriptions, part 1/3
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "elseif _c.set == 'Enhanced' then"
+position = "before"
+match_indent = true
+payload = '''
+if specific_vars.act_as then
+    localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
+end
+if specific_vars.default_wild then
+    localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
+end
+'''
+
+# Counterpart and 0 card descriptions, part 2/3
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if _c.effect == 'Mult Card' then loc_vars = {_c.config.mult}"
+position = "before"
+match_indent = true
+payload = '''
+if _c.name ~= 'Stone Card' and specific_vars then
+    if specific_vars.act_as then
+        localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
+    end
+    if specific_vars.default_wild then
+        localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
+    end
+end
+'''
+
+# Counterpart and 0 card descriptions, part 3/3
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) > 0 and (self.ability.bonus + (self.ability.perma_bonus or 0)) or nil,"
+position = "after"
+match_indent = true
+payload = '''
+act_as = get_counterpart(self.base.value, true),
+default_wild = self.base.value == "showdown_Zero",
+'''
+
+# 0 Card name
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "localize{type = 'other', key = 'playing_card', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks'), localize(specific_vars.suit, 'suits_plural'), colours = {specific_vars.colour}}}"
+position = "at"
+match_indent = true
+payload = '''
+if specific_vars.value == "showdown_Zero" then
+    localize{type = 'other', key = 'playing_card_zero', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks')}}
+else
+    localize{type = 'other', key = 'playing_card', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks'), localize(specific_vars.suit, 'suits_plural'), colours = {specific_vars.colour}}}
+end
+'''
