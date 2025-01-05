@@ -49,7 +49,7 @@ SMODS.Consumable({ -- Constant
 	atlas = 'showdown_mathematic',
     pos = coordinate(1),
 	config = {max_highlighted = 1},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {card.config.max_highlighted}} end,
 	can_use = function(self)
         return G.hand and #G.hand.highlighted == self.config.max_highlighted and #G.hand.cards >= 2
     end,
@@ -87,7 +87,7 @@ SMODS.Consumable({ -- Variable
 	atlas = 'showdown_mathematic',
     pos = coordinate(2),
 	config = {max_highlighted = 3, minMoney = 0, maxMoney = 10},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.minMoney, self.config.maxMoney}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {card.config.max_highlighted, card.config.minMoney, card.config.maxMoney}} end,
 	can_use = function(self)
         return #G.jokers.cards < G.jokers.config.card_limit and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,
@@ -108,7 +108,7 @@ SMODS.Consumable({ -- Function
 	atlas = 'showdown_mathematic',
     pos = coordinate(3),
 	config = {max_highlighted = 4, toDestroy = 1},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
 	can_use = function(self)
         return G.hand and #G.hand.highlighted == self.config.max_highlighted
     end,
@@ -143,7 +143,7 @@ SMODS.Consumable({ -- Shape
 	atlas = 'showdown_mathematic',
     pos = coordinate(4),
 	config = {max_highlighted = 4, toDestroy = 2},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted == self.config.max_highlighted then
             return true
@@ -176,7 +176,7 @@ SMODS.Consumable({ -- Vector
 	atlas = 'showdown_mathematic',
     pos = coordinate(5),
 	config = {max_highlighted = 3},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             return true
@@ -197,7 +197,7 @@ SMODS.Consumable({ -- Probability
 	atlas = 'showdown_mathematic',
     pos = coordinate(6),
 	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 and #G.jokers.cards >= 1 then
             return true
@@ -244,7 +244,7 @@ SMODS.Consumable({ -- Sequence
 	atlas = 'showdown_mathematic',
     pos = coordinate(7),
 	config = {max_highlighted = 3},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
 	can_use = function()
         if G.hand and #G.hand.highlighted <= 5 and #G.hand.highlighted >= 1 then
             return true
@@ -272,7 +272,7 @@ SMODS.Consumable({ -- Operation
 	atlas = 'showdown_mathematic',
     pos = coordinate(8),
 	config = {max_highlighted = 2},
-    loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
 	can_use = function()
         if G.hand and #G.hand.highlighted == 2 then
             return true

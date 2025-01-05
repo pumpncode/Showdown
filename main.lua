@@ -160,7 +160,8 @@ function create_joker(joker) -- (Thanks Bunco)
 
             return {vars = vars}
         end,
-
+		locked_loc_vars = joker.locked_vars or function(self, info_queue, card) end,
+		
         calculate = joker.calculate,
         update = joker.update,
         remove_from_deck = joker.remove,

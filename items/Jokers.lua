@@ -26,7 +26,6 @@ create_joker({ -- Crouton
     rarity = 'Legendary', --cost = 5,
     blueprint = true, eternal = true, perishable = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.hand then
             return {
@@ -79,7 +78,6 @@ create_joker({ -- Math Teacher
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = false, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
             local eval = evaluate_poker_hand(args.cards)
@@ -210,7 +208,6 @@ create_joker({ -- Color Splash
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
             local text,disp_text,poker_hands,scoring_hand,non_loc_disp_text = G.FUNCS.get_poker_hand_info(args.cards)
@@ -249,7 +246,6 @@ create_joker({ -- Blue
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'chip_score' then
             if
@@ -439,20 +435,22 @@ create_joker({ -- Parmesan
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play then
+        if context.individual and context.cardarea == G.play and not context.repetition then
             local lowestRank = 11
             for i=1, #context.scoring_hand do
                 if context.scoring_hand[i].base.nominal < lowestRank then
                     lowestRank = context.scoring_hand[i].base.nominal
                 end
             end
-            context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
-            context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + lowestRank
-            return {
-                extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
-                colour = G.C.CHIPS,
-                card = card
-            }
+            if lowestRank > 0 then
+                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+                context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + lowestRank
+                return {
+                    extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
+                    colour = G.C.CHIPS,
+                    card = card
+                }
+            end
         end
     end
 })
@@ -464,7 +462,6 @@ create_joker({ -- Chaos Card
     rarity = 'Rare', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
             local hands = G.GAME.chaos_card_hands
@@ -524,7 +521,6 @@ create_joker({ -- one doller
     rarity = 'Common', cost = 1,
     blueprint = false, perishable = false, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'buying_card' then
             if args.price <= 0 then unlock_card(self) end
@@ -579,7 +575,6 @@ create_joker({ -- Fruit Sticker
     rarity = 'Rare', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         -- Have stickers on your maximum amount or higher of jokers (no stake stickers)
     end,
@@ -610,7 +605,6 @@ create_joker({ -- Sinful Joker
     rarity = 'Rare', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if next(find_joker('Greedy Joker')) and next(find_joker('Lusty Joker')) and next(find_joker('Wrathful Joker')) and next(find_joker('Gluttonous Joker')) then
             unlock_card(self)
@@ -648,7 +642,6 @@ create_joker({ -- Egg Drawing
     rarity = 'Common', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'selling_card' then
             if args.sell_cost > 10 then unlock_card(self) end
@@ -850,7 +843,6 @@ create_joker({ -- Billiard
     rarity = 'Rare', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         --
     end,
@@ -896,7 +888,6 @@ create_joker({ -- What a Steel!
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
     unlocked = false,
-    unlock_condition = {hidden = true},
     check_for_unlock = function(self, args)
         if args.type == 'playing_card_added' then
             if args.card.config.center == G.P_CENTERS.m_steel then
@@ -957,6 +948,45 @@ create_joker({ -- Nitroglycerin
             for i=#G.hand.cards, 1, -1 do
                 G.hand.cards[i]:start_dissolve(nil, i == #G.hand.cards)
             end
+        end
+    end
+})
+
+create_joker({ -- Substitute Teacher
+    name = 'substitute_teacher',
+    --atlas = "showdown_jokers",
+    pos = coordinate(1),
+    vars = {{chips_scale = 4}, {mult_scale = 2}},
+    custom_vars = function(self, info_queue, card)
+        local mathUsed = G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic or 0
+        return { vars = { card.ability.extra.chips_scale, card.ability.extra.mult_scale, mathUsed * card.ability.extra.chips_scale, mathUsed * card.ability.extra.mult_scale } }
+	end,
+    locked_vars = function(self, info_queue, card)
+        return { vars = { 20, math.max(G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used or 0, 20) } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = false, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used >= 20 then
+            unlock_card(self)
+        end
+    end,
+    calculate = function(self, card, context)
+        local mathUsed = G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic or 0
+        local chips_scale = mathUsed * card.ability.extra.chips_scale
+        local mult_scale = mathUsed * card.ability.extra.mult_scale
+        if context.using_consumeable and not context.blueprint and (context.consumeable.ability.set == "Mathematic") then
+            G.E_MANAGER:add_event(Event({
+                func = function() card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_chips_mult',vars={chips_scale, mult_scale}}}); return true
+            end}))
+        end
+        if context.cardarea == G.jokers and context.joker_main and mathUsed > 0 then
+            return {
+                message = localize{type='variable',key='a_chips_mult',vars={chips_scale, mult_scale}},
+                chip_mod = chips_scale,
+                mult_mod = mult_scale,
+            }
         end
     end
 })

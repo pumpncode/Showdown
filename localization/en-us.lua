@@ -418,6 +418,18 @@ return {
                     '{C:inactive}(Does not work in Booster Packs)',
                 }
             },
+            j_showdown_substitute_teacher = {
+                name = 'Substitute Teacher',
+                text = {
+                    'Gains {C:chips}+#1#{} Chips and {C:mult}+#2#{} Mult',
+                    'per {C:showdown_calculus}Mathematic{} card used',
+                    '{C:inactive}(Currently {C:chips}+#3#{C:inactive} Chips and {C:mult}+#4#{C:inactive} Mult)',
+                },
+                unlock = {
+                    'Use #1# {C:showdown_calculus}Mathematic{} cards',
+                    '{C:inactive}(#2#/#1#)',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -645,7 +657,7 @@ return {
                     'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
                     'For each destroyed card, {C:attention}one{} future booster',
                     'will have an {C:attention}additional choice{}',
-                    '{C:inactive}(currently {C:attention}#2#{C:inactive} boosters){}',
+                    '{C:inactive}(Currently {C:attention}#2#{C:inactive} Boosters){}',
                 }
             },
             c_showdown_probability = {
@@ -1574,7 +1586,9 @@ return {
         suits_plural={},
         suits_singular={},
         tutorial={},
-        v_dictionary={},
+        v_dictionary={
+            a_chips_mult = '+#1# Chips, +#2# Mult',
+        },
         v_text={},
     },
 }

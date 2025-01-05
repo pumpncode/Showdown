@@ -359,3 +359,49 @@ else
     localize{type = 'other', key = 'playing_card', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks'), localize(specific_vars.suit, 'suits_plural'), colours = {specific_vars.colour}}}
 end
 '''
+
+# Substitute Teacher, part 1/2
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "G.GAME.consumeable_usage_total = G.GAME.consumeable_usage_total or {tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, all = 0}"
+position = "at"
+match_indent = true
+payload = '''
+G.GAME.consumeable_usage_total = G.GAME.consumeable_usage_total or {tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, mathematic = 0, all = 0}
+'''
+
+# Substitute Teacher, part 2/2
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "elseif card.config.center.set == 'Spectral' then  G.GAME.consumeable_usage_total.spectral = G.GAME.consumeable_usage_total.spectral + 1"
+position = "after"
+match_indent = true
+payload = '''
+elseif card.config.center.set == 'Mathematic' then G.GAME.consumeable_usage_total.mathematic = G.GAME.consumeable_usage_total.mathematic + 1
+'''
+
+# Substitute Teacher unlock, part 1/2
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "c_tarots_bought = 0,"
+position = "after"
+match_indent = true
+payload = '''
+c_maths_used = 0,
+'''
+
+# Substitute Teacher unlock, part 2/2
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = "else draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end"
+position = "after"
+match_indent = true
+payload = '''
+if card.config.center.set == 'Mathematic' then
+    inc_career_stat('c_maths_used', 1)
+end
+'''
