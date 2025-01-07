@@ -990,3 +990,34 @@ create_joker({ -- Substitute Teacher
         end
     end
 })
+
+create_joker({ -- World Map
+    name = 'world_map',
+    --atlas = "showdown_jokers",
+    pos = coordinate(1),
+    vars = {{chips_scale = 12.5}, {chips = 0}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            local eval = evaluate_poker_hand(context.scoring_hand)
+            if next(eval['Flush']) then
+                local zero = false
+                for i=1, #context.scoring_hand do
+                    local _card = context.scoring_hand[i]
+                    if _card:get_id() == 1 then zero = true break end
+                end
+                if zero then
+                    card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
+                    return {
+                        message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                        chip_mod = card.ability.extra.chips,
+                    }
+                end
+            end
+        end
+    end
+})

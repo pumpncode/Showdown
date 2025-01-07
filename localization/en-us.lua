@@ -430,6 +430,17 @@ return {
                     '{C:inactive}(#2#/#1#)',
                 }
             },
+            j_showdown_world_map = {
+                name = 'World Map',
+                text = {
+                    'Gains {C:chips}+#1#{} Chips if played',
+                    'hand contains a {C:attention}Flush{} and a {C:attention}0{}',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'idk',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
