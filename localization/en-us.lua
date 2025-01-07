@@ -436,8 +436,11 @@ return {
                     'Gains {C:chips}+#1#{} Chips if played',
                     'hand contains a {C:attention}Flush{} and a {C:attention}0{}',
                     '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
-                },
-                unlock = {
+                }
+            },
+            j_showdown_bugged_seed = {
+                name = 'Bugged Seed',
+                text = {
                     'idk',
                 }
             },

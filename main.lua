@@ -323,6 +323,16 @@ function get_counterpart(rank, onlyCounterpart)
 	return counterparts[rank]
 end
 
+function get_lowest_rank(hand)
+	local lowestRank = 11
+	for i=1, #hand do
+		if hand[i].base.nominal < lowestRank then
+			lowestRank = hand[i].base.nominal
+		end
+	end
+	return lowestRank
+end
+
 ---- Mod Icon
 
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
@@ -418,9 +428,6 @@ SMODS.Rank({ -- 2.5 Card
 	},
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards',
-	loc_vars = function (self, info_queue, center)
-		--info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
-	end,
 	inject = function(self)
 		for _, suit in pairs(SMODS.Suits) do
 			inject_p_card_suit_compat(suit, self)

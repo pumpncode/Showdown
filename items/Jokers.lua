@@ -923,20 +923,7 @@ create_joker({ -- Diplomatic Immunity
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = true, eternal = true
 })
---[[
-create_joker({ -- Sick Trick
-    name = 'sick_trick',
-    --atlas = "showdown_jokers",
-    pos = coordinate(2),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        if not context.blueprint then
-            --
-        end
-    end
-})
-]]--
+
 create_joker({ -- Nitroglycerin
     name = 'nitroglycerin',
     --atlas = "showdown_jokers",
@@ -944,7 +931,7 @@ create_joker({ -- Nitroglycerin
     rarity = 'Uncommon', --cost = 4,
     blueprint = false, perishable = false, eternal = false,
     calculate = function(self, card, context)
-        if context.selling_self and not context.blueprint then
+        if context.selling_self and not context.blueprint and not G.booster_pack then
             for i=#G.hand.cards, 1, -1 do
                 G.hand.cards[i]:start_dissolve(nil, i == #G.hand.cards)
             end
@@ -1002,21 +989,64 @@ create_joker({ -- World Map
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
-            local eval = evaluate_poker_hand(context.scoring_hand)
-            if next(eval['Flush']) then
-                local zero = false
-                for i=1, #context.scoring_hand do
-                    local _card = context.scoring_hand[i]
-                    if _card:get_id() == 1 then zero = true break end
+        if context.cardarea == G.jokers then
+            if context.joker_main and card.ability.extra.chips > 0 then
+                return {
+                    message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                    chip_mod = card.ability.extra.chips,
+                    colour = G.C.CHIPS
+                }
+            elseif context.before and not context.blueprint then
+                local eval = evaluate_poker_hand(context.scoring_hand)
+                if next(eval['Flush']) then
+                    local zero = false
+                    for i=1, #context.scoring_hand do
+                        local _card = context.scoring_hand[i]
+                        if _card:get_id() == 1 then zero = true break end
+                    end
+                    if zero then
+                        card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
+                        return {
+                            message = localize('k_upgrade_ex'),
+                            colour = G.C.CHIPS,
+                            card = card
+                        }
+                    end
                 end
-                if zero then
-                    card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
-                    return {
-                        message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
-                        chip_mod = card.ability.extra.chips,
-                    }
+            end
+        end
+    end
+})
+
+create_joker({ -- Bugged Seed
+    name = 'bugged_seed',
+    atlas = "showdown_jokers",
+    pos = coordinate(39),
+    rarity = 'Common', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Sick Trick
+    name = 'sick_trick',
+    --atlas = "showdown_jokers",
+    pos = coordinate(2),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker and #context.scoring_hand > 1 then
+            local idx = 1
+            for i=2, #context.scoring_hand do
+                if context.scoring_hand[idx].base.nominal < context.scoring_hand[i].base.nominal then
+                    idx = i
                 end
+            end
+            if idx > 1 then
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                    copy_card(context.scoring_hand[idx], context.scoring_hand[idx-1])
+                return true end }))
             end
         end
     end
