@@ -151,7 +151,7 @@ create_joker({ -- Jean-Paul
     rarity = 'Common', cost = 2,
     blueprint = false, perishable = false, eternal = true,
     calculate = function(self, card, context)
-        if not context.blueprint and not context.repetition then
+        if card.hasSpeech and not context.blueprint and not context.repetition then
             if context.end_of_round and not context.individual then
                 card.ability.extra.inBlind = false
                 say(card, {blabla = ('end_of_round'), prob = 2})

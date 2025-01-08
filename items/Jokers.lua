@@ -987,7 +987,7 @@ create_joker({ -- World Map
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
 	end,
     rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers then
             if context.joker_main and card.ability.extra.chips > 0 then
@@ -1022,8 +1022,20 @@ create_joker({ -- Bugged Seed
     name = 'bugged_seed',
     atlas = "showdown_jokers",
     pos = coordinate(39),
+    locked_vars = function(self, info_queue, card)
+        if false then -- If Erratic Deck hasn't been discovered
+            return { key = "j_showdown_bugged_seed_unknown" }
+        end
+        return { key = "j_showdown_bugged_seed" }
+	end,
     rarity = 'Common', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if G.GAME.seeded and args.type == '7LB2WVPK' then
+            unlock_card(self)
+        end
+    end,
     calculate = function(self, card, context)
         --
     end
@@ -1048,6 +1060,44 @@ create_joker({ -- Sick Trick
                     copy_card(context.scoring_hand[idx], context.scoring_hand[idx-1])
                 return true end }))
             end
+        end
+    end
+})
+
+create_joker({ -- Jaws
+    name = 'jaws',
+    --atlas = "showdown_jokers",
+    pos = coordinate(1),
+    vars = {{chips_scale = 2}, {chips = 0}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = false, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'discard_custom' then
+            local allFaces = #args.cards > 0
+            for i=1, #args.cards do
+                allFaces = allFaces and args.cards[i]:is_face()
+            end
+            if allFaces then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.joker_main and card.ability.extra.chips > 0 then
+            return {
+                message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                chip_mod = card.ability.extra.chips,
+                colour = G.C.CHIPS
+            }
+        elseif not context.blueprint and context.discard and context.other_card:is_face() then
+            card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS,
+                card = card
+            }
         end
     end
 })

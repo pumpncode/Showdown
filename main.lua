@@ -572,35 +572,7 @@ table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 --
 
 function SMODS.is_counterpart(card)
-	return (next(find_joker("hiding_details")) and not find_joker("hiding_details").debuff) or card.base.id < 0
-end
-
-SMODS.Consumable:take_ownership('lovers', {
-	can_use = function(self, card, area, copier)
-		if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
-			for j=1, #G.hand.highlighted do
-				if G.hand.highlighted[j]:get_id() == 1 then return false end
-			end
-			return true
-		end
-		return false
-	end,
-})
-
-local suit_tarot = {'star', 'moon', 'sun', 'world'}
-
-for i=1, #suit_tarot do
-	SMODS.Consumable:take_ownership(suit_tarot[i], {
-		can_use = function(self, card, area, copier)
-			if G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= card.ability.max_highlighted then
-				for j=1, #G.hand.highlighted do
-					if G.hand.highlighted[j]:get_id() == 1 then return false end
-				end
-				return true
-			end
-			return false
-		end,
-	})
+	return next(find_joker("hiding_details")) or card.base.id < 0
 end
 
 ---- Consumables

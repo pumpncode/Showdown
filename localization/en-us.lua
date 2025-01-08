@@ -402,14 +402,6 @@ return {
                     '{C:attention}cannot{} be debuffed',
                 }
             },
-            j_showdown_sick_trick = {
-                name = 'Sick Trick',
-                text = {
-                    'Copy the {C:attention}leftest lowest',
-                    'rank card onto the card',
-                    'on its {C:attention}left',
-                }
-            },
             j_showdown_nitroglycerin = {
                 name = 'Nitroglycerin',
                 text = {
@@ -442,6 +434,40 @@ return {
                 name = 'Bugged Seed',
                 text = {
                     'idk',
+                },
+                unlock = {
+                    'Win a run with {C:attention}Erratic Deck{}',
+                    'on the {C:attention,E:1}7LB2WVPK{} seed',
+                }
+            },
+            j_showdown_bugged_seed_unknown = {
+                name = 'Bugged Seed',
+                text = {
+                    'idk',
+                },
+                unlock = {
+                    'Win a run with {C:attention}??????{}',
+                    'on the {C:attention,E:1}7LB2WVPK{} seed',
+                }
+            },
+            j_showdown_sick_trick = {
+                name = 'Sick Trick',
+                text = {
+                    'Copy the {C:attention}leftest lowest',
+                    'rank card onto the card',
+                    'on its {C:attention}left',
+                }
+            },
+            j_showdown_jaws = {
+                name = 'Jaws',
+                text = {
+                    'Gains {C:chips}+#1#{} Chips when a',
+                    'face card is {C:attention}discarded{}',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'Discard {C:attention}5 face cards{}',
+                    'at the same time',
                 }
             },
         },
@@ -873,16 +899,18 @@ return {
                 'card afterlife?',
             },
             selling_card_7 = {
-                '',
+                'mmhhmhmhhmhmmh',
+                'money',
             },
             selling_card_8 = {
-                '',
+                'Goodbye!',
             },
             selling_card_9 = {
-                '',
+                'See ya later!',
             },
             selling_card_10 = {
-                '',
+                'I miss him',
+                'already...',
             },
             reroll_shop_1 = {
                 'Is it better',
@@ -925,7 +953,9 @@ return {
                 'much cards here!',
             },
             reroll_shop_10 = {
-                '',
+                'This shop must be',
+                'enormous for it to',
+                'have this much cards!',
             },
             shop_jokers_1 = {
                 'Hello!',
@@ -951,19 +981,25 @@ return {
                 'stuff here!',
             },
             shop_jokers_6 = {
-                '',
+                'This spot is',
+                'quite comfortable.',
             },
             shop_jokers_7 = {
-                '',
+                'Do you want',
+                'to buy me?',
             },
             shop_jokers_8 = {
-                '',
+                'You can speak',
+                'too???',
             },
             shop_jokers_9 = {
-                '',
+                'How did I',
+                'got here?',
             },
             shop_jokers_10 = {
-                '',
+                'Did you know that',
+                'peas are primarily',
+                'composed of peas?',
             },
             buying_self_1 = {
                 'Thank you',
@@ -982,22 +1018,28 @@ return {
                 '^^',
             },
             buying_self_5 = {
-                '',
+                'You\'re my',
+                'bff now.',
             },
             buying_self_6 = {
-                '',
+                'Ooooooh, I',
+                'always wanted',
+                'to be up here!',
             },
             buying_self_7 = {
-                '',
+                'I promess, I\'m',
+                'no scam!',
             },
             buying_self_8 = {
-                '',
+                'Where did your',
+                'money go? :(',
             },
             buying_self_9 = {
-                '',
+                'Was I',
+                'in sale?',
             },
             buying_self_10 = {
-                '',
+                'Me?',
             },
             buying_other_self_1 = {
                 'ANOTHER ME?',
@@ -1496,37 +1538,49 @@ return {
                 '',
             },
             random_1 = {
-                '',
+                ':3',
             },
             random_2 = {
-                '',
+                'Sometimes, I',
+                'dream about',
+                'cheese...',
             },
             random_3 = {
-                '',
+                'Why did the',
+                'chicken crossed',
+                'the road?',
             },
             random_4 = {
-                '',
+                'Smells like',
+                'bread in here.',
             },
             random_5 = {
-                '',
+                '*does a cool',
+                'backflip*',
             },
             random_6 = {
-                '',
+                'I could put the',
+                'entire script of',
+                'the bee movie here.',
             },
             random_7 = {
-                '',
+                'I love',
+                'Balatro',
             },
             random_8 = {
-                '',
+                'fish',
             },
             random_9 = {
-                '',
+                'I have a',
+                'feeling of',
+                'déjà vu...',
             },
             random_10 = {
-                '',
+                '{E:1}This text',
+                '{E:1}is moving.',
             },
             random_11 = {
-                '',
+                'cocainer',
             },
             random_12 = {
                 '',
