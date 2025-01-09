@@ -75,7 +75,7 @@ pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
 position = 'before'
 match_indent = true
 payload = '''
-if self.base.value == 'showdown_Zero' and not self.debuff then
+if self.base.value == 'showdown_Zero' then
     return true
 end
 '''

@@ -333,6 +333,12 @@ function get_lowest_rank(hand)
 	return lowestRank
 end
 
+local Cardchange_suitRef = Card.change_suit
+function Card:change_suit(new_suit)
+	if self.base.value == 'showdown_Zero' then G.GAME.blind:debuff_card(self)
+	else Cardchange_suitRef(self, new_suit) end
+end
+
 ---- Mod Icon
 
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
@@ -374,10 +380,8 @@ SMODS.Back{ -- Mirror Deck
 SMODS.Back{ -- Calculus Deck
 	name = "Calculus Deck",
 	key = "Calculus",
-	--atlas = "showdown_decks",
-	atlas = "showdown_placeholders",
-	--pos = coordinate(2),
-	pos = coordinate(15, 5),
+	atlas = "showdown_decks",
+	pos = coordinate(2),
 	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
 }
 
@@ -552,7 +556,6 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 	max_id = {
 		value = 0,
 	},
-	straight_edge = true,
 	hc_atlas = 'showdown_cardsHC',
 	lc_atlas = 'showdown_cards',
 	inject = function(self)

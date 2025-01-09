@@ -2,13 +2,13 @@
 
 -- Unique
 
---SMODS.Atlas({key = "showdown_cryptidUnique", path = "CrossMod/Cryptid/Unique.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_cryptidUnique", path = "CrossMod/Cryptid/Unique.png", px = 71, py = 95})
 
 SMODS.Consumable({ -- Strange Thing
 	key = 'strange_thing',
 	set = 'Unique',
-	atlas = 'showdown_placeholders',
-    pos = coordinate(14, 5),
+	atlas = 'showdown_cryptidUnique',
+    pos = coordinate(1),
 	config = { extra = {multMin = nil, multMax = nil}},
 	loc_vars = function(self) return {vars = {self.config.min_value, self.config.max_value}} end,
 	can_use = function()

@@ -141,12 +141,17 @@ function copy_card(other, new_card, card_scale, playing_card, strip_edition)
     return _card
 end
 
-SMODS.Atlas({key = "showdown_jean_paul_joker", path = "Jokers/JeanPaul.png", px = 71, py = 95})
+---- Atlases
 
-create_joker({ -- Jean-Paul
+SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
+SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
+
+---- Jean-Paul
+
+create_joker({
     name = 'jean_paul',
-    atlas = "showdown_jean_paul_joker",
-    pos = coordinate(1),
+	atlas = "showdown_jokers",
+	pos = coordinate(1),
     vars = {{talk = 0}, {inBlind = false}},
     rarity = 'Common', cost = 2,
     blueprint = false, perishable = false, eternal = true,
