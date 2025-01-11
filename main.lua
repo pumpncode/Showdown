@@ -391,6 +391,17 @@ function Back.apply_to_run(self)
 	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
 end
 
+function find_consumable(name, non_debuff)
+	local consumeables = {}
+	for k, v in pairs(G.consumeables.cards) do
+		if v and type(v) == 'table' then print(v.ability.name) end
+		if v and type(v) == 'table' and v.ability.name == name and (non_debuff or not v.debuff) then
+			table.insert(consumeables, v)
+		end
+	end
+	return consumeables
+end
+
 ---- Counterpart Cards
 
 SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
@@ -714,6 +725,48 @@ SMODS.Consumable({ -- The Angel
     end
 })
 
+SMODS.Consumable({ -- Red Key Piece 1
+	key = 'red_key_piece_1',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	no_collection = true,
+    pos = coordinate(6),
+	can_use = function(self)
+		local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		return next(find_joker('c_showdown_red_key_piece_2')) and lockJ and not lockJ.ability.extra.locks[1]
+    end,
+    use = function(self, card, area, copier)
+		local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		lockJ.ability.extra.locks[1] = true
+		find_joker('c_showdown_red_key_piece_2')[next(find_joker('c_showdown_red_key_piece_2'))]:start_dissolve(nil, true)
+		forced_message(localize('k_unlocked'), lockJ, G.C.RED, true)
+    end,
+	in_pool = function(self, args)
+		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[1]
+	end
+})
+
+SMODS.Consumable({ -- Red Key Piece 2
+	key = 'red_key_piece_2',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	no_collection = true,
+    pos = coordinate(7),
+	can_use = function(self)
+		local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		return next(find_joker('c_showdown_red_key_piece_1')) and lockJ and not lockJ.ability.extra.locks[1]
+    end,
+    use = function(self, card, area, copier)
+		local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		lockJ.ability.extra.locks[1] = true
+		find_joker('c_showdown_red_key_piece_1')[next(find_joker('c_showdown_red_key_piece_1'))]:start_dissolve(nil, true)
+		forced_message(localize('k_unlocked'), lockJ, G.C.RED, true)
+    end,
+	in_pool = function(self, args)
+		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[1]
+	end
+})
+
 -- Spectral
 
 SMODS.Atlas({key = "showdown_spectrals", path = "Consumables/Spectrals.png", px = 71, py = 95})
@@ -793,6 +846,26 @@ SMODS.Consumable({ -- Vision
 		delay(0.2)
 		for i=1, #G.hand.cards do unflipCard(G.hand.cards[i], i, #G.hand.cards) end
     end
+})
+
+SMODS.Consumable({ -- Blue Key
+	key = 'blue_key',
+	set = 'Spectral',
+	atlas = 'showdown_spectrals',
+	no_collection = true,
+    pos = coordinate(3),
+	can_use = function(self)
+		local lockJ = next(find_joker('4_locks')) and find_joker('4_locks')[next(find_joker('4_locks'))]
+		return lockJ and not lockJ.ability.extra.locks[2]
+    end,
+    use = function(self, card, area, copier)
+		local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		lockJ.ability.extra.locks[2] = true
+		forced_message(localize('k_unlocked'), lockJ, G.C.BLUE, true)
+    end,
+	in_pool = function(self, args)
+		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[2]
+	end
 })
 
 -- Mathematic (gives bonuses by sacrificing cards)
@@ -927,6 +1000,66 @@ SMODS.Enhancement({
 		end
 	end
 })
+
+---- Tags
+
+SMODS.Atlas({key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34})
+
+SMODS.Tag({
+	key = "green_key",
+	atlas = "showdown_tags",
+	pos = coordinate(1),
+	no_collection = true,
+	apply = function(self, tag, context)
+		if next(find_joker('4_locks')) then
+			local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+			if not lockJ.ability.extra.locks[3] then
+				lockJ.ability.extra.locks[3] = true
+				forced_message(localize('k_unlocked'), lockJ, G.C.GREEN, true)
+			end
+		end
+		tag.triggered = true
+		return true
+	end,
+	in_pool = function(self, args)
+		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[3]
+	end
+})
+
+---- Blinds
+
+SMODS.Atlas({key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atlas_table = "ANIMATION_ATLAS", frames = 21})
+
+SMODS.Blind({
+	key = "latch",
+	atlas = "showdown_blinds",
+	pos = coordinate(1),
+	boss_colour = G.C.GREY,
+	boss = { min = 1 },
+	mult = 3,
+	defeat = function(self)
+		if next(find_joker('4_locks')) then
+			local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+			if not lockJ.ability.extra.locks[4] then
+				lockJ.ability.extra.locks[4] = true
+				forced_message(localize('k_unlocked'), lockJ, G.C.YELLOW, true)
+			end
+		end
+	end,
+	in_pool = function(self, args)
+		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[4]
+	end
+})
+
+local gnb = get_new_boss
+function get_new_boss()
+	for k, v in pairs(G.P_BLINDS) do
+		if not G.GAME.bosses_used[k] then
+			G.GAME.bosses_used[k] = 0
+		end
+	end
+	return gnb()
+end
 
 ---- Jokers
 

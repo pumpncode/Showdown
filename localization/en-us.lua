@@ -20,7 +20,15 @@ return {
                 }
             },
         },
-        Blind={},
+        Blind={
+            bl_showdown_latch = {
+                name = 'The Latch',
+                text = {
+                    '{C:attention}Unlocks{} the',
+                    '{C:money,E:1}Yellow{E:1} Lock',
+                }
+            }
+        },
         Edition={},
         Enhanced={
             m_showdown_ghost = {
@@ -470,6 +478,27 @@ return {
                     'at the same time',
                 }
             },
+            j_showdown_4_locks = {
+                name = '4 Locks',
+                text = {
+                    'The {C:red,E:1}Red{E:1} Lock{} is {C:attention}#1#',
+                    'The {C:blue,E:1}Blue{E:1} Lock{} is {C:attention}#2#',
+                    'The {C:green,E:1}Green{E:1} Lock{} is {C:attention}#3#',
+                    'The {C:money,E:1}Yellow{E:1} Lock{} is {C:attention}#4#',
+                    '{C:inactive}What lies beyond these locks?',
+                },
+                unlock = {
+                    'Win the game in',
+                    'a {C:attention}different{} way',
+                }
+            },
+            j_showdown_unshackled_joker = {
+                name = 'Unshackled Joker',
+                text = {
+                    'Multiplies {C:mult}Mult{} by',
+                    '{C:attention}played{} hand {C:planet}level{}',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -556,9 +585,22 @@ return {
                     'or {C:attention}seal{}',
                 }
             },
+            c_showdown_blue_key = {
+                name = 'Blue Key',
+                text = {
+                    '{C:attention}Unlocks{} the {C:blue,E:1}Blue{E:1} Lock',
+                }
+            },
         },
         Stake={},
-        Tag={},
+        Tag={
+            tag_showdown_green_key = {
+                name = "Key Tag",
+                text = {
+                    '{C:attention}Unlocks{} the {C:green,E:1}Green{E:1} Lock',
+                },
+            },
+        },
         Tarot={
             c_showdown_reflection = {
                 name = 'The Reflection',
@@ -605,6 +647,18 @@ return {
                     'selected cards to a',
                     'random {C:bunc_fleurons}exotic{}',
                     '{C:counterpart_ranks}counterpart{}',
+                }
+            },
+            c_showdown_red_key_piece_1 = {
+                name = 'Red Key Piece',
+                text = {
+                    '{C:attention}Unlocks{} the...',
+                }
+            },
+            c_showdown_red_key_piece_2 = {
+                name = 'Red Key Piece',
+                text = {
+                    '...{C:red,E:1}Red{E:1} Lock',
                 }
             },
         },
@@ -748,6 +802,7 @@ return {
             k_BAM = "BAM!",
             k_strainer_broke = "Broken",
             k_showdown_mysterious_tarot = 'Tarot?',
+            k_unlocked = 'Unlocked!',
             k_mathematic = "Mathematic",
             b_mathematic_cards = "Mathematic Cards",
             b_pull = "PULL",
@@ -1150,7 +1205,7 @@ return {
             },
             skip_blind_2 = {
                 'So you like',
-                'pulling of some',
+                'pulling off some',
                 'risky moves...',
             },
             skip_blind_3 = {

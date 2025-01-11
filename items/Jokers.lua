@@ -710,6 +710,7 @@ create_joker({ -- Gary McCready
                         blockable = false,
                         func = (function()
                             win_game()
+                            check_for_unlock({type = 'win_ultimate'})
                             G.GAME.won = true
                             return true
                         end)
@@ -1093,6 +1094,74 @@ create_joker({ -- Jaws
             return {
                 message = localize('k_upgrade_ex'),
                 colour = G.C.CHIPS,
+                card = card
+            }
+        end
+    end
+})
+
+create_joker({ -- 4 Locks
+    name = '4_locks',
+    atlas = "showdown_jokers",
+    pos = coordinate(43),
+    vars = {{locks = {false, false, false, false}}, {created = false}},
+    custom_vars = function(self, info_queue, card)
+        local locks = {'Locked', 'Locked', 'Locked', 'Locked'}
+        for i=1, #card.ability.extra.locks do
+            locks[i] = card.ability.extra.locks[i] and 'Unlocked' or 'Locked'
+        end
+        return { vars = locks }
+	end,
+    rarity = 'Rare', --cost = 4,
+    blueprint = false, perishable = false, eternal = false,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'win_ultimate' then unlock_card(self) end
+    end,
+    calculate = function(self, card, context)
+        if not context.blueprint and not card.ability.extra.created then
+            if card.ability.extra.red and card.ability.extra.blue and card.ability.extra.green and card.ability.extra.yellow then
+                card.ability.extra.created = true
+                if not G.GAME.won then
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'immediate',
+                        blocking = false,
+                        blockable = false,
+                        func = (function()
+                            win_game()
+                            G.GAME.won = true
+                            return true
+                        end)
+                    }))
+                end
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.2,
+                    func = function()
+                        card:start_dissolve()
+                        local _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_showdown_unshackled_joker', no_edition = true})
+                        _card:add_to_deck()
+                        G.jokers:emplace(_card)
+                        return true
+                    end
+                }))
+            end
+        end
+    end
+})
+
+create_joker({ -- Unshackled Joker
+    name = 'unshackled_joker',
+    atlas = "showdown_jokers",
+    pos = coordinate(44),
+    rarity = 'showdown_Final', cost = 20,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if false and context.joker_main and G.GAME.round > 1 then
+            return {
+                message = 'X' .. G.GAME.round,
+                Xmult_mod = G.GAME.round,
+                colour = G.C.RED,
                 card = card
             }
         end

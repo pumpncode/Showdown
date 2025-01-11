@@ -442,3 +442,29 @@ match_indent = true
 payload = '''
 if _RELEASE_MODE then
 '''
+
+# Hidden cards aren't required for cards unlocks, part 1/2
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = "if not v.omit then"
+position = "at"
+payload = '''
+if not v.omit and not v.no_collection then
+'''
+
+# Hidden cards aren't required for cards unlocks, part 2/2
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = "if card.unlock_condition.tarot_count <= args.tarot_count then"
+position = "at"
+payload = '''
+local tarotNb = #G.P_CENTER_POOLS.Tarot
+for _, v in ipairs(G.P_CENTER_POOLS.Tarot) do
+    if v.no_collection then tarotNb = tarotNb - 1 end
+end
+if tarotNb <= args.tarot_count then
+'''
