@@ -24,10 +24,17 @@ return {
             bl_showdown_latch = {
                 name = 'The Latch',
                 text = {
-                    '{C:attention}Unlocks{} the',
-                    '{C:money,E:1}Yellow{E:1} Lock',
+                    'Unlocks the',
+                    'Yellow Lock',
                 }
-            }
+            },
+            bl_showdown_patient = {
+                name = 'The Patient',
+                text = {
+                    'You must use',
+                    'all your hands',
+                }
+            },
         },
         Edition={},
         Enhanced={
@@ -421,7 +428,7 @@ return {
             j_showdown_substitute_teacher = {
                 name = 'Substitute Teacher',
                 text = {
-                    'Gains {C:chips}+#1#{} Chips and {C:mult}+#2#{} Mult',
+                    'This Joker gains {C:chips}+#1#{} Chips and {C:mult}+#2#{} Mult',
                     'per {C:showdown_calculus}Mathematic{} card used',
                     '{C:inactive}(Currently {C:chips}+#3#{C:inactive} Chips and {C:mult}+#4#{C:inactive} Mult)',
                 },
@@ -469,7 +476,7 @@ return {
             j_showdown_jaws = {
                 name = 'Jaws',
                 text = {
-                    'Gains {C:chips}+#1#{} Chips when a',
+                    'This Joker gains {C:chips}+#1#{} Chips when a',
                     'face card is {C:attention}discarded{}',
                     '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
                 },

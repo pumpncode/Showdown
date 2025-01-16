@@ -1032,8 +1032,9 @@ SMODS.Atlas({key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atl
 
 SMODS.Blind({
 	key = "latch",
+	name = "The Latch",
 	atlas = "showdown_blinds",
-	pos = coordinate(1),
+	pos = { x = 0, y = 0 },
 	boss_colour = G.C.GREY,
 	boss = { min = 1 },
 	mult = 3,
@@ -1049,6 +1050,16 @@ SMODS.Blind({
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[4]
 	end
+})
+
+SMODS.Blind({
+	key = "patient",
+	name = "The Patient",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 1 },
+	boss_colour = G.C.BLUE,
+	boss = { min = 1 },
+	mult = 2,
 })
 
 local gnb = get_new_boss

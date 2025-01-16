@@ -468,3 +468,14 @@ for _, v in ipairs(G.P_CENTER_POOLS.Tarot) do
 end
 if tarotNb <= args.tarot_count then
 '''
+
+# The Patient
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+match_indent = true
+pattern = "if G.GAME.chips - G.GAME.blind.chips >= 0 then"
+position = "at"
+payload = '''
+if to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips) and (G.GAME.blind.name == 'The Patient' and G.GAME.current_round.hands_left <= 0 or G.GAME.blind.name ~= 'The Patient') then
+'''
