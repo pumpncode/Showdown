@@ -506,6 +506,25 @@ return {
                     '{C:attention}played{} hand {C:planet}level{}',
                 }
             },
+            j_showdown_red_coins = {
+                name = 'Red Coins',
+                text = {
+                    'At end of each Round,',
+                    '{C:money}$#1#{} per remaining {C:red}Discard',
+                }
+            },
+            j_showdown_money_cutter = {
+                name = 'Money Cutter',
+                text = {
+                    'At end of each Round,',
+                    '{C:money}$#1#{} per remaining {C:blue}Hand',
+                    'Earn no {C:attention}Interest',
+                },
+                unlock = {
+                    'Win at least {C:money}$20{} of',
+                    'interest in {C:attention}one round',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
