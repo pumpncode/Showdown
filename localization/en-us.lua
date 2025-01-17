@@ -525,6 +525,13 @@ return {
                     'interest in {C:attention}one round',
                 }
             },
+            j_showdown_passage_of_time = {
+                name = 'Passage of Time',
+                text = {
+                    '{C:purple}+#1#{} Mult and Chips',
+                    'Value equald to round',
+                }
+            },
         },
         Other={
             counterpart_ranks = {

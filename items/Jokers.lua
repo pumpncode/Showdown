@@ -1201,3 +1201,25 @@ create_joker({ -- Money Cutter
         G.GAME.modifiers.no_interest = G.deck.name ~= 'Green Deck'
     end,
 })
+
+create_joker({ -- Passage of Time
+    name = 'passage_of_time',
+    atlas = "showdown_jokers",
+    pos = coordinate(47),
+    custom_vars = function(self, info_queue, card)
+		return { vars = { G.GAME.round } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.joker_main and G.GAME.round > 0 then
+            return {
+                message = '+' .. G.GAME.round,
+                chip_mod = G.GAME.round,
+                mult_mod = G.GAME.round,
+                colour = G.C.PURPLE,
+                card = card
+            }
+        end
+    end
+})
