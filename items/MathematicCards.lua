@@ -226,10 +226,10 @@ SMODS.Consumable({ -- Probability
 							if type(v) == "table" then
 								for kk, vv in pairs(v) do
 									if type(vv) == "number" then
-										v[kk] = vv * card.ability.mult_joker
+										v[kk] = tonumber(('%%.%dg'):format(2.11):format(vv * card.ability.mult_joker))
 									end
 								end
-							elseif not ((k == "x_mult" or k == "Xmult") and v == 1) then joker.ability[k] = v * card.ability.mult_joker end
+							elseif not ((k == "x_mult" or k == "Xmult") and v == 1) then joker.ability[k] = tonumber(('%%.%dg'):format(2.11):format(v * card.ability.mult_joker)) end
 						end
 					end
 				end

@@ -1172,48 +1172,32 @@ create_joker({ -- Red Coins
     name = 'red_coins',
     atlas = "showdown_jokers",
     pos = coordinate(45),
-    vars = {{money = 1}, {previous = {1}}},
+    vars = {{money = 1}},
     custom_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 20,
+    rarity = 'Common', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
-    add_to_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.money_per_discard = (G.GAME.modifiers.money_per_discard or 0) + card.config.extra.money
-    end,
-    remove_from_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.money_per_discard = (G.GAME.modifiers.money_per_discard or 0) - card.config.extra.money
-    end,
-    update = function(self, card, dt)
-        if card.config.extra and card.config.extra.previous[1] ~= card.config.extra.money then
-            G.GAME.modifiers.money_per_discard = (G.GAME.modifiers.money_per_discard or 0) + (card.config.extra.money - card.config.extra.previous[1])
-            card.config.extra.previous[1] = card.config.extra.money
-        end
-    end,
 })
 
 create_joker({ -- Money Cutter
     name = 'money_cutter',
     atlas = "showdown_jokers",
     pos = coordinate(46),
-    vars = {{money = 1}, {previous = {1}}},
+    vars = {{money = 1}},
     custom_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 20,
+    rarity = 'Common', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'interest' and args.money >= 20 then unlock_card(self) end
+    end,
     add_to_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.money_per_hand = (G.GAME.modifiers.money_per_hand or 0) + 1
         G.GAME.modifiers.no_interest = true
     end,
     remove_from_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.money_per_hand = (G.GAME.modifiers.money_per_hand or 0) - 1
-        G.GAME.modifiers.no_interest = G.deck.config.no_interest
-    end,
-    update = function(self, card, dt)
-        if card.config.extra and card.config.extra.previous[1] ~= card.config.extra.money then
-            G.GAME.modifiers.money_per_hand = (G.GAME.modifiers.money_per_hand or 0) + (card.config.extra.money - card.config.extra.previous[1])
-            card.config.extra.previous[1] = card.config.extra.money
-        end
+        G.GAME.modifiers.no_interest = G.deck.name ~= 'Green Deck'
     end,
 })

@@ -164,8 +164,8 @@ function create_joker(joker) -- (Thanks Bunco)
 		
         calculate = joker.calculate,
         update = joker.update,
-        remove_from_deck = joker.remove,
-        add_to_deck = joker.add,
+        remove_from_deck = joker.remove_from_deck,
+        add_to_deck = joker.add_to_deck,
         set_ability = joker.set_ability,
         set_sprites = joker.set_sprites,
         load = joker.load,
