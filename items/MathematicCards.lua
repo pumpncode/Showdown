@@ -49,7 +49,7 @@ SMODS.Consumable({ -- Constant
 	atlas = 'showdown_mathematic',
     pos = coordinate(1),
 	config = {max_highlighted = 1},
-    loc_vars = function(self, info_queue, card) return {vars = {card.config.max_highlighted}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
 	can_use = function(self)
         return G.hand and #G.hand.highlighted == self.config.max_highlighted and #G.hand.cards >= 2
     end,
@@ -87,7 +87,7 @@ SMODS.Consumable({ -- Variable
 	atlas = 'showdown_mathematic',
     pos = coordinate(2),
 	config = {max_highlighted = 3, minMoney = 0, maxMoney = 10},
-    loc_vars = function(self, info_queue, card) return {vars = {card.config.max_highlighted, card.config.minMoney, card.config.maxMoney}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.minMoney, self.config.maxMoney}} end,
 	can_use = function(self)
         return #G.jokers.cards < G.jokers.config.card_limit and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,

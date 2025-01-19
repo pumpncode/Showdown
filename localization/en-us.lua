@@ -13,10 +13,18 @@ return {
             b_showdown_Calculus = {
                 name = 'Calculus Deck',
                 text = {
-                        'First booster in the shop is',
-                        'always a {C:showdown_calculus}Calculus Booster{}',
-                        'You start with a {C:attention}Genie{} tarot',
-                        'card and with {C:attention}Number Theory{}',
+                    'First booster in the shop is',
+                    'always a {C:showdown_calculus}Calculus Booster{}',
+                    'You start with a {C:purple}Genie{} tarot',
+                    'card and {C:attention}Number Theory{}',
+                }
+            },
+            b_showdown_Starter = {
+                name = 'Starter Deck',
+                text = {
+                    'Start with a {C:attention}random',
+                    'joker, consumable,',
+                    'voucher and {C:money}$0',
                 }
             },
         },
@@ -33,6 +41,21 @@ return {
                 text = {
                     'You must use',
                     'all your hands',
+                }
+            },
+            bl_showdown_shameful = {
+                name = 'The Shameful',
+                text = {
+                    'Enhancements and',
+                    'seals are inactive',
+                }
+            },
+            bl_showdown_wasteful = {
+                name = 'The Wasteful',
+                text = {
+                    'You cannot play',
+                    'while having',
+                    'discards',
                 }
             },
         },
@@ -532,6 +555,73 @@ return {
                     'Value equald to round',
                 }
             },
+            j_showdown_colored_glasses = {
+                name = 'Colored Glasses',
+                text = {
+                    'This Joker gains {C:mult}+#1#{} Mult if played',
+                    'hand contains {C:attention}2{} different suits',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
+                }
+            },
+            j_showdown_2814 = {
+                name = '2814',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_birth_of_a_new_day = {
+                name = 'Birth of a New Day',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_rain_temple = {
+                name = 'Rain Temple',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_lost_fragments = {
+                name = 'Lost Fragments',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_pillar_new_sun = {
+                name = 'Pillar / New Sun',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_voyage_embrace = {
+                name = 'Voyage / Embrace',
+                text = {
+                    'idk',
+                }
+            },
+            j_showdown_versatile_joker = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_unknown = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    '{C:red}Unkown deck, no effect',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -598,6 +688,48 @@ return {
                     'Can be used',
                     'as any suit',
                 },
+            },
+            ['2814_2814'] = {
+                name = '2814 - 2 8 1 4',
+                text = {
+                    'Studio Album',
+                    'Released October 15, 2014',
+                }
+            },
+            ['2814_birth_of_a_new_day'] = {
+                name = '2814 - Birth of a New Day',
+                text = {
+                    'Studio Album',
+                    'Released January 21, 2015',
+                }
+            },
+            ['2814_rain_temple'] = {
+                name = '2814 - Rain Temple',
+                text = {
+                    'Studio Album',
+                    'Released July 26, 2016',
+                }
+            },
+            ['2814_lost_fragments'] = {
+                name = '2814 - Lost Fragments',
+                text = {
+                    'Compilation',
+                    'Released July 5, 2019',
+                }
+            },
+            ['2814_pillar_new_sun'] = {
+                name = '2814 - Pillar / New Sun',
+                text = {
+                    'Extended Plays',
+                    'Released February 1, 2018',
+                }
+            },
+            ['2814_voyage_embrace'] = {
+                name = '2814 - Voyage / Embrace',
+                text = {
+                    'Extended Plays',
+                    'Released September 9, 2020',
+                }
             },
         },
         Planet={},

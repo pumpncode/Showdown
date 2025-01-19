@@ -385,10 +385,54 @@ SMODS.Back{ -- Calculus Deck
 	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
 }
 
+SMODS.Back{ -- Starter Deck
+	name = "Starter Deck",
+	key = "Starter",
+	atlas = "showdown_decks",
+	pos = coordinate(3),
+	config = { showdown_starter = true }
+}
+
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(self)
 	Backapply_to_runRef(self)
 	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
+	if self.effect.config.showdown_starter then
+		G.GAME.starting_params.dollars = 0
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				if G.jokers then
+					local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
+					card:add_to_deck()
+					card:start_materialize()
+					G.jokers:emplace(card)
+					return true
+				end
+			end,
+		}))
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				if G.consumeables then
+					local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, "showdown_starter")
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					return true
+				end
+			end,
+		}))
+		local vouchers = {}
+		for _, v in pairs(G.P_CENTERS) do
+			if v.set == 'Voucher' and not (v.requires and next(v.requires)) then
+				table.insert(vouchers, v.key)
+			end
+		end
+		if next(vouchers) then
+			local randomVoucher = pseudorandom_element(vouchers)
+			G.GAME.used_vouchers[randomVoucher] = true
+			G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
+			Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
+		end
+	end
 end
 
 function find_consumable(name, non_debuff)
@@ -1062,6 +1106,16 @@ SMODS.Blind({
 	mult = 2,
 })
 
+SMODS.Blind({
+	key = "shameful",
+	name = "The Shameful",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 2 },
+	boss_colour = G.C.YELLOW,
+	boss = { min = 1 },
+	mult = 2,
+})
+
 local gnb = get_new_boss
 function get_new_boss()
 	for k, v in pairs(G.P_BLINDS) do
@@ -1073,6 +1127,9 @@ function get_new_boss()
 end
 
 ---- Jokers
+
+SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
 
 filesystem.load(itemsPath.."JokerJeanPaul.lua")()
 filesystem.load(itemsPath.."Jokers.lua")()

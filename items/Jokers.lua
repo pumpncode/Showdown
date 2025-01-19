@@ -1223,3 +1223,163 @@ create_joker({ -- Passage of Time
         end
     end
 })
+
+create_joker({ -- Colored Classes
+    name = 'colored_glasses',
+    atlas = "showdown_jokers",
+    pos = coordinate(48),
+    vars = {{mult_scale = 4}, {mult = 0}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = false, eternal = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                chip_mod = card.ability.extra.mult,
+                colour = G.C.MULT
+            }
+        elseif not context.blueprint and context.cardarea == G.jokers and context.before then
+            local suits = {}
+            for i=1, #context.scoring_hand do
+                if not findInTable(context.scoring_hand[i].base.suit, suits) then table.insert(suits, context.scoring_hand[i].base.suit) end
+            end
+            if #suits == 2 then
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+                return {
+                    message = localize('k_upgrade_ex'),
+                    colour = G.C.MULT,
+                    card = card
+                }
+            end
+        end
+    end
+})
+--[[
+create_joker({ -- 2814
+    name = '2814',
+    atlas = "showdown_jokers",
+    pos = coordinate(49),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_2814'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Birth of a New Day
+    name = 'birth_of_a_new_day',
+    atlas = "showdown_jokers",
+    pos = coordinate(50),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_birth_of_a_new_day'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Rain Temple
+    name = 'rain_temple',
+    atlas = "showdown_jokers",
+    pos = coordinate(51),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_rain_temple'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Lost Fragments
+    name = 'lost_fragments',
+    atlas = "showdown_jokers",
+    pos = coordinate(52),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_lost_fragments'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Pillar / New Sun
+    name = 'pillar_new_sun',
+    atlas = "showdown_jokers",
+    pos = coordinate(53),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_pillar_new_sun'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+create_joker({ -- Voyage / Embrace
+    name = 'voyage_embrace',
+    atlas = "showdown_jokers",
+    pos = coordinate(54),
+    custom_vars = function(self, info_queue, card)
+		info_queue[#info_queue+1] = {set = 'Other', key = '2814_voyage_embrace'}
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        --
+    end
+})
+]]--
+
+create_joker({ -- Versatile Joker
+    name = 'versatile_joker',
+    atlas = "showdown_versatile_joker",
+    pos = coordinate(1),
+    vars = {{something = true}},
+    custom_vars = function(self, info_queue, card)
+        if G.STAGE == G.STAGES.RUN then
+            return { key = 'j_showdown_versatile_joker_unknown' }
+        end
+        return { key = 'j_showdown_versatile_joker' }
+    end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = false, eternal = true,
+    unlocked = false,
+    unlock_condition = {type = 'win_stake', stake = 4},
+    calculate = function(self, card, context)
+        --
+    end,
+    update = function(self, card)
+        print(inspectDepth(card.config.center))
+        --[[
+        if card.ability.extra.side == 'happy' then
+            if G.localization.descriptions["Joker"]["j_csau_sohappy"] ~= G.localization.descriptions["Joker"]["j_csau_sohappy2"] then
+                G.localization.descriptions["Joker"]["j_csau_sohappy"] = G.localization.descriptions["Joker"]["j_csau_sohappy2"]
+            end
+            if card.config.center.atlas ~= "csau_sohappy" then
+                card.config.center.atlas = "csau_sohappy"
+                card:set_sprites(card.config.center)
+            end
+        elseif card.ability.extra.side == 'sad' then
+            if G.localization.descriptions["Joker"]["j_csau_sohappy"] ~= G.localization.descriptions["Joker"]["j_csau_sosad"] then
+                G.localization.descriptions["Joker"]["j_csau_sohappy"] = G.localization.descriptions["Joker"]["j_csau_sosad"]
+            end
+            if card.config.center.atlas ~= "csau_sosad" then
+                card.config.center.atlas = "csau_sosad"
+                card:set_sprites(card.config.center)
+            end
+        end]]--
+    end 
+})

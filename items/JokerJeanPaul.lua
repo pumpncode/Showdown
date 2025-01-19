@@ -141,11 +141,6 @@ function copy_card(other, new_card, card_scale, playing_card, strip_edition)
     return _card
 end
 
----- Atlases
-
-SMODS.Atlas({key = "showdown_placeholders", path = "Jokers/placeholders.png", px = 71, py = 95}) -- Thanks Cryptid
-SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
-
 ---- Jean-Paul
 
 create_joker({
