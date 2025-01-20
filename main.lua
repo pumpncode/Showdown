@@ -4,17 +4,13 @@ itemsPath = showdown.path.."items/"
 
 ---- Functions
 
-function get_coordinates(position, width)
-    if width == nil then width = 10 end
-    return {x = (position) % width, y = math.floor((position) / width)}
-end
-
 ---Get card texture coordinates on the atlas
 ---@param position integer
 ---@param width integer|nil
 ---@return table
 function coordinate(position, width)
-    return get_coordinates(position - 1, width)
+    if width == nil then width = 10 end
+    return {x = (position-1) % width, y = math.floor((position-1) / width)}
 end
 
 function modCompatibility(modName, filePath)
@@ -1133,6 +1129,7 @@ SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png
 
 filesystem.load(itemsPath.."JokerJeanPaul.lua")()
 filesystem.load(itemsPath.."Jokers.lua")()
+filesystem.load(itemsPath.."JokerVersatile.lua")()
 
 ---- Mod Compatibility
 

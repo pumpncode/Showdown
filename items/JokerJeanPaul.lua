@@ -127,7 +127,7 @@ function giveSpeech(card)
     end
 end
 
-local create_cardRef = create_card
+--[[ local create_cardRef = create_card
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 	local _card = create_cardRef(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
     if _card.ability.name == 'jean_paul' then giveSpeech(_card) end
@@ -139,7 +139,7 @@ function copy_card(other, new_card, card_scale, playing_card, strip_edition)
 	local _card = copy_cardRef(other, new_card, card_scale, playing_card, strip_edition)
     if _card.ability.name == 'jean_paul' then giveSpeech(_card) end
     return _card
-end
+end ]]
 
 ---- Jean-Paul
 
@@ -198,6 +198,9 @@ create_joker({
                 end
             end
         end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        giveSpeech(card)
     end,
     update = function(self, card, dt)
         if card.hasSpeech and card.ability.extra.talk <= 0 then

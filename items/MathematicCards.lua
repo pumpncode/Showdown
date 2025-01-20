@@ -222,6 +222,8 @@ SMODS.Consumable({ -- Probability
 							and not (k == "qty")
 							and not ((k == "x_mult" or k == "Xmult") and v == 1 and not joker.ability.override_x_mult_check)
 							and not (k == "selected_d6_face")
+							and not (k == "x")
+							and not (k == "y")
 						then
 							if type(v) == "table" then
 								for kk, vv in pairs(v) do

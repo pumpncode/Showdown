@@ -622,6 +622,240 @@ return {
                     '{C:attention}Black Stake{} difficulty',
                 }
             },
+            j_showdown_versatile_joker_red = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Red Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_blue = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Blue Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_yellow = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Yellow Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_green = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Green Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_black = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Black Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_magic = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Magic Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_nebula = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Nebula Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_ghost = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Ghost Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_abandoned = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Abandoned Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_checkered = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Checkered Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_zodiac = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Zodiac Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_painted = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Painted Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_anaglyph = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'When getting a {C:attention}Double Tag{}, you',
+                    'get {C:attention}#1#{} additional',
+                    '{C:attention}Double Tag',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_plasma = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Plasma Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_erratic = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Erratic Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_challenge = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    '{C:blue}+1{} hand and {C:red}+1{} discard',
+                    'each round',
+                    '{C:attention}This bonus can\'t be modified',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_mirror = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Mirror Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_calculus = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Create a {C:showdown_calculus}Mathematic{} card when {C:attention}Blind',
+                    'is selected',
+                    '{C:inactive}(Must have room)',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_starter = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Starter Deck',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -969,6 +1203,7 @@ return {
             k_showdown_mysterious_tarot = 'Tarot?',
             k_unlocked = 'Unlocked!',
             k_mathematic = "Mathematic",
+            k_plus_math="+1 Mathematic",
             b_mathematic_cards = "Mathematic Cards",
             b_pull = "PULL",
         },
