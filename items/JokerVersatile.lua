@@ -1,5 +1,5 @@
 local versatile = {
-    ['Unknown'] = { desc = 'j_showdown_versatile_joker_unknown', pos = coordinate(1), blueprint = true, effect = function(self, card, context) end },
+    ['Unknown'] = { desc = 'j_showdown_versatile_joker_unknown', pos = coordinate(1), blueprint = true },
     ['Red Deck'] = { desc = 'j_showdown_versatile_joker_red', pos = coordinate(2), blueprint = false, effect = function(self, card, context)
         --
         if context.cardarea == G.jokers and context.joker_main then
@@ -45,9 +45,7 @@ local versatile = {
     ['Painted Deck'] = { desc = 'j_showdown_versatile_joker_painted', pos = coordinate(13), blueprint = false, effect = function(self, card, context)
         --
     end },
-    ['Anaglyph Deck'] = { desc = 'j_showdown_versatile_joker_anaglyph', pos = coordinate(14), blueprint = false, effect = function(self, card, context)
-        -- give more double tag when you get a double tag
-    end },
+    ['Anaglyph Deck'] = { desc = 'j_showdown_versatile_joker_anaglyph', pos = coordinate(14), blueprint = false },
     ['Plasma Deck'] = { desc = 'j_showdown_versatile_joker_plasma', pos = coordinate(15), blueprint = false, effect = function(self, card, context)
         --
     end },
@@ -65,7 +63,7 @@ local versatile = {
         --
     end },
     ['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = false, effect = function(self, card, context)
-        if context.setting_blind and not self.getting_sliced and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+        if context.setting_blind and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
             G.E_MANAGER:add_event(Event({
                 func = (function()
@@ -77,7 +75,7 @@ local versatile = {
                             G.GAME.consumeable_buffer = 0
                             return true
                         end}))
-                        card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_plus_math'), colour = G.C.RED})                       
+                        card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_plus_math'), colour = G.C.RED})
                     return true
                 end)}))
         end
@@ -148,3 +146,16 @@ create_joker({ -- Versatile Joker
         end
     end
 })
+
+local add_tagRef = add_tag
+function add_tag(_tag)
+    add_tagRef(_tag)
+    local versatile = find_joker('versatile_joker')
+    if _tag.key == 'tag_double' and #versatile > 0 and G.GAME.selected_back.name == 'Anaglyph Deck' then
+        local bonusTag = 0
+        for i=1, #versatile do
+            bonusTag = bonusTag + find_joker('versatile_joker')[i].ability.extra.double_tag
+        end
+        if bonusTag >= 1 then for j=1, bonusTag do add_tagRef(Tag('tag_double')) end end
+    end
+end

@@ -417,8 +417,8 @@ function Back.apply_to_run(self)
 			end,
 		}))
 		local vouchers = {}
-		for _, v in pairs(G.P_CENTERS) do
-			if v.set == 'Voucher' and not (v.requires and next(v.requires)) then
+		for _, v in pairs(G.P_CENTER_POOLS['Voucher']) do
+			if not (v.requires and next(v.requires)) then
 				table.insert(vouchers, v.key)
 			end
 		end

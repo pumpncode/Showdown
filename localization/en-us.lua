@@ -771,8 +771,7 @@ return {
                 text = {
                     'Effect depends of {C:attention}played deck',
                     'When getting a {C:attention}Double Tag{}, you',
-                    'get {C:attention}#1#{} additional',
-                    '{C:attention}Double Tag',
+                    'get {C:attention}#1#{} additional {C:attention}Double Tag',
                 },
                 unlock = {
                     'Win a run with any',
