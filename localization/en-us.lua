@@ -65,7 +65,7 @@ return {
                 name = 'Ghost Card',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
-                    '{C:green}1 in #3#{} chance to disappear',
+                    '{C:green}#4# in #3#{} chance to disappear',
                     'after all scoring is finished',
                 }
             },
@@ -551,8 +551,9 @@ return {
             j_showdown_passage_of_time = {
                 name = 'Passage of Time',
                 text = {
-                    '{C:purple}+#1#{} Mult and Chips',
-                    'Value equald to round',
+                    'This Joker gains {C:chips}+1{} Chips and',
+                    '{C:mult}+1{} Mult at the end of round',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips and {C:mult}+#2#{C:inactive} Mult)',
                 }
             },
             j_showdown_colored_glasses = {
@@ -650,7 +651,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Yellow Deck',
+                    'Gains {C:attention}sell value{} equal to {C:money}interest',
+                    'at end of round',
                 },
                 unlock = {
                     'Win a run with any',
@@ -734,7 +736,11 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Checkered Deck',
+                    'Played cards with {C:hearts}Heart{} suit give',
+                    '{C:mult}+#1#{} Mult when scored',
+                    '{C:green}#3# in 2{} chance for played cards with',
+                    '{C:spades}Spade{} suit to give {X:chips,C:white}X#2#{} Chips',
+                    'when scored',
                 },
                 unlock = {
                     'Win a run with any',
@@ -783,7 +789,9 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Plasma Deck',
+                    'Instead of balancing {C:chips}Chips{} and',
+                    '{C:mult}Mult{}, adds the {C:attention}quarter{} of both',
+                    'to both',
                 },
                 unlock = {
                     'Win a run with any',

@@ -646,7 +646,6 @@ create_joker({ -- Egg Drawing
     end,
     calculate = function(self, card, context)
         if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
-            print("egg drawing")
             local joker = pseudorandom_element(G.jokers.cards, pseudoseed('egg_drawing'))
             joker.ability.extra_value = joker.ability.extra_value + card.ability.extra.money
             joker:set_cost()
@@ -1206,17 +1205,25 @@ create_joker({ -- Passage of Time
     name = 'passage_of_time',
     atlas = "showdown_jokers",
     pos = coordinate(47),
+    vars = {{chips_mult = 0}, {scale = 3}},
     custom_vars = function(self, info_queue, card)
-		return { vars = { G.GAME.round } }
+		return { vars = { card.ability.extra.scale, card.ability.extra.chips_mult } }
 	end,
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.joker_main and G.GAME.round > 0 then
+        if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
+            card.ability.extra.chips_mult = card.ability.extra.chips_mult + card.ability.extra.scale
             return {
-                message = '+' .. G.GAME.round,
-                chip_mod = G.GAME.round,
-                mult_mod = G.GAME.round,
+                message = localize('k_upgrade_ex'),
+                colour = G.C.PURPLE,
+                card = card
+            }
+        elseif context.joker_main then
+            return {
+                message = '+' .. card.ability.extra.chips_mult,
+                chip_mod = card.ability.extra.chips_mult,
+                mult_mod = card.ability.extra.chips_mult,
                 colour = G.C.PURPLE,
                 card = card
             }

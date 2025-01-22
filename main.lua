@@ -1,6 +1,5 @@
-showdown = SMODS.current_mod
-filesystem = NFS or love.filesystem
-itemsPath = showdown.path.."items/"
+local filesystem = NFS or love.filesystem
+local itemsPath = SMODS.current_mod.path.."items/"
 
 ---- Functions
 
@@ -15,7 +14,7 @@ end
 
 function modCompatibility(modName, filePath)
 	sendInfoMessage("Mod Compatibility: "..modName.." is loaded!", "Showdown")
-	filesystem.load(showdown.path..filePath)()
+	filesystem.load(SMODS.current_mod.path..filePath)()
 end
 
 function event(config)
@@ -206,7 +205,7 @@ if not (SMODS.Mods["Paperback"] or {}).can_load then
 end
 
 baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
-extraSuits = {}
+Showdown.extraSuits = {}
 
 ---Returns all vanilla and modded suits. Args can be passed to have more control over the suits:
 ---- noModded: Exclude Modded suits
@@ -458,14 +457,14 @@ local function inject_p_card_suit_compat(suit, rank)
 		hc_atlas = rank.suit_map[suit.key] and rank.hc_atlas or suit.hc_atlas,
 	}
 	if not findInTable(card.suit, baseSuits) then
-		if not extraSuits[card.suit] then
+		if not Showdown.extraSuits[card.suit] then
 			sendWarnMessage("Unknown suit for "..card.name, "Showdown")
 			card.lc_atlas = 'showdown_unknownSuit'
 			card.hc_atlas = 'showdown_unknownSuit'
 			card.pos = {x = 0, y = 0}
 		else
-			card.lc_atlas = extraSuits[card.suit].lc_atlas
-			card.hc_atlas = extraSuits[card.suit].hc_atlas
+			card.lc_atlas = Showdown.extraSuits[card.suit].lc_atlas
+			card.hc_atlas = Showdown.extraSuits[card.suit].hc_atlas
 		end
 	end
 	G.P_CARDS[suit.card_key .. '_' .. rank.card_key] = card
@@ -1010,9 +1009,9 @@ SMODS.Enhancement({
 	config = {extra = {x_mult = 1.25, x_chips = 1.25, shatter_chance = 8}},
     loc_vars = function(self, info_queue, card)
 		if card then
-			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips, card.ability.extra.shatter_chance}}
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips, card.ability.extra.shatter_chance, G.GAME.probabilities.normal}}
 		end
-		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips, self.config.extra.shatter_chance}}
+		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips, self.config.extra.shatter_chance, G.GAME.probabilities.normal}}
 	end,
 	calculate = function(self, card, context, effect)
 		if context.cardarea == G.play and not context.repetition then

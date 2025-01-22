@@ -628,3 +628,55 @@ table.insert(left_text, {n=G.UIT.O, config={object = DynaText({string = {" "..lo
 #payload = '''
 #if context.repetition_only and not G.GAME.blind.name == 'The Shameful' then
 #'''
+
+# Init Showdown global through lovely
+[[patches]]
+[patches.pattern]
+target = "main.lua"
+match_indent = true
+pattern = '''function love.load()'''
+position = "before"
+payload = '''
+Showdown = {}
+Showdown.extraSuits = {}
+Showdown.versatile = {}
+'''
+
+# Versatile Joker (Yellow Deck)
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+match_indent = true
+pattern = "ease_dollars(G.GAME.current_round.dollars)"
+position = "after"
+payload = '''
+for i = 1, #G.jokers.cards do
+    G.jokers.cards[i]:calculate_joker({cash_out = true, money = G.GAME.current_round.dollars, interest = G.GAME.interest_amount*math.min(math.floor(G.GAME.dollars/5), G.GAME.interest_cap/5)})
+end
+'''
+
+# Versatile Joker (Plasma Deck), part 1/2
+[[patches]]
+[patches.pattern]
+target = "back.lua"
+match_indent = true
+pattern = "if self.name == 'Plasma Deck' and args.context == 'final_scoring_step' then"
+position = "after"
+payload = '''
+if next(find_joker('versatile_joker')) then
+    local tot = args.chips + args.mult
+    args.chips = args.chips + math.floor(tot/4)
+    args.mult = args.mult + math.floor(tot/4)
+else
+'''
+
+# Versatile Joker (Plasma Deck), part 2/2
+[[patches]]
+[patches.pattern]
+target = "back.lua"
+match_indent = true
+pattern = "update_hand_text({delay = 0}, {mult = args.mult, chips = args.chips})"
+position = "before"
+payload = '''
+end
+'''

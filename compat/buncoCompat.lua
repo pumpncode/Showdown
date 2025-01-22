@@ -10,8 +10,8 @@ end
 SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
 
-extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
-extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
+Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
+Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 
 --[[
 SMODS.DeckSkin({
@@ -82,3 +82,12 @@ SMODS.Consumable({ -- The Beast
         delay(0.5)
     end
 })
+
+-- Versatile Joker
+
+Showdown.versatile['Fairy Deck'] = { desc = 'j_showdown_versatile_joker_fairy', pos = coordinate(21), blueprint = false, effect = function(self, card, context)
+    --
+end }
+Showdown.versatile['Digital Deck'] = { desc = 'j_showdown_versatile_joker_digital', pos = coordinate(22), blueprint = false, effect = function(self, card, context)
+    --
+end }
