@@ -12,8 +12,12 @@ Showdown.versatile['Yellow Deck'] = { desc = 'j_showdown_versatile_joker_yellow'
         forced_message(localize('k_val_up'), card, nil, true)
     end
 end }
-Showdown.versatile['Green Deck'] = { desc = 'j_showdown_versatile_joker_green', pos = coordinate(5), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Green Deck'] = { desc = 'j_showdown_versatile_joker_green', pos = coordinate(5), blueprint = false, add_to_deck = function(self, card, from_debuff)
+    G.GAME.interest_amount = G.GAME.interest_amount + 1
+    G.GAME.modifiers.no_interest = false
+end, remove_from_deck = function(self, card, from_debuff)
+    G.GAME.interest_amount = G.GAME.interest_amount - 1
+    G.GAME.modifiers.no_interest = true
 end }
 Showdown.versatile['Black Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(6), blueprint = false, effect = function(self, card, context)
     --
@@ -81,9 +85,7 @@ Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calcu
             end)}))
     end
 end }
-Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false, effect = function(self, card, context)
-    --
-end }
+Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
 
 ---Get deck specifications for Versatile Joker
 ---@param type string
@@ -141,10 +143,10 @@ create_joker({ -- Versatile Joker
                 card.config.center.blueprint_compat = blueprint
                 card:set_sprites(card.config.center)
             end
-        else
+        elseif card.config.center.pos ~= coordinate(1) or card.config.center.blueprint_compat ~= false then
             card.config.center.pos = coordinate(1)
             card.config.center.blueprint_compat = false
-            card:set_sprites(card.config.center) -- This isn't really pretty because it runs that function every frame
+            card:set_sprites(card.config.center)
         end
     end,
     load = function(self, card, card_table, other_card)

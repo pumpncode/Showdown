@@ -78,12 +78,6 @@ end
 ---Creates a joker given the passed arguments
 ---@param joker table
 function create_joker(joker) -- (Thanks Bunco)
-	-- Sprite atlas
-    local atlas
-	if not joker.atlas then 
-		atlas = "showdown_placeholders"
-	end
-
     -- Key generation from name
     local key = string.gsub(string.lower(joker.name), '%s', '_') -- Removes spaces and uppercase letters
 
@@ -121,7 +115,7 @@ function create_joker(joker) -- (Thanks Bunco)
         name = joker.name,
         key = key,
 
-        atlas = joker.atlas or atlas,
+        atlas = joker.atlas,
         pos = joker.pos,
         soul_pos = joker.soul,
 
@@ -388,45 +382,53 @@ SMODS.Back{ -- Starter Deck
 	config = { showdown_starter = true }
 }
 
+local function give_starter()
+	G.E_MANAGER:add_event(Event({
+		func = function()
+			if G.jokers then
+				local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
+				card:add_to_deck()
+				card:start_materialize()
+				G.jokers:emplace(card)
+				return true
+			end
+		end,
+	}))
+	G.E_MANAGER:add_event(Event({
+		func = function()
+			if G.consumeables then
+				local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, "showdown_starter")
+				card:add_to_deck()
+				G.consumeables:emplace(card)
+				return true
+			end
+		end,
+	}))
+	local vouchers = {}
+	for _, v in pairs(G.P_CENTER_POOLS['Voucher']) do
+		if not (v.requires and next(v.requires)) then
+			table.insert(vouchers, v.key)
+		end
+	end
+	if next(vouchers) then
+		local randomVoucher = pseudorandom_element(vouchers)
+		G.GAME.used_vouchers[randomVoucher] = true
+		G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
+		Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
+	end
+end
+
 local Backapply_to_runRef = Back.apply_to_run
 function Back.apply_to_run(self)
 	Backapply_to_runRef(self)
 	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
 	if self.effect.config.showdown_starter then
-		G.GAME.starting_params.dollars = 0
-		G.E_MANAGER:add_event(Event({
-			func = function()
-				if G.jokers then
-					local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
-					card:add_to_deck()
-					card:start_materialize()
-					G.jokers:emplace(card)
-					return true
-				end
-			end,
-		}))
-		G.E_MANAGER:add_event(Event({
-			func = function()
-				if G.consumeables then
-					local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, "showdown_starter")
-					card:add_to_deck()
-					G.consumeables:emplace(card)
-					return true
-				end
-			end,
-		}))
-		local vouchers = {}
-		for _, v in pairs(G.P_CENTER_POOLS['Voucher']) do
-			if not (v.requires and next(v.requires)) then
-				table.insert(vouchers, v.key)
-			end
-		end
-		if next(vouchers) then
-			local randomVoucher = pseudorandom_element(vouchers)
-			G.GAME.used_vouchers[randomVoucher] = true
-			G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
-			Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
-		end
+		G.GAME.starting_params.dollars = -5
+		give_starter()
+	end
+	if G.PROFILES[G.SETTINGS.profile].starter_next_run then
+		G.PROFILES[G.SETTINGS.profile].starter_next_run = false
+		give_starter()
 	end
 end
 
@@ -1125,6 +1127,7 @@ end
 
 SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
 
 filesystem.load(itemsPath.."JokerJeanPaul.lua")()
 filesystem.load(itemsPath.."Jokers.lua")()

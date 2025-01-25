@@ -3,6 +3,17 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
+# For testing
+[[patches]]
+[patches.pattern]
+target = "controller.lua"
+pattern = "if not _RELEASE_MODE then"
+position = "at"
+match_indent = true
+payload = '''
+if _RELEASE_MODE then
+'''
+
 # Counterpart ranks and mathematic color, part 1/2
 [[patches]]
 [patches.pattern]
@@ -421,6 +432,7 @@ if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G
 end
 '''
 
+# Bugged Seed unlock (doesn't work)
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
@@ -431,16 +443,6 @@ payload = '''
 if G.GAME.seeded and G.GAME.selected_back.name == G.P_CENTERS.b_erratic.name and G.GAME.pseudorandom.seed == '7LB2WVPK' then
     check_for_unlock({type = '7LB2WVPK'})
 end
-'''
-
-[[patches]]
-[patches.pattern]
-target = "controller.lua"
-pattern = "if not _RELEASE_MODE then"
-position = "at"
-match_indent = true
-payload = '''
-if _RELEASE_MODE then
 '''
 
 # Hidden cards aren't required for cards unlocks, part 1/2
@@ -678,5 +680,18 @@ match_indent = true
 pattern = "update_hand_text({delay = 0}, {mult = args.mult, chips = args.chips})"
 position = "before"
 payload = '''
+end
+'''
+
+# Versatile Joker (Starter Deck)
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+match_indent = true
+pattern = "inc_career_stat('c_wins', 1)"
+position = "after"
+payload = '''
+if G.GAME.selected_back.name == 'Starter Deck' and next(find_joker('versatile_joker')) then
+    G.PROFILES[G.SETTINGS.profile].starter_next_run = true
 end
 '''

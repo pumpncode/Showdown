@@ -1349,3 +1349,44 @@ create_joker({ -- Voyage / Embrace
     end
 })
 ]]--
+create_joker({ -- Joker Variance Authority
+    name = 'joker_variance_authorithy',
+    atlas = "showdown_jokers",
+    pos = coordinate(55),
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if pseudorandom('joker_variant') < 1 / 50 then
+            G.GAME.showdown_JVA = coordinate(math.random(1, 20))
+        end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        G.GAME.showdown_JVA = coordinate(math.random(1, 20))
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        G.GAME.showdown_JVA = nil
+    end
+})
+
+SMODS.Joker:take_ownership('joker', {
+    update = function(self, card, front)
+        if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then
+            if card.config.center.pos ~= G.GAME.showdown_JVA then
+                card.config.center.atlas = 'showdown_joker_variants'
+                card.config.center.pos = G.GAME.showdown_JVA
+                card:set_sprites(card.config.center)
+            end
+        elseif card.config.center.atlas ~= 'Joker' then
+            card.config.center.atlas = 'Joker'
+            card.config.center.pos = { x = 0, y = 0 }
+            card:set_sprites(card.config.center)
+        end
+    end,
+    load = function(self, card, card_table, other_card)
+        if G.GAME.showdown_JVA then
+            card.config.center.atlas = 'showdown_joker_variants'
+            card.config.center.pos = G.GAME.showdown_JVA
+            card:set_sprites(card.config.center)
+        end
+    end
+}, true)

@@ -651,7 +651,7 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Gains {C:attention}sell value{} equal to {C:money}interest',
+                    'Gains {C:attention}sell value{} equal to {C:attention}interest',
                     'at end of round',
                 },
                 unlock = {
@@ -664,7 +664,9 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Green Deck',
+                    'You gain {C:attention}interest{} back',
+                    'Earn an extra {C:money}$1{} of {C:attention}interest{} for',
+                    'every {C:money}$5{} you have at end of round',
                 },
                 unlock = {
                     'Win a run with any',
@@ -855,13 +857,21 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Starter Deck',
+                    'You start your {C:attention}next run{} with a {C:attention}random',
+                    'joker, consumable and voucher after',
+                    '{C:attention}winning{} this run',
                 },
                 unlock = {
                     'Win a run with any',
                     'deck on at least',
                     '{C:attention}Black Stake{} difficulty',
                 }
+            },
+            j_showdown_joker_variance_authorithy = {
+                name = 'Joker Variance Authority',
+                text = {
+                    'idk',
+                },
             },
         },
         Other={
@@ -1839,10 +1849,13 @@ return {
                 'y = ax + b',
             },
             using_mathematic_3 = {
-                '',
+                'Did you know about',
+                'DeMoivre\'s Theorem?',
+                'Yeah me neither.',
             },
             using_mathematic_4 = {
-                '',
+                'Do you have a',
+                'favourite number?',
             },
             using_mathematic_5 = {
                 '',
@@ -1881,10 +1894,14 @@ return {
                 'Matrix now??',
             },
             using_code_5 = {
-                '',
+                'local function hi()',
+                '   print(\'hello!\')',
+                'end',
             },
             using_code_6 = {
-                '',
+                'Did you know?',
+                'Code cards are',
+                'made with code.',
             },
             using_code_7 = {
                 '',
@@ -1970,7 +1987,8 @@ return {
                 '',
             },
             in_booster_1 = {
-                '',
+                'Are you looking',
+                'at the cards?',
             },
             in_booster_2 = {
                 '',
@@ -2045,31 +2063,39 @@ return {
                 'cocainer',
             },
             random_12 = {
-                '',
+                'am hungy',
             },
             random_13 = {
-                '',
+                'Why did the',
+                'chicken crossed',
+                'the road?',
             },
             random_14 = {
-                '',
+                'text',
             },
             random_15 = {
-                '',
+                'Imagine 2 onions.',
+                'Heck, imagine 3.',
+                'onions.',
             },
             random_16 = {
-                '',
+                'YOU SHOULD',
+                'LOVE YOURSELF',
+                'NOW!',
             },
             random_17 = {
-                '',
+                'Do you think?',
+                'I don\'t.',
             },
             random_18 = {
-                '',
+                'blleblbelblebllebe :Þ',
             },
             random_19 = {
-                '',
+                'cheddar',
             },
             random_20 = {
-                '',
+                'I love',
+                'cheese.',
             },
             --[[
             _1 = {
