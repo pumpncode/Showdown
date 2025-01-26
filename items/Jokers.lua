@@ -18,7 +18,7 @@ create_joker({ -- Crouton
     name = 'crouton',
 	atlas = "showdown_jokers",
     pos = coordinate(2), soul = coordinate(3),
-    vars = {{x_mult = 1.2}},
+    vars = {{x_mult = 1.5}},
     rarity = 'Legendary', --cost = 5,
     blueprint = true, eternal = true, perishable = true,
     unlocked = false,
@@ -1119,7 +1119,11 @@ create_joker({ -- 4 Locks
     end,
     calculate = function(self, card, context)
         if not context.blueprint and not card.ability.extra.created then
-            if card.ability.extra.red and card.ability.extra.blue and card.ability.extra.green and card.ability.extra.yellow then
+            local unlocked = true
+            for i=1, #card.ability.extra.locks do
+                unlocked = unlocked and card.ability.extra.locks[i]
+            end
+            if unlocked then
                 card.ability.extra.created = true
                 if not G.GAME.won then
                     G.E_MANAGER:add_event(Event({
@@ -1156,13 +1160,14 @@ create_joker({ -- Unshackled Joker
     rarity = 'showdown_Final', cost = 20,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if false and context.joker_main and G.GAME.round > 1 then
-            return {
-                message = 'X' .. G.GAME.round,
-                Xmult_mod = G.GAME.round,
-                colour = G.C.RED,
-                card = card
-            }
+        if context.joker_main then
+            local text = G.FUNCS.get_poker_hand_info(context.scoring_hand)
+            if G.GAME.hands[text].level > 1 then
+                return {
+                    message = localize{type = 'variable', key = 'a_xmult', vars = {G.GAME.hands[text].level}},
+                    Xmult_mod = G.GAME.hands[text].level
+                }
+            end
         end
     end
 })
@@ -1348,7 +1353,7 @@ create_joker({ -- Voyage / Embrace
         --
     end
 })
-]]--
+
 create_joker({ -- Joker Variance Authority
     name = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
@@ -1367,7 +1372,7 @@ create_joker({ -- Joker Variance Authority
         G.GAME.showdown_JVA = nil
     end
 })
-
+]]--
 SMODS.Joker:take_ownership('joker', {
     update = function(self, card, front)
         if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then

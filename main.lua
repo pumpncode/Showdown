@@ -1052,15 +1052,20 @@ SMODS.Tag({
 	pos = coordinate(1),
 	no_collection = true,
 	apply = function(self, tag, context)
-		if next(find_joker('4_locks')) then
-			local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
-			if not lockJ.ability.extra.locks[3] then
-				lockJ.ability.extra.locks[3] = true
-				forced_message(localize('k_unlocked'), lockJ, G.C.GREEN, true)
+		if context.type == "immediate" then
+			if next(find_joker('4_locks')) then
+				local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+				tag:yep("+", G.C.GREEN, function()
+					if not lockJ.ability.extra.locks[3] then
+						lockJ.ability.extra.locks[3] = true
+						forced_message(localize('k_unlocked'), lockJ, G.C.GREEN, true)
+					end
+					return true
+				end)
+				tag.triggered = true
+				return true
 			end
 		end
-		tag.triggered = true
-		return true
 	end,
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[3]
@@ -1076,6 +1081,7 @@ SMODS.Blind({
 	name = "The Latch",
 	atlas = "showdown_blinds",
 	pos = { x = 0, y = 0 },
+	no_collection = true,
 	boss_colour = G.C.GREY,
 	boss = { min = 1 },
 	mult = 3,
