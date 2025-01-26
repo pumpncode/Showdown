@@ -710,3 +710,30 @@ payload = '''
                     G.jokers.cards[i]:calculate_joker({using_fool = true, created_card = card})
                 end
 '''
+
+# banana unlock
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "if pseudorandom(self.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel') < G.GAME.probabilities.normal/self.ability.extra.odds then"
+position = "after"
+payload = '''
+check_for_unlock({type = 'extinct', name = self.ability.name})
+'''
+
+# banana image scaling
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "if center.name == \"Wee Joker\" and (center.discovered or self.bypass_discovery_center) then"
+position = "before"
+payload = '''
+if center.name == 'banana' and (center.discovered or self.bypass_discovery_center) then
+    H = H/2
+    W = W/2
+    self.T.h = H
+    self.T.w = W
+end
+'''

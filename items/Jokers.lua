@@ -1399,3 +1399,34 @@ SMODS.Joker:take_ownership('joker', {
         end
     end
 }, true)
+
+create_joker({ -- banana
+    name = 'banana',
+    atlas = "showdown_banana",
+    pos = { x = 0, y = 0 },
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'extinct' and args.name == 'Cavendish' then unlock_card(self) end
+    end,
+    calculate = function(self, card, context)
+        --
+    end
+})
+
+local updateRef = Game.update
+banana_dt = 0
+function Game:update(dt)
+    updateRef(self, dt)
+    banana_dt = banana_dt + dt
+    if G.P_CENTERS and G.P_CENTERS.j_showdown_banana and banana_dt > 0.1 then
+        banana_dt = 0
+        local obj = G.P_CENTERS.j_showdown_banana
+        if obj.pos.x == 7 then
+            obj.pos.x = 0
+        elseif obj.pos.x < 7 then
+            obj.pos.x = obj.pos.x + 1
+        end
+    end
+end

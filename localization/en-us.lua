@@ -875,6 +875,15 @@ return {
                     'idk',
                 },
             },
+            j_showdown_banana = {
+                name = 'banana',
+                text = {
+                    'idk',
+                },
+                unlock = {
+                    'Make Cavendish {C:attention}expire',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
