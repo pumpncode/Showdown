@@ -86,19 +86,21 @@ SMODS.Consumable({ -- Variable
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(2),
-	config = {max_highlighted = 3, minMoney = 0, maxMoney = 10},
+	config = {max_highlighted = 3, minMoney = 0, maxMoney = 6},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.minMoney, self.config.maxMoney}} end,
 	can_use = function(self)
-        return #G.jokers.cards < G.jokers.config.card_limit and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
+        return #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,
     use = function(self)
+		local money = 0
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
 				mathDestroyCard(G.hand.highlighted[i], {nil, i == #G.hand.highlighted})
-				local money = math.random(self.config.minMoney, self.config.maxMoney)
-				if money > 0 then ease_dollars(money) end
 			return true end })
+			money = money + math.random(self.config.minMoney, self.config.maxMoney)
         end
+		delay(0.6)
+		if money > 0 then ease_dollars(money) end
     end
 })
 
@@ -197,7 +199,7 @@ SMODS.Consumable({ -- Probability
 	atlas = 'showdown_mathematic',
     pos = coordinate(6),
 	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.mult_joker}} end,
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.mult_joker, G.GAME.probabilities.normal, self.config.extra.odds}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 and #G.jokers.cards >= 1 then
             return true

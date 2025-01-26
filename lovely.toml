@@ -695,3 +695,18 @@ if G.GAME.selected_back.name == 'Starter Deck' and next(find_joker('versatile_jo
     G.PROFILES[G.SETTINGS.profile].starter_next_run = true
 end
 '''
+
+# Versatile Joker (Magic Deck)
+[[patches]]
+[patches.regex]
+target = "card.lua"
+#match_indent = true
+#line_prepend = '$indent'
+pattern = "(?<indent1>[\t ]*)local card = create_card[(]'Tarot_Planet', G.consumeables, nil, nil, nil, nil, G.GAME.last_tarot_planet, 'fool'[)][\n](?<indent2>[\t ]*)card:add_to_deck[(][)][\n](?<indent3>[\t ]*)G.consumeables:emplace[(]card[)]"
+position = "after"
+payload = '''
+
+                for i = 1, #G.jokers.cards do
+                    G.jokers.cards[i]:calculate_joker({using_fool = true, created_card = card})
+                end
+'''

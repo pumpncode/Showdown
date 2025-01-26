@@ -14,6 +14,8 @@ SMODS.Rarity{
 
 ---- Jokers
 
+filesystem.load(itemsPath.."JokerJeanPaul.lua")()
+
 create_joker({ -- Crouton
     name = 'crouton',
 	atlas = "showdown_jokers",
@@ -1014,7 +1016,7 @@ create_joker({ -- World Map
         end
     end
 })
-
+--[[ 
 create_joker({ -- Bugged Seed
     name = 'bugged_seed',
     atlas = "showdown_jokers",
@@ -1037,7 +1039,7 @@ create_joker({ -- Bugged Seed
         --
     end
 })
-
+ ]]
 create_joker({ -- Sick Trick
     name = 'sick_trick',
     atlas = "showdown_jokers",
@@ -1353,7 +1355,9 @@ create_joker({ -- Voyage / Embrace
         --
     end
 })
-
+]]
+filesystem.load(itemsPath.."JokerVersatile.lua")()
+--[[
 create_joker({ -- Joker Variance Authority
     name = 'joker_variance_authorithy',
     atlas = "showdown_jokers",

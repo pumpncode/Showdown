@@ -1,5 +1,5 @@
-local filesystem = NFS or love.filesystem
-local itemsPath = SMODS.current_mod.path.."items/"
+filesystem = NFS or love.filesystem
+itemsPath = SMODS.current_mod.path.."items/"
 
 ---- Functions
 
@@ -916,7 +916,7 @@ filesystem.load(itemsPath.."MathematicCards.lua")()
 ---- Vouchers
 
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
-
+--[[ 
 SMODS.Voucher({ -- Irrational Numbers
 	key = 'irrational',
 	atlas = 'showdown_vouchers',
@@ -937,7 +937,7 @@ SMODS.Voucher({ -- Transcendant Numbers
         --
     end,
 })
-
+ ]]
 SMODS.Voucher({ -- Number Theory
 	key = 'number',
 	atlas = 'showdown_vouchers',
@@ -1135,9 +1135,7 @@ SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 
 SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
 
-filesystem.load(itemsPath.."JokerJeanPaul.lua")()
 filesystem.load(itemsPath.."Jokers.lua")()
-filesystem.load(itemsPath.."JokerVersatile.lua")()
 
 ---- Mod Compatibility
 

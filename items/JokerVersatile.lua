@@ -22,8 +22,24 @@ end }
 Showdown.versatile['Black Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(6), blueprint = false, effect = function(self, card, context)
     --
 end }
-Showdown.versatile['Magic Deck'] = { desc = 'j_showdown_versatile_joker_magic', pos = coordinate(7), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Magic Deck'] = { desc = 'j_showdown_versatile_joker_magic', pos = coordinate(7), blueprint = true, effect = function(self, card, context)
+    if context.using_fool then
+        for _=1, card.ability.extra.fool_copy do
+            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                local _card = create_card('Tarot_Planet', G.consumeables, nil, nil, nil, nil, context.created_card.config.center_key, 'fool')
+                _card:add_to_deck()
+                G.consumeables:emplace(_card)
+            end
+        end
+    end
+end, add_to_deck = function(self, card, from_debuff)
+    G.E_MANAGER:add_event(Event({func = function()
+        G.consumeables.config.card_limit = G.consumeables.config.card_limit + 1
+    return true end }))
+end, remove_from_deck = function(self, card, from_debuff)
+    G.E_MANAGER:add_event(Event({func = function()
+        G.consumeables.config.card_limit = G.consumeables.config.card_limit - 1
+    return true end }))
 end }
 Showdown.versatile['Nebula Deck'] = { desc = 'j_showdown_versatile_joker_nebula', pos = coordinate(8), blueprint = false, effect = function(self, card, context)
     --
@@ -32,7 +48,13 @@ Showdown.versatile['Ghost Deck'] = { desc = 'j_showdown_versatile_joker_ghost', 
     --
 end }
 Showdown.versatile['Abandoned Deck'] = { desc = 'j_showdown_versatile_joker_abandoned', pos = coordinate(10), blueprint = true, effect = function(self, card, context)
-    --
+    if context.repetition and context.cardarea == G.play and not context.other_card:is_face() then
+        return {
+            message = localize('k_again_ex'),
+            repetitions = card.ability.extra.non_face_retrigger,
+            card = card
+        }
+    end
 end }
 Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_checkered', pos = coordinate(11), blueprint = true, effect = function(self, card, context)
     if context.individual and context.cardarea == G.play then
@@ -49,8 +71,10 @@ end }
 Showdown.versatile['Zodiac Deck'] = { desc = 'j_showdown_versatile_joker_zodiac', pos = coordinate(12), blueprint = false, effect = function(self, card, context)
     --
 end }
-Showdown.versatile['Painted Deck'] = { desc = 'j_showdown_versatile_joker_painted', pos = coordinate(13), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Painted Deck'] = { desc = 'j_showdown_versatile_joker_painted', pos = coordinate(13), blueprint = false, add_to_deck = function(self, card, from_debuff)
+    G.jokers.config.card_limit = G.jokers.config.card_limit + 2
+end, remove_from_deck = function(self, card, from_debuff)
+    G.jokers.config.card_limit = G.jokers.config.card_limit - 2
 end }
 Showdown.versatile['Anaglyph Deck'] = { desc = 'j_showdown_versatile_joker_anaglyph', pos = coordinate(14), blueprint = false }
 Showdown.versatile['Plasma Deck'] = { desc = 'j_showdown_versatile_joker_plasma', pos = coordinate(15), blueprint = false }
@@ -104,14 +128,20 @@ create_joker({ -- Versatile Joker
     pos = coordinate(1),
     vars = {
         {x = 0}, {y = 0}, {blueprint = false},            -- Base Card
+        {fool_copy = 1},                               -- Magic Deck
+        {non_face_retrigger = 1},                      -- Abandoned Deck
         {hearts = 20}, {spades = 1.5}, {spades_odd = 2}, -- Checkered Deck
         {double_tag = 1},                              -- Anaglyph Deck
     },
     custom_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
             local loc = { key = get_versatile('desc') }
-            if G.GAME.selected_back.name == 'Checkered Deck' then
-                loc.vars = { card.ability.extra.hearts, card.ability.extra.spades, G.GAME.probabilities.normal }
+            if G.GAME.selected_back.name == 'Magic Deck' then
+                loc.vars = { card.ability.extra.fool_copy }
+            elseif G.GAME.selected_back.name == 'Abandoned Deck' then
+                loc.vars = { card.ability.extra.non_face_retrigger }
+            elseif G.GAME.selected_back.name == 'Checkered Deck' then
+                loc.vars = { card.ability.extra.hearts, card.ability.extra.spades, G.GAME.probabilities.normal, card.ability.extra.spades_odd }
             elseif G.GAME.selected_back.name == 'Anaglyph Deck' then
                 loc.vars = { card.ability.extra.double_tag }
             end

@@ -122,9 +122,9 @@ return {
                 name = 'Infection',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{}',
-                    'future cards in shop and boosters can be {C:attention}replaced{}',
-                    'by {C:attention}Strange Thing{}',
-                    'future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
+                    'Cards in shop and boosters can',
+                    'be {C:attention}replaced{} by {C:attention}Strange Thing{}',
+                    'Future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
                 }
             },
             j_showdown_math_teacher = {
@@ -615,7 +615,7 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    '{C:red}Unkown deck, no effect',
+                    '{C:red}Unknown deck, no effect',
                 },
                 unlock = {
                     'Win a run with any',
@@ -690,7 +690,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Magic Deck',
+                    '{C:attention}+1{} Consumable slot',
+                    '{C:purple}The Fool{} creates {C:attention}#1#{} additional card',
                 },
                 unlock = {
                     'Win a run with any',
@@ -726,7 +727,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Abandoned Deck',
+                    '{C:attention}Non-face{} cards are',
+                    'retriggered {C:attention}#1#{} additional time',
                 },
                 unlock = {
                     'Win a run with any',
@@ -740,7 +742,7 @@ return {
                     'Effect depends of {C:attention}played deck',
                     'Played cards with {C:hearts}Heart{} suit give',
                     '{C:mult}+#1#{} Mult when scored',
-                    '{C:green}#3# in 2{} chance for played cards with',
+                    '{C:green}#3# in #4#{} chance for played cards with',
                     '{C:spades}Spade{} suit to give {X:chips,C:white}X#2#{} Chips',
                     'when scored',
                 },
@@ -766,7 +768,7 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Painted Deck',
+                    '{C:dark_edition}+2{C:attention} Joker{} slots',
                 },
                 unlock = {
                     'Win a run with any',
@@ -1174,7 +1176,7 @@ return {
                 name = 'Probability',
                 text = {
                     'Select up to {C:attention}#1#{} cards, each card has',
-                    'a {C:green}1 in 3{} chance to be {C:attention}destroyed{}',
+                    'a {C:green}#3# in #4#{} chance to be {C:attention}destroyed{}',
                     'Each destroyed card {C:attention}multiply{} the values of',
                     'the leftest joker by {X:attention,C:white}X#2#{}',
                 }
