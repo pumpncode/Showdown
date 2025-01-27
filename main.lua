@@ -1108,7 +1108,7 @@ SMODS.Blind({
 	boss = { min = 1 },
 	mult = 2,
 })
-
+--[[ 
 SMODS.Blind({
 	key = "shameful",
 	name = "The Shameful",
@@ -1118,7 +1118,7 @@ SMODS.Blind({
 	boss = { min = 1 },
 	mult = 2,
 })
-
+ ]]
 local gnb = get_new_boss
 function get_new_boss()
 	for k, v in pairs(G.P_BLINDS) do
@@ -1142,7 +1142,7 @@ filesystem.load(itemsPath.."Jokers.lua")()
 
 ---- Mod Compatibility
 
-if (SMODS.Mods["Bunco"] or {}).can_load then
+--[[ if (SMODS.Mods["Bunco"] or {}).can_load then
 	modCompatibility("Bunco", "compat/buncoCompat.lua")
 end
 if (SMODS.Mods["Cryptid"] or {}).can_load then
@@ -1153,4 +1153,4 @@ if (SMODS.Mods["MusicalSuit"] or {}).can_load then
 end
 if (SMODS.Mods["InkAndColor"] or {}).can_load then
 	modCompatibility("InkAndColor", "compat/inkAndColorCompat.lua")
-end
+end ]]
