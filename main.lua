@@ -964,7 +964,8 @@ SMODS.Voucher({ -- Number Theory
 SMODS.Voucher({ -- Axiom of Infinity
 	key = 'axiom',
 	atlas = 'showdown_vouchers',
-    unlocked = false,
+    --unlocked = false,
+    unlocked = true,
     requires = {'v_showdown_number'},
 	pos = coordinate(4, 2),
 	redeem = function(self)
