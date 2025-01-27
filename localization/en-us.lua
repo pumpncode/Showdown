@@ -222,7 +222,7 @@ return {
             j_showdown_empty_joker = {
                 name = 'Empty Joker',
                 text = {
-                    '{C:mult}+#1#{} if hand contains a {C:attention}0{}',
+                    '{C:mult}+#1#{} Mult if hand contains a {C:attention}0{}',
                 }
             },
             j_showdown_baby_jimbo = {
@@ -878,7 +878,10 @@ return {
             j_showdown_banana = {
                 name = 'banana',
                 text = {
-                    'idk',
+                    '{C:green}#3# in 2{} chance to gain {C:mult}+#1#{} Mult at {C:attention}end of round',
+                    'Otherwise, loses {C:mult}-#1#{} Mult',
+                    '{C:attention}Destroyed{} when having {C:mult}0{} Mult',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 },
                 unlock = {
                     'Make Cavendish {C:attention}expire',
@@ -1232,6 +1235,7 @@ return {
             k_unlocked = 'Unlocked!',
             k_mathematic = "Mathematic",
             k_plus_math="+1 Mathematic",
+            k_downgrade_ex="Downgrade!",
             b_mathematic_cards = "Mathematic Cards",
             b_pull = "PULL",
         },

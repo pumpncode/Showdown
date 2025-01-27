@@ -1136,6 +1136,8 @@ SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png
 SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
 SMODS.Atlas({key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43})
 
+SMODS.Sound({key = "cronch", path = "cronch.ogg"})
+
 filesystem.load(itemsPath.."Jokers.lua")()
 
 ---- Mod Compatibility

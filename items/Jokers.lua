@@ -562,7 +562,7 @@ create_joker({ -- Revolution
         end
     end
 })
-
+--[[ 
 create_joker({ -- Fruit Sticker
     name = 'fruit_sticker',
     atlas = "showdown_jokers",
@@ -592,7 +592,7 @@ create_joker({ -- Fruit Sticker
         end
     end
 })
-
+ ]]
 create_joker({ -- Sinful Joker
     name = 'sinful_joker',
     atlas = "showdown_jokers",
@@ -1404,6 +1404,10 @@ create_joker({ -- banana
     name = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
+    vars = {{mult = 15}, {mult_scale = 5}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
+	end,
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
@@ -1411,7 +1415,46 @@ create_joker({ -- banana
         if args.type == 'extinct' and args.name == 'Cavendish' then unlock_card(self) end
     end,
     calculate = function(self, card, context)
-        --
+        if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
+            if pseudorandom('banana') < G.GAME.probabilities.normal/2 then
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+                return {
+                    message = localize('k_upgrade_ex')
+                }
+            else
+                card.ability.extra.mult = card.ability.extra.mult - card.ability.extra.mult_scale
+                if card.ability.extra.mult > 0 then
+                    return {
+                        message = localize('k_downgrade_ex')
+                    }
+                else
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('showdown_cronch')
+                            card.T.r = -0.2
+                            card:juice_up(0.3, 0.4)
+                            card.states.drag.is = true
+                            card.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                                func = function()
+                                        G.jokers:remove_card(card)
+                                        card:remove()
+                                        card = nil
+                                    return true; end}))
+                            return true
+                        end
+                    }))
+                    return {
+                        message = localize('k_extinct_ex')
+                    }
+                end
+            end
+        elseif context.cardarea == G.jokers and context.joker_main then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult,
+            }
+        end
     end
 })
 

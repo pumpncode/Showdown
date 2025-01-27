@@ -722,7 +722,7 @@ payload = '''
 check_for_unlock({type = 'extinct', name = self.ability.name})
 '''
 
-# banana image scaling
+# banana image scaling, part 1/2
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -736,4 +736,19 @@ if center.name == 'banana' and (center.discovered or self.bypass_discovery_cente
     self.T.h = H
     self.T.w = W
 end
+'''
+
+# banana image scaling, part 2/2
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "elseif self.config.center.name == \"Wee Joker\" then"
+position = "before"
+payload = '''
+elseif self.config.center.name == 'banana' then
+    H = H/2
+    W = W/2
+    self.T.h = H
+    self.T.w = W
 '''
