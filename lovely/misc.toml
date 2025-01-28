@@ -1,0 +1,54 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# For testing
+[[patches]]
+[patches.pattern]
+target = "controller.lua"
+pattern = "if not _RELEASE_MODE then"
+position = "at"
+match_indent = true
+payload = '''
+if _RELEASE_MODE then
+'''
+
+# Counterpart ranks and mathematic color, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'globals.lua'
+pattern = "RENTAL = HEX('b18f43'),"
+position = 'after'
+match_indent = true
+payload = '''
+COUNTERPART_RANKS = HEX('485fab'),
+SHOWDOWN_CALCULUS = HEX('b84242'),
+SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
+'''
+
+# Counterpart ranks and mathematic color, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = "legendary = G.C.RARITY[4],"
+position = 'after'
+match_indent = true
+payload = '''
+counterpart_ranks = G.C.COUNTERPART_RANKS,
+showdown_calculus = G.C.SHOWDOWN_CALCULUS,
+showdown_calculus_dark = G.C.SHOWDOWN_CALCULUS_DARK,
+'''
+
+# Init Showdown global through lovely
+[[patches]]
+[patches.pattern]
+target = "main.lua"
+match_indent = true
+pattern = '''function love.load()'''
+position = "before"
+payload = '''
+Showdown = {}
+Showdown.extraSuits = {}
+Showdown.versatile = {}
+'''

@@ -3,130 +3,6 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
-# For testing
-[[patches]]
-[patches.pattern]
-target = "controller.lua"
-pattern = "if not _RELEASE_MODE then"
-position = "at"
-match_indent = true
-payload = '''
-if _RELEASE_MODE then
-'''
-
-# Counterpart ranks and mathematic color, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'globals.lua'
-pattern = "RENTAL = HEX('b18f43'),"
-position = 'after'
-match_indent = true
-payload = '''
-COUNTERPART_RANKS = HEX('485fab'),
-SHOWDOWN_CALCULUS = HEX('b84242'),
-SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
-'''
-
-# Counterpart ranks and mathematic color, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'functions/misc_functions.lua'
-pattern = "legendary = G.C.RARITY[4],"
-position = 'after'
-match_indent = true
-payload = '''
-counterpart_ranks = G.C.COUNTERPART_RANKS,
-showdown_calculus = G.C.SHOWDOWN_CALCULUS,
-showdown_calculus_dark = G.C.SHOWDOWN_CALCULUS_DARK,
-'''
-
-# Counterpart don't spawn in decks except the counterpart deck, part 1/3
-[[patches]]
-[patches.pattern]
-target = 'functions/misc_functions.lua'
-pattern = "erratic_suits_and_ranks = false,"
-position = 'after'
-match_indent = true
-payload = '''
-counterpart_replacing = false,
-'''
-
-# Counterpart don't spawn in decks except the counterpart deck, part 2/3
-[[patches]]
-[patches.pattern]
-target = 'back.lua'
-pattern = "if self.effect.config.spectral_rate then"
-position = 'before'
-match_indent = true
-payload = '''
-if self.effect.config.counterpart_replacing then
-    G.GAME.starting_params.counterpart_replacing = true
-end
-'''
-
-# Counterpart don't spawn in decks except the counterpart deck, part 3/3
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or _r == 'J') then keep = false end"
-position = 'after'
-match_indent = true
-payload = '''
-if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
-or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
-    keep = false
-end
-'''
-
-# 0 has wild card behavior by default, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
-position = 'before'
-match_indent = true
-payload = '''
-if self.base.value == 'showdown_Zero' then
-    return true
-end
-'''
-
-# 0 has wild card behavior by default, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'if self.ability.name == "Wild Card" then'
-position = 'before'
-match_indent = true
-payload = '''
-if self.base.value == 'showdown_Zero' then
-    return true
-end
-'''
-
-# Counterparts counts as original
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'return self.base.id'
-position = 'at'
-match_indent = true
-payload = '''
-if self.base.id then return math.abs(self.base.id) end
-return -9999999
-'''
-
-# 0 cards counts in Even Steven scoring
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'context.other_card:get_id()%2 == 0'
-position = 'at'
-match_indent = true
-payload = '''
-(context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
-'''
-
 # Addition of removing_cards context
 [[patches]]
 [patches.pattern]
@@ -153,32 +29,6 @@ payload = '''
 G.latest_area_baby_jimbo = self
 '''
 
-# SIM Card behavior by default, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'if self.ability.name == "Wild Card" and not self.debuff then'
-position = 'before'
-match_indent = true
-payload = '''
-if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
-    return true
-end
-'''
-
-# SIM Card behavior by default, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'if self.ability.name == "Wild Card" then'
-position = 'before'
-match_indent = true
-payload = '''
-if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then
-    return true
-end
-'''
-
 # Check unlock for free item (one doller)
 [[patches]]
 [patches.pattern]
@@ -199,68 +49,6 @@ position = 'before'
 match_indent = true
 payload = '''
 check_for_unlock({type = 'selling_card', sell_cost = self.sell_cost})
-'''
-
-# Add choices in booster with Vector
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = 'G.GAME.pack_choices = self.config.center.config.choose or 1'
-position = "after"
-match_indent = true
-payload = '''
-if G.GAME.showdown_vector and G.GAME.showdown_vector > 0 then
-    self.ability.extra = self.ability.extra + 1
-    G.GAME.pack_choices = G.GAME.pack_choices + 1
-    G.GAME.showdown_vector = G.GAME.showdown_vector - 1
-    G.GAME.pack_size = self.ability.extra
-end
-'''
-
-# Ghost card destroying
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-pattern = "if scoring_hand[i].ability.name == 'Glass Card' and not scoring_hand[i].debuff and pseudorandom('glass') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra then"
-position = "before"
-match_indent = true
-payload = '''
-if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
-    destroyed = true
-end
-'''
-
-# Calculus deck forces first booster in shop to be a Calculus booster, part 1/3
-[[patches]]
-[patches.pattern]
-target = "game.lua"
-pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
-position = "at"
-match_indent = true
-payload = '''
-G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
-'''
-
-# Calculus deck forces first booster in shop to be a Calculus booster, part 2/3
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "if not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then"
-position = "at"
-match_indent = true
-payload = '''
-if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
-'''
-
-# Calculus deck forces first booster in shop to be a Calculus booster, part 3/3
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
-position = "at"
-match_indent = true
-payload = '''
-G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
 '''
 
 # Hands check for Chaos Card unlock
@@ -310,67 +98,6 @@ elseif self.config.center.name == "jean_paul" then
     giveSpeech(self)
 '''
 
-# Counterpart and 0 card descriptions, part 1/3
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "elseif _c.set == 'Enhanced' then"
-position = "before"
-match_indent = true
-payload = '''
-if specific_vars.act_as then
-    localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
-end
-if specific_vars.default_wild then
-    localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
-end
-'''
-
-# Counterpart and 0 card descriptions, part 2/3
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "if _c.effect == 'Mult Card' then loc_vars = {_c.config.mult}"
-position = "before"
-match_indent = true
-payload = '''
-if _c.name ~= 'Stone Card' and specific_vars then
-    if specific_vars.act_as then
-        localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
-    end
-    if specific_vars.default_wild then
-        localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
-    end
-end
-'''
-
-# Counterpart and 0 card descriptions, part 3/3
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = "bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) > 0 and (self.ability.bonus + (self.ability.perma_bonus or 0)) or nil,"
-position = "after"
-match_indent = true
-payload = '''
-act_as = get_counterpart(self.base.value, true),
-default_wild = self.base.value == "showdown_Zero",
-'''
-
-# 0 Card name
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "localize{type = 'other', key = 'playing_card', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks'), localize(specific_vars.suit, 'suits_plural'), colours = {specific_vars.colour}}}"
-position = "at"
-match_indent = true
-payload = '''
-if specific_vars.value == "showdown_Zero" then
-    localize{type = 'other', key = 'playing_card_zero', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks')}}
-else
-    localize{type = 'other', key = 'playing_card', set = 'Other', nodes = full_UI_table.name, vars = {localize(specific_vars.value, 'ranks'), localize(specific_vars.suit, 'suits_plural'), colours = {specific_vars.colour}}}
-end
-'''
-
 # Substitute Teacher, part 1/2
 [[patches]]
 [patches.pattern]
@@ -408,27 +135,12 @@ c_maths_used = 0,
 [[patches]]
 [patches.pattern]
 target = "functions/button_callbacks.lua"
-pattern = "else draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end"
+pattern = "elseif not nc then draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end"
 position = "after"
 match_indent = true
 payload = '''
 if card.config.center.set == 'Mathematic' then
     inc_career_stat('c_maths_used', 1)
-end
-'''
-
-# 0 can't change suit
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = "if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK then"
-position = "before"
-match_indent = true
-payload = '''
-if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.ability.max_highlighted then
-    for i=1, #G.hand.highlighted do
-        if G.hand.highlighted[i]:get_id() == 1 then return false end
-    end
 end
 '''
 
@@ -443,43 +155,6 @@ payload = '''
 if G.GAME.seeded and G.GAME.selected_back.name == G.P_CENTERS.b_erratic.name and G.GAME.pseudorandom.seed == '7LB2WVPK' then
     check_for_unlock({type = '7LB2WVPK'})
 end
-'''
-
-# Hidden cards aren't required for cards unlocks, part 1/2
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-match_indent = true
-pattern = "if not v.omit then"
-position = "at"
-payload = '''
-if not v.omit and not v.no_collection then
-'''
-
-# Hidden cards aren't required for cards unlocks, part 2/2
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-match_indent = true
-pattern = "if card.unlock_condition.tarot_count <= args.tarot_count then"
-position = "at"
-payload = '''
-local tarotNb = #G.P_CENTER_POOLS.Tarot
-for _, v in ipairs(G.P_CENTER_POOLS.Tarot) do
-    if v.no_collection then tarotNb = tarotNb - 1 end
-end
-if tarotNb <= args.tarot_count then
-'''
-
-# The Patient
-[[patches]]
-[patches.pattern]
-target = "functions/state_events.lua"
-match_indent = true
-pattern = "if G.GAME.chips - G.GAME.blind.chips >= 0 then"
-position = "at"
-payload = '''
-if to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips) and (G.GAME.blind.name == 'The Patient' and G.GAME.current_round.hands_left <= 0 or G.GAME.blind.name ~= 'The Patient') then
 '''
 
 # Red Coins, part 1/4
@@ -607,41 +282,6 @@ if #find_joker('money_cutter') > 0 then
     end
 end
 table.insert(left_text, {n=G.UIT.O, config={object = DynaText({string = {" "..localize{type = 'variable', key = 'remaining_hand_money', vars = {(G.GAME.modifiers.money_per_hand or 1)+bonusHand}}}, colours = {G.C.UI.TEXT_LIGHT}, shadow = true, pop_in = 0, scale = 0.4*scale, silent = true})}})
-'''
-
-# The Shameful, part 1/?
-#[[patches]]
-#[patches.pattern]
-#target = "functions/state_events.lua"
-#match_indent = true
-#pattern = "if scoring_hand[i].ability.effect ~= 'Stone Card' then"
-#position = "at"
-#payload = '''
-#if scoring_hand[i].ability.effect ~= 'Stone Card' and not G.GAME.blind.name == 'The Shameful' then
-#'''
-
-# The Shameful, part 2/?
-#[[patches]]
-#[patches.pattern]
-#target = "functions/common_events.lua"
-#match_indent = true
-#pattern = "if context.repetition_only then"
-#position = "at"
-#payload = '''
-#if context.repetition_only and not G.GAME.blind.name == 'The Shameful' then
-#'''
-
-# Init Showdown global through lovely
-[[patches]]
-[patches.pattern]
-target = "main.lua"
-match_indent = true
-pattern = '''function love.load()'''
-position = "before"
-payload = '''
-Showdown = {}
-Showdown.extraSuits = {}
-Showdown.versatile = {}
 '''
 
 # Versatile Joker (Yellow Deck)

@@ -1,0 +1,76 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -20
+
+# Counterpart don't spawn in decks except the counterpart deck, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = "erratic_suits_and_ranks = false,"
+position = 'after'
+match_indent = true
+payload = '''
+counterpart_replacing = false,
+'''
+
+# Counterpart don't spawn in decks except the counterpart deck, part 2/3
+[[patches]]
+[patches.pattern]
+target = 'back.lua'
+pattern = "if self.effect.config.spectral_rate then"
+position = 'before'
+match_indent = true
+payload = '''
+if self.effect.config.counterpart_replacing then
+    G.GAME.starting_params.counterpart_replacing = true
+end
+'''
+
+# Counterpart don't spawn in decks except the counterpart deck, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or _r == 'J') then keep = false end"
+position = 'after'
+match_indent = true
+payload = '''
+if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
+or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
+    keep = false
+end
+'''
+
+# ?????
+# Calculus deck forces first booster in shop to be a Calculus booster, part 1/2
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
+position = "at"
+match_indent = true
+payload = '''
+G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+'''
+
+# Calculus deck forces first booster in shop to be a Calculus booster, part 2/2
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then"
+position = "at"
+match_indent = true
+payload = '''
+if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
+'''
+
+# Calculus deck forces first booster in shop to be a Calculus booster, part 3/2
+#[[patches]]
+#[patches.pattern]
+#target = "functions/common_events.lua"
+#pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
+#position = "at"
+#match_indent = true
+#payload = '''
+#G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
+#'''

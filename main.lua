@@ -626,6 +626,13 @@ table.insert(SMODS.Ranks["Jack"].next, "showdown_Princess")
 table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 --
 
+local SMODShas_any_suitRef = SMODS.has_any_suit
+function SMODS.has_any_suit(card)
+	SMODShas_any_suitRef(card)
+	if card.base.value == 'showdown_Zero' then return true end
+	if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then return true end
+end
+
 function SMODS.is_counterpart(card)
 	return next(find_joker("hiding_details")) or card.base.id < 0
 end

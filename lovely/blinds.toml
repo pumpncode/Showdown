@@ -1,0 +1,37 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -20
+
+# The Patient
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+match_indent = true
+pattern = "if G.GAME.chips - G.GAME.blind.chips >= 0 then"
+position = "at"
+payload = '''
+if to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips) and (G.GAME.blind.name == 'The Patient' and G.GAME.current_round.hands_left <= 0 or G.GAME.blind.name ~= 'The Patient') then
+'''
+
+# The Shameful, part 1/?
+#[[patches]]
+#[patches.pattern]
+#target = "functions/state_events.lua"
+#match_indent = true
+#pattern = "if scoring_hand[i].ability.effect ~= 'Stone Card' then"
+#position = "at"
+#payload = '''
+#if scoring_hand[i].ability.effect ~= 'Stone Card' and not G.GAME.blind.name == 'The Shameful' then
+#'''
+
+# The Shameful, part 2/?
+#[[patches]]
+#[patches.pattern]
+#target = "functions/common_events.lua"
+#match_indent = true
+#pattern = "if context.repetition_only then"
+#position = "at"
+#payload = '''
+#if context.repetition_only and not G.GAME.blind.name == 'The Shameful' then
+#'''

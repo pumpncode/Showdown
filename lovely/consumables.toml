@@ -1,0 +1,35 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Add choices in booster with Vector
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'G.GAME.pack_choices = self.config.center.config.choose or 1'
+position = "after"
+match_indent = true
+payload = '''
+if G.GAME.showdown_vector and G.GAME.showdown_vector > 0 then
+    self.ability.extra = self.ability.extra + 1
+    G.GAME.pack_choices = G.GAME.pack_choices + 1
+    G.GAME.showdown_vector = G.GAME.showdown_vector - 1
+    G.GAME.pack_size = self.ability.extra
+end
+'''
+
+# Hidden cards aren't required for cards unlocks
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = "if #G.P_CENTER_POOLS.Tarot <= args.tarot_count then"
+position = "at"
+payload = '''
+local tarotNb = #G.P_CENTER_POOLS.Tarot
+for _, v in ipairs(G.P_CENTER_POOLS.Tarot) do
+    if v.no_collection then tarotNb = tarotNb - 1 end
+end
+if tarotNb <= args.tarot_count then
+'''
