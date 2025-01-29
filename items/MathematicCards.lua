@@ -193,16 +193,23 @@ SMODS.Consumable({ -- Vector
     end
 })
 
+local function joker_probability_compat(jonkler)
+	if not jonkler then return false end
+	return true
+end
+
 SMODS.Consumable({ -- Probability
 	key = 'probability',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(6),
-	config = {max_highlighted = 3, mult_joker = 1.25, extra = { odds = 3 }},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.mult_joker, G.GAME.probabilities.normal, self.config.extra.odds}} end,
+	config = {max_highlighted = 3, mult_joker = 1.25, extra = { initial_odds = 2, odds = 5 }},
+    loc_vars = function(self, info_queue, card)
+		return { vars = {self.config.max_highlighted, self.config.mult_joker, G.GAME.probabilities.normal * self.config.extra.initial_odds, self.config.extra.odds} }
+	end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 and #G.jokers.cards >= 1 then
-            return true
+            return joker_probability_compat(G.jokers.cards[1])
         end
         return false
     end,
@@ -211,7 +218,7 @@ SMODS.Consumable({ -- Probability
 		local joker = G.jokers.cards[1]
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				if G.hand.highlighted ~= nil and (pseudorandom("showdown_probability") < G.GAME.probabilities.normal / card.ability.extra.odds) then
+				if G.hand.highlighted ~= nil and (pseudorandom("showdown_probability") < (G.GAME.probabilities.normal * self.config.extra.initial_odds) / card.ability.extra.odds) then
                 	if mathDestroyCard(G.hand.highlighted[i], {nil, first_dissolved}) then first_dissolved = false end
 					for k, v in pairs(joker.ability) do
 						if
@@ -239,7 +246,20 @@ SMODS.Consumable({ -- Probability
 				end
             return true end })
         end
-    end
+    end,
+	generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+		SMODS.Consumable.super.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+		--[[ if G.GAME and card.area and (card.area == G.consumeables or (card.area == G.pack_cards and G.GAME.used_vouchers['v_showdown_axiom'])) then
+			local jonkler_compat = joker_probability_compat(G.jokers.cards[1])
+			desc_nodes[#desc_nodes+1] = {
+				{n=G.UIT.C, config={align = "bm", minh = 0.4}, nodes={
+					{n=G.UIT.C, config={ref_table = self, align = "m", colour = jonkler_compat and G.C.GREEN or G.C.RED, r = 0.05, padding = 0.06}, nodes={
+						{n=G.UIT.T, config={text = ' '..localize(jonkler_compat and 'k_compatible' or 'k_incompatible')..' ',colour = G.C.UI.TEXT_LIGHT, scale = 0.32*0.9}},
+					}}
+				}}
+			}
+		end ]]
+	end,
 })
 
 SMODS.Consumable({ -- Sequence

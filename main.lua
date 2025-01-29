@@ -630,7 +630,7 @@ local SMODShas_any_suitRef = SMODS.has_any_suit
 function SMODS.has_any_suit(card)
 	SMODShas_any_suitRef(card)
 	if card.base.value == 'showdown_Zero' then return true end
-	if next(find_joker('sim_card')) and SMODS.is_counterpart(self) then return true end
+	if next(find_joker('sim_card')) and SMODS.is_counterpart(card) then return true end
 end
 
 function SMODS.is_counterpart(card)
@@ -1023,10 +1023,12 @@ SMODS.Enhancement({
 		end
 		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips, self.config.extra.shatter_chance, G.GAME.probabilities.normal}}
 	end,
-	calculate = function(self, card, context, effect)
+	calculate = function(self, card, context)
 		if context.cardarea == G.play and not context.repetition then
-			effect.x_mult = card.ability.extra.x_mult
-			effect.x_chips = card.ability.extra.x_chips
+			return {
+				x_mult = card.ability.extra.x_mult,
+				x_chips = card.ability.extra.x_chips
+			}
 		end
 	end
 })
@@ -1042,10 +1044,12 @@ SMODS.Enhancement({
 		end
 		return {vars = {self.config.extra.x_mult, self.config.extra.x_mult_gain}}
 	end,
-	calculate = function(self, card, context, effect)
+	calculate = function(self, card, context)
 		if context.cardarea == G.play and not context.repetition then
 			card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
-			effect.x_mult = card.ability.extra.x_mult
+			return {
+				x_mult = card.ability.extra.x_mult
+			}
 		end
 	end
 })

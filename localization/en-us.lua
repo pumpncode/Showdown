@@ -551,8 +551,8 @@ return {
             j_showdown_passage_of_time = {
                 name = 'Passage of Time',
                 text = {
-                    'This Joker gains {C:chips}+1{} Chips and',
-                    '{C:mult}+1{} Mult at the end of round',
+                    'This Joker gains {C:chips}+#1#{} Chips and',
+                    '{C:mult}+#1#{} Mult at the end of round',
                     '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips and {C:mult}+#2#{C:inactive} Mult)',
                 }
             },

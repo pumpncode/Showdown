@@ -1212,7 +1212,7 @@ create_joker({ -- Passage of Time
     name = 'passage_of_time',
     atlas = "showdown_jokers",
     pos = coordinate(47),
-    vars = {{chips_mult = 0}, {scale = 3}},
+    vars = {{chips_mult = 0}, {scale = 2}},
     custom_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.scale, card.ability.extra.chips_mult } }
 	end,
