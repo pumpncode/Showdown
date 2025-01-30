@@ -23,7 +23,7 @@ pattern = 'context.other_card:get_id()%2 == 0'
 position = 'at'
 match_indent = true
 payload = '''
-(context.other_card:get_id()%2 == 0 or context.other_card:get_id() == 1)
+(context.other_card:get_id()%2 == 0 or SMODS.is_zero(context.other_card))
 '''
 
 # Counterpart and 0 card descriptions, part 1/3
@@ -69,7 +69,7 @@ position = "after"
 match_indent = true
 payload = '''
 act_as = get_counterpart(self.base.value, true),
-default_wild = self.base.value == "showdown_Zero",
+default_wild = SMODS.is_zero(self),
 '''
 
 # 0 Card name
@@ -97,7 +97,7 @@ match_indent = true
 payload = '''
 if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.ability.max_highlighted then
     for i=1, #G.hand.highlighted do
-        if G.hand.highlighted[i]:get_id() == 1 then return false end
+        if SMODS.is_zero(G.hand.highlighted[i]) then return false end
     end
 end
 '''
@@ -113,7 +113,7 @@ if self.ability.effect == 'Stone Card' then
 position = "before"
 match_indent = true
 payload = '''
-if self.base.value == 'showdown_Zero' then return true end
+if SMODS.is_zero(self) then return true end
 '''
 
 # 0 count as all suits even when debuffed, part 2/2
@@ -126,5 +126,5 @@ if flush_calc then
 position = "after"
 match_indent = true
 payload = '''
-if self.base.value == 'showdown_Zero' then return true end
+if SMODS.is_zero(self) then return true end
 '''

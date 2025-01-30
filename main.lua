@@ -324,7 +324,7 @@ end
 
 local Cardchange_suitRef = Card.change_suit
 function Card:change_suit(new_suit)
-	if self.base.value == 'showdown_Zero' then G.GAME.blind:debuff_card(self)
+	if SMODS.is_zero(self) then G.GAME.blind:debuff_card(self)
 	else Cardchange_suitRef(self, new_suit) end
 end
 
@@ -629,12 +629,16 @@ table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 local SMODShas_any_suitRef = SMODS.has_any_suit
 function SMODS.has_any_suit(card)
 	SMODShas_any_suitRef(card)
-	if card.base.value == 'showdown_Zero' then return true end
+	if SMODS.is_zero(card) then return true end
 	if next(find_joker('sim_card')) and SMODS.is_counterpart(card) then return true end
 end
 
 function SMODS.is_counterpart(card)
 	return next(find_joker("hiding_details")) or card.base.id < 0
+end
+
+function SMODS.is_zero(card)
+	return card.base.id == 1 or card.base.value == 'showdown_Zero'
 end
 
 ---- Consumables
@@ -837,9 +841,7 @@ SMODS.Consumable({ -- Mist
 		for i=1, self.config.change do flipCard(temp_hand[i], i, self.config.change) end
 		for i=1, self.config.change do
 			local rank = "Ace"
-			if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
-				rank = "showdown_Zero"
-			end
+			if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then rank = "showdown_Zero" end
 			event({trigger = 'after', delay = 0.1, func = function()
 				assert(SMODS.change_base(temp_hand[i], nil, rank))
 			return true end })

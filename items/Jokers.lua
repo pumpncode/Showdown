@@ -46,7 +46,7 @@ create_joker({ -- Pinpoint
         if args.type == 'hand_contents' then
             local zero = 0
             for j = 1, #args.cards do
-                if args.cards[j]:get_id() == 1 then
+                if SMODS.is_zero(args.cards[j]) then
                     zero = zero + 1
                 end
             end
@@ -56,7 +56,7 @@ create_joker({ -- Pinpoint
         end
     end,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.hand and context.other_card:get_id() == 1 then
+        if context.individual and context.cardarea == G.hand and SMODS.is_zero(context.other_card) then
             return {
                 x_chips = card.ability.extra.x_chips,
                 card = card
@@ -114,11 +114,11 @@ create_joker({ -- Gruyère
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and context.other_card:get_id() == 1 and not context.blueprint then
+        if context.individual and context.cardarea == G.play and SMODS.is_zero(context.other_card) and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.MULT, true)
         end
-		if context.joker_main then
+		if context.joker_main and card.ability.extra.mult > 0 then
 			return {
 				message = localize({ type = "variable", key = "a_mult", vars = { card.ability.extra.mult } }),
 				mult_mod = card.ability.extra.mult,
@@ -135,11 +135,12 @@ create_joker({ -- Mirror
     custom_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
-    rarity = 'Rare', --cost = 4,
+    rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play then
-			if context.other_card:get_id() == 1 or SMODS.is_counterpart(context.other_card) then
+            print(context.other_card.base.value..": "..context.other_card:get_id())
+			if SMODS.is_zero(context.other_card) or SMODS.is_counterpart(context.other_card) then
 				return {
 					message = localize("k_again_ex"),
 					repetitions = card.ability.extra.retrigger,
@@ -277,7 +278,7 @@ create_joker({ -- Spotted Joker
     blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play then
-            if context.other_card:get_id() == 1 then
+            if SMODS.is_zero(context.other_card) then
                 card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
                 return {
                     message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
@@ -299,8 +300,8 @@ create_joker({ -- Golden Roulette
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = false,
     calculate = function(self, card, context)
-        if context.end_of_round then
-            if pseudorandom('golden_roulette') < G.GAME.probabilities.normal / 6 then
+        if context.end_of_round and not context.repetition and not context.individual then
+            if not context.blueprint and pseudorandom('golden_roulette') < G.GAME.probabilities.normal / 6 then
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         play_sound('tarot1')
@@ -374,7 +375,7 @@ create_joker({ -- Empty Joker
     calculate = function(self, card, context)
         if context.joker_main then
             for i=1, #context.scoring_hand do
-                if context.scoring_hand[i]:get_id() == 1 then
+                if SMODS.is_zero(context.scoring_hand[i]) then
                     return {
                         message = localize({ type = "variable", key = "a_mult", vars = { card.ability.extra.mult } }),
                         mult_mod = card.ability.extra.mult,
@@ -781,7 +782,7 @@ create_joker({ -- Strainer
             if (context.buying_card or context.open_booster) and not context.blueprint then
                 card.ability.extra.money = card.ability.extra.money + math.max(context.card.cost, 0)
             elseif context.reroll_shop and not context.blueprint then
-                card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost, 0)
+                card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost-1, 0)
             elseif context.ending_shop then
                 local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
                 local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
@@ -850,7 +851,7 @@ create_joker({ -- Billiard
             local idx = findInTable(context.card, G.play.cards)
             print(idx)
             local rep = 0
-            if idx and ((idx > 1 and G.play.cards[idx-1]:get_id() == 1) or (idx < #G.play.cards and G.play.cards[idx+1]:get_id() == 1)) then
+            if idx and ((idx > 1 and SMODS.is_zero(G.play.cards[idx-1])) or (idx < #G.play.cards and SMODS.is_zero(G.play.cards[idx+1]))) then
                 rep = rep + 1
             end
             if rep > 0 then
@@ -1001,7 +1002,7 @@ create_joker({ -- World Map
                     local zero = false
                     for i=1, #context.scoring_hand do
                         local _card = context.scoring_hand[i]
-                        if _card:get_id() == 1 then zero = true break end
+                        if SMODS.is_zero(_card) then zero = true break end
                     end
                     if zero then
                         card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
@@ -1050,14 +1051,18 @@ create_joker({ -- Sick Trick
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker and #context.scoring_hand > 1 then
             local idx = 1
             for i=2, #context.scoring_hand do
-                if context.scoring_hand[idx].base.nominal < context.scoring_hand[i].base.nominal then
-                    idx = i
-                end
+                if context.scoring_hand[i].base.nominal < context.scoring_hand[idx].base.nominal then idx = i end
             end
             if idx > 1 then
-                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                flipCard(context.scoring_hand[idx], idx, #context.scoring_hand)
+                flipCard(context.scoring_hand[idx-1], idx-1, #context.scoring_hand)
+                delay(0.2)
+                event({trigger = 'after', delay = 0.15, func = function()
                     copy_card(context.scoring_hand[idx], context.scoring_hand[idx-1])
-                return true end }))
+                return true end})
+                unflipCard(context.scoring_hand[idx], idx, #context.scoring_hand)
+                unflipCard(context.scoring_hand[idx-1], idx-1, #context.scoring_hand)
+                delay(0.6)
             end
         end
     end
@@ -1252,15 +1257,19 @@ create_joker({ -- Colored Classes
         if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
             return {
                 message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
-                chip_mod = card.ability.extra.mult,
-                colour = G.C.MULT
+                mult_mod = card.ability.extra.mult
             }
         elseif not context.blueprint and context.cardarea == G.jokers and context.before then
-            local suits = {}
-            for i=1, #context.scoring_hand do
-                if not findInTable(context.scoring_hand[i].base.suit, suits) then table.insert(suits, context.scoring_hand[i].base.suit) end
+            local suits, wild, twoSuits = {}, 0, false
+            for i=1, #G.play.cards do
+                if SMODS.has_any_suit(G.play.cards[i]) then wild = wild + 1
+                elseif not findInTable(G.play.cards[i].base.suit, suits) then table.insert(suits, G.play.cards[i].base.suit) end
             end
-            if #suits == 2 then
+            while wild >= 0 and not twoSuits do
+                twoSuits = twoSuits or #suits + wild == 2
+                wild = wild - 1
+            end
+            if twoSuits then
                 card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
                 return {
                     message = localize('k_upgrade_ex'),

@@ -121,7 +121,7 @@ SMODS.Consumable({ -- Function
 		for i=1, #G.hand.highlighted do
 			local _card = G.hand.highlighted[i]
             event({trigger = 'after', delay = 0.1, func = function()
-				_card:set_ability(pseudorandom_element(_card:get_id() == 1 and cen_pool_zero or cen_pool, pseudoseed('spe_card')), true);
+				_card:set_ability(pseudorandom_element(SMODS.is_zero(_card) and cen_pool_zero or cen_pool, pseudoseed('spe_card')), true);
             return true end })
         end
         delay(0.2)
