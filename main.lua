@@ -1122,6 +1122,33 @@ SMODS.Blind({
 	boss = { min = 1 },
 	mult = 2,
 })
+
+function SMODS.patient_gain_score(blind) -- Thanks Bunco
+	if not G.GAME.patient_scoring then G.GAME.patient_scoring = { score = blind.chips, triggers = 0 } end
+	G.GAME.patient_scoring.triggers = G.GAME.patient_scoring.triggers + 1
+    local final_chips = (G.GAME.patient_scoring.score / 100) * (100 + 50 * G.GAME.patient_scoring.triggers)
+    local chip_mod -- iterate over ~120 ticks
+    if type(blind.chips) ~= 'table' then
+        chip_mod = math.ceil((G.GAME.blind.chips + final_chips) / 120)
+    else
+        chip_mod = ((G.GAME.blind.chips + final_chips) / 120):ceil()
+    end
+    local step = 0
+    G.E_MANAGER:add_event(Event({trigger = 'after', blocking = true, func = function()
+        blind.chips = blind.chips + G.SETTINGS.GAMESPEED * chip_mod
+        if blind.chips < final_chips then
+            blind.chip_text = number_format(blind.chips)
+            if step % 5 == 0 then
+                play_sound('chips1', 1.0 + (step * 0.005))
+            end
+            step = step + 1
+        else
+            blind.chips = final_chips
+            blind.chip_text = number_format(blind.chips)
+            return true
+        end
+    end}))
+end
 --[[ 
 SMODS.Blind({
 	key = "shameful",

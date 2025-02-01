@@ -3,15 +3,28 @@ version = "1.0.0"
 dump_lua = true
 priority = -20
 
-# The Patient
+# The Patient, part 1/2
+[[patches]]
+[patches.regex]
+target = 'functions/state_events.lua'
+pattern = "(?<indent>[\t ]*)else\\s*\\n[\\t ]*mult\\s*=\\s*mod_mult\\(\\s*0\\s*\\)\\s*\\n[\\t ]*hand_chips\\s*=\\s*mod_chips\\(\\s*0\\s*\\)\\s*"
+position = 'before'
+line_prepend = '$indent'
+payload = '''
+if G.GAME.blind and G.GAME.blind.name == 'The Patient' and not G.GAME.blind.disabled and G.GAME.current_round.hands_left > 0 and hand_chips*mult + G.GAME.chips >= G.GAME.blind.chips then
+    SMODS.patient_gain_score(G.GAME.blind)
+end
+'''
+
+# The Patient, part 1/2
 [[patches]]
 [patches.pattern]
-target = "functions/state_events.lua"
+target = 'functions/state_events.lua'
 match_indent = true
-pattern = "if G.GAME.chips - G.GAME.blind.chips >= 0 then"
-position = "at"
+pattern = "G.FUNCS.evaluate_round = function()"
+position = 'after'
 payload = '''
-if to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips) and (G.GAME.blind.name == 'The Patient' and G.GAME.current_round.hands_left <= 0 or G.GAME.blind.name ~= 'The Patient') then
+if G.GAME.patient_scoring then G.GAME.patient_scoring = nil end
 '''
 
 # The Shameful, part 1/?

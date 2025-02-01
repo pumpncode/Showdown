@@ -39,8 +39,9 @@ return {
             bl_showdown_patient = {
                 name = 'The Patient',
                 text = {
-                    'You must use',
-                    'all your hands',
+                    'Blind requirement ',
+                    'increases if played',
+                    'hand isn\'t last',
                 }
             },
             bl_showdown_shameful = {
