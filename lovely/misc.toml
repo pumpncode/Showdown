@@ -52,3 +52,22 @@ Showdown = {}
 Showdown.extraSuits = {}
 Showdown.versatile = {}
 '''
+
+# xChips eval state
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = '''elseif eval_type == 'h_mult' then'''
+position = "before"
+payload = '''
+elseif eval_type == 'xchips' then 
+    --sound = 'xchips'
+    sound = 'foil2'
+    volume = 0.7
+    amt = amt
+    text = localize{type='variable',key='a_xchips',vars={amt}}
+    colour = G.C.CHIPS
+    config.type = 'fade'
+    config.scale = 0.7
+'''

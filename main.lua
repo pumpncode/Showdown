@@ -443,6 +443,14 @@ function find_consumable(name, non_debuff)
 	return consumeables
 end
 
+SMODS.Sound({key = "xchips", path = "xchips.ogg"}) -- Thanks Talisman (doesn't work rn :<)
+
+function do_x_chips(x_chips, card)
+	hand_chips = mod_chips(hand_chips * x_chips)
+	update_hand_text({delay = 0}, {chips = hand_chips})
+	card_eval_status_text(card, 'xchips', x_chips, percent, nil, nil)
+end
+
 ---- Counterpart Cards
 
 SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})

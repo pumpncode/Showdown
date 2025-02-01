@@ -1231,7 +1231,7 @@ return {
         dictionary={
             k_showdown_final = 'Final',
             k_BAM = "BAM!",
-            k_strainer_broke = "Broken",
+            k_strainer_broke = "Broken!",
             k_showdown_mysterious_tarot = 'Tarot?',
             k_unlocked = 'Unlocked!',
             k_mathematic = "Mathematic",
@@ -2160,6 +2160,7 @@ return {
         tutorial={},
         v_dictionary={
             a_chips_mult = '+#1# Chips, +#2# Mult',
+            a_xchips="X#1# Chips",
         },
         v_text={},
     },

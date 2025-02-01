@@ -56,11 +56,8 @@ create_joker({ -- Pinpoint
         end
     end,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.hand and SMODS.is_zero(context.other_card) then
-            return {
-                x_chips = card.ability.extra.x_chips,
-                card = card
-            }
+        if context.individual and context.cardarea == G.hand and context.full_hand and SMODS.is_zero(context.other_card) then
+            do_x_chips(card.ability.extra.x_chips, context.other_card)
         end
     end
 })
@@ -748,9 +745,9 @@ create_joker({ -- Ultimate Joker
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if context.joker_main and G.GAME.round > 1 then
+            do_x_chips(G.GAME.round, card)
             return {
                 message = 'X' .. G.GAME.round,
-                Xchip_mod = G.GAME.round,
                 Xmult_mod = G.GAME.round,
                 colour = G.C.PURPLE,
                 card = card
