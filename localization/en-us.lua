@@ -1061,14 +1061,14 @@ return {
                 name = 'The Lost',
                 text = {
                     "Enhances {C:attention}#1#{} selected card",
-                    "into {C:attention}Ghost Cards{}"
+                    "into a {C:attention}Ghost Card{}"
                 }
             },
             c_showdown_angel = {
                 name = 'The Angel',
                 text = {
                     "Enhances {C:attention}#1#{} selected card",
-                    "into {C:attention}Holy Cards{}"
+                    "into a {C:attention}Holy Card{}"
                 }
             },
             c_showdown_beast = {
@@ -1146,7 +1146,7 @@ return {
             c_showdown_constant = {
                 name = 'Constant',
                 text = {
-                    'Select {C:attention}#1#{} card that will get {C:attention}destroyed{}',
+                    'Destroy {C:attention}#1#{} selected card',
                     'All cards with {C:attention}equal{} rank will get',
                     'random {C:attention}enhancements{}',
                 }
@@ -1154,8 +1154,7 @@ return {
             c_showdown_variable = {
                 name = 'Variable',
                 text = {
-                    'Select up to {C:attention}#1#{} cards',
-                    'that will get {C:attention}destroyed{}',
+                    'Destroy {C:attention}#1#{} selected cards',
                     'Each card gives between',
                     '{C:money}$#2#{} and {C:money}$#3#',
                 }
@@ -1163,8 +1162,8 @@ return {
             c_showdown_function = {
                 name = 'Function',
                 text = {
-                    'Select {C:attention}#1#{} cards that will get',
-                    'random {C:attention}enhancements{}, then {C:attention}1{} random',
+                    'Select {C:attention}#1#{} card that will get',
+                    'random {C:attention}enhancements{}, then {C:attention}#2#{} random',
                     'cards will be {C:attention}destroyed{}',
                 }
             },
@@ -1172,16 +1171,16 @@ return {
                 name = 'Shape',
                 text = {
                     'Select {C:attention}#1#{} cards that will get',
-                    'random {C:attention}editions{}, then {C:attention}2{} random',
+                    'random {C:attention}editions{}, then {C:attention}#2#{} random',
                     'cards will be {C:attention}destroyed{}',
                 }
             },
             c_showdown_vector = {
                 name = 'Vector',
                 text = {
-                    'Select up to {C:attention}#1#{} cards that will get {C:attention}destroyed{}',
-                    'For each destroyed card, {C:attention}one{} future booster',
-                    'will have an {C:attention}additional choice{}',
+                    'Destroy {C:attention}#1#{} selected cards',
+                    'For each destroyed card, {C:attention}one{} future',
+                    'booster will have an {C:attention}additional choice{}',
                     '{C:inactive}(Currently {C:attention}#2#{C:inactive} Boosters){}',
                 }
             },
@@ -1205,9 +1204,10 @@ return {
             c_showdown_operation = {
                 name = 'Operation',
                 text = {
-                    'Destroy {C:attention}#1#{} selected cards and create a card',
-                    'that {C:attention}inherit{} the modifiers of the destroyed cards',
-                    'The {C:attention}rank{} and {C:attention}suit{} of the card is {C:attention}randomized{}',
+                    'Destroy {C:attention}#1#{} selected cards',
+                    'Creates a card that {C:attention}inherit',
+                    'modifiers of the destroyed cards',
+                    '{C:attention}Rank{} and {C:attention}suit{} is {C:attention}randomized',
                 }
             },
         },
@@ -1229,6 +1229,7 @@ return {
         challenge_names={},
         collabs={},
         dictionary={
+            k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_final = 'Final',
             k_BAM = "BAM!",
             k_strainer_broke = "Broken!",

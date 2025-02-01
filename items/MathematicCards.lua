@@ -177,7 +177,7 @@ SMODS.Consumable({ -- Vector
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(5),
-	config = {max_highlighted = 3},
+	config = {max_highlighted = 2},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
 	can_use = function(self)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
@@ -375,6 +375,7 @@ for i = 1, 4 do
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
 		kind = 'booster_calculus',
+		group_key = "k_showdown_calculus_pack",
         in_pool = function() return (pseudorandom('calculus'..G.SEED) < 0.5) end,
 		update_pack = function(self, dt)
             if G.buttons then G.buttons:remove(); G.buttons = nil end
@@ -406,10 +407,10 @@ for i = 1, 4 do
                                     end}))
                                 return true
                             end
-                        }))  
+                        }))
                         return true
                     end
-                }))  
+                }))
             end
         end,
     }

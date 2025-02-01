@@ -13,7 +13,6 @@ match_indent = true
 payload = '''
 if G.GAME.showdown_vector and G.GAME.showdown_vector > 0 then
     self.ability.extra = self.ability.extra + 1
-    G.GAME.pack_choices = G.GAME.pack_choices + 1
     G.GAME.showdown_vector = G.GAME.showdown_vector - 1
     G.GAME.pack_size = self.ability.extra
 end

@@ -709,7 +709,7 @@ SMODS.Consumable({ -- The Vessel
 		event({trigger = 'after', delay = 0.1, func = function()
 			assert(SMODS.change_base(G.hand.highlighted[1], nil, "showdown_Zero"))
 		return true end })
-		if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+		if pseudorandom("showdown_Probability") < 4 / 5 then
 			local cen_pool = getEnhancements({"m_wild"})
 			event({trigger = 'after', delay = 0.1, func = function()
 				G.hand.highlighted[1]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
@@ -762,7 +762,7 @@ SMODS.Consumable({ -- The Lost
 	key = 'lost',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	config = { max_highlighted = 2, mod_conv = "m_showdown_ghost" },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_ghost" },
     loc_vars = function(self, info_queue)
         info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_ghost
 		return {vars = {self.config.max_highlighted}}
@@ -774,7 +774,7 @@ SMODS.Consumable({ -- The Angel
 	key = 'angel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
-	config = { max_highlighted = 2, mod_conv = "m_showdown_holy" },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_holy" },
     loc_vars = function(self, info_queue)
         info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_holy
 		return {vars = {self.config.max_highlighted}}
@@ -1034,10 +1034,10 @@ SMODS.Enhancement({
 		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips, self.config.extra.shatter_chance, G.GAME.probabilities.normal}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.play and not context.repetition then
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
+			do_x_chips(card.ability.extra.x_chips, card)
 			return {
-				x_mult = card.ability.extra.x_mult,
-				x_chips = card.ability.extra.x_chips
+				x_mult = card.ability.extra.x_mult
 			}
 		end
 	end
@@ -1055,7 +1055,7 @@ SMODS.Enhancement({
 		return {vars = {self.config.extra.x_mult, self.config.extra.x_mult_gain}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.play and not context.repetition then
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
 			card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
 			return {
 				x_mult = card.ability.extra.x_mult
