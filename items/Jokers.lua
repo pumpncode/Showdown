@@ -240,7 +240,7 @@ create_joker({ -- Blue
     name = 'blue',
     atlas = "showdown_jokers",
     pos = coordinate(11),
-    rarity = 'Common', --cost = 4,
+    rarity = 'Common', cost = 1,
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
     check_for_unlock = function(self, args)
@@ -260,7 +260,10 @@ create_joker({ -- Blue
 				chip_mod = 1,
 			}
 		end
-    end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        check_for_unlock({type = 'blued'})
+    end,
 })
 
 create_joker({ -- Spotted Joker
@@ -753,7 +756,10 @@ create_joker({ -- Ultimate Joker
                 card = card
             }
         end
-    end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        check_for_unlock({type = 'jimbodia'})
+    end,
 })
 
 create_joker({ -- Strainer
@@ -904,6 +910,7 @@ create_joker({ -- What a Steel!
             end
             card.ability.extra.steel_tally = math.min(card.ability.extra.steel_tally, 80)
             G.GAME.discount_percent = math.min(G.GAME.discount_percent, 80)
+            if G.GAME.discount_percent >= 80 then check_for_unlock({type = 'metal_cap'}) end
             G.E_MANAGER:add_event(Event({func = function()
                 for k, v in pairs(G.I.CARD) do
                     if v.set_cost then v:set_cost() end
@@ -1173,7 +1180,10 @@ create_joker({ -- Unshackled Joker
                 }
             end
         end
-    end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        check_for_unlock({type = 'chains'})
+    end,
 })
 
 create_joker({ -- Red Coins
@@ -1186,6 +1196,9 @@ create_joker({ -- Red Coins
 	end,
     rarity = 'Common', --cost = 4,
     blueprint = false, perishable = true, eternal = true,
+    add_to_deck = function(self, card, from_debuff)
+        if next(find_joker('money_cutter')) then check_for_unlock({type = 'green_deck_home'}) end
+    end,
 })
 
 create_joker({ -- Money Cutter
@@ -1204,6 +1217,7 @@ create_joker({ -- Money Cutter
     end,
     add_to_deck = function(self, card, from_debuff)
         G.GAME.modifiers.no_interest = true
+        if next(find_joker('red_coins')) then check_for_unlock({type = 'green_deck_home'}) end
     end,
     remove_from_deck = function(self, card, from_debuff)
         G.GAME.modifiers.no_interest = G.deck.name ~= 'Green Deck'
@@ -1450,6 +1464,7 @@ create_joker({ -- banana
                             return true
                         end
                     }))
+                    check_for_unlock({type = 'cronch'})
                     return {
                         message = localize('k_extinct_ex')
                     }

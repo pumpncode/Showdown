@@ -166,7 +166,10 @@ create_joker({
                     say(card, {blabla = ('buying_card'), prob = 2})
                 end
             elseif context.selling_card then
-                if context.card.ability.name == 'jean_paul' and context.card ~= card then
+                if context.card == card then
+                    -- funny sound
+                    check_for_unlock({type = 'sell_jean_paul'})
+                elseif context.card.ability.name == 'jean_paul' and context.card ~= card then
                     say(card, {blabla = ('selling_other_self'), guaranteed = true})
                 else
                     say(card, {blabla = ('selling_card'), prob = 3})
@@ -201,6 +204,7 @@ create_joker({
     end,
     add_to_deck = function(self, card, from_debuff)
         giveSpeech(card)
+        check_for_unlock({type = 'get_jean_paul'})
     end,
     update = function(self, card, dt)
         if card.hasSpeech and card.ability.extra.talk <= 0 then

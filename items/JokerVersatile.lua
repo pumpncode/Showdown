@@ -58,14 +58,15 @@ Showdown.versatile['Abandoned Deck'] = { desc = 'j_showdown_versatile_joker_aban
 end }
 Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_checkered', pos = coordinate(11), blueprint = true, effect = function(self, card, context)
     if context.individual and context.cardarea == G.play then
-        local args = { card = card }
         if context.other_card:is_suit("Spades") and pseudorandom('versatile_checkered') < G.GAME.probabilities.normal/card.ability.extra.spades_odd then
-            args.x_chips = card.ability.extra.spades
+            do_x_chips(card.ability.extra.spades, card)
         end
         if context.other_card:is_suit("Hearts") then
-            args.mult = card.ability.extra.hearts
+            return {
+                mult = card.ability.extra.hearts,
+                card = card
+            }
         end
-        return args
     end
 end }
 Showdown.versatile['Zodiac Deck'] = { desc = 'j_showdown_versatile_joker_zodiac', pos = coordinate(12), blueprint = false, effect = function(self, card, context)
@@ -122,6 +123,15 @@ local function get_versatile(type)
     return Showdown.versatile['Unknown'][type]
 end
 
+---Unlock the Versatility achievement if Versatile Joker has been played on every deck at least once
+local function check_versatility()
+    local versatile = true
+    for k, _ in pairs(Showdown.versatile) do
+        versatile = versatile and G.PROFILES[G.SETTINGS.profile].versatility[k]
+    end
+    if versatile then check_for_unlock({type = 'versatility'}) end
+end
+
 create_joker({ -- Versatile Joker
     name = 'versatile_joker',
     atlas = "showdown_versatile_joker",
@@ -158,6 +168,11 @@ create_joker({ -- Versatile Joker
     end,
     add_to_deck = function(self, card, from_debuff)
         if get_versatile('add_to_deck') then return get_versatile('add_to_deck')(self, card, from_debuff) end
+        if not G.PROFILES[G.SETTINGS.profile].versatility then G.PROFILES[G.SETTINGS.profile].versatility = {} end
+        if not findInTable(G.GAME.selected_back.name, G.PROFILES[G.SETTINGS.profile].versatility) then
+            table.insert(G.PROFILES[G.SETTINGS.profile].versatility, G.GAME.selected_back.name)
+        end
+        check_versatility()
     end,
     remove_from_deck = function(self, card, from_debuff)
         if get_versatile('remove_from_deck') then return get_versatile('remove_from_deck')(self, card, from_debuff) end

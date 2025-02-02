@@ -39,7 +39,7 @@ end
 function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
-	for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+	for k, v in pairs(G.P_CENTER_POOLS.Enhanced) do
 		if not findInTable(v.key, blacklist) then
 			cen_pool[#cen_pool+1] = v
 		end
@@ -405,7 +405,7 @@ local function give_starter()
 		end,
 	}))
 	local vouchers = {}
-	for _, v in pairs(G.P_CENTER_POOLS['Voucher']) do
+	for _, v in pairs(G.P_CENTER_POOLS.Voucher) do
 		if not (v.requires and next(v.requires)) then
 			table.insert(vouchers, v.key)
 		end
@@ -1188,6 +1188,10 @@ SMODS.Atlas({key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 
 SMODS.Sound({key = "cronch", path = "cronch.ogg"})
 
 filesystem.load(itemsPath.."Jokers.lua")()
+
+---- Achievements
+
+filesystem.load(itemsPath.."Achievements.lua")()
 
 ---- Mod Compatibility
 
