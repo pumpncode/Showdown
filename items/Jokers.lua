@@ -141,7 +141,7 @@ create_joker({ -- Mirror
 				return {
 					message = localize("k_again_ex"),
 					repetitions = card.ability.extra.retrigger,
-					card = card,
+					card = context.other_card,
 				}
 			end
 		end
@@ -277,14 +277,11 @@ create_joker({ -- Spotted Joker
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = false, eternal = true,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play then
-            if SMODS.is_zero(context.other_card) then
-                card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
-                return {
-                    message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
-                    chips = card.ability.extra.chips,
-                }
-            end
+        if context.individual and context.cardarea == G.play and SMODS.is_zero(context.other_card) then
+            card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
+            return {
+                chips = card.ability.extra.chips
+            }
         end
     end
 })
@@ -392,10 +389,9 @@ create_joker({ -- Baby Jimbo
     atlas = "showdown_jokers",
     pos = coordinate(16),
     rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if not context.blueprint
-            and (context.destroying_cards or context.removing_cards)
+        if context.destroying_cards
             and context.destroyed_card
             and context.destroyed_card ~= card
             and context.destroyed_card.ability.set == "Joker"
@@ -407,22 +403,19 @@ create_joker({ -- Baby Jimbo
             G.E_MANAGER:add_event(Event({
                 trigger = 'after',
                 delay = 0.0,
-                func = (function()
-                        --local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'baby_jimbo')
-                        local card = SMODS.create_card({set = 'Spectral', area = G.consumeables, edition = {negative = true}})
-                        --card:set_edition({negative = true}, true)
-                        card:add_to_deck()
-                        G.consumeables:emplace(card)
-                        G.GAME.consumeable_buffer = 0
-                        return true
-                    end
-                )
+                func = function()
+                    local _card = SMODS.create_card({set = 'Spectral', area = G.consumeables, edition = {negative = true}})
+                    _card:add_to_deck()
+                    G.consumeables:emplace(_card)
+                    G.GAME.consumeable_buffer = 0
+                    return true
+                end
             }))
             G.latest_area_baby_jimbo = nil
             return {
                 message = localize('k_plus_spectral'),
                 colour = G.C.SECONDARY_SET.Spectral,
-                card = self
+                card = card
             }
         end
     end
@@ -1242,9 +1235,9 @@ create_joker({ -- Passage of Time
                 colour = G.C.PURPLE,
                 card = card
             }
-        elseif context.joker_main then
+        elseif context.joker_main and card.ability.extra.chips_mult > 0 then
             return {
-                message = '+' .. card.ability.extra.chips_mult,
+                message = '+'..card.ability.extra.chips_mult,
                 chip_mod = card.ability.extra.chips_mult,
                 mult_mod = card.ability.extra.chips_mult,
                 colour = G.C.PURPLE,

@@ -392,3 +392,29 @@ elseif self.config.center.name == 'banana' then
     self.T.h = H
     self.T.w = W
 '''
+
+# Versatile Joker (Nebula Joker), part 1/2
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(self.ability.consumeable.hand_type, 'poker_hands'),chips = G.GAME.hands[self.ability.consumeable.hand_type].chips, mult = G.GAME.hands[self.ability.consumeable.hand_type].mult, level=G.GAME.hands[self.ability.consumeable.hand_type].level})"
+position = "before"
+payload = '''
+local versatile, amount = find_joker('versatile_joker'), 1
+if #versatile > 0 and G.GAME.selected_back.name == 'Nebula Deck' then
+    for i=1, #versatile do amount = amount + versatile[i].ability.extra.planet end
+end
+amount = math.floor(amount)
+'''
+
+# Versatile Joker (Nebula Joker), part 2/2
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "level_up_hand(used_tarot, self.ability.consumeable.hand_type)"
+position = "at"
+payload = '''
+level_up_hand(used_tarot, self.ability.consumeable.hand_type, nil, amount)
+'''

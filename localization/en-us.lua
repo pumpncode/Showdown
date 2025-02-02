@@ -199,9 +199,9 @@ return {
             j_showdown_spotted_joker = {
                 name = 'Spotted Joker',
                 text = {
-                    'Played {C:attention}0{} card gives {C:chips}+#1#{} Chips',
-                    'when scored and add',
-                    '{C:chips}+#2#{} Chips to this joker',
+                    'Scored {C:attention}0{} cards gives {C:chips}+#1#{} Chips',
+                    'This effect gains {C:chips}+#2#{} Chips for',
+                    'each {C:attention}0{} card scored',
                 }
             },
             j_showdown_golden_roulette = {
@@ -223,7 +223,8 @@ return {
             j_showdown_empty_joker = {
                 name = 'Empty Joker',
                 text = {
-                    '{C:mult}+#1#{} Mult if hand contains a {C:attention}0{}',
+                    '{C:mult}+#1#{} Mult if played hand',
+                    'contains a {C:attention}0{}',
                 }
             },
             j_showdown_baby_jimbo = {
@@ -628,7 +629,7 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Red Deck',
+                    'Discards give {C:money}$#1#',
                 },
                 unlock = {
                     'Win a run with any',
@@ -704,7 +705,7 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Nebula Deck',
+                    '{C:planet}Planet{} cards give {C:attention}#1#{} additional level',
                 },
                 unlock = {
                     'Win a run with any',
@@ -846,9 +847,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Create a {C:showdown_calculus}Mathematic{} card when {C:attention}Blind',
-                    'is selected',
-                    '{C:inactive}(Must have room)',
+                    'When a {C:showdown_calculus}Mathematic{} card is used,',
+                    '{C:attention}duplicate{} a random card in hand',
                 },
                 unlock = {
                     'Win a run with any',

@@ -1,6 +1,14 @@
 Showdown.versatile['Unknown'] = { desc = 'j_showdown_versatile_joker_unknown', pos = coordinate(1), blueprint = true }
 Showdown.versatile['Red Deck'] = { desc = 'j_showdown_versatile_joker_red', pos = coordinate(2), blueprint = false, effect = function(self, card, context)
-    --
+    if context.discard and context.other_card == context.full_hand[1] then
+        ease_dollars(card.ability.extra.money)
+        return {
+            message = localize('$')..card.ability.extra.money,
+            colour = G.C.MONEY,
+            delay = 0.45,
+            card = card
+        }
+    end
 end }
 Showdown.versatile['Blue Deck'] = { desc = 'j_showdown_versatile_joker_blue', pos = coordinate(3), blueprint = false, effect = function(self, card, context)
     --
@@ -41,9 +49,7 @@ end, remove_from_deck = function(self, card, from_debuff)
         G.consumeables.config.card_limit = G.consumeables.config.card_limit - 1
     return true end }))
 end }
-Showdown.versatile['Nebula Deck'] = { desc = 'j_showdown_versatile_joker_nebula', pos = coordinate(8), blueprint = false, effect = function(self, card, context)
-    --
-end }
+Showdown.versatile['Nebula Deck'] = { desc = 'j_showdown_versatile_joker_nebula', pos = coordinate(8), blueprint = false }
 Showdown.versatile['Ghost Deck'] = { desc = 'j_showdown_versatile_joker_ghost', pos = coordinate(9), blueprint = false, effect = function(self, card, context)
     --
 end }
@@ -93,21 +99,15 @@ Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror'
     --
 end }
 Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = true, effect = function(self, card, context)
-    if context.setting_blind and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-        G.E_MANAGER:add_event(Event({
-            func = (function()
-                G.E_MANAGER:add_event(Event({
-                    func = function() 
-                        local _card = create_card('Mathematic', G.consumeables, nil, nil, nil, nil, nil, 'car')
-                        _card:add_to_deck()
-                        G.consumeables:emplace(_card)
-                        G.GAME.consumeable_buffer = 0
-                        return true
-                    end}))
-                    card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_plus_math'), colour = G.C.RED})
-                return true
-            end)}))
+    if context.using_consumeable and context.consumeable.ability.set == 'Mathematic' then
+        G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+        local _card = copy_card(pseudorandom_element(G.hand.cards, pseudoseed('versatile_calculus')), nil, nil, G.playing_card)
+        _card:add_to_deck()
+        G.deck.config.card_limit = G.deck.config.card_limit + 1
+        table.insert(G.playing_cards, _card)
+        G.hand:emplace(_card)
+        _card:start_materialize()
+        playing_card_joker_effects({_card})
     end
 end }
 Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
@@ -138,7 +138,9 @@ create_joker({ -- Versatile Joker
     pos = coordinate(1),
     vars = {
         {x = 0}, {y = 0}, {blueprint = false},            -- Base Card
+        {money = 1},                                  -- Red Deck
         {fool_copy = 1},                               -- Magic Deck
+        {planet = 1},                                  -- Nebula Deck
         {non_face_retrigger = 1},                      -- Abandoned Deck
         {hearts = 20}, {spades = 1.5}, {spades_odd = 2}, -- Checkered Deck
         {double_tag = 1},                              -- Anaglyph Deck
@@ -146,8 +148,12 @@ create_joker({ -- Versatile Joker
     custom_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
             local loc = { key = get_versatile('desc') }
-            if G.GAME.selected_back.name == 'Magic Deck' then
+            if G.GAME.selected_back.name == 'Red Deck' then
+                loc.vars = { card.ability.extra.money }
+            elseif G.GAME.selected_back.name == 'Magic Deck' then
                 loc.vars = { card.ability.extra.fool_copy }
+            elseif G.GAME.selected_back.name == 'Nebula Deck' then
+                loc.vars = { card.ability.extra.planet }
             elseif G.GAME.selected_back.name == 'Abandoned Deck' then
                 loc.vars = { card.ability.extra.non_face_retrigger }
             elseif G.GAME.selected_back.name == 'Checkered Deck' then
