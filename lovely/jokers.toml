@@ -418,3 +418,29 @@ position = "at"
 payload = '''
 level_up_hand(used_tarot, self.ability.consumeable.hand_type, nil, amount)
 '''
+
+# The Idol doesn't pick counterparts
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "valid_idol_cards[#valid_idol_cards+1] = v"
+position = "at"
+payload = '''
+if v.base.id > 0 then
+    valid_idol_cards[#valid_idol_cards+1] = v
+end
+'''
+
+# Mail in Rebate doesn't pick counterparts
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "valid_mail_cards[#valid_mail_cards+1] = v"
+position = "at"
+payload = '''
+if v.base.id > 0 then
+    valid_mail_cards[#valid_mail_cards+1] = v
+end
+'''

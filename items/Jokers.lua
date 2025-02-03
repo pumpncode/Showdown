@@ -141,7 +141,7 @@ create_joker({ -- Mirror
 				return {
 					message = localize("k_again_ex"),
 					repetitions = card.ability.extra.retrigger,
-					card = context.other_card,
+					card = card
 				}
 			end
 		end
