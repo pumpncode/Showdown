@@ -1487,3 +1487,80 @@ function Game:update(dt)
         end
     end
 end
+
+local function reroll_tags_and_blind(blind)
+    local blindUpper = blind:gsub("^%l", string.upper)
+    G.GAME.round_resets.blind_tags[blindUpper] = get_next_tag_key()
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        func = function()
+          play_sound('other1')
+          G.blind_select_opts[blind]:set_role({xy_bond = 'Weak'})
+          G.blind_select_opts[blind].alignment.offset.y = 20
+          return true
+        end
+      }))
+    G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.3,
+        func = (function()
+            local par = G.blind_select_opts[blind].parent
+
+            G.blind_select_opts[blind]:remove()
+            G.blind_select_opts[blind] = UIBox{
+                T = {par.T.x, 0, 0, 0, },
+                definition =
+                {n=G.UIT.ROOT, config={align = "cm", colour = G.C.CLEAR}, nodes={
+                    UIBox_dyn_container({create_UIBox_blind_choice(blindUpper)},false,get_blind_main_colour(blindUpper))
+                }},
+                config = {align="bmi",
+                        offset = {x=0,y=G.ROOM.T.y + 9},
+                        major = par,
+                        xy_bond = 'Weak'
+                        }
+            }
+            par.config.object = G.blind_select_opts[blind]
+            par.config.object:recalculate()
+            G.blind_select_opts[blind].parent = par
+            G.blind_select_opts[blind].alignment.offset.y = 0
+            return true
+        end)
+    }))
+end
+
+create_joker({ -- Label
+    name = 'label',
+    atlas = "showdown_jokers",
+    pos = coordinate(56),
+    vars = {{can_reroll = true}},
+    rarity = 'Common', --cost = 4,
+    blueprint = false, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if context.ending_shop then
+            card.ability.extra.can_reroll =
+                (not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide'))
+                or not (G.GAME.round_resets.blind_states.Big == 'Defeated' or G.GAME.round_resets.blind_states.Big == 'Skipped' or G.GAME.round_resets.blind_states.Big == 'Hide')
+        elseif context.setting_blind and not card.getting_sliced then
+            card.ability.extra.can_reroll = false
+        elseif context.selling_self and not context.blueprint and card.ability.extra.can_reroll then
+            if not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide') then
+                reroll_tags_and_blind('small')
+            end
+            if not (G.GAME.round_resets.blind_states.Big == 'Defeated' or G.GAME.round_resets.blind_states.Big == 'Skipped' or G.GAME.round_resets.blind_states.Big == 'Hide') then
+                reroll_tags_and_blind('big')
+            end
+        end
+    end,
+    generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        SMODS.Joker.super.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        if G.GAME and card.area == G.jokers then
+            desc_nodes[#desc_nodes+1] = {
+                {n=G.UIT.C, config={align = "bm", minh = 0.4}, nodes={
+                    {n=G.UIT.C, config={ref_table = self, align = "m", colour = card.ability.extra.can_reroll and G.C.GREEN or G.C.RED, r = 0.05, padding = 0.06}, nodes={
+                        {n=G.UIT.T, config={text = ' '..localize(card.ability.extra.can_reroll and 'k_can_reroll' or 'k_cannot_reroll')..' ',colour = G.C.UI.TEXT_LIGHT, scale = 0.32*0.9}},
+                    }}
+                }}
+            }
+        end
+    end,
+})

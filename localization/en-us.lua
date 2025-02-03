@@ -888,6 +888,15 @@ return {
                     'Make Cavendish {C:attention}expire',
                 }
             },
+            j_showdown_label = {
+                name = 'Label',
+                text = {
+                    'Reroll tags when {C:attention}sold',
+                },
+                unlock = {
+                    'Use {C:attention}12{} tags in one run',
+                }
+            },
         },
         Other={
             counterpart_ranks = {
@@ -1029,6 +1038,12 @@ return {
                 name = "Key Tag",
                 text = {
                     '{C:attention}Unlocks{} the {C:green,E:1}Green{E:1} Lock',
+                },
+            },
+            tag_showdown_jean_paul = {
+                name = "Jean-Paul Tag",
+                text = {
+                    'hiiiiiii :P',
                 },
             },
         },
@@ -1260,6 +1275,8 @@ return {
             k_mathematic = "Mathematic",
             k_plus_math="+1 Mathematic",
             k_downgrade_ex="Downgrade!",
+            k_can_reroll="Can reroll",
+            k_cannot_reroll="Cannnot reroll",
             b_mathematic_cards = "Mathematic Cards",
             b_pull = "PULL",
         },

@@ -1094,6 +1094,35 @@ SMODS.Tag({
 	end
 })
 
+SMODS.Tag({
+	key = "jean_paul",
+	atlas = "showdown_tags",
+	pos = coordinate(2),
+	min_ante = 8,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+				local lock = tag.ID
+                G.CONTROLLER.locks[lock] = true
+                tag:yep('+', G.C.GREEN, function()
+					if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+						local card = create_card("Joker", G.jokers, nil, 0.8, nil, nil, 'j_showdown_jean_paul', 'jean_paul')
+						card:add_to_deck()
+						G.jokers:emplace(card)
+					end
+                	G.CONTROLLER.locks[lock] = nil
+					check_for_unlock({ type = 'jean_paul_tag' })
+                	return true
+                end)
+			else
+				tag:nope()
+			end
+            tag.triggered = true
+            return true
+		end
+	end
+})
+
 ---- Blinds
 
 SMODS.Atlas({key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atlas_table = "ANIMATION_ATLAS", frames = 21})
