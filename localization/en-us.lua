@@ -232,10 +232,6 @@ return {
                 text = {
                     'Creates a {C:dark_edition}Negative{} {C:spectral}Spectral{} card',
                     'when a joker is {C:attention}destroyed{}',
-                },
-                unlock = {
-                    'Have {C:attention}two times{} your maximum',
-                    'amount of {C:attention}consumables{}',
                 }
             },
             j_showdown_parmesan = {
@@ -299,7 +295,7 @@ return {
                 name = 'one doller',
                 text = {
                     'Buying something let you keep',
-                    '{C:money}1${} of the money you used',
+                    '{C:money}$1{} of the money you used',
                 },
                 unlock = {
                     'Buy something for {C:attention}free{}',
@@ -329,7 +325,7 @@ return {
             j_showdown_sinful_joker = {
                 name = 'Sinful Joker',
                 text = {
-                    '{C:mult}+#1#{} Mult to {C:attention}Greedy Joker{}, {C:attention}Lusty Joker{}',
+                    '{C:mult}+#1#{} Mult to {C:attention}Greedy Joker{}, {C:attention}Lusty Joker{},',
                     '{C:attention}Wrathful Joker{} and {C:attention}Gluttonous Joker{}',
                     'every time a hand is played',
                 },
@@ -342,42 +338,42 @@ return {
             j_showdown_egg_drawing = {
                 name = 'Egg Drawing',
                 text = {
-                    'A random joker gains {C:money}4${} of {C:attention}sell{}',
+                    'A random joker gains {C:money}$#1#{} of {C:attention}sell{}',
                     '{C:attention}value{} at the end of round',
                 },
                 unlock = {
                     'Sell a card for',
-                    'more than {C:money}10${}',
+                    'more than {C:money}$10{}',
                 }
             },
             j_showdown_jimbo_makeup = {
                 name = "Jimbo's Makeup",
                 text = {
-                    'insert text',
+                    'Get 5 {C:attention}specific jokers{} to...',
                 },
             },
             j_showdown_jimbo_hat = {
                 name = "Jimbo's Hat",
                 text = {
-                    'insert text',
+                    'Get 5 {C:attention}specific jokers{} to...',
                 },
             },
             j_showdown_jimbo_bells = {
                 name = "Jimbo's Bells",
                 text = {
-                    'insert text',
+                    'Get 5 {C:attention}specific jokers{} to...',
                 },
             },
             j_showdown_jimbo_collar = {
                 name = "Jimbo's Collar",
                 text = {
-                    'insert text',
+                    'Get 5 {C:attention}specific jokers{} to...',
                 },
             },
             j_showdown_gary_mccready = {
                 name = 'Gary McCready',
                 text = {
-                    'insert text',
+                    'Get 5 {C:attention}specific jokers{} to...',
                 },
             },
             j_showdown_ultimate_joker = {
