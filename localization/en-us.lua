@@ -754,7 +754,10 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Zodiac Deck',
+                    'Using a {C:planet}Planet{} or {C:purple}Tarot{} card has',
+                    'a {C:green}#1# in #2#{} chance to generate a',
+                    'new {C:planet}Planet{} or {C:purple}Tarot{} card',
+                    '{C:inactive}(Must have room)',
                 },
                 unlock = {
                     'Win a run with any',
@@ -831,7 +834,9 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Mirror Deck',
+                    'Scored non-enhanced {C:counterpart_ranks}counterparts',
+                    'gains a {C:attention}random{} enhancement from',
+                    'your {C:attention}hand{} before scoring',
                 },
                 unlock = {
                     'Win a run with any',

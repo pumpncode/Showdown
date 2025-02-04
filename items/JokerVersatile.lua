@@ -75,8 +75,32 @@ Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_chec
         end
     end
 end }
-Showdown.versatile['Zodiac Deck'] = { desc = 'j_showdown_versatile_joker_zodiac', pos = coordinate(12), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Zodiac Deck'] = { desc = 'j_showdown_versatile_joker_zodiac', pos = coordinate(12), blueprint = true, effect = function(self, card, context)
+    if
+        context.using_consumeable
+        and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet")
+        and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit
+        and pseudorandom('versatile_zodiac') < G.GAME.probabilities.normal/card.ability.extra.generate_odd
+    then
+        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+        local loc = { card = card }
+        G.E_MANAGER:add_event(Event({
+            trigger = 'before',
+            delay = 0.0,
+            func = (function()
+                    local _card = create_card('Tarot_Planet',G.consumeables, nil, nil, nil, nil, nil, 'versatile_zodiac')
+                    _card:add_to_deck()
+                    G.consumeables:emplace(_card)
+                    G.GAME.consumeable_buffer = 0
+                    if _card.ability.set == 'Tarot' then
+                        loc.message = localize('k_plus_tarot')
+                    elseif _card.ability.set == 'Planet' then
+                        loc.message = localize('k_plus_planet')
+                    end
+                return true
+            end)}))
+        return loc
+    end
 end }
 Showdown.versatile['Painted Deck'] = { desc = 'j_showdown_versatile_joker_painted', pos = coordinate(13), blueprint = false, add_to_deck = function(self, card, from_debuff)
     G.jokers.config.card_limit = G.jokers.config.card_limit + 2
@@ -96,7 +120,26 @@ end, remove_from_deck = function(self, card, from_debuff)
     ease_discard(-1)
 end }
 Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, effect = function(self, card, context)
-    --
+    if context.before and not context.blueprint then
+        local hazZero = false
+        for i=1, #context.scoring_hand do
+            hazZero = hazZero or SMODS.is_zero(context.scoring_hand[i])
+        end
+        local enhancements = {}
+        for _, v in ipairs(G.hand.cards) do
+            if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and not findInTable(v.config.center, enhancements) then
+                table.insert(enhancements, v.config.center)
+            end
+        end
+        if #enhancements > 0 then
+            for i=1, #context.scoring_hand do
+                local _card = context.scoring_hand[i]
+                if _card.config.center == G.P_CENTERS.c_base and not _card.debuff then
+                    _card:set_ability(pseudorandom_element(enhancements, pseudoseed('versatile_mirror')), nil, true)
+                end
+            end
+        end
+    end
 end }
 Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = true, effect = function(self, card, context)
     if context.using_consumeable and context.consumeable.ability.set == 'Mathematic' then
@@ -143,6 +186,7 @@ create_joker({ -- Versatile Joker
         {planet = 1},                                  -- Nebula Deck
         {non_face_retrigger = 1},                      -- Abandoned Deck
         {hearts = 20}, {spades = 1.5}, {spades_odd = 2}, -- Checkered Deck
+        {generate_odd = 4},                           -- Zodiac Deck
         {double_tag = 1},                              -- Anaglyph Deck
     },
     custom_vars = function(self, info_queue, card)
@@ -158,6 +202,8 @@ create_joker({ -- Versatile Joker
                 loc.vars = { card.ability.extra.non_face_retrigger }
             elseif G.GAME.selected_back.name == 'Checkered Deck' then
                 loc.vars = { card.ability.extra.hearts, card.ability.extra.spades, G.GAME.probabilities.normal, card.ability.extra.spades_odd }
+            elseif G.GAME.selected_back.name == 'Zodiac Deck' then
+                loc.vars = { G.GAME.probabilities.normal, card.ability.extra.generate_odd }
             elseif G.GAME.selected_back.name == 'Anaglyph Deck' then
                 loc.vars = { card.ability.extra.double_tag }
             end
