@@ -1041,7 +1041,7 @@ return {
                 },
             },
             tag_showdown_jean_paul = {
-                name = "Jean-Paul Tag",
+                name = "J-P Tag",
                 text = {
                     'hiiiiiii :P',
                 },
