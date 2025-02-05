@@ -1156,7 +1156,7 @@ SMODS.Blind({
 	atlas = "showdown_blinds",
 	pos = { x = 0, y = 1 },
 	boss_colour = G.C.BLUE,
-	boss = { min = 1 },
+	boss = { min = 2 },
 	mult = 2,
 })
 
@@ -1197,6 +1197,19 @@ SMODS.Blind({
 	mult = 2,
 })
  ]]
+SMODS.Blind({
+	key = "wasteful",
+	name = "The Wasteful",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 3 },
+	boss_colour = G.C.RED,
+	boss = { min = 2 },
+	mult = 2,
+	debuff_hand = function(self, cards, hand, handname, check)
+		return G.GAME.current_round.discards_left > 0
+	end
+})
+
 local gnb = get_new_boss
 function get_new_boss()
 	for k, v in pairs(G.P_BLINDS) do

@@ -24,7 +24,7 @@ return {
                 text = {
                     'Start with a {C:attention}random',
                     'joker, consumable,',
-                    'voucher and {C:money}$0',
+                    'voucher and {C:money}$-5',
                 }
             },
         },
@@ -1223,7 +1223,7 @@ return {
                     'Destroy {C:attention}#1#{} selected cards',
                     'Creates a card that {C:attention}inherit',
                     'modifiers of the destroyed cards',
-                    '{C:attention}Rank{} and {C:attention}suit{} is {C:attention}randomized',
+                    '{C:attention}Rank{} and {C:attention}Suit{} is {C:attention}randomized',
                 }
             },
         },

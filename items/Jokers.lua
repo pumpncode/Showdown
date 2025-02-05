@@ -1533,7 +1533,7 @@ create_joker({ -- Label
     atlas = "showdown_jokers",
     pos = coordinate(56),
     vars = {{can_reroll = true}},
-    rarity = 'Common', --cost = 4,
+    rarity = 'Common', cost = 3,
     blueprint = false, perishable = false, eternal = false,
     calculate = function(self, card, context)
         if context.ending_shop then

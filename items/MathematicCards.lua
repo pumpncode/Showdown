@@ -267,8 +267,8 @@ SMODS.Consumable({ -- Sequence
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(7),
-	config = {max_highlighted = 3},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
+	config = {max_highlighted = 3, extra = { levels = 3 }},
+    loc_vars = function(self, info_queue, card) return {vars = {self.config.extra.levels}} end,
 	can_use = function()
         if G.hand and #G.hand.highlighted <= 5 and #G.hand.highlighted >= 1 then
             return true
@@ -279,7 +279,7 @@ SMODS.Consumable({ -- Sequence
 		local text, disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
 		local used_consumable = copier or card
 		update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(text, 'poker_hands'),chips = G.GAME.hands[text].chips, mult = G.GAME.hands[text].mult, level=G.GAME.hands[text].level})
-		level_up_hand(used_consumable, text, nil, 3)
+		level_up_hand(used_consumable, text, nil, self.config.extra.levels)
 		update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
