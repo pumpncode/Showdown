@@ -50,8 +50,18 @@ end, remove_from_deck = function(self, card, from_debuff)
     return true end }))
 end }
 Showdown.versatile['Nebula Deck'] = { desc = 'j_showdown_versatile_joker_nebula', pos = coordinate(8), blueprint = false }
-Showdown.versatile['Ghost Deck'] = { desc = 'j_showdown_versatile_joker_ghost', pos = coordinate(9), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Ghost Deck'] = { desc = 'j_showdown_versatile_joker_ghost', pos = coordinate(9), blueprint = false, add_to_deck = function(self, card, from_debuff)
+    G.E_MANAGER:add_event(Event({func = function()
+        for k, v in pairs(G.I.CARD) do
+            if v.set_cost then v:set_cost() end
+        end
+    return true end }))
+end, remove_from_deck = function(self, card, from_debuff)
+    G.E_MANAGER:add_event(Event({func = function()
+        for k, v in pairs(G.I.CARD) do
+            if v.set_cost then v:set_cost() end
+        end
+    return true end }))
 end }
 Showdown.versatile['Abandoned Deck'] = { desc = 'j_showdown_versatile_joker_abandoned', pos = coordinate(10), blueprint = true, effect = function(self, card, context)
     if context.repetition and context.cardarea == G.play and not context.other_card:is_face() then
@@ -154,6 +164,9 @@ Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calcu
     end
 end }
 Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
+Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(21), blueprint = false, effect = function(self, card, context)
+    --
+end }
 
 ---Get deck specifications for Versatile Joker
 ---@param type string
@@ -186,7 +199,7 @@ create_joker({ -- Versatile Joker
         {planet = 1},                                  -- Nebula Deck
         {non_face_retrigger = 1},                      -- Abandoned Deck
         {hearts = 20}, {spades = 1.5}, {spades_odd = 2}, -- Checkered Deck
-        {generate_odd = 4},                           -- Zodiac Deck
+        {generate_odd = 4},                            -- Zodiac Deck
         {double_tag = 1},                              -- Anaglyph Deck
     },
     custom_vars = function(self, info_queue, card)

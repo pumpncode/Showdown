@@ -382,6 +382,21 @@ SMODS.Back{ -- Starter Deck
 	config = { showdown_starter = true }
 }
 
+SMODS.Back{ -- Cheater Deck
+	name = "Cheater Deck",
+	key = "Cheater",
+	atlas = "showdown_decks",
+	pos = coordinate(4),
+	config = { showdown_cheater = true },
+	calculate = function (self, back, context)
+		if context.destroy_card and context.cardarea == G.play then
+			if pseudorandom('cheater') < G.GAME.probabilities.normal/G.GAME.cheater_destroy_odd then
+				return { remove = true } -- I have to make this fucking thing work
+			end
+		end
+	end
+}
+
 local function give_starter()
 	G.E_MANAGER:add_event(Event({
 		func = function()
@@ -430,6 +445,7 @@ function Back.apply_to_run(self)
 		G.PROFILES[G.SETTINGS.profile].starter_next_run = false
 		give_starter()
 	end
+	if self.effect.config.showdown_cheater then G.GAME.cheater_destroy_odd = 6 end
 end
 
 function find_consumable(name, non_debuff)
@@ -1186,7 +1202,7 @@ function SMODS.patient_gain_score(blind) -- Thanks Bunco
         end
     end}))
 end
---[[ 
+--[[
 SMODS.Blind({
 	key = "shameful",
 	name = "The Shameful",
@@ -1196,7 +1212,7 @@ SMODS.Blind({
 	boss = { min = 1 },
 	mult = 2,
 })
- ]]
+]]--
 SMODS.Blind({
 	key = "wasteful",
 	name = "The Wasteful",

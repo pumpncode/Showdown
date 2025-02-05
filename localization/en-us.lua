@@ -27,6 +27,12 @@ return {
                     'voucher and {C:money}$-5',
                 }
             },
+            b_showdown_Cheater = {
+                name = 'Cheater Deck',
+                text = {
+                    'idk',
+                }
+            },
         },
         Blind={
             bl_showdown_latch = {
@@ -713,7 +719,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Ghost Deck',
+                    'All {C:spectral}Spectral{} cards and {C:spectral}Spectral',
+                    '{C:spectral}Packs{} in the shop are {C:attention}free',
                 },
                 unlock = {
                     'Win a run with any',

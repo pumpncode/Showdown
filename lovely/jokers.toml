@@ -393,7 +393,7 @@ elseif self.config.center.name == 'banana' then
     self.T.w = W
 '''
 
-# Versatile Joker (Nebula Joker), part 1/2
+# Versatile Joker (Nebula Deck), part 1/2
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -408,7 +408,7 @@ end
 amount = math.floor(amount)
 '''
 
-# Versatile Joker (Nebula Joker), part 2/2
+# Versatile Joker (Nebula Deck), part 2/2
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -443,4 +443,15 @@ payload = '''
 if v.base.id > 0 then
     valid_mail_cards[#valid_mail_cards+1] = v
 end
+'''
+
+# Versatile Joker (Ghost Deck)
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "if (self.ability.set == 'Planet' or (self.ability.set == 'Booster' and self.ability.name:find('Celestial'))) and #find_joker('Astronomer') > 0 then self.cost = 0 end"
+position = "after"
+payload = '''
+if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and #find_joker('versatile_joker') > 0 and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
 '''
