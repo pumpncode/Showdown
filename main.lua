@@ -949,28 +949,7 @@ filesystem.load(itemsPath.."MathematicCards.lua")()
 ---- Vouchers
 
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
---[[ 
-SMODS.Voucher({ -- Irrational Numbers
-	key = 'irrational',
-	atlas = 'showdown_vouchers',
-    unlocked = true,
-	pos = coordinate(1),
-	check_for_unlock = function()
-        --
-    end,
-})
 
-SMODS.Voucher({ -- Transcendant Numbers
-	key = 'transcendant',
-	atlas = 'showdown_vouchers',
-    unlocked = false,
-    requires = {'v_showdown_irrational'},
-	pos = coordinate(3, 2),
-	check_for_unlock = function()
-        --
-    end,
-})
- ]]
 SMODS.Voucher({ -- Number Theory
 	key = 'number',
 	atlas = 'showdown_vouchers',
@@ -1013,6 +992,73 @@ SMODS.Voucher({ -- Axiom of Infinity
 		G.E_MANAGER:add_event(Event({
 			func = function()
 				G.draw_hand_math = false
+				return true
+			end,
+		}))
+	end,
+})
+
+SMODS.Voucher({ -- L U I
+	key = 'lui',
+	atlas = 'showdown_vouchers',
+    unlocked = true,
+	pos = coordinate(1),
+	loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_flower'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_luigi'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mario'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_star'}
+	end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.casino_rate = (G.GAME.casino_rate or 0) + 0.25
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.casino_rate = math.max(0, G.GAME.casino_rate - 0.25)
+				return true
+			end,
+		}))
+	end,
+})
+
+SMODS.Voucher({ -- G I
+	key = 'gi',
+	atlas = 'showdown_vouchers',
+    --unlocked = false,
+    unlocked = true,
+    requires = {'v_showdown_lui'},
+	pos = coordinate(3, 2),
+	loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_flower'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_luigi'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mario'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_star'}
+	end,
+	check_for_unlock = function()
+        --
+    end,
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.casino_rate = (G.GAME.casino_rate or 0) + 0.75
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.casino_rate = math.max(0, G.GAME.casino_rate - 0.75)
 				return true
 			end,
 		}))
@@ -1236,6 +1282,155 @@ function get_new_boss()
 	return gnb()
 end
 
+---- Stickers
+SMODS.Atlas({key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95})
+
+SMODS.Sticker({
+	key = 'static',
+	atlas = 'showdown_stickers',
+	pos = coordinate(1, 5),
+	badge_colour = HEX("727272"),
+	default_compat = true,
+	apply = function(self, card, val)
+		card.ability[self.key] = val
+		card.states.drag.can = not val
+	end,
+})
+
+SMODS.Sticker({
+	key = 'cloud',
+	atlas = 'showdown_stickers',
+	pos = coordinate(2, 5),
+	badge_colour = HEX("D0B0B8"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	calculate = function(self, card, context)
+		if (context.joker_main and context.cardarea == G.jokers) or context.cardarea == G.play or context.cardarea == G.hand then
+			ease_dollars(2)
+			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + 2
+			G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+			return {
+				message = localize('$')..2,
+				dollars = 2,
+				colour = G.C.MONEY
+			}
+		end
+	end
+})
+
+SMODS.Sticker({
+	key = 'mushroom',
+	atlas = 'showdown_stickers',
+	pos = coordinate(3, 5),
+	badge_colour = HEX("F00808"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	calculate = function(self, card, context)
+		if not context.blueprint and context.first_hand_drawn then
+			G.E_MANAGER:add_event(Event({func = function()
+				G.hand:change_size(1)
+                G.GAME.round_resets.temp_handsize = (G.GAME.round_resets.temp_handsize or 0) + 1
+			return true end }))
+		end
+	end
+})
+
+SMODS.Sticker({
+	key = 'flower',
+	atlas = 'showdown_stickers',
+	pos = coordinate(4, 5),
+	badge_colour = HEX("F87800"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	calculate = function(self, card, context)
+		--
+	end
+})
+
+SMODS.Sticker({
+	key = 'luigi',
+	atlas = 'showdown_stickers',
+	pos = coordinate(5, 5),
+	badge_colour = HEX("006800"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	--[[calculate = function(self, card, context)
+		if context.joker_main then
+			return {
+                message = 'X1.5 Mult',
+                Xmult_mod = 1.5,
+                colour = G.C.RED,
+			}
+		end
+	end,]]--
+	apply = function(self, card, val)
+		card.ability[self.key] = val
+		if val then
+			card.ability.x_mult = card.ability.x_mult + 0.5
+			card.ability.h_x_mult = card.ability.h_x_mult + 0.5
+		else
+			card.ability.x_mult = card.ability.x_mult - 0.5
+			card.ability.h_x_mult = card.ability.h_x_mult - 0.5
+		end
+	end,
+})
+
+SMODS.Sticker({
+	key = 'mario',
+	atlas = 'showdown_stickers',
+	pos = coordinate(6, 5),
+	badge_colour = HEX("B00000"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	calculate = function(self, card, context)
+		if
+			-- Joker
+			(card.ability.set == "Joker" and not context.blueprint and context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card)
+			-- Playing Card
+			or (context.repetition and context.repetition_only) -- this doesn't work fuck
+		then
+			return {
+				message = localize("k_again_ex"),
+				repetitions = 1,
+				card = card
+			}
+		end
+	end
+})
+
+SMODS.Sticker({
+	key = 'star',
+	atlas = 'showdown_stickers',
+	pos = coordinate(7, 5),
+	badge_colour = HEX("F8B000"),
+	sets = { Joker = true, Default = true, Enhanced = true },
+	should_apply = false,
+	apply = function(self, card, val)
+		card.ability[self.key] = val
+		card:set_debuff()
+	end,
+})
+
+local cardSetDebuffRef = Card.set_debuff
+function Card:set_debuff(should_debuff)
+	if self.ability.showdown_star then self.debuff = false
+	else cardSetDebuffRef(self, should_debuff) end
+end
+
+for _, v in ipairs(SMODS.Sticker.obj_buffer) do
+    local sticker = SMODS.Stickers[v]
+    if
+		sticker.key == 'showdown_cloud'
+		or sticker.key == 'showdown_mushroom'
+		or sticker.key == 'showdown_flower'
+		or sticker.key == 'showdown_luigi'
+		or sticker.key == 'showdown_mario'
+		or sticker.key == 'showdown_star'
+	then
+        table.insert(Showdown.casino, sticker)
+    end
+end
+
 ---- Jokers
 
 SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
@@ -1265,3 +1460,42 @@ end
 if (SMODS.Mods["InkAndColor"] or {}).can_load then
 	modCompatibility("InkAndColor", "compat/inkAndColorCompat.lua")
 end ]]
+
+local debugplus = require("debugplus")
+if debugplus then
+	local debugplusHandleKeysRef = debugplus.handleKeys
+	function debugplus.handleKeys(controller, key, dt)
+		if controller.hovering.target and controller.hovering.target:is(Card) then
+			local _card = controller.hovering.target
+			if key == "t" then
+				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+					SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
+				end
+			elseif key == "y" then
+				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+					if _card.ability.showdown_cloud then
+						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+					elseif _card.ability.showdown_mushroom then
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
+					elseif _card.ability.showdown_flower then
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
+						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+					elseif _card.ability.showdown_luigi then
+						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+						SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
+					elseif _card.ability.showdown_mario then
+						SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
+						SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
+					elseif _card.ability.showdown_star then
+						SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
+					else
+						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
+					end
+				end
+			end
+		end
+		debugplusHandleKeysRef(controller, key, dt)
+	end
+end

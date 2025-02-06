@@ -455,3 +455,30 @@ position = "after"
 payload = '''
 if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and #find_joker('versatile_joker') > 0 and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
 '''
+
+# Joker on Joker stickers effects
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+match_indent = true
+pattern = '''for _, v in ipairs(G.jokers.cards) do'''
+position = "before"
+payload = '''
+-- Joker on Joker stickers effects
+for _, v in ipairs(G.jokers.cards) do
+    for k, v1 in pairs(v.ability) do
+        local effect = v:calculate_joker({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_joker_sticker = _card, ability = {key=k, value=v1}, callback = function(v, effect)
+            if effect then
+                local extras = {mult = false, hand_chips = false}
+                if effect.mult_mod then mult = mod_mult(mult + effect.mult_mod);extras.mult = true end
+                if effect.chip_mod then hand_chips = mod_chips(hand_chips + effect.chip_mod);extras.hand_chips = true end
+                if effect.Xmult_mod then mult = mod_mult(mult*effect.Xmult_mod);extras.mult = true  end
+                if extras.mult or extras.hand_chips then update_hand_text({delay = 0}, {chips = extras.hand_chips and hand_chips, mult = extras.mult and mult}) end
+                if extras.mult or extras.hand_chips then card_eval_status_text(v, 'jokers', nil, percent, nil, effect) end
+                percent = percent+percent_delta
+            end
+        end})
+    end
+end
+
+'''

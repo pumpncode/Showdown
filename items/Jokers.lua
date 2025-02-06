@@ -556,12 +556,12 @@ create_joker({ -- Revolution
         end
     end
 })
---[[ 
+--[[
 create_joker({ -- Fruit Sticker
     name = 'fruit_sticker',
     atlas = "showdown_jokers",
     pos = coordinate(23),
-    vars = {{x_mult = 2.5}},
+    vars = {{x_mult = 1.75}},
     custom_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.x_mult } }
 	end,
@@ -572,21 +572,20 @@ create_joker({ -- Fruit Sticker
         -- Have stickers on your maximum amount or higher of jokers (no stake stickers)
     end,
     calculate = function(self, card, context)
-        --if context.joker_main or context.other_joker or (context.individual and context.cardarea == G.hand) then
-        if context.other_joker then
-            for k, v in pairs(context.other_joker.ability) do
-                print(k)
-                if findInTable(k, SMODS.Sticker.obj_buffer) and v then
-                    return {
-                        x_mult = card.ability.extra.x_mult,
-                        card = context.other_joker
-                    }
-                end
+        --if context.other_joker then print(inspect(context.other_joker.ability)) end
+        if context.joker_main then print(inspect(SMODS.Sticker.obj_table)) end
+        if context.other_joker_sticker and context.ability then
+            if type(context.ability.value) ~= 'table' then print(context.other_joker_sticker.ability.name..' ['..context.ability.key..'] '..(context.ability.value and 'true' or 'false')) end
+            if type(context.ability.value) ~= 'table' and SMODS.Sticker.obj_table[context.ability.key] and context.ability.value then
+                return {
+                    x_mult = card.ability.extra.x_mult,
+                    card = context.other_joker_sticker
+                }
             end
         end
     end
 })
- ]]
+]]--
 create_joker({ -- Sinful Joker
     name = 'sinful_joker',
     atlas = "showdown_jokers",

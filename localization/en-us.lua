@@ -907,6 +907,54 @@ return {
             },
         },
         Other={
+            showdown_static = {
+                name = "Static",
+                text = {
+                    "Can't be",
+                    "moved",
+                },
+            },
+            showdown_cloud = {
+                name = "Cloud",
+                text = {
+                    "{C:money}+$2{} when",
+                    "scoring",
+                },
+            },
+            showdown_mushroom = {
+                name = "Mushroom",
+                text = {
+                    "{C:attention}+1{} hand size",
+                },
+            },
+            showdown_flower = {
+                name = "Flower",
+                text = {
+                    "idk",
+                },
+            },
+            showdown_luigi = {
+                name = "Luigi",
+                text = {
+                    "{X:mult,C:white}X1.5{} Mult",
+                },
+            },
+            showdown_mario = {
+                name = "Mario",
+                text = {
+                    "Retrigger this",
+                    "card {C:attention}1{}",
+                    "additional time",
+                },
+            },
+            showdown_star = {
+                name = "Star",
+                text = {
+                    "This card",
+                    "cannot be",
+                    "debuffed",
+                },
+            },
             counterpart_ranks = {
                 name = 'Counterparts',
                 text = {
@@ -1117,27 +1165,6 @@ return {
             },
         },
         Voucher={
-            v_showdown_irrational = {
-                name = 'Irrational Numbers',
-                text = {
-                    'idk',
-                }
-            },
-            v_showdown_transcendant = {
-                name = 'Transcendant Numbers',
-                text = {
-                    'idk',
-                },
-                unlock = {
-                    'idk',
-                }
-            },
-            v_showdown_complex = {
-                name = 'Complex Numbers',
-                text = {
-                    'idk',
-                }
-            },
             v_showdown_number = {
                 name = 'Number Theory',
                 text = {
@@ -1162,6 +1189,23 @@ return {
                     'Cards destroyed by {C:showdown_calculus}mathematic{}',
                     'cards have a {C:green}1 in 3{} chance of',
                     '{C:attention}not{} getting destroyed',
+                }
+            },
+            v_showdown_lui = {
+                name = 'L U I',
+                text = {
+                    'Joker have a {C:green}1 in 4{} chance to',
+                    'spawn with a {C:attention}Casino Sticker',
+                }
+            },
+            v_showdown_gi = {
+                name = 'G I',
+                text = {
+                    'Joker {C:attention}always{} spawn',
+                    'with a {C:attention}Casino Sticker',
+                },
+                unlock = {
+                    'idk',
                 }
             },
         },
@@ -1289,7 +1333,15 @@ return {
             b_pull = "PULL",
         },
         high_scores={},
-        labels={},
+        labels={
+            showdown_static = "Static",
+            showdown_cloud = "Cloud",
+            showdown_mushroom = "Mushroom",
+            showdown_flower = "Flower",
+            showdown_luigi = "Luigi",
+            showdown_mario = "Mario",
+            showdown_star = "Star",
+        },
         poker_hand_descriptions={},
         poker_hands={},
         quips={

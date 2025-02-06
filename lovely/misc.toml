@@ -51,6 +51,7 @@ payload = '''
 Showdown = {}
 Showdown.extraSuits = {}
 Showdown.versatile = {}
+Showdown.casino = {}
 '''
 
 # xChips eval state
@@ -70,4 +71,33 @@ elseif eval_type == 'xchips' then
     colour = G.C.CHIPS
     config.type = 'fade'
     config.scale = 0.7
+'''
+
+# Casino stickers apply
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if card.ability.consumeable and not skip_materialize then card:start_materialize() end"
+position = "after"
+match_indent = true
+payload = '''
+if card.ability.set == 'Joker' and G.GAME.casino_rate and pseudorandom('casino') < G.GAME.casino_rate then
+    pseudorandom_element(Showdown.casino, pseudoseed('casino')):apply(card, true)
+end
+'''
+
+# Mushroom sticker works for drawn cards
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if card then drawn = true end"
+position = "after"
+match_indent = true
+payload = '''
+if card.ability.showdown_mushroom then
+    G.E_MANAGER:add_event(Event({func = function()
+        G.hand:change_size(1)
+        G.GAME.round_resets.temp_handsize = (G.GAME.round_resets.temp_handsize or 0) + 1
+    return true end }))
+end
 '''
