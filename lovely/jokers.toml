@@ -3,7 +3,7 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
-# Addition of removing_cards context
+# Addition of removing_card context (have to find a way of detecting that card is sold from here)
 [[patches]]
 [patches.pattern]
 target = 'card.lua'
@@ -13,7 +13,7 @@ match_indent = true
 payload = '''
 if G.jokers and G.jokers.cards then
     for i = 1, #G.jokers.cards do
-        G.jokers.cards[i]:calculate_joker({ removing_cards = true, destroyed_card = self })
+        G.jokers.cards[i]:calculate_joker({removing_card = true, removed_card = self, removed_card_is_sold = false})
     end
 end
 '''
@@ -26,7 +26,7 @@ pattern = 'if self.cards[i] == card then'
 position = 'after'
 match_indent = true
 payload = '''
-G.latest_area_baby_jimbo = self
+G.GAME.latest_area_baby_jimbo = self
 '''
 
 # Check unlock for free item (one doller)
@@ -422,7 +422,7 @@ level_up_hand(used_tarot, self.ability.consumeable.hand_type, nil, amount)
 # The Idol doesn't pick counterparts
 [[patches]]
 [patches.pattern]
-target = "card.lua"
+target = "functions/common_events.lua"
 match_indent = true
 pattern = "valid_idol_cards[#valid_idol_cards+1] = v"
 position = "at"
@@ -435,7 +435,7 @@ end
 # Mail in Rebate doesn't pick counterparts
 [[patches]]
 [patches.pattern]
-target = "card.lua"
+target = "functions/common_events.lua"
 match_indent = true
 pattern = "valid_mail_cards[#valid_mail_cards+1] = v"
 position = "at"
@@ -461,23 +461,32 @@ if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ab
 [patches.pattern]
 target = "functions/state_events.lua"
 match_indent = true
-pattern = '''for _, v in ipairs(G.jokers.cards) do'''
+pattern = '''-- Calculate context.other_joker effects'''
 position = "before"
 payload = '''
 -- Joker on Joker stickers effects
-for _, v in ipairs(G.jokers.cards) do
-    for k, v1 in pairs(v.ability) do
-        local effect = v:calculate_joker({full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_joker_sticker = _card, ability = {key=k, value=v1}, callback = function(v, effect)
-            if effect then
-                local extras = {mult = false, hand_chips = false}
-                if effect.mult_mod then mult = mod_mult(mult + effect.mult_mod);extras.mult = true end
-                if effect.chip_mod then hand_chips = mod_chips(hand_chips + effect.chip_mod);extras.hand_chips = true end
-                if effect.Xmult_mod then mult = mod_mult(mult*effect.Xmult_mod);extras.mult = true  end
-                if extras.mult or extras.hand_chips then update_hand_text({delay = 0}, {chips = extras.hand_chips and hand_chips, mult = extras.mult and mult}) end
-                if extras.mult or extras.hand_chips then card_eval_status_text(v, 'jokers', nil, percent, nil, effect) end
-                percent = percent+percent_delta
+if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+    for _, _area in ipairs(SMODS.get_card_areas('jokers')) do
+        for _, _joker in ipairs(_area.cards) do
+            for k, w in pairs(_card.ability) do
+                -- TARGET: add context.other_something identifier to your cards
+                local joker_sticker_eval,post = eval_card(_joker, {full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_card = _card, ability = {key=k, value=w} })
+                if next(joker_sticker_eval) then
+                    if joker_sticker_eval.edition then joker_sticker_eval.edition = {} end
+                    joker_sticker_eval.jokers.juice_card = _joker
+                    table.insert(effects, joker_sticker_eval)
+                    for _, v in ipairs(post) do effects[#effects+1] = v end
+                    if joker_sticker_eval.retriggers then
+                        for rt = 1, #joker_sticker_eval.retriggers do
+                            local rt_eval, rt_post = eval_card(_card, {full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_card = _card, ability = {key=k, value=w}, retrigger_joker = true})
+                            table.insert(effects, {joker_sticker_eval.retriggers[rt]})
+                            table.insert(effects, rt_eval)
+                            for _, v in ipairs(rt_post) do effects[#effects+1] = v end
+                        end
+                    end
+                end
             end
-        end})
+        end
     end
 end
 

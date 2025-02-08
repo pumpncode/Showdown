@@ -1,7 +1,8 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = -20
+#priority = -20
+priority = 0
 
 # Counterparts counts as original
 [[patches]]
@@ -42,12 +43,17 @@ if specific_vars.default_wild then
 end
 '''
 
+# Doesn't patch
 # Counterpart and 0 card descriptions, part 2/3
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
-pattern = "if _c.effect == 'Mult Card' then loc_vars = {_c.config.mult}"
-position = "before"
+pattern = '''
+if specific_vars and _c.name ~= 'Stone Card' and specific_vars.nominal_chips then
+    localize{type = 'other', key = 'card_chips', nodes = desc_nodes, vars = {specific_vars.nominal_chips}}
+end
+'''
+position = "after"
 match_indent = true
 payload = '''
 if _c.name ~= 'Stone Card' and specific_vars then
@@ -91,7 +97,7 @@ end
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = "if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK then"
+pattern = "if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SMODS_BOOSTER_OPENED then"
 position = "before"
 match_indent = true
 payload = '''
@@ -102,13 +108,14 @@ if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G
 end
 '''
 
+# Doesn't patch
 # 0 count as all suits even when debuffed, part 1/2
 [[patches]]
 [patches.pattern]
 target = "card.lua"
 pattern = '''
 if self.debuff and not bypass_debuff then return end
-if self.ability.effect == 'Stone Card' then
+if SMODS.has_no_suit(self) then
 '''
 position = "before"
 match_indent = true
@@ -120,9 +127,7 @@ if SMODS.is_zero(self) then return true end
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = '''
-if flush_calc then
-'''
+pattern = '''if flush_calc then'''
 position = "after"
 match_indent = true
 payload = '''

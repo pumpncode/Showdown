@@ -1,15 +1,30 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = -20
+priority = 0
 
+# Doesn't patch
 # The Patient, part 1/2
 [[patches]]
-[patches.regex]
+[patches.pattern]
 target = 'functions/state_events.lua'
-pattern = "(?<indent>[\t ]*)else\\s*\\n[\\t ]*mult\\s*=\\s*mod_mult\\(\\s*0\\s*\\)\\s*\\n[\\t ]*hand_chips\\s*=\\s*mod_chips\\(\\s*0\\s*\\)\\s*"
+match_indent = true
+pattern = '''
+else
+    mult = mod_mult(0)
+    hand_chips = mod_chips(0)
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        func = (function()
+            SMODS.juice_up_blind()
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                play_sound('tarot2', 0.76, 0.4);return true end}))
+            play_sound('tarot2', 1, 0.4)
+            return true
+        end)
+    }))
+'''
 position = 'before'
-line_prepend = '$indent'
 payload = '''
 if G.GAME.blind and G.GAME.blind.name == 'The Patient' and not G.GAME.blind.disabled and G.GAME.current_round.hands_left > 0 and hand_chips*mult + G.GAME.chips >= G.GAME.blind.chips then
     SMODS.patient_gain_score(G.GAME.blind)

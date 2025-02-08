@@ -81,7 +81,7 @@ pattern = "if card.ability.consumeable and not skip_materialize then card:start_
 position = "after"
 match_indent = true
 payload = '''
-if card.ability.set == 'Joker' and G.GAME.casino_rate and pseudorandom('casino') < G.GAME.casino_rate then
+if (card.ability.set == 'Joker' or card.ability.set == 'Default' or card.ability.set == 'Enhanced') and G.GAME.casino_rate and pseudorandom('casino') < G.GAME.casino_rate then
     pseudorandom_element(Showdown.casino, pseudoseed('casino')):apply(card, true)
 end
 '''
@@ -101,3 +101,70 @@ if card.ability.showdown_mushroom then
     return true end }))
 end
 '''
+
+# Removing Mushroom and Flower sticker when destroyed
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = 'if self.area then self.area:remove_card(self) end'
+position = 'before'
+match_indent = true
+payload = '''
+if self.ability.showdown_mushroom then
+    SMODS.Sticker.obj_table['showdown_mushroom']:apply(self, false)
+elseif self.ability.showdown_flower then
+    SMODS.Sticker.obj_table['showdown_flower']:apply(self, false)
+end
+'''
+
+# Removing Mushroom and Flower sticker when destroyed
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'c1:add_to_deck()'
+position = 'after'
+match_indent = true
+payload = '''
+if c1.ability.showdown_mushroom then
+    SMODS.Sticker.obj_table['showdown_mushroom']:apply(c1, true)
+elseif c1.ability.showdown_flower then
+    SMODS.Sticker.obj_table['showdown_flower']:apply(c1, true)
+end
+'''
+
+# Static sticker, part 1/3
+#[[patches]]
+#[patches.pattern]
+#target = "card.lua"
+#pattern = "self:set_base(card, true)"
+#position = "after"
+#match_indent = true
+#payload = '''
+#self.states.drag.can = self.states.drag.can and not self.ability.showdown_static
+#'''
+
+# Static sticker, part 2/3
+#[[patches]]
+#[patches.pattern]
+#target = "cardarea.lua"
+#pattern = "table.sort(self.cards, function (a, b) return a.T.x + a.T.w/2 - 100*((a.pinned and not a.ignore_pinned) and a.sort_id or 0) < b.T.x + b.T.w/2 - 100*((b.pinned and not b.ignore_pinned) and b.sort_id or 0) end)"
+#position = "at"
+#match_indent = true
+#payload = '''
+#table.sort(self.cards, function (a, b)
+#    return a.T.x + a.T.w/2 - 100*((a.pinned and not a.ignore_pinned) and a.sort_id or a.showdown_static and a.rank or 0) < b.T.x + b.T.w/2 - 100*((b.pinned and not b.ignore_pinned) and b.sort_id or b.showdown_static and b.rank or 0)
+#end)
+#'''
+
+# Static sticker, part 3/3
+#[[patches]]
+#[patches.pattern]
+#target = "cardarea.lua"
+#pattern = "table.sort(self.cards, function (a, b) return a.T.x + a.T.w/2 < b.T.x + b.T.w/2 end)"
+#position = "at"
+#match_indent = true
+#payload = '''
+#table.sort(self.cards, function (a, b)
+#    return a.T.x + a.T.w/2 - 100*(a.showdown_static and a.rank or 0) < b.T.x + b.T.w/2 - 100*(b.showdown_static and b.rank or 0)
+#end)
+#'''

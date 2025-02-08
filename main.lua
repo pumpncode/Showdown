@@ -184,20 +184,20 @@ function forced_message(message, card, color, delay, juice) -- Thanks Bunco
         return true
     end})
 end
-
+--[[
 if not (SMODS.Mods["Paperback"] or {}).can_load then
 	local start_dissolve_ref = Card.start_dissolve
 	function Card:start_dissolve(dissolve_colours, silent, dissolve_time_fac, no_juice) -- Thanks Paperback
 		if self.getting_sliced then
 			for i = 1, #G.jokers.cards do
-				G.jokers.cards[i]:calculate_joker({ destroying_cards = true, destroyed_card = self })
+				G.jokers.cards[i]:calculate_joker({ removing_card = true, removed_card = self, area = self.area })
 			end
 		end
 
 		start_dissolve_ref(self, dissolve_colours, silent, dissolve_time_fac, no_juice)
 	end
 end
-
+]]--
 baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
 Showdown.extraSuits = {}
 
@@ -1305,12 +1305,11 @@ SMODS.Sticker({
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	calculate = function(self, card, context)
-		if (context.joker_main and context.cardarea == G.jokers) or context.cardarea == G.play or context.cardarea == G.hand then
+		if (context.joker_main and context.cardarea == G.jokers) or (not context.repetition and (context.cardarea == G.play or context.cardarea == G.hand)) then
 			ease_dollars(2)
 			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + 2
 			G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
 			return {
-				message = localize('$')..2,
 				dollars = 2,
 				colour = G.C.MONEY
 			}
@@ -1325,14 +1324,18 @@ SMODS.Sticker({
 	badge_colour = HEX("F00808"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	calculate = function(self, card, context)
-		if not context.blueprint and context.first_hand_drawn then
-			G.E_MANAGER:add_event(Event({func = function()
+	apply = function(self, card, val)
+		print(card.ability.name)
+		if card.area == G.shop_jokers then
+			card.ability[self.key] = val
+		else
+			if val then
 				G.hand:change_size(1)
-                G.GAME.round_resets.temp_handsize = (G.GAME.round_resets.temp_handsize or 0) + 1
-			return true end }))
+			else
+				G.hand:change_size(-1)
+			end
 		end
-	end
+	end,
 })
 
 SMODS.Sticker({
@@ -1342,9 +1345,17 @@ SMODS.Sticker({
 	badge_colour = HEX("F87800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	calculate = function(self, card, context)
-		--
-	end
+	apply = function(self, card, val)
+		if card.area == G.shop_jokers then
+			card.ability[self.key] = val
+		else
+			if val then
+				G.consumeables:change_size(1)
+			else
+				G.consumeables:change_size(-1)
+			end
+		end
+	end,
 })
 
 SMODS.Sticker({
@@ -1384,15 +1395,15 @@ SMODS.Sticker({
 	should_apply = false,
 	calculate = function(self, card, context)
 		if
-			-- Joker
+			-- Joker (doesn't work)
 			(card.ability.set == "Joker" and not context.blueprint and context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card)
 			-- Playing Card
-			or (context.repetition and context.repetition_only) -- this doesn't work fuck
+			or ((card.ability.set == "Default" or card.ability.set == "Enhanced") and context.repetition)
 		then
 			return {
 				message = localize("k_again_ex"),
 				repetitions = 1,
-				card = card
+				card = card,
 			}
 		end
 	end

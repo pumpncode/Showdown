@@ -318,13 +318,12 @@ return {
             j_showdown_fruit_sticker = {
                 name = 'Fruit Sticker',
                 text = {
-                    '{X:mult,C:white}X#1#{} for each card with',
-                    'at least one {C:attention}sticker{}',
+                    '{X:mult,C:white}X#1#{} for each {C:attention}sticker{}',
                     '{C:inactive}(Stake stickers excluded)',
                 },
                 unlock = {
                     'Have {C:attention}at least one{} sticker on your',
-                    '{C:attention}maximum{} amount of jokers (or higher)',
+                    '{C:attention}maximum{} amount of jokers',
                     '{C:inactive}(Stake stickers excluded)',
                 }
             },
@@ -917,7 +916,7 @@ return {
             showdown_cloud = {
                 name = "Cloud",
                 text = {
-                    "{C:money}+$2{} when",
+                    "{C:money}$2{} when",
                     "scoring",
                 },
             },
@@ -930,7 +929,8 @@ return {
             showdown_flower = {
                 name = "Flower",
                 text = {
-                    "idk",
+                    "{C:attention}+1{} consumeable",
+                    "slot",
                 },
             },
             showdown_luigi = {

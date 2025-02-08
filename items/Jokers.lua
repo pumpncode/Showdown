@@ -308,7 +308,6 @@ create_joker({ -- Golden Roulette
                         card.children.center.pinch.x = true
                         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
                             func = function()
-                                    G.jokers:remove_card(card)
                                     card:remove()
                                     card = nil
                                 return true; end})) 
@@ -316,7 +315,8 @@ create_joker({ -- Golden Roulette
                     end
                 }))
                 return {
-                    message = localize('k_BAM')
+                    message = localize('k_BAM'),
+                    destroyed = true
                 }
             else
                 ease_dollars(card.ability.extra.money)
@@ -391,13 +391,14 @@ create_joker({ -- Baby Jimbo
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
-        if context.destroying_cards
-            and context.destroyed_card
-            and context.destroyed_card ~= card
-            and context.destroyed_card.ability.set == "Joker"
-            and G.latest_area_baby_jimbo
-            and G.latest_area_baby_jimbo == G.jokers
-            and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit
+        if
+            context.removing_card
+            and context.removed_card
+            and context.removed_card ~= card
+            and context.removed_card.ability.set == 'Joker'
+            and not context.removed_card_is_sold
+            and G.GAME.latest_area_baby_jimbo
+            and G.GAME.latest_area_baby_jimbo == G.jokers
         then
             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
             G.E_MANAGER:add_event(Event({
@@ -411,7 +412,7 @@ create_joker({ -- Baby Jimbo
                     return true
                 end
             }))
-            G.latest_area_baby_jimbo = nil
+            G.GAME.latest_area_baby_jimbo = nil
             return {
                 message = localize('k_plus_spectral'),
                 colour = G.C.SECONDARY_SET.Spectral,
@@ -556,7 +557,7 @@ create_joker({ -- Revolution
         end
     end
 })
---[[
+
 create_joker({ -- Fruit Sticker
     name = 'fruit_sticker',
     atlas = "showdown_jokers",
@@ -569,23 +570,34 @@ create_joker({ -- Fruit Sticker
     blueprint = true, perishable = true, eternal = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        -- Have stickers on your maximum amount or higher of jokers (no stake stickers)
+        if G.STAGE == G.STAGES.RUN and G.jokers then
+            local allStickers = {}
+            for i, joker in ipairs(G.jokers.cards) do
+                for key, value in pairs(joker.ability) do
+                    if SMODS.Sticker.obj_table[key] and value then allStickers[i] = true break end
+                end
+            end
+            local sticker = #allStickers == G.jokers.config.card_limit
+            if sticker then
+                for i=1, #allStickers do
+                    sticker = sticker and allStickers[i]
+                end
+                if sticker then unlock_card(self) end
+            end
+        end
     end,
     calculate = function(self, card, context)
-        --if context.other_joker then print(inspect(context.other_joker.ability)) end
-        if context.joker_main then print(inspect(SMODS.Sticker.obj_table)) end
-        if context.other_joker_sticker and context.ability then
-            if type(context.ability.value) ~= 'table' then print(context.other_joker_sticker.ability.name..' ['..context.ability.key..'] '..(context.ability.value and 'true' or 'false')) end
+        if context.other_card and context.ability then
             if type(context.ability.value) ~= 'table' and SMODS.Sticker.obj_table[context.ability.key] and context.ability.value then
                 return {
                     x_mult = card.ability.extra.x_mult,
-                    card = context.other_joker_sticker
+                    card = context.other_card
                 }
             end
         end
     end
 })
-]]--
+
 create_joker({ -- Sinful Joker
     name = 'sinful_joker',
     atlas = "showdown_jokers",

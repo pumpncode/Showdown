@@ -1,7 +1,8 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = -20
+#priority = -20
+priority = 0
 
 # Counterpart don't spawn in decks except the counterpart deck, part 1/3
 [[patches]]
@@ -31,7 +32,7 @@ end
 [[patches]]
 [patches.pattern]
 target = 'game.lua'
-pattern = "if self.GAME.starting_params.no_faces and (_r == 'K' or _r == 'Q' or _r == 'J') then keep = false end"
+pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face then keep = false end"
 position = 'after'
 match_indent = true
 payload = '''
@@ -63,14 +64,3 @@ match_indent = true
 payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
 '''
-
-# Calculus deck forces first booster in shop to be a Calculus booster, part 3/2
-#[[patches]]
-#[patches.pattern]
-#target = "functions/common_events.lua"
-#pattern = "G.GAME.current_round.used_packs[i] = get_pack('shop_pack').key"
-#position = "at"
-#match_indent = true
-#payload = '''
-#G.GAME.current_round.used_packs[i] = get_pack('shop_pack', (G.GAME.first_booster_calculus and i == 1 and 'booster_calculus')).key
-#'''

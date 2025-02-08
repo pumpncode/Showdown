@@ -3,14 +3,14 @@
 	"name": "Showdown",
     "display_name": "Showdown",
 	"author": ["Mistyk__"],
-	"description": "A balatro mod made for fun",
+	"description": "A balatro mod made for fun. Thanks to Neyako for testing the mod!",
 	"prefix": "showdown",
 	"main_file": "main.lua",
 	"priority": 0,
 	"badge_colour": "#4287f5",
 	"badge_text_colour": "#000917",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"dependencies": [
-		"Steamodded (1.0.0~ALPHA-0917a)"
+		"Steamodded (1.0.0~ALPHA-1326a)"
 	]
 }
