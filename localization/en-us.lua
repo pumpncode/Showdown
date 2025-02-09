@@ -990,6 +990,15 @@ return {
                     "learn what it does"
                 }
             },
+            undiscovered_logic = {
+                name = "Not Discovered",
+                text = {
+                    "Purchase or use",
+                    "this card in an",
+                    "unseeded run to",
+                    "learn what it does"
+                }
+            },
             p_showdown_calculus_1 = {
                 name = 'Calculus Pack',
                 text = {
@@ -1127,6 +1136,13 @@ return {
                     '{C:showdown_calculus}Mega Mathematic Pack',
                 },
             },
+            tag_showdown_boolean = {
+                name = "Boolean Tag",
+                text = {
+                    'Give a free',
+                    '{C:showdown_logic}Mega Boolean Pack',
+                },
+            },
             tag_showdown_mystery_switch = {
                 name = "Mystery Switch",
                 text = {
@@ -1157,6 +1173,14 @@ return {
                 text = {
                     "Creates up to {C:attention}#1#",
                     "random {C:showdown_calculus}Mathematic{} card",
+                    "{C:inactive}(Must have room){}",
+                }
+            },
+            c_showdown_inventor = {
+                name = 'The Inventor',
+                text = {
+                    "Creates up to {C:attention}#1#",
+                    "random {C:showdown_logic}Logic{} card",
                     "{C:inactive}(Must have room){}",
                 }
             },
@@ -1312,6 +1336,50 @@ return {
                 }
             },
         },
+        Logic = {
+            c_showdown_and = {
+                name = 'AND',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_or = {
+                name = 'OR',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_xor = {
+                name = 'XOR',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_not = {
+                name = 'NOT',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_nand = {
+                name = 'NAND',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_nor = {
+                name = 'NOR',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_xnor = {
+                name = 'XNOR',
+                text = {
+                    'idk',
+                }
+            },
+        },
         Unique = {
             c_showdown_strange_thing = {
                 name = 'Strange Thing',
@@ -1359,11 +1427,13 @@ return {
             k_showdown_mysterious_tarot = 'Tarot?',
             k_unlocked = 'Unlocked!',
             k_mathematic = "Mathematic",
+            k_logic = "Logic",
             k_plus_math="+1 Mathematic",
             k_downgrade_ex="Downgrade!",
             k_can_reroll="Can reroll",
             k_cannot_reroll="Cannnot reroll",
             b_mathematic_cards = "Mathematic Cards",
+            b_logic_cards = "Logic Cards",
             b_pull = "PULL",
         },
         high_scores={},
@@ -1683,10 +1753,11 @@ return {
                 'that face!',
             },
             buying_other_self_6 = {
-                '',
+                'HOLY COW IS THAT',
+                'ANOTHER ME????',
             },
             buying_other_self_7 = {
-                '',
+                'no way',
             },
             buying_other_self_8 = {
                 '',
@@ -1709,19 +1780,19 @@ return {
                 'Goodbye me...',
             },
             selling_other_self_4 = {
-                '',
+                'WHAT??? WHY?????',
             },
             selling_other_self_5 = {
-                '',
+                'NOOOOOOOO D:',
             },
             selling_other_self_6 = {
-                '',
+                'why do u do dis',
             },
             selling_other_self_7 = {
-                '',
+                'What have you done?!',
             },
             selling_other_self_8 = {
-                '',
+                'And there I go...',
             },
             selling_other_self_9 = {
                 '',
@@ -1752,16 +1823,20 @@ return {
                 'shop already?',
             },
             ending_shop_6 = {
-                '',
+                'Did you put anything',
+                'in your pockets? Can',
+                'I check?',
             },
             ending_shop_7 = {
-                '',
+                'You didn\'t spend',
+                'all your money',
+                'this time?',
             },
             ending_shop_8 = {
-                '',
+                'I love shopping.',
             },
             ending_shop_9 = {
-                '',
+                ':)',
             },
             ending_shop_10 = {
                 '',
@@ -1784,13 +1859,15 @@ return {
                 'this economy?',
             },
             skip_blind_5 = {
-                '',
+                'heh, tag.',
             },
             skip_blind_6 = {
-                '',
+                'Do you like',
+                'playing Tag?',
             },
             skip_blind_7 = {
-                '',
+                'Oooooh a',
+                'juicy tag!',
             },
             skip_blind_8 = {
                 '',
@@ -1807,20 +1884,21 @@ return {
             },
             skipping_booster_2 = {
                 'You\'re skipping',
-                'a booster?.',
+                'a booster?',
             },
             skipping_booster_3 = {
                 'Was it',
                 'disappointing?',
             },
             skipping_booster_4 = {
-                '',
+                'But the cards... :(',
             },
             skipping_booster_5 = {
-                '',
+                'You\'re skipping?',
             },
             skipping_booster_6 = {
-                '',
+                'You could have',
+                'took one at least.',
             },
             skipping_booster_7 = {
                 '',
@@ -1849,7 +1927,7 @@ return {
                 'still building?',
             },
             setting_blind_5 = {
-                '',
+                'This will be easy!',
             },
             setting_blind_6 = {
                 '',
@@ -1942,7 +2020,8 @@ return {
                 'fking {C:blue}BLUE{}',
             },
             using_planet_8 = {
-                '',
+                'Is there the',
+                'Kuiper Belt?',
             },
             using_planet_9 = {
                 '',
@@ -1985,10 +2064,11 @@ return {
                 'trick?',
             },
             using_spectral_9 = {
-                '',
+                'Is it halloween?',
             },
             using_spectral_10 = {
-                '',
+                'You should be careful',
+                'with these.',
             },
             using_mathematic_1 = {
                 'All alone doing',
@@ -2008,21 +2088,53 @@ return {
                 'favourite number?',
             },
             using_mathematic_5 = {
-                '',
+                'I love math',
+                'so much',
             },
             using_mathematic_6 = {
-                '',
+                'What\'s 9 + 10?',
             },
             using_mathematic_7 = {
-                '',
+                '7',
             },
             using_mathematic_8 = {
-                '',
+                'Mathematic is',
+                'mathemagic!',
             },
             using_mathematic_9 = {
-                '',
+                'The numbers Mason!',
             },
             using_mathematic_10 = {
+                '',
+            },
+            using_logic_1 = {
+                'It\'s logic.',
+            },
+            using_logic_2 = {
+                'It\'s that simple.',
+            },
+            using_logic_3 = {
+                '',
+            },
+            using_logic_4 = {
+                '',
+            },
+            using_logic_5 = {
+                '',
+            },
+            using_logic_6 = {
+                '',
+            },
+            using_logic_7 = {
+                '',
+            },
+            using_logic_8 = {
+                '',
+            },
+            using_logic_9 = {
+                '',
+            },
+            using_logic_10 = {
                 '',
             },
             using_code_1 = {
@@ -2054,16 +2166,21 @@ return {
                 'made with code.',
             },
             using_code_7 = {
-                '',
+                'i love chewing',
+                'on 0s and 1s',
             },
             using_code_8 = {
-                '',
+                'public class HelloWorld {',
+                '   public static void main(String[] args) {',
+                '       System.out.println("Hello world!");',
+                '   }',
+                '}',
             },
             using_code_9 = {
-                '',
+                'I hate C.',
             },
             using_code_10 = {
-                '',
+                'I love Lua!',
             },
             using_unknown_1 = {
                 'What is this?',
@@ -2113,13 +2230,15 @@ return {
                 'your cards?',
             },
             in_blind_3 = {
-                '',
+                'Did you know?',
             },
             in_blind_4 = {
-                '',
+                'Oooooh look at',
+                'all these cards!',
             },
             in_blind_5 = {
-                '',
+                'What are you',
+                'planning to do...',
             },
             in_blind_6 = {
                 '',
@@ -2141,19 +2260,23 @@ return {
                 'at the cards?',
             },
             in_booster_2 = {
-                '',
+                'How much are there?',
             },
             in_booster_3 = {
-                '',
+                'You do like to',
+                'open boosters.',
             },
             in_booster_4 = {
-                '',
+                'Cmon, pick one!',
             },
             in_booster_5 = {
-                '',
+                'You should pick',
+                'this one.',
             },
             in_booster_6 = {
-                '',
+                'Imagine how much',
+                'chips you could make',
+                'with these!',
             },
             in_booster_7 = {
                 '',
@@ -2247,38 +2370,6 @@ return {
                 'I love',
                 'cheese.',
             },
-            --[[
-            _1 = {
-                '',
-            },
-            _2 = {
-                '',
-            },
-            _3 = {
-                '',
-            },
-            _4 = {
-                '',
-            },
-            _5 = {
-                '',
-            },
-            _6 = {
-                '',
-            },
-            _7 = {
-                '',
-            },
-            _8 = {
-                '',
-            },
-            _9 = {
-                '',
-            },
-            _10 = {
-                '',
-            },
-            ]]--
         },
         ranks={
             ['showdown_2.5'] = '2.5',
@@ -2294,7 +2385,6 @@ return {
         tutorial={},
         v_dictionary={
             a_chips_mult = '+#1# Chips, +#2# Mult',
-            a_xchips="X#1# Chips",
         },
         v_text={},
     },

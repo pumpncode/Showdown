@@ -341,15 +341,25 @@ SMODS.Atlas({key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png",
 SMODS.DeckSkin({
 	key = "JeanPaul",
 	suit = "Clubs",
-	ranks = {
-		"Jack", "Queen", "King"
-	},
-	lc_atlas = "showdown_jean_paul",
-	hc_atlas = "showdown_jean_paul_hc",
 	loc_txt = {
-        ['en-us'] = 'Jean-Paul'
-    },
-	posStyle = 'collab'
+		['en-us'] = 'Jean-Paul'
+	},
+	palettes = {
+		{
+			key = 'lc',
+			ranks = {'Queen', "King", "Ace",},
+			display_ranks = {"King", "Queen", "Jack"},
+			atlas = 'showdown_jean_paul',
+			pos_style = 'collab',
+		},
+		{
+			key = 'hc',
+			ranks = {'Queen', "King", "Ace",},
+			display_ranks = {"King", "Queen", "Jack"},
+			atlas = 'showdown_jean_paul_hc',
+			pos_style = 'collab',
+		},
+	}
 })
 
 ---- Decks
@@ -459,14 +469,6 @@ function find_consumable(name, non_debuff)
 		end
 	end
 	return consumeables
-end
-
-SMODS.Sound({key = "xchips", path = "xchips.ogg"}) -- Thanks Talisman (doesn't work rn :<)
-
-function do_x_chips(x_chips, card)
-	hand_chips = mod_chips(hand_chips * x_chips)
-	update_hand_text({delay = 0}, {chips = hand_chips})
-	card_eval_status_text(card, 'xchips', x_chips, percent, nil, nil)
 end
 
 ---- Counterpart Cards
@@ -954,6 +956,10 @@ SMODS.Consumable({ -- Blue Key
 
 filesystem.load(itemsPath.."MathematicCards.lua")()
 
+-- Logic (joker and tags interactions)
+
+filesystem.load(itemsPath.."LogicCards.lua")()
+
 ---- Vouchers
 
 SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
@@ -1105,9 +1111,10 @@ SMODS.Enhancement({
 	end,
 	calculate = function(self, card, context)
 		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
-			do_x_chips(card.ability.extra.x_chips, card)
 			return {
-				x_mult = card.ability.extra.x_mult
+				x_mult = card.ability.extra.x_mult,
+				x_chips = card.ability.extra.x_chips,
+				card = card
 			}
 		end
 	end
@@ -1136,108 +1143,14 @@ SMODS.Enhancement({
 
 ---- Tags
 
-SMODS.Atlas({key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34})
-
 filesystem.load(itemsPath.."Tags.lua")()
 
 ---- Blinds
 
-SMODS.Atlas({key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atlas_table = "ANIMATION_ATLAS", frames = 21})
-
-SMODS.Blind({
-	key = "latch",
-	name = "The Latch",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 0 },
-	no_collection = true,
-	boss_colour = G.C.GREY,
-	boss = { min = 1 },
-	mult = 3,
-	defeat = function(self)
-		if next(find_joker('4_locks')) then
-			local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
-			if not lockJ.ability.extra.locks[4] then
-				lockJ.ability.extra.locks[4] = true
-				forced_message(localize('k_unlocked'), lockJ, G.C.YELLOW, true)
-			end
-		end
-	end,
-	in_pool = function(self, args)
-		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[4]
-	end
-})
-
-SMODS.Blind({
-	key = "patient",
-	name = "The Patient",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 1 },
-	boss_colour = G.C.BLUE,
-	boss = { min = 2 },
-	mult = 2,
-})
-
-function SMODS.patient_gain_score(blind) -- Thanks Bunco
-	if not G.GAME.patient_scoring then G.GAME.patient_scoring = { score = blind.chips, triggers = 0 } end
-	G.GAME.patient_scoring.triggers = G.GAME.patient_scoring.triggers + 1
-    local final_chips = (G.GAME.patient_scoring.score / 100) * (100 + 50 * G.GAME.patient_scoring.triggers)
-    local chip_mod -- iterate over ~120 ticks
-    if type(blind.chips) ~= 'table' then
-        chip_mod = math.ceil((G.GAME.blind.chips + final_chips) / 120)
-    else
-        chip_mod = ((G.GAME.blind.chips + final_chips) / 120):ceil()
-    end
-    local step = 0
-    G.E_MANAGER:add_event(Event({trigger = 'after', blocking = true, func = function()
-        blind.chips = blind.chips + G.SETTINGS.GAMESPEED * chip_mod
-        if blind.chips < final_chips then
-            blind.chip_text = number_format(blind.chips)
-            if step % 5 == 0 then
-                play_sound('chips1', 1.0 + (step * 0.005))
-            end
-            step = step + 1
-        else
-            blind.chips = final_chips
-            blind.chip_text = number_format(blind.chips)
-            return true
-        end
-    end}))
-end
---[[
-SMODS.Blind({
-	key = "shameful",
-	name = "The Shameful",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 2 },
-	boss_colour = G.C.YELLOW,
-	boss = { min = 1 },
-	mult = 2,
-})
-]]--
-SMODS.Blind({
-	key = "wasteful",
-	name = "The Wasteful",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 3 },
-	boss_colour = G.C.RED,
-	boss = { min = 2 },
-	mult = 2,
-	debuff_hand = function(self, cards, hand, handname, check)
-		return G.GAME.current_round.discards_left > 0
-	end
-})
-
-local gnb = get_new_boss
-function get_new_boss()
-	for k, v in pairs(G.P_BLINDS) do
-		if not G.GAME.bosses_used[k] then
-			G.GAME.bosses_used[k] = 0
-		end
-	end
-	return gnb()
-end
+filesystem.load(itemsPath.."Blinds.lua")()
 
 ---- Stickers
+
 SMODS.Atlas({key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95})
 
 SMODS.Sticker({
@@ -1260,7 +1173,14 @@ SMODS.Sticker({
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	calculate = function(self, card, context)
-		if (context.joker_main and context.cardarea == G.jokers) or (not context.repetition and (context.cardarea == G.play or context.cardarea == G.hand)) then
+		if
+			not context.repetition
+			and (
+				(context.joker_main and context.cardarea == G.jokers)
+				or (context.main_scoring and context.cardarea == G.play)
+				--or ((card.ability.set == 'Default' or card.ability.set == 'Enhanced') and context.cardarea == G.hand)
+			)
+		then
 			ease_dollars(2)
 			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + 2
 			G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
@@ -1279,15 +1199,15 @@ SMODS.Sticker({
 	badge_colour = HEX("F00808"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val)
-		print(card.ability.name)
-		if card.area == G.shop_jokers then
+	apply = function(self, card, val, debug)
+		if debug then
 			card.ability[self.key] = val
+			if G.hand then G.hand:change_size(val and 1 or -1) end
 		else
-			if val then
-				G.hand:change_size(1)
+			if not G.hand or card.area == G.shop_jokers then
+				card.ability[self.key] = val
 			else
-				G.hand:change_size(-1)
+				G.hand:change_size(val and 1 or -1)
 			end
 		end
 	end,
@@ -1300,14 +1220,15 @@ SMODS.Sticker({
 	badge_colour = HEX("F87800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val)
-		if card.area == G.shop_jokers then
+	apply = function(self, card, val, debug)
+		if debug then
 			card.ability[self.key] = val
+			if G.consumeables then G.consumeables:change_size(val and 1 or -1) end
 		else
-			if val then
-				G.consumeables:change_size(1)
+			if not G.consumeables or card.area == G.shop_jokers then
+				card.ability[self.key] = val
 			else
-				G.consumeables:change_size(-1)
+				G.consumeables:change_size(val and 1 or -1)
 			end
 		end
 	end,
@@ -1320,23 +1241,20 @@ SMODS.Sticker({
 	badge_colour = HEX("006800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	--[[calculate = function(self, card, context)
-		if context.joker_main then
+	calculate = function(self, card, context)
+		if
+			not context.repetition
+			and (
+				(context.joker_main and context.cardarea == G.jokers)
+				or (context.main_scoring and context.cardarea == G.play)
+				--or ((card.ability.set == 'Default' or card.ability.set == 'Enhanced') and context.cardarea == G.hand)
+			)
+		then
 			return {
-                message = 'X1.5 Mult',
-                Xmult_mod = 1.5,
+                message = localize{type='variable',key='a_xmult',vars={1.5}},
+                x_mult = 1.5,
                 colour = G.C.RED,
 			}
-		end
-	end,]]--
-	apply = function(self, card, val)
-		card.ability[self.key] = val
-		if val then
-			card.ability.x_mult = card.ability.x_mult + 0.5
-			card.ability.h_x_mult = card.ability.h_x_mult + 0.5
-		else
-			card.ability.x_mult = card.ability.x_mult - 0.5
-			card.ability.h_x_mult = card.ability.h_x_mult - 0.5
 		end
 	end,
 })
@@ -1351,7 +1269,7 @@ SMODS.Sticker({
 	calculate = function(self, card, context)
 		if
 			-- Joker (doesn't work)
-			(card.ability.set == "Joker" and not context.blueprint and context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card)
+			(context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card)
 			-- Playing Card
 			or ((card.ability.set == "Default" or card.ability.set == "Enhanced") and context.repetition)
 		then
@@ -1399,13 +1317,6 @@ end
 
 ---- Jokers
 
-SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43})
-
-SMODS.Sound({key = "cronch", path = "cronch.ogg"})
-
 filesystem.load(itemsPath.."Jokers.lua")()
 
 ---- Achievements
@@ -1441,12 +1352,12 @@ if debugplus then
 				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
 					if _card.ability.showdown_cloud then
 						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, true)
 					elseif _card.ability.showdown_mushroom then
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, true)
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, true)
 					elseif _card.ability.showdown_flower then
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, true)
 						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 					elseif _card.ability.showdown_luigi then
 						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)

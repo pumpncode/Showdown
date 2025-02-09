@@ -194,6 +194,8 @@ create_joker({
                     say(card, {blabla = ('using_spectral'), prob = 2})
                 elseif context.consumeable.ability.set == 'Mathematic' then
                     say(card, {blabla = ('using_mathematic'), prob = 2})
+                elseif context.consumeable.ability.set == 'Logic' then
+                    say(card, {blabla = ('using_logic'), prob = 2})
                 elseif context.consumeable.ability.set == 'Code' then
                     say(card, {blabla = ('using_code'), prob = 2})
                 else

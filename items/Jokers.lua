@@ -1,3 +1,10 @@
+SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
+SMODS.Atlas({key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43})
+
+SMODS.Sound({key = "cronch", path = "cronch.ogg"})
+
 ---- Final Rarity
 
 SMODS.Rarity{
@@ -57,7 +64,10 @@ create_joker({ -- Pinpoint
     end,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.hand and context.full_hand and SMODS.is_zero(context.other_card) then
-            do_x_chips(card.ability.extra.x_chips, context.other_card)
+            return {
+                x_chips = card.ability.extra.x_chips,
+                card = context.other_card
+            }
         end
     end
 })
@@ -757,10 +767,10 @@ create_joker({ -- Ultimate Joker
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if context.joker_main and G.GAME.round > 1 then
-            do_x_chips(G.GAME.round, card)
             return {
-                message = 'X' .. G.GAME.round,
+                message = localize{type='variable',key='a_xmult',vars={G.GAME.round}},
                 Xmult_mod = G.GAME.round,
+                x_chips = G.GAME.round,
                 colour = G.C.PURPLE,
                 card = card
             }

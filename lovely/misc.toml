@@ -14,7 +14,7 @@ payload = '''
 if _RELEASE_MODE then
 '''
 
-# Counterpart ranks and mathematic color, part 1/2
+# Text colors, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'globals.lua'
@@ -26,9 +26,11 @@ COUNTERPART_RANKS = HEX('485fab'),
 SHOWDOWN_CALCULUS = HEX('b84242'),
 SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
 SWITCH = HEX('acc3f0'),
+SHOWDOWN_LOGIC = HEX('808080'),
+SHOWDOWN_LOGIC_DARK = HEX('595959'),
 '''
 
-# Counterpart ranks and mathematic color, part 2/2
+# Text colors, part 2/2
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -39,6 +41,8 @@ payload = '''
 counterpart_ranks = G.C.COUNTERPART_RANKS,
 showdown_calculus = G.C.SHOWDOWN_CALCULUS,
 showdown_calculus_dark = G.C.SHOWDOWN_CALCULUS_DARK,
+showdown_logic = G.C.SHOWDOWN_LOGIC,
+showdown_logic_dark = G.C.SHOWDOWN_LOGIC_DARK,
 '''
 
 # Init Showdown global through lovely
@@ -53,25 +57,6 @@ Showdown = {}
 Showdown.extraSuits = {}
 Showdown.versatile = {}
 Showdown.casino = {}
-'''
-
-# xChips eval state
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-match_indent = true
-pattern = '''elseif eval_type == 'h_mult' then'''
-position = "before"
-payload = '''
-elseif eval_type == 'xchips' then 
-    --sound = 'xchips'
-    sound = 'foil2'
-    volume = 0.7
-    amt = amt
-    text = localize{type='variable',key='a_xchips',vars={amt}}
-    colour = G.C.CHIPS
-    config.type = 'fade'
-    config.scale = 0.7
 '''
 
 # Casino stickers apply

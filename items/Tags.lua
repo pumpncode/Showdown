@@ -1,3 +1,5 @@
+SMODS.Atlas({key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34})
+
 SMODS.Tag({
 	key = "green_key",
 	atlas = "showdown_tags",
@@ -31,15 +33,13 @@ SMODS.Tag({
 	min_ante = 8,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+			if G.jokers then
 				local lock = tag.ID
                 G.CONTROLLER.locks[lock] = true
                 tag:yep('+', G.C.GREEN, function()
-					if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
-						local card = create_card("Joker", G.jokers, nil, 0.8, nil, nil, 'j_showdown_jean_paul', 'jean_paul')
-						card:add_to_deck()
-						G.jokers:emplace(card)
-					end
+					local card = create_card("Joker", G.jokers, nil, 0.8, nil, nil, 'j_showdown_jean_paul', 'jean_paul')
+					card:add_to_deck()
+					G.jokers:emplace(card)
                 	G.CONTROLLER.locks[lock] = nil
 					check_for_unlock({ type = 'jean_paul_tag' })
                 	return true
@@ -91,7 +91,7 @@ SMODS.Tag({
 	key = "mystery_switch",
 	atlas = "showdown_tags",
 	pos = coordinate(11),
-	min_ante = 2,
+	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "new_blind_choice" then
 			tag:yep("+", G.C.SWITCH, function()

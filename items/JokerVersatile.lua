@@ -75,7 +75,10 @@ end }
 Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_checkered', pos = coordinate(11), blueprint = true, effect = function(self, card, context)
     if context.individual and context.cardarea == G.play then
         if context.other_card:is_suit("Spades") and pseudorandom('versatile_checkered') < G.GAME.probabilities.normal/card.ability.extra.spades_odd then
-            do_x_chips(card.ability.extra.spades, card)
+            return {
+                x_chips = card.ability.extra.spades,
+                card = card
+            }
         end
         if context.other_card:is_suit("Hearts") then
             return {

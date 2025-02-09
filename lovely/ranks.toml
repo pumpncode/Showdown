@@ -43,7 +43,6 @@ if specific_vars.default_wild then
 end
 '''
 
-# Doesn't patch
 # Counterpart and 0 card descriptions, part 2/3
 [[patches]]
 [patches.pattern]
@@ -108,26 +107,11 @@ if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G
 end
 '''
 
-# Doesn't patch
-# 0 count as all suits even when debuffed, part 1/2
+# 0 count as all suits even when debuffed
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = '''
-if self.debuff and not bypass_debuff then return end
-if SMODS.has_no_suit(self) then
-'''
-position = "before"
-match_indent = true
-payload = '''
-if SMODS.is_zero(self) then return true end
-'''
-
-# 0 count as all suits even when debuffed, part 2/2
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = '''if flush_calc then'''
+pattern = '''function Card:is_suit(suit, bypass_debuff, flush_calc)'''
 position = "after"
 match_indent = true
 payload = '''
