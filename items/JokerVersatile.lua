@@ -119,8 +119,47 @@ end, remove_from_deck = function(self, card, from_debuff)
 end }
 Showdown.versatile['Anaglyph Deck'] = { desc = 'j_showdown_versatile_joker_anaglyph', pos = coordinate(14), blueprint = false }
 Showdown.versatile['Plasma Deck'] = { desc = 'j_showdown_versatile_joker_plasma', pos = coordinate(15), blueprint = false }
-Showdown.versatile['Erratic Deck'] = { desc = 'j_showdown_versatile_joker_erratic', pos = coordinate(16), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Erratic Deck'] = { desc = 'j_showdown_versatile_joker_erratic', pos = coordinate(16), blueprint = true, effect = function(self, card, context)
+    if context.end_of_round and not context.repetition and not context.individual then
+        local ranks, suits = {}, {}
+        for _, _card in ipairs(G.playing_cards) do
+            if not ranks[_card.base.value] then ranks[_card.base.value] = 1
+            else ranks[_card.base.value] = ranks[_card.base.value] + 1 end
+            if not suits[_card.base.suit] then suits[_card.base.suit] = 1
+            else suits[_card.base.suit] = suits[_card.base.suit] + 1 end
+        end
+        local finalRank, finalRankNB = 'Ace', 0
+        for k, v in pairs(ranks) do if v > finalRankNB then
+            finalRank = k
+            finalRankNB = v
+        end end
+        local finalSuit, finalSuitNB = 'Spades', 0
+        for k, v in pairs(suits) do if v > finalSuitNB then
+            finalSuit = k
+            finalSuitNB = v
+        end end
+        local created_card = get_card_from_rank_suit(finalRank, finalSuit)
+        if created_card then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                    local _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+                    _card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+                    G.play:emplace(_card)
+                    table.insert(G.playing_cards, _card)
+                    return true
+            end}))
+            delay(0.6)
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    G.deck.config.card_limit = G.deck.config.card_limit + 1
+                    return true
+            end}))
+            draw_card(G.play,G.deck, 90,'up', nil)
+            playing_card_joker_effects({true})
+            delay(0.2)
+        end
+    end
 end }
 Showdown.versatile['Challenge Deck'] = { desc = 'j_showdown_versatile_joker_challenge', pos = coordinate(17), blueprint = false, add_to_deck = function(self, card, from_debuff)
     ease_hands_played(1)
@@ -164,9 +203,7 @@ Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calcu
     end
 end }
 Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
-Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(21), blueprint = false, effect = function(self, card, context)
-    --
-end }
+Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_cheater', pos = coordinate(21), blueprint = false }
 
 ---Get deck specifications for Versatile Joker
 ---@param type string

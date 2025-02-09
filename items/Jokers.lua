@@ -388,15 +388,16 @@ create_joker({ -- Baby Jimbo
     name = 'baby_jimbo',
     atlas = "showdown_jokers",
     pos = coordinate(16),
+    vars = {{sold = false}},
     rarity = 'Uncommon', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if
             context.removing_card
+            and not card.ability.extra.sold
             and context.removed_card
             and context.removed_card ~= card
             and context.removed_card.ability.set == 'Joker'
-            and not context.removed_card_is_sold
             and G.GAME.latest_area_baby_jimbo
             and G.GAME.latest_area_baby_jimbo == G.jokers
         then
@@ -418,6 +419,10 @@ create_joker({ -- Baby Jimbo
                 colour = G.C.SECONDARY_SET.Spectral,
                 card = card
             }
+        elseif context.selling_card and context.card ~= card then
+            card.ability.extra.sold = true
+        elseif context.post_removing then
+            card.ability.extra.sold = false
         end
     end
 })
@@ -802,7 +807,7 @@ create_joker({ -- Strainer
                         G.E_MANAGER:add_event(Event({
                             func = function()
                                 G.playing_card = (G.playing_card and G.playing_card + 1) or 1
-                                local _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, get_card_from_rank_suit(rank, suit), G.P_CENTERS.c_base, {playing_card = G.playing_card})
+                                local _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
                                 _card:start_materialize({G.C.SECONDARY_SET.Enhanced})
                                 G.play:emplace(_card)
                                 table.insert(G.playing_cards, _card)

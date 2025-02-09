@@ -103,7 +103,8 @@ function create_joker(joker) -- (Thanks Bunco)
 
     -- Config values
     if not joker.vars then joker.vars = {} end
-    joker.config = {extra = {}}
+	if joker.config and not joker.config.extra then joker.config.extra = {} end
+    joker.config = joker.config or {extra = {}}
     for _, kv_pair in ipairs(joker.vars) do
         -- kv_pair is {a = 1}
         local k, v = next(kv_pair)
@@ -388,13 +389,9 @@ SMODS.Back{ -- Cheater Deck
 	atlas = "showdown_decks",
 	pos = coordinate(4),
 	config = { showdown_cheater = true },
-	calculate = function (self, back, context)
-		if context.destroy_card and context.cardarea == G.play then
-			if pseudorandom('cheater') < G.GAME.probabilities.normal/G.GAME.cheater_destroy_odd then
-				return { remove = true } -- I have to make this fucking thing work
-			end
-		end
-	end
+    loc_vars = function(self, info_queue, card)
+        return { vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
+	end,
 }
 
 local function give_starter()
@@ -429,12 +426,17 @@ local function give_starter()
 		local randomVoucher = pseudorandom_element(vouchers)
 		G.GAME.used_vouchers[randomVoucher] = true
 		G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
-		Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
+		G.E_MANAGER:add_event(Event({
+            func = function()
+                Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
+                return true
+            end
+        }))
 	end
 end
 
 local Backapply_to_runRef = Back.apply_to_run
-function Back.apply_to_run(self)
+function Back:apply_to_run()
 	Backapply_to_runRef(self)
 	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
 	if self.effect.config.showdown_starter then
@@ -503,6 +505,7 @@ SMODS.Rank({ -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
+	counterpart = true,
 	max_id = {
 		value = -3,
 	},
@@ -522,6 +525,7 @@ SMODS.Rank({ -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
+	counterpart = true,
 	max_id = {
 		value = -6,
 	},
@@ -541,6 +545,7 @@ SMODS.Rank({ -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
+	counterpart = true,
 	max_id = {
 		value = -9,
 	},
@@ -562,6 +567,7 @@ SMODS.Rank({ -- Butler Card
 	face_nominal = 0.1,
 	next = { 'showdown_Princess', 'Queen' },
 	face = true,
+	counterpart = true,
 	max_id = {
 		value = -12,
 	},
@@ -583,6 +589,7 @@ SMODS.Rank({ -- Princess Card
 	face_nominal = 0.2,
 	next = { 'showdown_Lord', 'King' },
 	face = true,
+	counterpart = true,
 	max_id = {
 		value = -13,
 	},
@@ -604,6 +611,7 @@ SMODS.Rank({ -- Lord Card
 	face_nominal = 0.3,
 	next = { 'Ace' },
 	face = true,
+	counterpart = true,
 	max_id = {
 		value = -14,
 	},
@@ -1130,60 +1138,7 @@ SMODS.Enhancement({
 
 SMODS.Atlas({key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34})
 
-SMODS.Tag({
-	key = "green_key",
-	atlas = "showdown_tags",
-	pos = coordinate(1),
-	no_collection = true,
-	apply = function(self, tag, context)
-		if context.type == "immediate" then
-			if next(find_joker('4_locks')) then
-				local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
-				tag:yep("+", G.C.GREEN, function()
-					if not lockJ.ability.extra.locks[3] then
-						lockJ.ability.extra.locks[3] = true
-						forced_message(localize('k_unlocked'), lockJ, G.C.GREEN, true)
-					end
-					return true
-				end)
-				tag.triggered = true
-				return true
-			end
-		end
-	end,
-	in_pool = function(self, args)
-		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[3]
-	end
-})
-
-SMODS.Tag({
-	key = "jean_paul",
-	atlas = "showdown_tags",
-	pos = coordinate(2),
-	min_ante = 8,
-	apply = function(self, tag, context)
-		if context.type == "immediate" then
-			if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
-				local lock = tag.ID
-                G.CONTROLLER.locks[lock] = true
-                tag:yep('+', G.C.GREEN, function()
-					if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
-						local card = create_card("Joker", G.jokers, nil, 0.8, nil, nil, 'j_showdown_jean_paul', 'jean_paul')
-						card:add_to_deck()
-						G.jokers:emplace(card)
-					end
-                	G.CONTROLLER.locks[lock] = nil
-					check_for_unlock({ type = 'jean_paul_tag' })
-                	return true
-                end)
-			else
-				tag:nope()
-			end
-            tag.triggered = true
-            return true
-		end
-	end
-})
+filesystem.load(itemsPath.."Tags.lua")()
 
 ---- Blinds
 

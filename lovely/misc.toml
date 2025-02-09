@@ -25,6 +25,7 @@ payload = '''
 COUNTERPART_RANKS = HEX('485fab'),
 SHOWDOWN_CALCULUS = HEX('b84242'),
 SHOWDOWN_CALCULUS_DARK = HEX('8a3434'),
+SWITCH = HEX('acc3f0'),
 '''
 
 # Counterpart ranks and mathematic color, part 2/2

@@ -30,7 +30,10 @@ return {
             b_showdown_Cheater = {
                 name = 'Cheater Deck',
                 text = {
-                    'idk',
+                    'Start with all faces and a 0',
+                    'Played hand creates a face or a 0',
+                    'Scored card have a {C:green}#1# in 6{}',
+                    'chance to be {C:red}destroyed',
                 }
             },
         },
@@ -814,7 +817,10 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Erratic Deck',
+                    'At the end of each round,',
+                    '{C:attention}creates{} a card with rank',
+                    'and suit {C:attention}equals{} to {C:attention}highest',
+                    'count of rank and suit in deck',
                 },
                 unlock = {
                     'Win a run with any',
@@ -870,6 +876,18 @@ return {
                     'You start your {C:attention}next run{} with a {C:attention}random',
                     'joker, consumable and voucher after',
                     '{C:attention}winning{} this run',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_cheater = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Deck no longer {C:attention}destroy{} cards',
                 },
                 unlock = {
                     'Win a run with any',
@@ -977,7 +995,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
-                    'be used immediately'
+                    'pull to your hand'
                 }
             },
             p_showdown_calculus_2 = {
@@ -985,7 +1003,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
-                    'be used immediately'
+                    'pull to your hand'
                 }
             },
             p_showdown_calculus_jumbo = {
@@ -993,7 +1011,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_calculus} Mathematic{} cards to',
-                    'be used immediately'
+                    'pull to your hand'
                 }
             },
             p_showdown_calculus_mega = {
@@ -1001,7 +1019,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2# {C:showdown_calculus}Mathematic{} cards to',
-                    'be used immediately'
+                    'pull to your hand'
                 }
             },
             playing_card_zero={
@@ -1102,6 +1120,20 @@ return {
                     'hiiiiiii :P',
                 },
             },
+            tag_showdown_theorem = {
+                name = "Theorem Tag",
+                text = {
+                    'Give a free',
+                    '{C:showdown_calculus}Mega Mathematic Pack',
+                },
+            },
+            tag_showdown_mystery_switch = {
+                name = "Mystery Switch",
+                text = {
+                    'Give a free',
+                    '{C:attention}Random Pack',
+                },
+            },
         },
         Tarot={
             c_showdown_reflection = {
@@ -1180,7 +1212,7 @@ return {
                 },
                 unlock = {
                     'Open {C:attention}10{} {C:showdown_calculus}Calculus',
-                    '{C:showdown_calculus}Pack{} in one run',
+                    '{C:showdown_calculus}Packs{} in one run',
                 }
             },
             v_showdown_collatz = {
@@ -1194,15 +1226,17 @@ return {
             v_showdown_lui = {
                 name = 'L U I',
                 text = {
-                    'Joker have a {C:green}1 in 4{} chance to',
+                    'Jokers and Playing Cards',
+                    'have a {C:green}1 in 4{} chance to',
                     'spawn with a {C:attention}Casino Sticker',
                 }
             },
             v_showdown_gi = {
                 name = 'G I',
                 text = {
-                    'Joker {C:attention}always{} spawn',
-                    'with a {C:attention}Casino Sticker',
+                    'Jokers and Playing Cards',
+                    '{C:attention}always{} spawn with a',
+                    '{C:attention}Casino Sticker',
                 },
                 unlock = {
                     'idk',

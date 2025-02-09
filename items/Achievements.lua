@@ -17,7 +17,7 @@ SMODS.Achievement({ -- :(
 	end,
 })
 
-SMODS.Achievement({ -- :D (not implemented)
+SMODS.Achievement({ -- :D
     key = 'jean_paul_tag',
     hidden_text = true,
     unlock_condition = function(self, args)

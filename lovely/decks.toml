@@ -4,7 +4,20 @@ dump_lua = true
 #priority = -20
 priority = 0
 
-# Counterpart don't spawn in decks except the counterpart deck, part 1/3
+# Other decks don't have counterpart
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face then keep = false end"
+position = 'after'
+match_indent = true
+payload = '''
+if not (self.GAME.starting_params.counterpart_replacing or self.GAME.showdown_cheater) and (SMODS.Ranks[v.value].counterpart or _r == 'showdown_Z') then 
+    keep = false
+end
+'''
+
+# Mirror deck cards, part 1/3
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -15,7 +28,7 @@ payload = '''
 counterpart_replacing = false,
 '''
 
-# Counterpart don't spawn in decks except the counterpart deck, part 2/3
+# Mirror deck cards, part 2/3
 [[patches]]
 [patches.pattern]
 target = 'back.lua'
@@ -28,7 +41,7 @@ if self.effect.config.counterpart_replacing then
 end
 '''
 
-# Counterpart don't spawn in decks except the counterpart deck, part 3/3
+# Mirror deck cards, part 3/3
 [[patches]]
 [patches.pattern]
 target = 'game.lua'
@@ -36,8 +49,7 @@ pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face t
 position = 'after'
 match_indent = true
 payload = '''
-if (self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A'))
-or ((not self.GAME.starting_params.counterpart_replacing) and (_r == 'showdown_L' or _r == 'showdown_P' or _r == 'showdown_B' or _r == 'showdown_W' or _r == 'showdown_F' or _r == 'showdown_E' or _r == 'showdown_Z')) then 
+if self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A') then 
     keep = false
 end
 '''
@@ -63,4 +75,59 @@ position = "at"
 match_indent = true
 payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
+'''
+
+# Cheater deck cards, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = "erratic_suits_and_ranks = false,"
+position = 'after'
+match_indent = true
+payload = '''
+showdown_cheater = false,
+'''
+
+# Cheater deck cards, part 2/3
+[[patches]]
+[patches.pattern]
+target = 'back.lua'
+pattern = "if self.effect.config.spectral_rate then"
+position = 'before'
+match_indent = true
+payload = '''
+if self.effect.config.showdown_cheater then
+    G.GAME.showdown_cheater = true
+end
+'''
+
+# Cheater deck cards, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face then keep = false end"
+position = 'after'
+match_indent = true
+payload = '''
+if self.GAME.showdown_cheater and not SMODS.Ranks[v.value].face then
+    if _r == 'showdown_Z' and not self.GAME.showdown_cheater_zero then
+        keep = true
+        self.GAME.showdown_cheater_zero = true
+    else
+        keep = false
+    end
+end
+'''
+
+# Cheater deck card destruction
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "if SMODS.has_enhancement(scoring_hand[i], 'm_glass') and not scoring_hand[i].debuff and pseudorandom('glass') < G.GAME.probabilities.normal/(scoring_hand[i].ability.name == 'Glass Card' and scoring_hand[i].ability.extra or G.P_CENTERS.m_glass.config.extra) then"
+position = "before"
+match_indent = true
+payload = '''
+if G.GAME.selected_back.name == 'Cheater Deck' and not scoring_hand[i].debuff and pseudorandom('cheater') < G.GAME.probabilities.normal/6 and not next(find_joker('versatile_joker')) then 
+    destroyed = true
+end
 '''
