@@ -1150,6 +1150,40 @@ return {
                     '{C:attention}Random Pack',
                 },
             },
+            tag_showdown_money_switch = {
+                name = "Money Switch",
+                text = {
+                    'Gain {C:money}$#1#{} per Blind for',
+                    'the next {C:attention}#2#{} blinds',
+                },
+            },
+            tag_showdown_nebula_switch = {
+                name = "Nebula Switch",
+                text = {
+                    'Upgrades {C:attention}3 random hands',
+                    'by {C:attention}1 level',
+                },
+            },
+            tag_showdown_gift_switch = {
+                name = "Gift Switch",
+                text = {
+                    'Get either a {C:attention}random',
+                    'joker, consumable or {C:money}$#1#',
+                },
+            },
+            tag_showdown_burning_switch = {
+                name = "Burning Switch",
+                text = {
+                    'Next blind gives {C:attention}no money',
+                    'but hands give {C:attention}double money',
+                },
+            },
+            tag_showdown_duplicate_switch = {
+                name = "Duplicate Switch",
+                text = {
+                    'Gain {C:attention}3{} random tags',
+                },
+            },
         },
         Tarot={
             c_showdown_reflection = {
@@ -1435,6 +1469,8 @@ return {
             b_mathematic_cards = "Mathematic Cards",
             b_logic_cards = "Logic Cards",
             b_pull = "PULL",
+            ph_money_switch = "Money Switch",
+            ph_money_switch_end = "END",
         },
         high_scores={},
         labels={

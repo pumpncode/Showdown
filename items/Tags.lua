@@ -115,3 +115,149 @@ SMODS.Tag({
 		end
 	end
 })
+
+SMODS.Tag({
+	key = "money_switch",
+	atlas = "showdown_tags",
+	pos = coordinate(12),
+	config = { type = "eval", triggers = 4, dollars = 5 },
+	loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.dollars, tag.config.triggers } }
+	end,
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "eval" then
+			tag.config.triggers = tag.config.triggers - 1
+			if tag.config.triggers == 0 then
+				tag:yep(localize('ph_money_switch_end'), G.C.SWITCH, function()
+					return true
+				end)
+				tag.triggered = true
+			end
+			return {
+				dollars = tag.config.dollars,
+				condition = localize('ph_money_switch'),
+				pos = tag.pos,
+				atlas = 'showdown_tags',
+				tag = tag
+			}
+		end
+	end
+})
+
+SMODS.Tag({
+	key = "nebula_switch",
+	atlas = "showdown_tags",
+	pos = coordinate(13),
+	config = { type = "immediate", triggers = 3 },
+	loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.triggers } }
+	end,
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local hands = {}
+			for k, _ in pairs(G.GAME.hands) do
+				table.insert(hands, k)
+			end
+			tag:yep("+", G.C.SWITCH, function()
+				for _=1, tag.config.triggers do
+					local randomIdx = math.random(1, #hands)
+					local randomHand = hands[randomIdx]
+					update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(randomHand, 'poker_hands'),chips = G.GAME.hands[randomHand].chips, mult = G.GAME.hands[randomHand].mult, level=G.GAME.hands[randomHand].level})
+					level_up_hand(nil, randomHand)
+					update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+					table.remove(hands, randomIdx)
+				end
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+})
+
+SMODS.Tag({
+	key = "gift_switch",
+	atlas = "showdown_tags",
+	pos = coordinate(14),
+	config = { type = "immediate", money = 10 },
+	loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.money } }
+	end,
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep("+", G.C.SWITCH, function()
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			G.E_MANAGER:add_event(Event({
+				trigger = 'immediate',
+				func = function()
+					local rand = pseudorandom('gift_switch')
+					if rand < 1/3 and G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+						local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'gift_switch')
+						card:add_to_deck()
+						G.jokers:emplace(card)
+					elseif rand < 2/3 and G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+						local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, 'gift_switch')
+						card:add_to_deck()
+						G.consumeables:emplace(card)
+					else
+						ease_dollars(tag.config.money, true)
+					end
+					return true
+				end
+			}))
+			tag.triggered = true
+			return true
+		end
+	end
+})
+
+SMODS.Tag({
+	key = "burning_switch",
+	atlas = "showdown_tags",
+	pos = coordinate(15),
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			tag:yep("+", G.C.SWITCH, function()
+				G.GAME.burning_double_hands = true
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+})
+
+SMODS.Tag({
+	key = "duplicate_switch",
+	atlas = "showdown_tags",
+	pos = coordinate(16),
+	config = { type = "tag_add", tags = 3 },
+	loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.tags } }
+	end,
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "tag_add" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				for _=1, tag.config.tags do
+					add_tag(Tag(pseudorandom_element(SMODS.Tag.ctype_buffer).key))
+					G.orbital_hand = nil
+				end
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+})
