@@ -215,9 +215,7 @@ function get_all_suits(args)
 		local suit = SMODS.Suit.obj_table[SMODS.Suit.obj_buffer[i]]
 		if (not args.noVanilla and findInTable(suit.key, baseSuits)) or
 			(not args.noModded and
-				((suit.key == "bunc_Fleurons"
-					or suit.key == "bunc_Halberds"
-				) and args.exotic)
+				((suit.key == "bunc_Fleurons" or suit.key == "bunc_Halberds") and args.exotic)
 			)
 		then
 			table.insert(suits, suit.key)
@@ -347,14 +345,14 @@ SMODS.DeckSkin({
 	palettes = {
 		{
 			key = 'lc',
-			ranks = {'Queen', "King", "Ace",},
+			ranks = {'King', "Queen", "Jack",},
 			display_ranks = {"King", "Queen", "Jack"},
 			atlas = 'showdown_jean_paul',
 			pos_style = 'collab',
 		},
 		{
 			key = 'hc',
-			ranks = {'Queen', "King", "Ace",},
+			ranks = {'King', "Queen", "Jack",},
 			display_ranks = {"King", "Queen", "Jack"},
 			atlas = 'showdown_jean_paul_hc',
 			pos_style = 'collab',
@@ -402,6 +400,14 @@ SMODS.Back{ -- Cheater Deck
     loc_vars = function(self, info_queue, card)
         return { vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
 	end,
+}
+
+SMODS.Back{ -- Engineer Deck
+	name = "Engineer Deck",
+	key = "Engineer",
+	atlas = "showdown_decks",
+	pos = coordinate(5),
+	config = { showdown_engineer = true },
 }
 
 local function give_starter()
@@ -1144,6 +1150,7 @@ SMODS.Enhancement({
 ---- Tags
 
 filesystem.load(itemsPath.."Tags.lua")()
+filesystem.load(itemsPath.."Switches.lua")()
 
 ---- Blinds
 
@@ -1330,13 +1337,28 @@ filesystem.load(itemsPath.."Achievements.lua")()
 end
 if (SMODS.Mods["Cryptid"] or {}).can_load then
 	modCompatibility("Cryptid", "compat/cryptidCompat.lua")
+end ]]
+
+if (SMODS.Mods["Bunco"] or {}).can_load then
+	SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
+	SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
+
+	Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
+	Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 end
 if (SMODS.Mods["MusicalSuit"] or {}).can_load then
-	modCompatibility("MusicalSuit", "compat/musicalSuitCompat.lua")
+	SMODS.Atlas({key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95})
+	SMODS.Atlas({key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95})
+
+	Showdown.extraSuits['Notes'] = {lc_atlas = 'showdown_musicalCards', hc_atlas = 'showdown_musicalCardsHC'}
 end
 if (SMODS.Mods["InkAndColor"] or {}).can_load then
-	modCompatibility("InkAndColor", "compat/inkAndColorCompat.lua")
-end ]]
+	SMODS.Atlas({key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95})
+	SMODS.Atlas({key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95})
+
+	Showdown.extraSuits['ink_Inks'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
+	Showdown.extraSuits['ink_Colors'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
+end
 
 local debugplus = require("debugplus")
 if debugplus then

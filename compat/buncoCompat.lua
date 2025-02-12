@@ -43,7 +43,6 @@ SMODS.DeckSkin({
 
 SMODS.Atlas({key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95})
 
-local randomCounterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "showdown_Butler", "showdown_Princess", "showdown_Lord"}
 local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
 
 SMODS.Consumable({ -- The Beast
@@ -68,6 +67,7 @@ SMODS.Consumable({ -- The Beast
     end,
     use = function()
 		enable_exotics()
+		local randomCounterparts = get_all_ranks({onlyCounterpart = true})
 		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
         delay(0.2)
 		for i=1, #G.hand.highlighted do

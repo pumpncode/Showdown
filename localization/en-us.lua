@@ -36,6 +36,12 @@ return {
                     'chance to be {C:red}destroyed',
                 }
             },
+            b_showdown_Engineer = {
+                name = 'Engineer Deck',
+                text = {
+                    'idk',
+                }
+            },
         },
         Blind={
             bl_showdown_latch = {
@@ -570,42 +576,6 @@ return {
                     '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 }
             },
-            j_showdown_2814 = {
-                name = '2814',
-                text = {
-                    'idk',
-                }
-            },
-            j_showdown_birth_of_a_new_day = {
-                name = 'Birth of a New Day',
-                text = {
-                    'idk',
-                }
-            },
-            j_showdown_rain_temple = {
-                name = 'Rain Temple',
-                text = {
-                    'idk',
-                }
-            },
-            j_showdown_lost_fragments = {
-                name = 'Lost Fragments',
-                text = {
-                    'idk',
-                }
-            },
-            j_showdown_pillar_new_sun = {
-                name = 'Pillar / New Sun',
-                text = {
-                    'idk',
-                }
-            },
-            j_showdown_voyage_embrace = {
-                name = 'Voyage / Embrace',
-                text = {
-                    'idk',
-                }
-            },
             j_showdown_versatile_joker = {
                 name = 'Versatile Joker',
                 text = {
@@ -645,7 +615,9 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Blue Deck',
+                    'This joker gains {X:red,C:white}X#1#{} Mult',
+                    'for every played {C:attention}hand',
+                    '{C:inactive}(Currently {X:red,C:white}X#2#{C:inactive} Mult)',
                 },
                 unlock = {
                     'Win a run with any',
@@ -684,7 +656,8 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    'Black Deck',
+                    '{C:blue}Common{} and {C:red}Rare{} Jokers',
+                    'each give {X:blue,C:white}X#1#{} Chips',
                 },
                 unlock = {
                     'Win a run with any',
@@ -1047,48 +1020,6 @@ return {
                     'as any suit',
                 },
             },
-            ['2814_2814'] = {
-                name = '2814 - 2 8 1 4',
-                text = {
-                    'Studio Album',
-                    'Released October 15, 2014',
-                }
-            },
-            ['2814_birth_of_a_new_day'] = {
-                name = '2814 - Birth of a New Day',
-                text = {
-                    'Studio Album',
-                    'Released January 21, 2015',
-                }
-            },
-            ['2814_rain_temple'] = {
-                name = '2814 - Rain Temple',
-                text = {
-                    'Studio Album',
-                    'Released July 26, 2016',
-                }
-            },
-            ['2814_lost_fragments'] = {
-                name = '2814 - Lost Fragments',
-                text = {
-                    'Compilation',
-                    'Released July 5, 2019',
-                }
-            },
-            ['2814_pillar_new_sun'] = {
-                name = '2814 - Pillar / New Sun',
-                text = {
-                    'Extended Plays',
-                    'Released February 1, 2018',
-                }
-            },
-            ['2814_voyage_embrace'] = {
-                name = '2814 - Voyage / Embrace',
-                text = {
-                    'Extended Plays',
-                    'Released September 9, 2020',
-                }
-            },
         },
         Planet={},
         Spectral={
@@ -1143,6 +1074,9 @@ return {
                     '{C:showdown_logic}Mega Boolean Pack',
                 },
             },
+        },
+        Switch={
+            
             tag_showdown_mystery_switch = {
                 name = "Mystery Switch",
                 text = {

@@ -10,8 +10,15 @@ Showdown.versatile['Red Deck'] = { desc = 'j_showdown_versatile_joker_red', pos 
         }
     end
 end }
-Showdown.versatile['Blue Deck'] = { desc = 'j_showdown_versatile_joker_blue', pos = coordinate(3), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Blue Deck'] = { desc = 'j_showdown_versatile_joker_blue', pos = coordinate(3), blueprint = true, effect = function(self, card, context)
+    if not context.blueprint and context.cardarea == G.jokers and context.before then
+        card.ability.x_mult = card.ability.x_mult + card.ability.extra.xmult_mod
+        return {
+            message = localize('k_upgrade_ex'),
+            colour = G.C.MULT,
+            card = card
+        }
+    end
 end }
 Showdown.versatile['Yellow Deck'] = { desc = 'j_showdown_versatile_joker_yellow', pos = coordinate(4), blueprint = false, effect = function(self, card, context)
     if not context.blueprint and context.cash_out then
@@ -27,8 +34,18 @@ end, remove_from_deck = function(self, card, from_debuff)
     G.GAME.interest_amount = G.GAME.interest_amount - 1
     G.GAME.modifiers.no_interest = true
 end }
-Showdown.versatile['Black Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(6), blueprint = false, effect = function(self, card, context)
-    --
+Showdown.versatile['Black Deck'] = { desc = 'j_showdown_versatile_joker_black', pos = coordinate(6), blueprint = true, effect = function(self, card, context)
+    if context.other_joker and (context.other_joker.config.center.rarity == 1 or context.other_joker.config.center.rarity == 3) and card ~= context.other_joker then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                context.other_joker:juice_up(0.5, 0.5)
+                return true
+            end
+        }))
+        return {
+            xchips = card.ability.extra.xchips
+        }
+    end
 end }
 Showdown.versatile['Magic Deck'] = { desc = 'j_showdown_versatile_joker_magic', pos = coordinate(7), blueprint = true, effect = function(self, card, context)
     if context.using_fool then
@@ -235,6 +252,8 @@ create_joker({ -- Versatile Joker
     vars = {
         {x = 0}, {y = 0}, {blueprint = false},            -- Base Card
         {money = 1},                                  -- Red Deck
+        {xmult_mod = 0.1},                             -- Blue Deck
+        {xchips = 1.5},                                -- Black Deck
         {fool_copy = 1},                               -- Magic Deck
         {planet = 1},                                  -- Nebula Deck
         {non_face_retrigger = 1},                      -- Abandoned Deck
@@ -247,6 +266,10 @@ create_joker({ -- Versatile Joker
             local loc = { key = get_versatile('desc') }
             if G.GAME.selected_back.name == 'Red Deck' then
                 loc.vars = { card.ability.extra.money }
+            elseif G.GAME.selected_back.name == 'Blue Deck' then
+                loc.vars = { card.ability.extra.xmult_mod, card.ability.x_mult }
+            elseif G.GAME.selected_back.name == 'Black Deck' then
+                loc.vars = { card.ability.extra.xchips }
             elseif G.GAME.selected_back.name == 'Magic Deck' then
                 loc.vars = { card.ability.extra.fool_copy }
             elseif G.GAME.selected_back.name == 'Nebula Deck' then
