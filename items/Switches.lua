@@ -1,3 +1,4 @@
+--[[
 SMODS.Atlas({key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34})
 
 Showdown.Switch = SMODS.Tag:extend{
@@ -175,3 +176,4 @@ Showdown.Switch({
 		end
 	end
 })
+]]

@@ -28,7 +28,7 @@ match_indent = true
 payload = '''
 if G.jokers and G.jokers.cards then
     for i = 1, #G.jokers.cards do
-        G.jokers.cards[i]:calculate_joker({post_removing = true})
+        G.jokers.cards[i]:calculate_joker({post_removing = true, removed_card = self})
     end
 end
 '''
@@ -378,35 +378,6 @@ payload = '''
 check_for_unlock({type = 'extinct', name = self.ability.name})
 '''
 
-# banana image scaling, part 1/2
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-match_indent = true
-pattern = "if center.name == \"Wee Joker\" and (center.discovered or self.bypass_discovery_center) then"
-position = "before"
-payload = '''
-if center.name == 'banana' and (center.discovered or self.bypass_discovery_center) then
-    H = H*0.5
-    W = W*0.5
-    self.T.h = H
-    self.T.w = W
-end
-'''
-
-# banana image scaling, part 2/2
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-match_indent = true
-pattern = "elseif self.config.center.name == \"Wee Joker\" then"
-position = "before"
-payload = '''
-elseif self.config.center.name == 'banana' then
-    self.T.h = H*scale*0.5*scale
-    self.T.w = W*scale*0.5*scale
-'''
-
 # Versatile Joker (Nebula Deck), part 1/2
 [[patches]]
 [patches.pattern]
@@ -504,4 +475,16 @@ if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.abili
     end
 end
 
+'''
+
+# Label unlock
+[[patches]]
+[patches.pattern]
+target = 'tag.lua'
+match_indent = true
+pattern = '''function Tag:yep(message, _colour, func)'''
+position = 'after'
+payload = '''
+G.GAME.tag_used = (G.GAME.tag_used or 0) + 1
+check_for_unlock({type = 'tag_used', tag = self})
 '''

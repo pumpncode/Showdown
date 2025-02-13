@@ -895,6 +895,44 @@ return {
                     'Use {C:attention}12{} tags in one run',
                 }
             },
+            j_showdown_silver_stars = {
+                name = 'Silver Stars',
+                text = {
+                    'Transforms into {C:attention}Gold Star',
+                    'when {C:attention}5{} steel cards are',
+                    'scored in {C:attention}one hand',
+                },
+            },
+            j_showdown_gold_star = {
+                name = 'Gold Star',
+                text = {
+                    '{X:chips,C:white}X#1#{} Chips',
+                },
+            },
+            j_showdown_shady_dealer = {
+                name = 'Shady Dealer',
+                text = {
+                    '{C:blue}+#1#{} Hands if you have {C:money}$#2#{} or less',
+                },
+                unlock = {
+                    'Have {C:money}$-20{} or less',
+                }
+            },
+            j_showdown_yipeee = {
+                name = 'YIPEEE',
+                text = {
+                    'Creates {C:attention}Popcorn{} and',
+                    '{C:attention}Diet Cola{} when sold',
+                    '{C:inactive}(Must have room)',
+                },
+            },
+            j_showdown_dealer_luigi = {
+                name = 'Dealer Luigi',
+                text = {
+                    'Apply a random {C:attention}Casino Sticker{} to a',
+                    '{C:attention}random joker{} at the end of round',
+                },
+            },
         },
         Other={
             showdown_static = {
@@ -1371,6 +1409,8 @@ return {
             ach_showdown_metal_cap = 'Get the maximum discount with What a Steel!',
             ach_showdown_cronch = 'eat the banana',
             ach_showdown_green_deck_home = 'Have Red Coins and Money Cutter at the same time',
+            ach_showdown_rico_kaboom = 'Lose by destroying your cards with Nitroglycerin',
+            ach_showdown_whole_new_deck = 'Gain at least 20 cards with one Strainer',
         },
         achievement_names={
             ach_showdown_get_jean_paul = ':3',
@@ -1383,6 +1423,8 @@ return {
             ach_showdown_metal_cap = 'Metal Cap',
             ach_showdown_cronch = 'cronch',
             ach_showdown_green_deck_home = 'We have Green Deck at home',
+            ach_showdown_rico_kaboom = 'Yes Rico, kaboom',
+            ach_showdown_whole_new_deck = 'A whole new deck',
         },
         blind_states={},
         challenge_names={},

@@ -4,6 +4,8 @@ mod_path = SMODS.current_mod.path
 filesystem.load(mod_path.."functions.lua")()
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
+-- No logics and switches for now
+
 local files = filesystem.getDirectoryItems(mod_path.."items/")
 for _, file in ipairs(files) do
 	sendTraceMessage("Loading file "..file, "Showdown")

@@ -1,5 +1,5 @@
 SMODS.Atlas({key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95})
-
+--[[
 SMODS.Sticker({
 	key = 'static',
 	atlas = 'showdown_stickers',
@@ -11,7 +11,7 @@ SMODS.Sticker({
 		card.states.drag.can = not val
 	end,
 })
-
+]]
 SMODS.Sticker({
 	key = 'cloud',
 	atlas = 'showdown_stickers',
@@ -46,8 +46,8 @@ SMODS.Sticker({
 	badge_colour = HEX("F00808"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val, debug)
-		if debug then
+	apply = function(self, card, val, forced)
+		if forced then
 			card.ability[self.key] = val
 			if G.hand then G.hand:change_size(val and 1 or -1) end
 		else
@@ -67,8 +67,8 @@ SMODS.Sticker({
 	badge_colour = HEX("F87800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val, debug)
-		if debug then
+	apply = function(self, card, val, forced)
+		if forced then
 			card.ability[self.key] = val
 			if G.consumeables then G.consumeables:change_size(val and 1 or -1) end
 		else
@@ -142,6 +142,15 @@ SMODS.Sticker({
 	end,
 })
 
+function have_casino_sticker(card)
+	return card.ability.showdown_cloud
+		or card.ability.showdown_mushroom
+		or card.ability.showdown_flower
+		or card.ability.showdown_luigi
+		or card.ability.showdown_mario
+		or card.ability.showdown_star
+end
+
 local cardSetDebuffRef = Card.set_debuff
 function Card:set_debuff(should_debuff)
 	if self.ability.showdown_star then self.debuff = false
@@ -170,7 +179,8 @@ if debugplus then
 			local _card = controller.hovering.target
 			if key == "t" then
 				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
-					SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
+					--SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
+					print('no static sticker for u :P')
 				end
 			elseif key == "y" then
 				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then

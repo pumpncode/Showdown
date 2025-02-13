@@ -805,11 +805,13 @@ create_joker({ -- Strainer
                 card.ability.extra.money = card.ability.extra.money + math.max(context.card.cost, 0)
             elseif context.reroll_shop and not context.blueprint then
                 card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost-1, 0)
-            elseif context.ending_shop then
+            elseif context.ending_shop and card.ability.extra.money < 10 then
                 local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
                 local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+                local created_cards = 0
                 while card.ability.extra.money >= card.ability.extra.moneyRequirement do
                     card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
+                    created_cards = created_cards + 1
                     local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
                     local suit = pseudorandom_element(suits, pseudoseed('strainer'))
                     local created_card = get_card_from_rank_suit(rank, suit)
@@ -832,6 +834,9 @@ create_joker({ -- Strainer
                         draw_card(G.play,G.deck, 90,'up', nil)
                         playing_card_joker_effects({true})
                         delay(0.2)
+                        if created_cards >= 20 then
+                            check_for_unlock({type = 'whole_new_deck'})
+                        end
                     end
                 end
                 G.E_MANAGER:add_event(Event({
@@ -957,6 +962,9 @@ create_joker({ -- Nitroglycerin
         if context.selling_self and not context.blueprint and not G.booster_pack then
             for i=#G.hand.cards, 1, -1 do
                 G.hand.cards[i]:start_dissolve(nil, i == #G.hand.cards)
+            end
+            if G.hand.config.card_limit <= 0 and #G.hand.cards == 0 then
+                check_for_unlock({type = 'rico_kaboom'})
             end
         end
     end
@@ -1310,97 +1318,13 @@ create_joker({ -- Colored Classes
         end
     end
 })
---[[
-create_joker({ -- 2814
-    name = '2814',
-    atlas = "showdown_jokers",
-    pos = coordinate(49),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_2814'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
 
-create_joker({ -- Birth of a New Day
-    name = 'birth_of_a_new_day',
-    atlas = "showdown_jokers",
-    pos = coordinate(50),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_birth_of_a_new_day'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
-
-create_joker({ -- Rain Temple
-    name = 'rain_temple',
-    atlas = "showdown_jokers",
-    pos = coordinate(51),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_rain_temple'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
-
-create_joker({ -- Lost Fragments
-    name = 'lost_fragments',
-    atlas = "showdown_jokers",
-    pos = coordinate(52),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_lost_fragments'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
-
-create_joker({ -- Pillar / New Sun
-    name = 'pillar_new_sun',
-    atlas = "showdown_jokers",
-    pos = coordinate(53),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_pillar_new_sun'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
-
-create_joker({ -- Voyage / Embrace
-    name = 'voyage_embrace',
-    atlas = "showdown_jokers",
-    pos = coordinate(54),
-    custom_vars = function(self, info_queue, card)
-		info_queue[#info_queue+1] = {set = 'Other', key = '2814_voyage_embrace'}
-	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
-    calculate = function(self, card, context)
-        --
-    end
-})
-]]
 --filesystem.load(itemsPath.."JokerVersatile.lua")()
 --[[
 create_joker({ -- Joker Variance Authority
     name = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
-    pos = coordinate(55),
+    pos = coordinate(49),
     rarity = 'Common', --cost = 4,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
@@ -1443,6 +1367,7 @@ create_joker({ -- banana
     name = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
+    display_size = { w = 35, h = 43 },
     vars = {{mult = 15}, {mult_scale = 5}},
     custom_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
@@ -1557,10 +1482,14 @@ end
 create_joker({ -- Label
     name = 'label',
     atlas = "showdown_jokers",
-    pos = coordinate(56),
+    pos = coordinate(50),
     vars = {{can_reroll = true}},
     rarity = 'Common', cost = 3,
     blueprint = false, perishable = false, eternal = false,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'tag_used' and (G.GAME.tag_used or 0) >= 12 then unlock_card(self) end
+    end,
     calculate = function(self, card, context)
         if context.ending_shop then
             card.ability.extra.can_reroll =
@@ -1587,6 +1516,139 @@ create_joker({ -- Label
                     }}
                 }}
             }
+        end
+    end,
+})
+
+create_joker({ -- Silver Stars
+    name = 'silver_stars',
+    atlas = "showdown_jokers",
+    pos = coordinate(51),
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = false, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.before and not context.blueprint then
+            local steel = 0
+            for _, _card in ipairs(context.scoring_hand) do
+                if _card.config.center == G.P_CENTERS.m_steel then
+                    steel = steel + 1
+                end
+            end
+            if steel >= 5 then
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.2,
+                    func = function()
+                        card:start_dissolve()
+                        local _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_showdown_gold_star'})
+                        _card:add_to_deck()
+                        G.jokers:emplace(_card)
+                        return true
+                    end
+                }))
+            end
+        end
+    end,
+})
+
+create_joker({ -- Gold Star
+    name = 'gold_star',
+    atlas = "showdown_jokers",
+    pos = coordinate(52),
+    vars = {{xchips = 3}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.xchips } }
+	end,
+    rarity = 'Uncommon', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            return {
+                x_chips = card.ability.extra.xchips,
+            }
+        end
+    end,
+})
+
+create_joker({ -- Shady Dealer
+    name = 'shady_dealer',
+    atlas = "showdown_jokers",
+    pos = coordinate(53),
+    vars = {{hands = 3}, {money = 0}},
+    custom_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.hands, card.ability.extra.money } }
+	end,
+    rarity = 'Common', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'money' and G.GAME.dollars <= -20 then unlock_card(self) end
+    end,
+    calculate = function(self, card, context)
+        if context.setting_blind and not (context.blueprint_card or card).getting_sliced and G.GAME.dollars <= card.ability.extra.money then
+            G.E_MANAGER:add_event(Event({func = function()
+                ease_hands_played(card.ability.extra.hands)
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize{type = 'variable', key = 'a_hands', vars = {card.ability.extra.hands}}})
+            return true end }))
+        end
+    end,
+})
+
+create_joker({ -- Yipeee
+    name = 'yipeee',
+    atlas = "showdown_jokers",
+    pos = coordinate(54),
+    vars = {{sold = false}},
+    rarity = 'Common', --cost = 4,
+    blueprint = false, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if context.selling_self and not context.blueprint then
+            card.ability.extra.sold = true
+        elseif context.removing_card and context.removed_card == card and card.ability.extra.sold and not context.blueprint then
+            G.E_MANAGER:add_event(Event({
+                func = (function()
+                    if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+                        local _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_popcorn'})
+                        _card:add_to_deck()
+                        G.jokers:emplace(_card)
+                        if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+                            _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_diet_cola'})
+                            _card:add_to_deck()
+                            G.jokers:emplace(_card)
+                        end
+                    end
+                return true end)
+            }))
+        end
+    end,
+})
+
+create_joker({ -- Dealer Luigi
+    name = 'dealer_luigi',
+    atlas = "showdown_jokers",
+    pos = coordinate(55),
+	custom_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_flower'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_luigi'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mario'}
+        info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_star'}
+	end,
+    rarity = 'Rare', --cost = 4,
+    blueprint = true, perishable = true, eternal = true,
+    calculate = function(self, card, context)
+        if context.end_of_round and not context.repetition and not context.individual then
+            local no_casino_stickers = {}
+            for _, joker in ipairs(G.jokers.cards) do
+                if not have_casino_sticker(joker) then table.insert(no_casino_stickers, joker) end
+            end
+            if #no_casino_stickers > 0 then
+                local random_joker = pseudorandom_element(no_casino_stickers, pseudoseed('dealer_luigi'))
+                play_sound("gold_seal", 1.2, 0.4)
+				random_joker:juice_up(0.3, 0.3)
+                pseudorandom_element(Showdown.casino, pseudoseed('dealer_luigi')):apply(random_joker, true, true)
+            end
         end
     end,
 })

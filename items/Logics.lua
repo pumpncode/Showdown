@@ -1,3 +1,4 @@
+--[[
 SMODS.Atlas({key = 'showdown_logic_undiscovered', path = 'Consumables/LogicUndiscovered.png', px = 71, py = 95})
 SMODS.Atlas({key = 'showdown_logic', path = 'Consumables/Logic.png', px = 71, py = 95})
 
@@ -118,3 +119,4 @@ SMODS.Consumable({ -- XNOR
 		--
     end
 })
+]]

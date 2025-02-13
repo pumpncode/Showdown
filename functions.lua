@@ -115,6 +115,9 @@ function create_joker(joker) -- (Thanks Bunco)
         pos = joker.pos,
         soul_pos = joker.soul,
 
+		display_size = joker.display_size,
+		pixel_size = joker.pixel_size,
+
         rarity = joker.rarity,
         cost = joker.cost,
 
