@@ -21,7 +21,7 @@ SMODS.Rarity{
 
 ---- Jokers
 
-filesystem.load(itemsPath.."JokerJeanPaul.lua")()
+--filesystem.load(itemsPath.."JokerJeanPaul.lua")()
 
 create_joker({ -- Crouton
     name = 'crouton',
@@ -393,7 +393,7 @@ create_joker({ -- Empty Joker
         end
     end
 })
-
+--[[
 create_joker({ -- Baby Jimbo
     name = 'baby_jimbo',
     atlas = "showdown_jokers",
@@ -436,7 +436,7 @@ create_joker({ -- Baby Jimbo
         end
     end
 })
-
+]]--
 create_joker({ -- Parmesan
     name = 'parmesan',
     atlas = "showdown_jokers",
@@ -1395,7 +1395,7 @@ create_joker({ -- Voyage / Embrace
     end
 })
 ]]
-filesystem.load(itemsPath.."JokerVersatile.lua")()
+--filesystem.load(itemsPath.."JokerVersatile.lua")()
 --[[
 create_joker({ -- Joker Variance Authority
     name = 'joker_variance_authorithy',

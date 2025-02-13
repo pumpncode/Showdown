@@ -1,10 +1,3 @@
----- Functions
-
-local function enable_exotics()
-    if G.GAME then G.GAME.Exotic = true end
-	sendDebugMessage('[SHOWDOWN] - Triggered Exotic System enabling.')
-end
-
 ---- Exotic Suit
 
 SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
