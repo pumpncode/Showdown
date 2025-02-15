@@ -175,8 +175,8 @@ for _, v in ipairs(SMODS.Sticker.obj_buffer) do
     end
 end
 
-local debugplus = require("debugplus")
-if debugplus then
+if prequire("debugplus") then
+	local debugplus = require("debugplus")
 	local debugplusHandleKeysRef = debugplus.handleKeys
 	function debugplus.handleKeys(controller, key, dt)
 		if controller.hovering.target and controller.hovering.target:is(Card) then

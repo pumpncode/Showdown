@@ -1230,7 +1230,7 @@ create_joker({ -- Money Cutter
         if next(find_joker('red_coins')) then check_for_unlock({type = 'green_deck_home'}) end
     end,
     remove_from_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.no_interest = G.deck.name ~= 'Green Deck'
+        G.GAME.modifiers.no_interest = G.GAME.selected_back.effect.config.no_interest
     end,
 })
 
@@ -1543,6 +1543,7 @@ create_joker({ -- Gold Star
         return { vars = { card.ability.extra.xchips } }
 	end,
     rarity = 'Uncommon', --cost = 4,
+    in_pool = function(self, args) return false end,
     blueprint = true, perishable = true, eternal = true,
     calculate = function(self, card, context)
         if context.joker_main then

@@ -385,3 +385,8 @@ function create_cards_in_deck(rank_list, suit_list, nb)
 	delay(0.2)
 end
 
+function prequire(m)
+	local ok, err = pcall(require, m)
+	if not ok then return nil, err end
+	return err
+end
