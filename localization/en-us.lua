@@ -17,6 +17,10 @@ return {
                     'always a {C:showdown_calculus}Calculus Booster{}',
                     'You start with a {C:purple}Genie{} tarot',
                     'card and {C:attention}Number Theory{}',
+                },
+                unlock = {
+                    'Use 10 {C:showdown_calculus}Mathematic',
+                    'cards in {C:attention}one run',
                 }
             },
             b_showdown_Starter = {
@@ -25,6 +29,9 @@ return {
                     'Start with a {C:attention}random',
                     'joker, consumable,',
                     'voucher and {C:money}$-5',
+                },
+                unlock = {
+                    'Have at least {C:attention}8{} jokers',
                 }
             },
             b_showdown_Cheater = {
@@ -34,12 +41,19 @@ return {
                     'Played hand creates a face or a 0',
                     'Scored card have a {C:green}#1# in 6{}',
                     'chance to be {C:red}destroyed',
+                },
+                unlock = {
+                    'Have at least {C:attention}80',
+                    'cards in your deck',
                 }
             },
             b_showdown_Engineer = {
                 name = 'Engineer Deck',
                 text = {
                     'idk',
+                },
+                unlock = {
+                    '???',
                 }
             },
         },
@@ -861,6 +875,7 @@ return {
                 text = {
                     'Effect depends of {C:attention}played deck',
                     'Deck no longer {C:attention}destroy{} cards',
+                    'Deck generate {C:attention}#1#{} additional card',
                 },
                 unlock = {
                     'Win a run with any',

@@ -6,12 +6,12 @@ priority = 0
 # Ghost card destroying
 [[patches]]
 [patches.pattern]
-target = "functions/state_events.lua"
-pattern = "if SMODS.has_enhancement(scoring_hand[i], 'm_glass') and not scoring_hand[i].debuff and pseudorandom('glass') < G.GAME.probabilities.normal/(scoring_hand[i].ability.name == 'Glass Card' and scoring_hand[i].ability.extra or G.P_CENTERS.m_glass.config.extra) then"
+target = '''=[SMODS _ "src/utils.lua"]'''
+pattern = "if scoring_hand and SMODS.has_enhancement(card, 'm_glass') and not card.debuff and pseudorandom('glass') < G.GAME.probabilities.normal/(card.ability.name == 'Glass Card' and card.ability.extra or G.P_CENTERS.m_glass.config.extra) then"
 position = "before"
 match_indent = true
 payload = '''
-if scoring_hand[i].ability.name == 'm_showdown_ghost' and not scoring_hand[i].debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/scoring_hand[i].ability.extra.shatter_chance then 
+if scoring_hand and card.ability.name == 'm_showdown_ghost' and not card.debuff and pseudorandom('ghost') < G.GAME.probabilities.normal/card.ability.extra.shatter_chance then 
     destroyed = true
 end
 '''

@@ -260,6 +260,7 @@ create_joker({ -- Versatile Joker
         {hearts = 20}, {spades = 1.5}, {spades_odd = 2}, -- Checkered Deck
         {generate_odd = 4},                            -- Zodiac Deck
         {double_tag = 1},                              -- Anaglyph Deck
+        {card = 1},                                   -- Cheater Deck
     },
     custom_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
@@ -282,6 +283,8 @@ create_joker({ -- Versatile Joker
                 loc.vars = { G.GAME.probabilities.normal, card.ability.extra.generate_odd }
             elseif G.GAME.selected_back.name == 'Anaglyph Deck' then
                 loc.vars = { card.ability.extra.double_tag }
+            elseif G.GAME.selected_back.name == 'Cheater Deck' then
+                loc.vars = { card.ability.extra.card }
             end
             return loc
         end

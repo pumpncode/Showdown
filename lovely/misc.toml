@@ -73,50 +73,20 @@ end
 '''
 
 # Mushroom sticker works for drawn cards
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "if card then drawn = true end"
-position = "after"
-match_indent = true
-payload = '''
-if card.ability.showdown_mushroom then
-    G.E_MANAGER:add_event(Event({func = function()
-        G.hand:change_size(1)
-        G.GAME.round_resets.temp_handsize = (G.GAME.round_resets.temp_handsize or 0) + 1
-    return true end }))
-end
-'''
-
-# Removing Mushroom and Flower sticker when destroyed
-[[patches]]
-[patches.pattern]
-target = 'card.lua'
-pattern = 'if self.area then self.area:remove_card(self) end'
-position = 'before'
-match_indent = true
-payload = '''
-if self.ability.showdown_mushroom then
-    SMODS.Sticker.obj_table['showdown_mushroom']:apply(self, false)
-elseif self.ability.showdown_flower then
-    SMODS.Sticker.obj_table['showdown_flower']:apply(self, false)
-end
-'''
-
-# Removing Mushroom and Flower sticker when destroyed
-[[patches]]
-[patches.pattern]
-target = 'functions/button_callbacks.lua'
-pattern = 'c1:add_to_deck()'
-position = 'after'
-match_indent = true
-payload = '''
-if c1.ability.showdown_mushroom then
-    SMODS.Sticker.obj_table['showdown_mushroom']:apply(c1, true)
-elseif c1.ability.showdown_flower then
-    SMODS.Sticker.obj_table['showdown_flower']:apply(c1, true)
-end
-'''
+#[[patches]]
+#[patches.pattern]
+#target = "functions/common_events.lua"
+#pattern = "if card then drawn = true end"
+#position = "after"
+#match_indent = true
+#payload = '''
+#if card.ability.showdown_mushroom then
+#    G.E_MANAGER:add_event(Event({func = function()
+#        G.hand:change_size(1)
+#        G.GAME.round_resets.temp_handsize = (G.GAME.round_resets.temp_handsize or 0) + 1
+#    return true end }))
+#end
+#'''
 
 # Static sticker, part 1/3
 #[[patches]]

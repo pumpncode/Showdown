@@ -795,69 +795,52 @@ create_joker({ -- Strainer
         end
 	end,
     rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = false,
+    blueprint = false, perishable = true, eternal = false,
     calculate = function(self, card, context)
-        if G.GAME and G.GAME.blind and G.GAME.blind.boss and not context.blueprint then
-            card.ability.extra.boss_shop = true
-        end
-        if card.ability.extra.boss_shop then
-            if (context.buying_card or context.open_booster) and not context.blueprint then
-                card.ability.extra.money = card.ability.extra.money + math.max(context.card.cost, 0)
-            elseif context.reroll_shop and not context.blueprint then
-                card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost-1, 0)
-            elseif context.ending_shop and card.ability.extra.money < 10 then
-                local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
-                local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
-                local created_cards = 0
-                while card.ability.extra.money >= card.ability.extra.moneyRequirement do
-                    card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
-                    created_cards = created_cards + 1
-                    local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
-                    local suit = pseudorandom_element(suits, pseudoseed('strainer'))
-                    local created_card = get_card_from_rank_suit(rank, suit)
-                    if created_card then
-                        G.E_MANAGER:add_event(Event({
-                            func = function()
-                                G.playing_card = (G.playing_card and G.playing_card + 1) or 1
-                                local _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
-                                _card:start_materialize({G.C.SECONDARY_SET.Enhanced})
-                                G.play:emplace(_card)
-                                table.insert(G.playing_cards, _card)
-                                return true
-                        end}))
-                        delay(0.6)
-                        G.E_MANAGER:add_event(Event({
-                            func = function()
-                                G.deck.config.card_limit = G.deck.config.card_limit + 1
-                                return true
-                        end}))
-                        draw_card(G.play,G.deck, 90,'up', nil)
-                        playing_card_joker_effects({true})
-                        delay(0.2)
-                        if created_cards >= 20 then
-                            check_for_unlock({type = 'whole_new_deck'})
+        if not context.blueprint then
+            if G.GAME and G.GAME.blind and G.GAME.blind.boss then
+                card.ability.extra.boss_shop = true
+            end
+            if card.ability.extra.boss_shop then
+                if context.buying_card or context.open_booster then
+                    card.ability.extra.money = card.ability.extra.money + math.max(context.card.cost, 0)
+                elseif context.reroll_shop then
+                    card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost-1, 0)
+                elseif context.ending_shop and card.ability.extra.money >= 10 then
+                    local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
+                    local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+                    local created_cards = 0
+                    while card.ability.extra.money >= card.ability.extra.moneyRequirement do
+                        local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
+                        local suit = pseudorandom_element(suits, pseudoseed('strainer'))
+                        if create_card_in_deck(rank, suit) then
+                            card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
+                            created_cards = created_cards + 1
+                            if created_cards >= 20 then
+                                check_for_unlock({type = 'whole_new_deck'})
+                            end
                         end
                     end
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            card.T.r = -0.2
+                            card:juice_up(0.3, 0.4)
+                            card.states.drag.is = true
+                            card.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                                func = function()
+                                        G.jokers:remove_card(card)
+                                        card:remove()
+                                        card = nil
+                                    return true; end}))
+                            return true
+                        end
+                    }))
+                    return {
+                        message = localize('k_strainer_broke')
+                    }
                 end
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        play_sound('tarot1')
-                        card.T.r = -0.2
-                        card:juice_up(0.3, 0.4)
-                        card.states.drag.is = true
-                        card.children.center.pinch.x = true
-                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-                            func = function()
-                                    G.jokers:remove_card(card)
-                                    card:remove()
-                                    card = nil
-                                return true; end}))
-                        return true
-                    end
-                }))
-                return {
-                    message = localize('k_strainer_broke')
-                }
             end
         end
     end

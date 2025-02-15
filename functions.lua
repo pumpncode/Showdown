@@ -324,3 +324,64 @@ function Card:change_suit(new_suit)
 	if SMODS.is_zero(self) then G.GAME.blind:debuff_card(self)
 	else Cardchange_suitRef(self, new_suit) end
 end
+
+function create_card_in_deck(rank, suit)
+	local created_card, card = get_card_from_rank_suit(rank, suit), nil
+	if created_card then
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+				card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+				card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+				G.play:emplace(card)
+				table.insert(G.playing_cards, card)
+				return true
+		end}))
+		delay(0.6)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.deck.config.card_limit = G.deck.config.card_limit + 1
+				return true
+		end}))
+		draw_card(G.play,G.deck, 90,'up', nil, card)
+		playing_card_joker_effects({true})
+		delay(0.2)
+	end
+	return card
+end
+
+function create_cards_in_deck(rank_list, suit_list, nb)
+	local cards = {}
+	for _=1, nb do
+		local rank, suit = pseudorandom_element(rank_list, pseudoseed('create_card')), pseudorandom_element(suit_list, pseudoseed('create_card'))
+		local created_card, card = get_card_from_rank_suit(rank, suit), nil
+		if created_card then
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+					card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+					card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+					G.play:emplace(card)
+					table.insert(G.playing_cards, card)
+					cards[#cards+1] = card
+					return true
+			end}))
+		end
+		delay(0.2)
+	end
+	G.E_MANAGER:add_event(Event({
+		func = function()
+			G.deck.config.card_limit = G.deck.config.card_limit + nb
+			return true
+	end}))
+	G.E_MANAGER:add_event(Event({
+		func = function()
+			for i=1, #cards do
+				draw_card(G.play, G.deck, i*100/#cards,'up', nil ,cards[i])
+			end
+			return true
+	end}))
+	playing_card_joker_effects(cards)
+	delay(0.2)
+end
+

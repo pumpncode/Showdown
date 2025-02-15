@@ -47,15 +47,9 @@ SMODS.Sticker({
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	apply = function(self, card, val, forced)
+		card.ability[self.key] = val
 		if forced then
-			card.ability[self.key] = val
-			if G.hand then G.hand:change_size(val and 1 or -1) end
-		else
-			if not G.hand or card.area == G.shop_jokers then
-				card.ability[self.key] = val
-			else
-				G.hand:change_size(val and 1 or -1)
-			end
+			if G.hand then G.hand:change_size(forced[1] and 1 or -1) end
 		end
 	end,
 })
@@ -68,15 +62,9 @@ SMODS.Sticker({
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	apply = function(self, card, val, forced)
+		card.ability[self.key] = val
 		if forced then
-			card.ability[self.key] = val
-			if G.consumeables then G.consumeables:change_size(val and 1 or -1) end
-		else
-			if not G.consumeables or card.area == G.shop_jokers then
-				card.ability[self.key] = val
-			else
-				G.consumeables:change_size(val and 1 or -1)
-			end
+			if G.hand then G.consumeables:change_size(forced[1] and 1 or -1) end
 		end
 	end,
 })
@@ -151,6 +139,22 @@ function have_casino_sticker(card)
 		or card.ability.showdown_star
 end
 
+local cardAdd_to_deckRef = Card.add_to_deck
+function Card:add_to_deck(from_debuff)
+	cardAdd_to_deckRef(self, from_debuff)
+	if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(1) end
+	elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(1) end end
+end
+
+local cardRemoveRef = Card.remove
+function Card:remove()
+	if not (self.area == G.shop_jokers or self.area == G.pack_cards) then
+		if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(-1) end
+		elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(-1) end end
+	end
+	cardRemoveRef(self)
+end
+
 local cardSetDebuffRef = Card.set_debuff
 function Card:set_debuff(should_debuff)
 	if self.ability.showdown_star then self.debuff = false
@@ -186,12 +190,12 @@ if debugplus then
 				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
 					if _card.ability.showdown_cloud then
 						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, true)
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {true})
 					elseif _card.ability.showdown_mushroom then
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, true)
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, true)
+						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {false})
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {true})
 					elseif _card.ability.showdown_flower then
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, true)
+						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {false})
 						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 					elseif _card.ability.showdown_luigi then
 						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)

@@ -16,7 +16,13 @@ SMODS.Back{ -- Calculus Deck
 	key = "Calculus",
 	atlas = "showdown_decks",
 	pos = coordinate(2),
-	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true }
+	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true },
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic >= 10 then
+			unlock_card(self)
+		end
+	end
 }
 
 SMODS.Back{ -- Starter Deck
@@ -24,7 +30,13 @@ SMODS.Back{ -- Starter Deck
 	key = "Starter",
 	atlas = "showdown_decks",
 	pos = coordinate(3),
-	config = { showdown_starter = true }
+	config = { showdown_starter = true },
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if G.jokers and #G.jokers.cards >= 8 then
+			unlock_card(self)
+		end
+	end
 }
 
 SMODS.Back{ -- Cheater Deck
@@ -36,16 +48,37 @@ SMODS.Back{ -- Cheater Deck
     loc_vars = function(self, info_queue, card)
         return { vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
 	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if G.deck and G.deck.config.card_limit >= 80 then
+			unlock_card(self)
+		end
+	end,
+	calculate = function(self, card, context)
+        if context.post_hand then
+			local cards = 1
+			for _, joker in pairs(find_joker('versatile_joker')) do
+				cards = cards + joker.ability.extra.card
+			end
+            local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
+			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+			create_cards_in_deck(ranks, suits, cards)
+        end
+    end
 }
-
+--[[
 SMODS.Back{ -- Engineer Deck
 	name = "Engineer Deck",
 	key = "Engineer",
 	atlas = "showdown_decks",
 	pos = coordinate(5),
 	config = { showdown_engineer = true },
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		--
+	end
 }
-
+]]
 local function give_starter()
 	G.E_MANAGER:add_event(Event({
 		func = function()
