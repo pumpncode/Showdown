@@ -21,7 +21,7 @@ local crouton = {
     type = 'Joker',
     key = 'crouton',
 	atlas = "showdown_jokers",
-    pos = coordinate(2), soul = coordinate(3),
+    pos = coordinate(2), soul_pos = coordinate(3),
     config = {extra = {x_mult = 1.5}},
     loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.x_mult } }

@@ -3,8 +3,7 @@ local versatile_joker = {
     key = 'versatile_joker',
     atlas = "showdown_versatile_joker",
     pos = coordinate(1),
-    vars = { extra = {
-        x = 0, y = 0, blueprint = false,               -- Base Card
+    config = { sprite = {x = 0, y = 0, blueprint = false}, extra = {
         money = 1,                                  -- Red Deck
         xmult_mod = 0.1,                             -- Blue Deck
         xchips = 1.5,                                -- Black Deck
@@ -65,10 +64,10 @@ local versatile_joker = {
     update = function(self, card, front)
         if G.STAGE == G.STAGES.RUN then
             local pos, blueprint = get_versatile('pos'), get_versatile('blueprint')
-            if not (card.ability.extra.x == pos.x and card.ability.extra.y == pos.y) or not card.ability.extra.blueprint == blueprint then
-                card.ability.extra.x = pos.x
-                card.ability.extra.y = pos.y
-                card.ability.extra.blueprint = blueprint
+            if not (card.ability.sprite.x == pos.x and card.ability.sprite.y == pos.y) or not card.ability.sprite.blueprint == blueprint then
+                card.ability.sprite.x = pos.x
+                card.ability.sprite.y = pos.y
+                card.ability.blueprint = blueprint
                 card.config.center.pos = pos
                 card.config.center.blueprint_compat = blueprint
                 card:set_sprites(card.config.center)
