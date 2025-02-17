@@ -1,7 +1,3 @@
-SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95})
-
 local function inject_p_card_suit_compat(suit, rank)
 	local card = {
 		name = rank.key .. ' of ' .. suit.key,
@@ -25,7 +21,8 @@ local function inject_p_card_suit_compat(suit, rank)
 	G.P_CARDS[suit.card_key .. '_' .. rank.card_key] = card
 end
 
-SMODS.Rank({ -- 2.5 Card
+local count2 = { -- 2.5 Card
+	type = 'Rank',
 	key = '2.5',
 	card_key = 'W',
 	shorthand = '2.5',
@@ -43,9 +40,10 @@ SMODS.Rank({ -- 2.5 Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -2
+} -- id: -2
 
-SMODS.Rank({ -- 5.5 Card
+local count5 = { -- 5.5 Card
+	type = 'Rank',
 	key = '5.5',
 	card_key = 'F',
 	shorthand = '5.5',
@@ -63,9 +61,10 @@ SMODS.Rank({ -- 5.5 Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -5
+} -- id: -5
 
-SMODS.Rank({ -- 8.5 Card
+local count8 = { -- 8.5 Card
+	type = 'Rank',
 	key = '8.5',
 	card_key = 'E',
 	shorthand = '8.5',
@@ -83,9 +82,10 @@ SMODS.Rank({ -- 8.5 Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -8
+} -- id: -8
 
-SMODS.Rank({ -- Butler Card
+local countButler = { -- Butler Card
+	type = 'Rank',
 	key = 'Butler',
 	card_key = 'B',
 	shorthand = 'B',
@@ -105,9 +105,10 @@ SMODS.Rank({ -- Butler Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -11
+} -- id: -11
 
-SMODS.Rank({ -- Princess Card
+local countPrincess = { -- Princess Card
+	type = 'Rank',
 	key = 'Princess',
 	card_key = 'P',
 	shorthand = 'P',
@@ -127,9 +128,10 @@ SMODS.Rank({ -- Princess Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -12
+} -- id: -12
 
-SMODS.Rank({ -- Lord Card
+local countLord = { -- Lord Card
+	type = 'Rank',
 	key = 'Lord',
 	card_key = 'L',
 	shorthand = 'L',
@@ -149,9 +151,10 @@ SMODS.Rank({ -- Lord Card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: -13
+} -- id: -13
 
-SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card)
+local zero = { -- 0 Card (counts as any suit and can't be converted to a wild card)
+	type = 'Rank',
 	key = 'Zero',
 	card_key = 'Z',
 	shorthand = '0',
@@ -174,49 +177,70 @@ SMODS.Rank({ -- 0 Card (counts as any suit and can't be converted to a wild card
 			inject_p_card_suit_compat(suit, self)
 		end
 	end,
-}) -- id: 1
+} -- id: 1
 
--- These are for making straights with counterparts and normal cards
-table.insert(SMODS.Ranks["Ace"].next, "showdown_2.5")
-table.insert(SMODS.Ranks["4"].next, "showdown_5.5")
-table.insert(SMODS.Ranks["7"].next, "showdown_8.5")
-table.insert(SMODS.Ranks["10"].next, "showdown_Butler")
-table.insert(SMODS.Ranks["Jack"].next, "showdown_Princess")
-table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
---
+return {
+	enabled = Showdown.config["Ranks"],
+	list = function()
+		local list = {
+			count2,
+			count5,
+			count8,
+			countButler,
+			countPrincess,
+			countLord,
+			zero,
+		}
+		return list
+	end,
+	exec = function()
+		SMODS.Atlas({key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95})
+		SMODS.Atlas({key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95})
+		SMODS.Atlas({key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95})
 
-local SMODShas_any_suitRef = SMODS.has_any_suit
-function SMODS.has_any_suit(card)
-	SMODShas_any_suitRef(card)
-	if SMODS.is_zero(card) then return true end
-	if next(find_joker('sim_card')) and SMODS.is_counterpart(card) then return true end
-end
+		-- These are for making straights with counterparts and normal cards
+		table.insert(SMODS.Ranks["Ace"].next, "showdown_2.5")
+		table.insert(SMODS.Ranks["4"].next, "showdown_5.5")
+		table.insert(SMODS.Ranks["7"].next, "showdown_8.5")
+		table.insert(SMODS.Ranks["10"].next, "showdown_Butler")
+		table.insert(SMODS.Ranks["Jack"].next, "showdown_Princess")
+		table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
+		--
 
-function SMODS.is_counterpart(card)
-	return next(find_joker("hiding_details")) or card.base.id < 0
-end
+		local SMODShas_any_suitRef = SMODS.has_any_suit
+		function SMODS.has_any_suit(card)
+			SMODShas_any_suitRef(card)
+			if SMODS.is_zero(card) then return true end
+			if next(find_joker('sim_card')) and SMODS.is_counterpart(card) then return true end
+		end
 
-function SMODS.is_zero(card)
-	return card.base.id == 1 or card.base.value == 'showdown_Zero'
-end
+		function SMODS.is_counterpart(card)
+			return next(find_joker("hiding_details")) or card.base.id < 0
+		end
 
-if (SMODS.Mods["Bunco"] or {}).can_load then
-	SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
-	SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
+		function SMODS.is_zero(card)
+			return card.base.id == 1 or card.base.value == 'showdown_Zero'
+		end
 
-	Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
-	Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
-end
-if (SMODS.Mods["MusicalSuit"] or {}).can_load then
-	SMODS.Atlas({key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95})
-	SMODS.Atlas({key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95})
+		if (SMODS.Mods["Bunco"] or {}).can_load then
+			SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
+			SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
 
-	Showdown.extraSuits['Notes'] = {lc_atlas = 'showdown_musicalCards', hc_atlas = 'showdown_musicalCardsHC'}
-end
-if (SMODS.Mods["InkAndColor"] or {}).can_load then
-	SMODS.Atlas({key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95})
-	SMODS.Atlas({key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95})
+			Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
+			Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
+		end
+		if (SMODS.Mods["MusicalSuit"] or {}).can_load then
+			SMODS.Atlas({key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95})
+			SMODS.Atlas({key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95})
 
-	Showdown.extraSuits['ink_Inks'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
-	Showdown.extraSuits['ink_Colors'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
-end
+			Showdown.extraSuits['Notes'] = {lc_atlas = 'showdown_musicalCards', hc_atlas = 'showdown_musicalCardsHC'}
+		end
+		if (SMODS.Mods["InkAndColor"] or {}).can_load then
+			SMODS.Atlas({key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95})
+			SMODS.Atlas({key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95})
+
+			Showdown.extraSuits['ink_Inks'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
+			Showdown.extraSuits['ink_Colors'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
+		end
+	end
+}

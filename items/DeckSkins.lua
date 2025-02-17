@@ -1,7 +1,5 @@
-SMODS.Atlas({key = "showdown_jean_paul", path = "DeckSkins/jean_paul.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png", px = 71, py = 95})
-
-SMODS.DeckSkin({
+local jean_paul = {
+	type = 'DeckSkin',
 	key = "JeanPaul",
 	suit = "Clubs",
 	loc_txt = {
@@ -23,4 +21,18 @@ SMODS.DeckSkin({
 			pos_style = 'suit',
 		},
 	}
-})
+}
+
+return {
+	enabled = Showdown.config["DeckSkins"],
+	list = function()
+		local list = {
+			jean_paul,
+		}
+		return list
+	end,
+	exec = function()
+		SMODS.Atlas({key = "showdown_jean_paul", path = "DeckSkins/jean_paul.png", px = 71, py = 95})
+		SMODS.Atlas({key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png", px = 71, py = 95})
+	end
+}

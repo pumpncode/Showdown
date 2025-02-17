@@ -1,6 +1,5 @@
-SMODS.Atlas({key = "showdown_decks", path = "Decks.png", px = 71, py = 95})
-
-SMODS.Back{ -- Mirror Deck
+local mirror = {
+	type = 'Back',
 	name = "Mirror Deck",
 	key = "Mirror",
 	atlas = "showdown_decks",
@@ -11,7 +10,8 @@ SMODS.Back{ -- Mirror Deck
 	end
 }
 
-SMODS.Back{ -- Calculus Deck
+local calculus = {
+	type = 'Back',
 	name = "Calculus Deck",
 	key = "Calculus",
 	atlas = "showdown_decks",
@@ -25,7 +25,8 @@ SMODS.Back{ -- Calculus Deck
 	end
 }
 
-SMODS.Back{ -- Starter Deck
+local starter = {
+	type = 'Back',
 	name = "Starter Deck",
 	key = "Starter",
 	atlas = "showdown_decks",
@@ -39,14 +40,15 @@ SMODS.Back{ -- Starter Deck
 	end
 }
 
-SMODS.Back{ -- Cheater Deck
+local cheater = {
+	type = 'Back',
 	name = "Cheater Deck",
 	key = "Cheater",
 	atlas = "showdown_decks",
 	pos = coordinate(4),
 	config = { showdown_cheater = true },
-    loc_vars = function(self, info_queue, card)
-        return { vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
+	loc_vars = function(self, info_queue, card)
+		return { vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
@@ -55,19 +57,20 @@ SMODS.Back{ -- Cheater Deck
 		end
 	end,
 	calculate = function(self, card, context)
-        if context.post_hand then
+		if context.post_hand then
 			local cards = 1
 			for _, joker in pairs(find_joker('versatile_joker')) do
 				cards = cards + joker.ability.extra.card
 			end
-            local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
+			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
 			create_cards_in_deck(ranks, suits, cards)
-        end
-    end
+		end
+	end
 }
---[[
-SMODS.Back{ -- Engineer Deck
+
+local engineer = { -- Not done at all
+	type = 'Back',
 	name = "Engineer Deck",
 	key = "Engineer",
 	atlas = "showdown_decks",
@@ -78,59 +81,82 @@ SMODS.Back{ -- Engineer Deck
 		--
 	end
 }
-]]
-local function give_starter()
-	G.E_MANAGER:add_event(Event({
-		func = function()
-			if G.jokers then
-				local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
-				card:add_to_deck()
-				card:start_materialize()
-				G.jokers:emplace(card)
-				return true
+
+return {
+	enabled = Showdown.config["Decks"],
+	list = function()
+		local list = {
+			starter,
+		}
+		if Showdown.config["Ranks"] then
+			table.insert(list, mirror)
+			table.insert(list, cheater)
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, calculus)
+		end
+		if Showdown.config["Tags"]["Switches"] then
+			table.insert(list, engineer)
+		end
+		return list
+	end,
+	exec = function()
+		SMODS.Atlas({key = "showdown_decks", path = "Decks.png", px = 71, py = 95})
+
+		local function give_starter()
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					if G.jokers then
+						local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
+						card:add_to_deck()
+						card:start_materialize()
+						G.jokers:emplace(card)
+						return true
+					end
+				end,
+			}))
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					if G.consumeables then
+						local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, "showdown_starter")
+						card:add_to_deck()
+						G.consumeables:emplace(card)
+						return true
+					end
+				end,
+			}))
+			local vouchers = {}
+			for _, v in pairs(G.P_CENTER_POOLS.Voucher) do
+				if not (v.requires and next(v.requires)) then
+					table.insert(vouchers, v.key)
+				end
 			end
-		end,
-	}))
-	G.E_MANAGER:add_event(Event({
-		func = function()
-			if G.consumeables then
-				local card = create_card(pseudorandom_element(SMODS.ConsumableType.ctype_buffer), G.consumeables, nil, nil, nil, nil, nil, "showdown_starter")
-				card:add_to_deck()
-				G.consumeables:emplace(card)
-				return true
+			if next(vouchers) then
+				local randomVoucher = pseudorandom_element(vouchers)
+				G.GAME.used_vouchers[randomVoucher] = true
+				G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
+						return true
+					end
+				}))
 			end
-		end,
-	}))
-	local vouchers = {}
-	for _, v in pairs(G.P_CENTER_POOLS.Voucher) do
-		if not (v.requires and next(v.requires)) then
-			table.insert(vouchers, v.key)
+		end
+
+		local Backapply_to_runRef = Back.apply_to_run
+		function Back:apply_to_run()
+			Backapply_to_runRef(self)
+			if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
+			if self.effect.config.showdown_starter then
+				G.GAME.starting_params.dollars = -5
+				give_starter()
+			end
+			if G.PROFILES[G.SETTINGS.profile].starter_next_run then
+				G.PROFILES[G.SETTINGS.profile].starter_next_run = false
+				give_starter()
+			end
+			if self.effect.config.showdown_cheater then G.GAME.cheater_destroy_odd = 6 end
 		end
 	end
-	if next(vouchers) then
-		local randomVoucher = pseudorandom_element(vouchers)
-		G.GAME.used_vouchers[randomVoucher] = true
-		G.GAME.starting_voucher_count = (G.GAME.starting_voucher_count or 0) + 1
-		G.E_MANAGER:add_event(Event({
-            func = function()
-                Card.apply_to_run(nil, G.P_CENTERS[randomVoucher])
-                return true
-            end
-        }))
-	end
-end
-
-local Backapply_to_runRef = Back.apply_to_run
-function Back:apply_to_run()
-	Backapply_to_runRef(self)
-	if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
-	if self.effect.config.showdown_starter then
-		G.GAME.starting_params.dollars = -5
-		give_starter()
-	end
-	if G.PROFILES[G.SETTINGS.profile].starter_next_run then
-		G.PROFILES[G.SETTINGS.profile].starter_next_run = false
-		give_starter()
-	end
-	if self.effect.config.showdown_cheater then G.GAME.cheater_destroy_odd = 6 end
-end
+}

@@ -1,14 +1,14 @@
 --[[
 SMODS.Atlas({key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34})
 
-Showdown.Switch = SMODS.Tag:extend{
+SMODS.Switch = SMODS.Tag:extend{
     atlas = 'showdown_switches',
     set = 'Switch',
 }
 
 G.P_CENTER_POOLS.Switch = {}
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "mystery_switch",
 	pos = coordinate(1),
 	min_ante = 1,
@@ -36,7 +36,7 @@ Showdown.Switch({
 	end
 })
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "money_switch",
 	pos = coordinate(2),
 	config = { type = "eval", triggers = 4, dollars = 5 },
@@ -64,7 +64,7 @@ Showdown.Switch({
 	end
 })
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "nebula_switch",
 	pos = coordinate(3),
 	config = { type = "immediate", triggers = 3 },
@@ -95,7 +95,7 @@ Showdown.Switch({
 	end
 })
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "gift_switch",
 	pos = coordinate(4),
 	config = { type = "immediate", money = 10 },
@@ -135,7 +135,7 @@ Showdown.Switch({
 	end
 })
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "burning_switch",
 	pos = coordinate(5),
 	min_ante = 2,
@@ -151,7 +151,7 @@ Showdown.Switch({
 	end
 })
 
-Showdown.Switch({
+SMODS.Switch({
 	key = "duplicate_switch",
 	pos = coordinate(6),
 	config = { type = "immediate", tags = 3 },

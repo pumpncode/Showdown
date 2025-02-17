@@ -1,11 +1,10 @@
-SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95})
-
-SMODS.Enhancement({
+local ghost = {
+	type = 'Enhancement',
 	key = 'ghost',
 	atlas = 'showdown_enhancements',
 	pos = coordinate(1, 7),
 	config = {extra = {x_mult = 1.25, x_chips = 1.25, shatter_chance = 8}},
-    loc_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
 		if card then
 			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips, card.ability.extra.shatter_chance, G.GAME.probabilities.normal}}
 		end
@@ -20,14 +19,15 @@ SMODS.Enhancement({
 			}
 		end
 	end
-})
+}
 
-SMODS.Enhancement({
+local holy = {
+	type = 'Enhancement',
 	key = 'holy',
 	atlas = 'showdown_enhancements',
 	pos = coordinate(2, 7),
 	config = {extra = {x_mult = 1, x_mult_gain = 0.05}},
-    loc_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
 		if card then
 			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_mult_gain}}
 		end
@@ -41,19 +41,33 @@ SMODS.Enhancement({
 			}
 		end
 	end
-})
+}
 
-local Centergenerate_uiRef = SMODS.Center.generate_ui
-function SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
-	if specific_vars then
-		if not specific_vars.debuffed then
-			if specific_vars.act_as then
-				localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
+return {
+	enabled = Showdown.config["Enhancements"],
+	list = function ()
+		local list = {
+			ghost,
+			holy,
+		}
+		return list
+	end,
+	exec = function()
+		SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95})
+
+		local Centergenerate_uiRef = SMODS.Center.generate_ui
+		function SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+			if specific_vars then
+				if not specific_vars.debuffed then
+					if specific_vars.act_as then
+						localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
+					end
+					if specific_vars.default_wild then
+						localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
+					end
+				end
 			end
-			if specific_vars.default_wild then
-				localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
-			end
+			Centergenerate_uiRef(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
 		end
 	end
-	Centergenerate_uiRef(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
-end
+}

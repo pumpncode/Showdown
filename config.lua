@@ -1,0 +1,25 @@
+return {
+    ["Ranks"] = true,
+    ["Achievements"] = true,
+    ["Blinds"] = true,
+    ["Decks"] = true,
+    ["DeckSkins"] = true,
+    ["Enhancements"] = true,
+    ["Jokers"] = {
+        ["Normal"] = true,
+        ["Jean-Paul"] = true,
+        ["Versatile"] = true,
+    },
+    ["Tags"] = {
+        ["Classic"] = true,
+        ["Switches"] = false,
+    },
+    ["Consumeables"] = {
+        ["Tarots"] = true,
+        ["Spectrals"] = true,
+        ["Mathematics"] = true,
+        ["Logics"] = false,
+    },
+    ["Vouchers"] = true,
+    ["Stickers"] = true,
+}

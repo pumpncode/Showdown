@@ -198,7 +198,6 @@ if not (SMODS.Mods["Paperback"] or {}).can_load then
 end
 ]]--
 baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
-Showdown.extraSuits = {}
 
 ---Returns all vanilla and modded suits. Args can be passed to have more control over the suits:
 ---- noModded: Exclude Modded suits
