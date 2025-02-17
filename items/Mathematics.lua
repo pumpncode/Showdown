@@ -1,49 +1,20 @@
-SMODS.Atlas({key = 'showdown_mathematic_undiscovered', path = 'Consumables/MathematicsUndiscovered.png', px = 71, py = 95})
-SMODS.Atlas({key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', px = 71, py = 95})
-
-SMODS.ConsumableType{
+local consumeable_type = {
+	type = 'ConsumableType',
     key = 'Mathematic',
     primary_colour = G.C.SHOWDOWN_CALCULUS,
     secondary_colour = G.C.SHOWDOWN_CALCULUS_DARK,
     collection_rows = {4, 4}
 }
 
-SMODS.UndiscoveredSprite{
+local undiscovered_sprite = {
+	type = 'UndiscoveredSprite',
     key = 'Mathematic',
     atlas = 'showdown_mathematic_undiscovered',
     pos = coordinate(1)
 }
 
-function mathDestroyCard(card, args)
-	if not card then return end
-	if not args then args = {} end
-	if
-		not G.GAME.mathematic_no_destroy_chance
-		or (G.GAME.mathematic_no_destroy_chance and pseudorandom('mathematic_no_destroy_chance') < G.GAME.probabilities.normal / 3)
-	then
-		card:start_dissolve(args.dissolve_colours, args.silent, args.dissolve_time_fac, args.no_juice)
-		return true
-	else
-		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
-			attention_text({
-				text = localize('k_nope_ex'),
-				scale = 1.3,
-				hold = 1.4,
-				major = card,
-				backdrop_colour = G.C.RED,
-				align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or 'cm',
-				offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -2.2 or -2},
-				silent = true
-				})
-				G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
-					play_sound('tarot2', 0.76, 0.4);return true end}))
-				play_sound('tarot2', 1, 0.4)
-				card:juice_up(0.3, 0.5)
-		return true end }))
-	end
-end
-
-SMODS.Consumable({ -- Constant
+local constant = {
+	type = 'Consumable',
 	key = 'constant',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -79,9 +50,10 @@ SMODS.Consumable({ -- Constant
         end
 		for i=1, #toEnhance do unflipCard(toEnhance[i], i, #toEnhance) end
     end
-})
+}
 
-SMODS.Consumable({ -- Variable
+local variable = {
+	type = 'Consumable',
 	key = 'variable',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -102,9 +74,10 @@ SMODS.Consumable({ -- Variable
 		delay(0.6)
 		if money > 0 then ease_dollars(money) end
     end
-})
+}
 
-SMODS.Consumable({ -- Function
+local func = {
+	type = 'Consumable',
 	key = 'function',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -137,9 +110,10 @@ SMODS.Consumable({ -- Function
         return true end })
         delay(0.5)
     end
-})
+}
 
-SMODS.Consumable({ -- Shape
+local shape = {
+	type = 'Consumable',
 	key = 'shape',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -170,9 +144,10 @@ SMODS.Consumable({ -- Shape
         return true end })
         delay(0.5)
     end
-})
+}
 
-SMODS.Consumable({ -- Vector
+local vector = {
+	type = 'Consumable',
 	key = 'vector',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -191,14 +166,15 @@ SMODS.Consumable({ -- Vector
             event({trigger = 'after', delay = 0.1, func = function() mathDestroyCard(G.hand.highlighted[i], {nil, i == #G.hand.highlighted}) return true end })
         end
     end
-})
+}
 
 local function joker_probability_compat(jonkler)
 	if not jonkler then return false end
 	return true
 end
 
-SMODS.Consumable({ -- Probability
+local probability = {
+	type = 'Consumable',
 	key = 'probability',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -260,9 +236,10 @@ SMODS.Consumable({ -- Probability
 			}
 		end ]]
 	end,
-})
+}
 
-SMODS.Consumable({ -- Sequence
+local sequence = {
+	type = 'Consumable',
 	key = 'sequence',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -288,9 +265,10 @@ SMODS.Consumable({ -- Sequence
         end
 		
     end
-})
+}
 
-SMODS.Consumable({ -- Operation
+local operation = {
+	type = 'Consumable',
 	key = 'operation',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -355,14 +333,15 @@ SMODS.Consumable({ -- Operation
 			playing_card_joker_effects(card)
 		return true end })
     end
-})
+}
 
 -- Booster Packs
 
-SMODS.Atlas({key = 'showdown_booster_packs_mathematic', path = 'BoostersMathematic.png', px = 71, py = 95})
+local boosters = {}
 
 for i = 1, 4 do
-    SMODS.Booster{
+    table.insert(boosters, {
+		type = 'Booster',
         key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
         config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
         create_card = function(self, card)
@@ -413,158 +392,215 @@ for i = 1, 4 do
                 }))
             end
         end,
-    }
+    })
 end
 
-local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
-function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
-	if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
-		if card.ability.set == "Mathematic" then
-			if G.draw_hand_math then
-				return {
-					n = G.UIT.ROOT,
-					config = { padding = -0.1, colour = G.C.CLEAR },
-					nodes = {
-						{
-							n = G.UIT.R,
-							config = {
-								ref_table = card,
-								r = 0.08,
-								padding = 0.1,
-								align = "bm",
-								minw = 0.5 * card.T.w - 0.15,
-								minh = 0.7 * card.T.h,
-								maxw = 0.7 * card.T.w - 0.15,
-								hover = true,
-								shadow = true,
-								colour = G.C.UI.BACKGROUND_INACTIVE,
-								one_press = true,
-								button = "use_card",
-								func = "can_reserve_card",
-							},
-							nodes = {
-								{
-									n = G.UIT.T,
-									config = {
-										text = localize("b_pull"),
-										colour = G.C.UI.TEXT_LIGHT,
-										scale = 0.55,
-										shadow = true,
-									},
-								},
-							},
-						},
-						{
-							n = G.UIT.R,
-							config = {
-								ref_table = card,
-								r = 0.08,
-								padding = 0.1,
-								align = "bm",
-								minw = 0.5 * card.T.w - 0.15,
-								maxw = 0.9 * card.T.w - 0.15,
-								minh = 0.1 * card.T.h,
-								hover = true,
-								shadow = true,
-								colour = G.C.UI.BACKGROUND_INACTIVE,
-								one_press = true,
-								button = "Do you know that this parameter does nothing?",
-								func = "can_use_consumeable",
-							},
-							nodes = {
-								{
-									n = G.UIT.T,
-									config = {
-										text = localize("b_use"),
-										colour = G.C.UI.TEXT_LIGHT,
-										scale = 0.45,
-										shadow = true,
-									},
-								},
-							},
-						},
-						{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
-						{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
-						{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
-						{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
-						-- Betmma can't explain it, neither can I
-					},
-				}
+return {
+	enabled = Showdown.config["Consumeables"]["Mathematics"],
+	list = function ()
+		local list = {
+			consumeable_type,
+			undiscovered_sprite,
+			constant,
+			variable,
+			func,
+			shape,
+			vector,
+			probability,
+			sequence,
+			operation,
+		}
+		for _, b in ipairs(boosters) do
+			table.insert(list, b)
+		end
+		return list
+	end,
+	atlases = {
+		{key = 'showdown_mathematic_undiscovered', path = 'Consumables/MathematicsUndiscovered.png', px = 71, py = 95},
+		{key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', px = 71, py = 95},
+		{key = 'showdown_booster_packs_mathematic', path = 'BoostersMathematic.png', px = 71, py = 95},
+	},
+	exec = function ()
+		function mathDestroyCard(card, args)
+			if not card then return end
+			if not args then args = {} end
+			if
+				not G.GAME.mathematic_no_destroy_chance
+				or (G.GAME.mathematic_no_destroy_chance and pseudorandom('mathematic_no_destroy_chance') < G.GAME.probabilities.normal / 3)
+			then
+				card:start_dissolve(args.dissolve_colours, args.silent, args.dissolve_time_fac, args.no_juice)
+				return true
+			else
+				G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+					attention_text({
+						text = localize('k_nope_ex'),
+						scale = 1.3,
+						hold = 1.4,
+						major = card,
+						backdrop_colour = G.C.RED,
+						align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or 'cm',
+						offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -2.2 or -2},
+						silent = true
+						})
+						G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+							play_sound('tarot2', 0.76, 0.4);return true end}))
+						play_sound('tarot2', 1, 0.4)
+						card:juice_up(0.3, 0.5)
+				return true end }))
 			end
-			return {
-				n = G.UIT.ROOT,
-				config = { padding = -0.1, colour = G.C.CLEAR },
-				nodes = {
-					{
-						n = G.UIT.R,
-						config = {
-							ref_table = card,
-							r = 0.08,
-							padding = 0.1,
-							align = "bm",
-							minw = 0.5 * card.T.w - 0.15,
-							minh = 0.7 * card.T.h,
-							maxw = 0.7 * card.T.w - 0.15,
-							hover = true,
-							shadow = true,
-							colour = G.C.UI.BACKGROUND_INACTIVE,
-							one_press = true,
-							button = "use_card",
-							func = "can_reserve_card",
-						},
+		end
+
+		local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
+		function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
+			if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
+				if card.ability.set == "Mathematic" then
+					if G.draw_hand_math then
+						return {
+							n = G.UIT.ROOT,
+							config = { padding = -0.1, colour = G.C.CLEAR },
+							nodes = {
+								{
+									n = G.UIT.R,
+									config = {
+										ref_table = card,
+										r = 0.08,
+										padding = 0.1,
+										align = "bm",
+										minw = 0.5 * card.T.w - 0.15,
+										minh = 0.7 * card.T.h,
+										maxw = 0.7 * card.T.w - 0.15,
+										hover = true,
+										shadow = true,
+										colour = G.C.UI.BACKGROUND_INACTIVE,
+										one_press = true,
+										button = "use_card",
+										func = "can_reserve_card",
+									},
+									nodes = {
+										{
+											n = G.UIT.T,
+											config = {
+												text = localize("b_pull"),
+												colour = G.C.UI.TEXT_LIGHT,
+												scale = 0.55,
+												shadow = true,
+											},
+										},
+									},
+								},
+								{
+									n = G.UIT.R,
+									config = {
+										ref_table = card,
+										r = 0.08,
+										padding = 0.1,
+										align = "bm",
+										minw = 0.5 * card.T.w - 0.15,
+										maxw = 0.9 * card.T.w - 0.15,
+										minh = 0.1 * card.T.h,
+										hover = true,
+										shadow = true,
+										colour = G.C.UI.BACKGROUND_INACTIVE,
+										one_press = true,
+										button = "Do you know that this parameter does nothing?",
+										func = "can_use_consumeable",
+									},
+									nodes = {
+										{
+											n = G.UIT.T,
+											config = {
+												text = localize("b_use"),
+												colour = G.C.UI.TEXT_LIGHT,
+												scale = 0.45,
+												shadow = true,
+											},
+										},
+									},
+								},
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								-- Betmma can't explain it, neither can I
+							},
+						}
+					end
+					return {
+						n = G.UIT.ROOT,
+						config = { padding = -0.1, colour = G.C.CLEAR },
 						nodes = {
 							{
-								n = G.UIT.T,
+								n = G.UIT.R,
 								config = {
-									text = localize("b_pull"),
-									colour = G.C.UI.TEXT_LIGHT,
-									scale = 0.55,
+									ref_table = card,
+									r = 0.08,
+									padding = 0.1,
+									align = "bm",
+									minw = 0.5 * card.T.w - 0.15,
+									minh = 0.7 * card.T.h,
+									maxw = 0.7 * card.T.w - 0.15,
+									hover = true,
 									shadow = true,
+									colour = G.C.UI.BACKGROUND_INACTIVE,
+									one_press = true,
+									button = "use_card",
+									func = "can_reserve_card",
+								},
+								nodes = {
+									{
+										n = G.UIT.T,
+										config = {
+											text = localize("b_pull"),
+											colour = G.C.UI.TEXT_LIGHT,
+											scale = 0.55,
+											shadow = true,
+										},
+									},
 								},
 							},
 						},
-					},
-				},
-			}
+					}
+				end
+			end
+			return G_UIDEF_use_and_sell_buttons_ref(card)
 		end
-	end
-	return G_UIDEF_use_and_sell_buttons_ref(card)
-end
-if not (SMODS.Mods["Cryptid"] or {}).can_load then
-	--Code from Betmma's Vouchers
-	G.FUNCS.can_reserve_card = function(e)
-		if #G.consumeables.cards < G.consumeables.config.card_limit then
-			e.config.colour = G.C.GREEN
-			e.config.button = "reserve_card"
-		else
-			e.config.colour = G.C.UI.BACKGROUND_INACTIVE
-			e.config.button = nil
+		if not (SMODS.Mods["Cryptid"] or {}).can_load then
+			--Code from Betmma's Vouchers
+			G.FUNCS.can_reserve_card = function(e)
+				if #G.consumeables.cards < G.consumeables.config.card_limit then
+					e.config.colour = G.C.GREEN
+					e.config.button = "reserve_card"
+				else
+					e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+					e.config.button = nil
+				end
+			end
+			G.FUNCS.reserve_card = function(e)
+				local c1 = e.config.ref_table
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.1,
+					func = function()
+						c1.area:remove_card(c1)
+						c1:add_to_deck()
+						if c1.children.price then
+							c1.children.price:remove()
+						end
+						c1.children.price = nil
+						if c1.children.buy_button then
+							c1.children.buy_button:remove()
+						end
+						c1.children.buy_button = nil
+						remove_nils(c1.children)
+						G.consumeables:emplace(c1)
+						G.GAME.pack_choices = G.GAME.pack_choices - 1
+						if G.GAME.pack_choices <= 0 then
+							G.FUNCS.end_consumeable(nil, delay_fac)
+						end
+						return true
+					end,
+				}))
+			end
 		end
-	end
-	G.FUNCS.reserve_card = function(e)
-		local c1 = e.config.ref_table
-		G.E_MANAGER:add_event(Event({
-			trigger = "after",
-			delay = 0.1,
-			func = function()
-				c1.area:remove_card(c1)
-				c1:add_to_deck()
-				if c1.children.price then
-					c1.children.price:remove()
-				end
-				c1.children.price = nil
-				if c1.children.buy_button then
-					c1.children.buy_button:remove()
-				end
-				c1.children.buy_button = nil
-				remove_nils(c1.children)
-				G.consumeables:emplace(c1)
-				G.GAME.pack_choices = G.GAME.pack_choices - 1
-				if G.GAME.pack_choices <= 0 then
-					G.FUNCS.end_consumeable(nil, delay_fac)
-				end
-				return true
-			end,
-		}))
-	end
-end
+	end,
+}

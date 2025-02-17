@@ -1,6 +1,5 @@
-SMODS.Atlas({key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34})
-
-SMODS.Tag({
+local green_key = {
+	type = 'Tag',
 	key = "green_key",
 	atlas = "showdown_tags",
 	pos = coordinate(1),
@@ -24,9 +23,10 @@ SMODS.Tag({
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[3]
 	end
-})
+}
 
-SMODS.Tag({
+local jean_paul = {
+	type = 'Tag',
 	key = "jean_paul",
 	atlas = "showdown_tags",
 	pos = coordinate(2),
@@ -51,9 +51,10 @@ SMODS.Tag({
             return true
 		end
 	end
-})
+}
 
-SMODS.Tag({
+local theorem = {
+	type = 'Tag',
 	key = "theorem",
 	atlas = "showdown_tags",
 	pos = coordinate(3),
@@ -85,4 +86,24 @@ SMODS.Tag({
 			return true
 		end
 	end
-})
+}
+
+return {
+	enabled = Showdown.config["Tags"]["Classic"],
+	list = function ()
+		local list = {}
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, green_key)
+		end
+		if Showdown.config["Jokers"]["Jean-Paul"] then
+			table.insert(list, jean_paul)
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, theorem)
+		end
+		return list
+	end,
+	atlases = {
+		{key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34},
+	},
+}

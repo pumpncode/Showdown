@@ -1,141 +1,11 @@
-local function lookFor(card)
-    local jokers = find_joker(card.ability.name)
-    if G.shop_jokers then
-        for _, v in pairs(G.shop_jokers) do
-            if v and type(v) == 'table' and v.ability and v.ability.name == card.ability.name and not v.debuff then
-                table.insert(jokers, v)
-            end
-        end
-    end
-    for k,v in pairs(jokers) do
-        if v == card then return k end
-    end
-    return 0
-end
-
-function say(card, args)
-    if not card.hasSpeech then print(card.ability.name.." tried to speak. But sadly, he remembers that he does not have any mouth...") return end
-    if not args.prob and not args.guaranteed then print(card.ability.name.." tried to speak. But sadly, he doesn't know how to count...") return end
-    if not args then args = {} end
-    if args.guaranteed or math.random(args.prob) == 1 then
-        card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true})
-        local queue = card.ability.name..'_'..lookFor(card)
-        if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {}
-        else G.E_MANAGER:clear_queue(queue) end
-        card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5), nil, queue)
-        G.E_MANAGER:add_event(Event({
-            trigger = 'after',
-            delay = args.delay or G.SETTINGS.GAMESPEED * 5,
-            func = function()
-                card:remove_speech_bubble()
-              return true
-            end
-        }), queue)
-        card.ability.extra.talk = math.random(750, 2500)
-    end
-end
-
-function speech_bubble(text_key, loc_vars)
-    local text = {}
-    if loc_vars and loc_vars.quip then
-      localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
-    else
-      localize{type = 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
-    end
-    local row = {}
-    for k, v in ipairs(text) do
-      row[#row+1] =  {n=G.UIT.R, config={align = "cl"}, nodes=v}
-    end
-    local t = {n = G.UIT.ROOT, config = {align = "cm", minh = 0, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
-                  {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.1, minw = 1, colour = G.C.WHITE}, nodes = {
-                    {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.03, minw = 1, colour = G.C.WHITE}, nodes = row}}
-                  }
-                }}
-    return t
-end
-
--- Taken from card_character
--- I originally used card_character to make Jean-Paul speak, but on top of being annoying to use here, I couldn't load it when reloading a game
--- So I decided to give speech directly to the card :3
--- If i did things right, giveSpeech and say are public functions which means that is you want to, you can give speech to any joker you want
--- (If you do this, think about updating your lovely patches like I did for Jean-Paul (lines 290 to 300))
-function giveSpeech(card)
-    card.hasSpeech = true
-
-    card.add_speech_bubble = function(text_key, loc_vars)
-        if card.children.speech_bubble then card.children.speech_bubble:remove() end
-        card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
-        card.children.speech_bubble = UIBox{
-            definition = speech_bubble(text_key, loc_vars, card),
-            config = card.config.speech_bubble_align
-        }
-        card.children.speech_bubble:set_role{
-            role_type = 'Major',
-            xy_bond = 'Strong',
-            r_bond = 'Strong',
-            major = card,
-        }
-        card.children.speech_bubble.states.visible = false
-    end
-
-    card.remove_speech_bubble = function()
-        if card.children.speech_bubble then card.children.speech_bubble:remove(); card.children.speech_bubble = nil end
-    end
-
-    card.say_stuff = function(n, not_first, queue)
-        if not not_first then
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.1,
-                func = function()
-                    if card.children.speech_bubble then card.children.speech_bubble.states.visible = true end
-                    card.say_stuff(n, true)
-                  return true
-                end
-            }), queue)
-        else
-            if n <= 0 then return end
-            --play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
-            play_sound('voice'..math.random(1, 11), (math.random()*0.2+1), 0.5)
-            card:juice_up(nil, 0.05)
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                blockable = false, blocking = false,
-                delay = 0.13,
-                func = function()
-                    card.say_stuff(n-1, true)
-                return true
-                end
-            }), queue)
-        end
-    end
-
-    local drawRef = card.draw
-    card.draw = function(layer)
-        if card.children.speech_bubble then
-            card.children.speech_bubble:draw()
-        end
-        drawRef(layer)
-    end
-    
-    local moveRef = card.move
-    card.move = function(self, dt)
-        moveRef(self, dt)
-        if self.children.speech_bubble then
-            self.children.speech_bubble:set_alignment(self:align_h_popup())
-        end
-    end
-end
-
----- Jean-Paul
-
-create_joker({
-    name = 'jean_paul',
+local jean_paul = {
+    type = 'Joker',
+    key = 'jean_paul',
 	atlas = "showdown_jokers",
 	pos = coordinate(1),
-    vars = {{talk = 0}, {inBlind = false}},
-    rarity = 'Common', cost = 2,
-    blueprint = false, perishable = false, eternal = true,
+    config = {extra = {talk = 0, inBlind = false}},
+    rarity = 1, cost = 2,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if card.hasSpeech and not context.blueprint and not context.repetition then
             if context.end_of_round and not context.individual then
@@ -191,7 +61,7 @@ create_joker({
         end
     end,
     add_to_deck = function(self, card, from_debuff)
-        giveSpeech(card)
+        SMODS.giveSpeech(card)
         check_for_unlock({type = 'get_jean_paul'})
     end,
     update = function(self, card, dt)
@@ -209,4 +79,144 @@ create_joker({
             card.ability.extra.talk = card.ability.extra.talk - 1
         end
     end
-})
+}
+
+return {
+	enabled = Showdown.config["Jokers"]["Jean-Paul"],
+	list = function ()
+		local list = {
+            jean_paul,
+        }
+		return list
+	end,
+    exec = function ()
+        local function lookFor(card)
+            local jokers = find_joker(card.ability.name)
+            if G.shop_jokers then
+                for _, v in pairs(G.shop_jokers) do
+                    if v and type(v) == 'table' and v.ability and v.ability.name == card.ability.name and not v.debuff then
+                        table.insert(jokers, v)
+                    end
+                end
+            end
+            for k,v in pairs(jokers) do
+                if v == card then return k end
+            end
+            return 0
+        end
+        
+        function say(card, args)
+            if not card.hasSpeech then print(card.ability.name.." tried to speak. But sadly, he remembers that he does not have any mouth...") return end
+            if not args.prob and not args.guaranteed then print(card.ability.name.." tried to speak. But sadly, he doesn't know how to count...") return end
+            if not args then args = {} end
+            if args.guaranteed or math.random(args.prob) == 1 then
+                card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true})
+                local queue = card.ability.name..'_'..lookFor(card)
+                if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {}
+                else G.E_MANAGER:clear_queue(queue) end
+                card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5), nil, queue)
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = args.delay or G.SETTINGS.GAMESPEED * 5,
+                    func = function()
+                        card:remove_speech_bubble()
+                      return true
+                    end
+                }), queue)
+                card.ability.extra.talk = math.random(750, 2500)
+            end
+        end
+        
+        function speech_bubble(text_key, loc_vars)
+            local text = {}
+            if loc_vars and loc_vars.quip then
+              localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
+            else
+              localize{type = 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
+            end
+            local row = {}
+            for k, v in ipairs(text) do
+              row[#row+1] =  {n=G.UIT.R, config={align = "cl"}, nodes=v}
+            end
+            local t = {n = G.UIT.ROOT, config = {align = "cm", minh = 0, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
+                          {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.1, minw = 1, colour = G.C.WHITE}, nodes = {
+                            {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.03, minw = 1, colour = G.C.WHITE}, nodes = row}}
+                          }
+                        }}
+            return t
+        end
+        
+        -- Taken from card_character
+        -- I originally used card_character to make Jean-Paul speak, but on top of being annoying to use here, I couldn't load it when reloading a game
+        -- So I decided to give speech directly to the card :3
+        -- If i did things right, giveSpeech and say are public functions which means that is you want to, you can give speech to any joker you want
+        -- (If you do this, think about updating your lovely patches like I did for Jean-Paul (lines 290 to 300))
+        function SMODS.giveSpeech(card)
+            card.hasSpeech = true
+        
+            card.add_speech_bubble = function(text_key, loc_vars)
+                if card.children.speech_bubble then card.children.speech_bubble:remove() end
+                card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
+                card.children.speech_bubble = UIBox{
+                    definition = speech_bubble(text_key, loc_vars, card),
+                    config = card.config.speech_bubble_align
+                }
+                card.children.speech_bubble:set_role{
+                    role_type = 'Major',
+                    xy_bond = 'Strong',
+                    r_bond = 'Strong',
+                    major = card,
+                }
+                card.children.speech_bubble.states.visible = false
+            end
+        
+            card.remove_speech_bubble = function()
+                if card.children.speech_bubble then card.children.speech_bubble:remove(); card.children.speech_bubble = nil end
+            end
+        
+            card.say_stuff = function(n, not_first, queue)
+                if not not_first then
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.1,
+                        func = function()
+                            if card.children.speech_bubble then card.children.speech_bubble.states.visible = true end
+                            card.say_stuff(n, true)
+                          return true
+                        end
+                    }), queue)
+                else
+                    if n <= 0 then return end
+                    --play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
+                    play_sound('voice'..math.random(1, 11), (math.random()*0.2+1), 0.5)
+                    card:juice_up(nil, 0.05)
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        blockable = false, blocking = false,
+                        delay = 0.13,
+                        func = function()
+                            card.say_stuff(n-1, true)
+                        return true
+                        end
+                    }), queue)
+                end
+            end
+        
+            local drawRef = card.draw
+            card.draw = function(layer)
+                if card.children.speech_bubble then
+                    card.children.speech_bubble:draw()
+                end
+                drawRef(layer)
+            end
+            
+            local moveRef = card.move
+            card.move = function(self, dt)
+                moveRef(self, dt)
+                if self.children.speech_bubble then
+                    self.children.speech_bubble:set_alignment(self:align_h_popup())
+                end
+            end
+        end
+    end,
+}

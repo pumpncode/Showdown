@@ -1,6 +1,5 @@
-SMODS.Atlas({key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95})
-
-SMODS.Voucher({ -- Number Theory
+local number_theory = {
+	type = 'Voucher',
 	key = 'number',
 	atlas = 'showdown_vouchers',
     unlocked = true,
@@ -21,9 +20,10 @@ SMODS.Voucher({ -- Number Theory
 			end,
 		}))
 	end,
-})
+}
 
-SMODS.Voucher({ -- Axiom of Infinity
+local axiom_infinity = {
+	type = 'Voucher',
 	key = 'axiom',
 	atlas = 'showdown_vouchers',
     --unlocked = false,
@@ -46,9 +46,10 @@ SMODS.Voucher({ -- Axiom of Infinity
 			end,
 		}))
 	end,
-})
+}
 
-SMODS.Voucher({ -- L U I
+local LUI = {
+	type = 'Voucher',
 	key = 'lui',
 	atlas = 'showdown_vouchers',
     unlocked = true,
@@ -77,9 +78,10 @@ SMODS.Voucher({ -- L U I
 			end,
 		}))
 	end,
-})
+}
 
-SMODS.Voucher({ -- G I
+local GI = {
+	type = 'Voucher',
 	key = 'gi',
 	atlas = 'showdown_vouchers',
     --unlocked = false,
@@ -113,4 +115,23 @@ SMODS.Voucher({ -- G I
 			end,
 		}))
 	end,
-})
+}
+
+return {
+	enabled = Showdown.config["Vouchers"],
+	list = function()
+		local list = {}
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, number_theory)
+			table.insert(list, axiom_infinity)
+		end
+		if Showdown.config["Stickers"] then
+			table.insert(list, LUI)
+			table.insert(list, GI)
+		end
+		return list
+	end,
+	atlases = {
+		{key = 'showdown_vouchers', path = 'Consumables/Vouchers.png', px = 71, py = 95},
+	},
+}

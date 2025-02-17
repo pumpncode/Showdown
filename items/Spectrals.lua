@@ -1,6 +1,5 @@
-SMODS.Atlas({key = "showdown_spectrals", path = "Consumables/Spectrals.png", px = 71, py = 95})
-
-SMODS.Consumable({ -- Mist
+local mist = {
+	type = 'Consumable',
 	key = 'mist',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
@@ -25,9 +24,10 @@ SMODS.Consumable({ -- Mist
 		end
 		for i=1, self.config.change do unflipCard(temp_hand[i], i, self.config.change) end
     end
-})
+}
 
-SMODS.Consumable({ -- Vision
+local vision = {
+	type = 'Consumable',
 	key = 'vision',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
@@ -73,9 +73,10 @@ SMODS.Consumable({ -- Vision
 		delay(0.2)
 		for i=1, #G.hand.cards do unflipCard(G.hand.cards[i], i, #G.hand.cards) end
     end
-})
+}
 
-SMODS.Consumable({ -- Blue Key
+local blue_key = {
+	type = 'Consumable',
 	key = 'blue_key',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
@@ -93,4 +94,22 @@ SMODS.Consumable({ -- Blue Key
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[2]
 	end
-})
+}
+
+return {
+	enabled = Showdown.config["Consumeables"]["Spectrals"],
+	list = function ()
+		local list = {}
+		if Showdown.config["Ranks"] then
+			table.insert(list, mist)
+			table.insert(list, vision)
+		end
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, blue_key)
+		end
+		return list
+	end,
+	atlases = {
+		{key = "showdown_spectrals", path = "Consumables/Spectrals.png", px = 71, py = 95},
+	},
+}

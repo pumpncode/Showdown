@@ -60,12 +60,13 @@ SMODS.Voucher({ -- Collatz Conjecture
 
 SMODS.Atlas({key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95})
 
-create_joker({ -- Infection
+local infection = { -- Infection
+	type = 'Joker',
     name = 'infection',
     atlas = "showdown_cryptidJokers",
     pos = coordinate(1),
-    vars = {{mult = 1}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {mult = 1}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.config.mult } }
 	end,
     rarity = 'cry_cursed', --cost = 4,
@@ -73,10 +74,10 @@ create_joker({ -- Infection
     calculate = function(self, card, context)
         --
     end,
-    custom_in_pool = function()
+    in_pool = function()
         return false
     end,
-})
+}
 
 -- Food
 

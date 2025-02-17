@@ -16,6 +16,11 @@ for _, file in ipairs(files) do
 		local item = f()
 		if item and item.enabled then
 			if item.exec then item.exec() end
+			if item.atlases then
+				for _, atlas in ipairs(item.atlases) do
+					SMODS.Atlas(atlas)
+				end
+			end
 			if item.list then
 				local list = item.list()
 				for _, obj in ipairs(list) do
@@ -24,6 +29,7 @@ for _, file in ipairs(files) do
 					end
 				end
 			end
+			if item.post_exec then item.post_exec() end
 		end
 	end
 end
@@ -78,6 +84,7 @@ local showdown_config_tab = function()
 								
 								{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_jokers_header"), colour = G.C.ORANGE, scale = 0.5}}}},
 								create_toggle({label = localize("showdown_config_jokers_normal"), ref_table = Showdown.config["Jokers"], ref_value = 'Normal', callback = function() shdwn:save_config() end}),
+								create_toggle({label = localize("showdown_config_jokers_final"), ref_table = Showdown.config["Jokers"], ref_value = 'Final', callback = function() shdwn:save_config() end}),
 								create_toggle({label = localize("showdown_config_jokers_jean_paul"), ref_table = Showdown.config["Jokers"], ref_value = 'Jean-Paul', callback = function() shdwn:save_config() end}),
 								create_toggle({label = localize("showdown_config_jokers_versatile"), ref_table = Showdown.config["Jokers"], ref_value = 'Versatile', callback = function() shdwn:save_config() end}),
 							

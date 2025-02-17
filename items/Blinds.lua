@@ -62,16 +62,19 @@ return {
 	enabled = Showdown.config["Blinds"],
 	list = function()
 		local list = {
-			latch,
 			patient,
 			wasteful,
 			--shameful,
 		}
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, latch)
+		end
 		return list
 	end,
+	atlases = {
+		{key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atlas_table = "ANIMATION_ATLAS", frames = 21},
+	},
 	exec = function()
-		SMODS.Atlas({key = "showdown_blinds", path = "Blinds.png", px = 34, py = 34, atlas_table = "ANIMATION_ATLAS", frames = 21})
-
 		function SMODS.patient_gain_score(blind) -- Thanks Bunco
 			if not G.GAME.patient_scoring then G.GAME.patient_scoring = { score = blind.chips, triggers = 0 } end
 			G.GAME.patient_scoring.triggers = G.GAME.patient_scoring.triggers + 1
@@ -101,7 +104,7 @@ return {
 
 		local gnb = get_new_boss
 		function get_new_boss()
-			for k, v in pairs(G.P_BLINDS) do
+			for k, _ in pairs(G.P_BLINDS) do
 				if not G.GAME.bosses_used[k] then
 					G.GAME.bosses_used[k] = 0
 				end

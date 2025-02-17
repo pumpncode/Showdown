@@ -17,7 +17,7 @@ if not (self.GAME.starting_params.counterpart_replacing or self.GAME.showdown_ch
 end
 '''
 
-# Mirror deck cards, part 1/3
+# Mirror deck cards, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -28,20 +28,7 @@ payload = '''
 counterpart_replacing = false,
 '''
 
-# Mirror deck cards, part 2/3
-[[patches]]
-[patches.pattern]
-target = 'back.lua'
-pattern = "if self.effect.config.spectral_rate then"
-position = 'before'
-match_indent = true
-payload = '''
-if self.effect.config.counterpart_replacing then
-    G.GAME.starting_params.counterpart_replacing = true
-end
-'''
-
-# Mirror deck cards, part 3/3
+# Mirror deck cards, part 2/2
 [[patches]]
 [patches.pattern]
 target = 'game.lua'
@@ -77,7 +64,7 @@ payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
 '''
 
-# Cheater deck cards, part 1/3
+# Cheater deck cards, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -88,20 +75,7 @@ payload = '''
 showdown_cheater = false,
 '''
 
-# Cheater deck cards, part 2/3
-[[patches]]
-[patches.pattern]
-target = 'back.lua'
-pattern = "if self.effect.config.spectral_rate then"
-position = 'before'
-match_indent = true
-payload = '''
-if self.effect.config.showdown_cheater then
-    G.GAME.showdown_cheater = true
-end
-'''
-
-# Cheater deck cards, part 3/3
+# Cheater deck cards, part 2/2
 [[patches]]
 [patches.pattern]
 target = 'game.lua'
@@ -143,7 +117,7 @@ payload = '''
 SMODS.calculate_context({post_hand = true})
 '''
 
-# Engineer deck, part 1/3
+# Engineer deck, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -154,20 +128,7 @@ payload = '''
 showdown_engineer = false,
 '''
 
-# Engineer deck, part 2/3
-[[patches]]
-[patches.pattern]
-target = 'back.lua'
-pattern = "if self.effect.config.spectral_rate then"
-position = 'before'
-match_indent = true
-payload = '''
-if self.effect.config.showdown_engineer then
-    G.GAME.showdown_engineer = true
-end
-'''
-
-# Engineer deck, part 3/3
+# Engineer deck, part 2/2
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"

@@ -1,6 +1,5 @@
-SMODS.Atlas({key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95})
-
-SMODS.Consumable({ -- The Reflection
+local reflection = {
+	type = 'Consumable',
 	key = 'reflection',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -33,9 +32,10 @@ SMODS.Consumable({ -- The Reflection
         return true end })
         delay(0.5)
     end
-})
+}
 
-SMODS.Consumable({ -- The Vessel
+local vessel = {
+	type = 'Consumable',
 	key = 'vessel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -70,9 +70,10 @@ SMODS.Consumable({ -- The Vessel
         return true end })
         delay(0.5)
     end
-})
+}
 
-SMODS.Consumable({ -- The Genie
+local genie = {
+	type = 'Consumable',
 	key = 'genie',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -101,9 +102,10 @@ SMODS.Consumable({ -- The Genie
 		end
 		delay(0.6)
     end
-})
+}
 
-SMODS.Consumable({ -- The Lost
+local lost = {
+	type = 'Consumable',
 	key = 'lost',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -113,9 +115,10 @@ SMODS.Consumable({ -- The Lost
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(4),
-})
+}
 
-SMODS.Consumable({ -- The Angel
+local angel = {
+	type = 'Consumable',
 	key = 'angel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -128,9 +131,10 @@ SMODS.Consumable({ -- The Angel
 	can_use = function(self)
 		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
     end
-})
+}
 
-SMODS.Consumable({ -- Red Key Piece 1
+local red_key_piece_1 = {
+	type = 'Consumable',
 	key = 'red_key_piece_1',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -149,9 +153,10 @@ SMODS.Consumable({ -- Red Key Piece 1
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[1]
 	end
-})
+}
 
-SMODS.Consumable({ -- Red Key Piece 2
+local red_key_piece_2 = {
+	type = 'Consumable',
 	key = 'red_key_piece_2',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -170,4 +175,30 @@ SMODS.Consumable({ -- Red Key Piece 2
 	in_pool = function(self, args)
 		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[1]
 	end
-})
+}
+
+return {
+	enabled = Showdown.config["Consumeables"]["Tarots"],
+	list = function ()
+		local list = {}
+		if Showdown.config["Ranks"] then
+			table.insert(list, reflection)
+			table.insert(list, vessel)
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, genie)
+		end
+		if Showdown.config["Enhancements"] then
+			table.insert(list, lost)
+			table.insert(list, angel)
+		end
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, red_key_piece_1)
+			table.insert(list, red_key_piece_2)
+		end
+		return list
+	end,
+	atlases = {
+		{key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95},
+	},
+}

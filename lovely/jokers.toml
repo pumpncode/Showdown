@@ -318,10 +318,10 @@ end
 [patches.pattern]
 target = "back.lua"
 match_indent = true
-pattern = "if self.name == 'Plasma Deck' and args.context == 'final_scoring_step' then"
-position = "after"
+pattern = "local tot = args.chips + args.mult"
+position = "before"
 payload = '''
-if next(find_joker('versatile_joker')) then
+if next(find_joker('versatile_joker')) and G.GAME.selected_back.name == 'Plasma Deck' then
     local tot = args.chips + args.mult
     args.chips = args.chips + math.floor(tot/4)
     args.mult = args.mult + math.floor(tot/4)

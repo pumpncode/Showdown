@@ -3,6 +3,7 @@ local function make_achievement(key, hidden)
 		type = 'Achievement',
 		key = key,
 		hidden_text = hidden or false,
+		bypass_all_unlocked = true,
 		unlock_condition = function(self, args)
 			if args.type == key then
 				return true

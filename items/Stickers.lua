@@ -1,6 +1,5 @@
-SMODS.Atlas({key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95})
---[[
-SMODS.Sticker({
+local static = {
+	type = 'Sticker',
 	key = 'static',
 	atlas = 'showdown_stickers',
 	pos = coordinate(1, 5),
@@ -10,9 +9,10 @@ SMODS.Sticker({
 		card.ability[self.key] = val
 		card.states.drag.can = not val
 	end,
-})
-]]
-SMODS.Sticker({
+}
+
+local cloud = {
+	type = 'Sticker',
 	key = 'cloud',
 	atlas = 'showdown_stickers',
 	pos = coordinate(2, 5),
@@ -37,9 +37,10 @@ SMODS.Sticker({
 			}
 		end
 	end
-})
+}
 
-SMODS.Sticker({
+local mushroom = {
+	type = 'Sticker',
 	key = 'mushroom',
 	atlas = 'showdown_stickers',
 	pos = coordinate(3, 5),
@@ -52,9 +53,10 @@ SMODS.Sticker({
 			if G.hand then G.hand:change_size(forced[1] and 1 or -1) end
 		end
 	end,
-})
+}
 
-SMODS.Sticker({
+local flower = {
+	type = 'Sticker',
 	key = 'flower',
 	atlas = 'showdown_stickers',
 	pos = coordinate(4, 5),
@@ -67,9 +69,10 @@ SMODS.Sticker({
 			if G.hand then G.consumeables:change_size(forced[1] and 1 or -1) end
 		end
 	end,
-})
+}
 
-SMODS.Sticker({
+local luigi = {
+	type = 'Sticker',
 	key = 'luigi',
 	atlas = 'showdown_stickers',
 	pos = coordinate(5, 5),
@@ -92,9 +95,10 @@ SMODS.Sticker({
 			}
 		end
 	end,
-})
+}
 
-SMODS.Sticker({
+local mario = {
+	type = 'Sticker',
 	key = 'mario',
 	atlas = 'showdown_stickers',
 	pos = coordinate(6, 5),
@@ -115,9 +119,10 @@ SMODS.Sticker({
 			}
 		end
 	end
-})
+}
 
-SMODS.Sticker({
+local star = {
+	type = 'Sticker',
 	key = 'star',
 	atlas = 'showdown_stickers',
 	pos = coordinate(7, 5),
@@ -128,89 +133,110 @@ SMODS.Sticker({
 		card.ability[self.key] = val
 		card:set_debuff()
 	end,
-})
+}
 
-function have_casino_sticker(card)
-	return card.ability.showdown_cloud
-		or card.ability.showdown_mushroom
-		or card.ability.showdown_flower
-		or card.ability.showdown_luigi
-		or card.ability.showdown_mario
-		or card.ability.showdown_star
-end
-
-local cardAdd_to_deckRef = Card.add_to_deck
-function Card:add_to_deck(from_debuff)
-	cardAdd_to_deckRef(self, from_debuff)
-	if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(1) end
-	elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(1) end end
-end
-
-local cardRemoveRef = Card.remove
-function Card:remove()
-	if not (self.area == G.shop_jokers or self.area == G.pack_cards) then
-		if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(-1) end
-		elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(-1) end end
-	end
-	cardRemoveRef(self)
-end
-
-local cardSetDebuffRef = Card.set_debuff
-function Card:set_debuff(should_debuff)
-	if self.ability.showdown_star then self.debuff = false
-	else cardSetDebuffRef(self, should_debuff) end
-end
-
-for _, v in ipairs(SMODS.Sticker.obj_buffer) do
-    local sticker = SMODS.Stickers[v]
-    if
-		sticker.key == 'showdown_cloud'
-		or sticker.key == 'showdown_mushroom'
-		or sticker.key == 'showdown_flower'
-		or sticker.key == 'showdown_luigi'
-		or sticker.key == 'showdown_mario'
-		or sticker.key == 'showdown_star'
-	then
-        table.insert(Showdown.casino, sticker)
-    end
-end
-
-if prequire("debugplus") then
-	local debugplus = require("debugplus")
-	local debugplusHandleKeysRef = debugplus.handleKeys
-	function debugplus.handleKeys(controller, key, dt)
-		if controller.hovering.target and controller.hovering.target:is(Card) then
-			local _card = controller.hovering.target
-			if key == "t" then
-				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
-					--SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
-					print('no static sticker for u :P')
-				end
-			elseif key == "y" then
-				if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
-					if _card.ability.showdown_cloud then
-						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {true})
-					elseif _card.ability.showdown_mushroom then
-						SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {false})
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {true})
-					elseif _card.ability.showdown_flower then
-						SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {false})
-						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
-					elseif _card.ability.showdown_luigi then
-						SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
-						SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
-					elseif _card.ability.showdown_mario then
-						SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
-						SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
-					elseif _card.ability.showdown_star then
-						SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
-					else
-						SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
+return {
+	enabled = Showdown.config["Stickers"],
+	list = function ()
+		local list = {
+			--static,
+			cloud,
+			mushroom,
+			flower,
+			luigi,
+			mario,
+			star,
+		}
+		return list
+	end,
+	atlases = {
+		{key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95},
+	},
+	exec = function ()
+		function have_casino_sticker(card)
+			return card.ability.showdown_cloud
+				or card.ability.showdown_mushroom
+				or card.ability.showdown_flower
+				or card.ability.showdown_luigi
+				or card.ability.showdown_mario
+				or card.ability.showdown_star
+		end
+		
+		local cardAdd_to_deckRef = Card.add_to_deck
+		function Card:add_to_deck(from_debuff)
+			cardAdd_to_deckRef(self, from_debuff)
+			if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(1) end
+			elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(1) end end
+		end
+		
+		local cardRemoveRef = Card.remove
+		function Card:remove()
+			if not (self.area == G.shop_jokers or self.area == G.pack_cards) then
+				if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(-1) end
+				elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(-1) end end
+			end
+			cardRemoveRef(self)
+		end
+		
+		local cardSetDebuffRef = Card.set_debuff
+		function Card:set_debuff(should_debuff)
+			if self.ability.showdown_star then self.debuff = false
+			else cardSetDebuffRef(self, should_debuff) end
+		end
+		
+		if prequire("debugplus") then
+			local debugplus = require("debugplus")
+			local debugplusHandleKeysRef = debugplus.handleKeys
+			function debugplus.handleKeys(controller, key, dt)
+				if controller.hovering.target and controller.hovering.target:is(Card) then
+					local _card = controller.hovering.target
+					if key == "t" then
+						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+							--SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
+							print('no static sticker for u :P')
+						end
+					elseif key == "y" then
+						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+							if _card.ability.showdown_cloud then
+								SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
+								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {true})
+							elseif _card.ability.showdown_mushroom then
+								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {false})
+								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {true})
+							elseif _card.ability.showdown_flower then
+								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {false})
+								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+							elseif _card.ability.showdown_luigi then
+								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+								SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
+							elseif _card.ability.showdown_mario then
+								SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)
+								SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
+							elseif _card.ability.showdown_star then
+								SMODS.Sticker.obj_table.showdown_star:apply(_card, not _card.ability.showdown_star)
+							else
+								SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
+							end
+						end
 					end
 				end
+				debugplusHandleKeysRef(controller, key, dt)
 			end
 		end
-		debugplusHandleKeysRef(controller, key, dt)
+	end,
+	post_exec = function ()
+		for _, v in ipairs(SMODS.Sticker.obj_buffer) do
+			local sticker = SMODS.Stickers[v]
+			if
+				sticker.key == 'showdown_cloud'
+				or sticker.key == 'showdown_mushroom'
+				or sticker.key == 'showdown_flower'
+				or sticker.key == 'showdown_luigi'
+				or sticker.key == 'showdown_mario'
+				or sticker.key == 'showdown_star'
+			then
+				table.insert(Showdown.casino, sticker)
+			end
+		end
 	end
-end
+}

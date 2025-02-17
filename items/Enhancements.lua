@@ -52,9 +52,10 @@ return {
 		}
 		return list
 	end,
+	atlases = {
+		{key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95},
+	},
 	exec = function()
-		SMODS.Atlas({key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95})
-
 		local Centergenerate_uiRef = SMODS.Center.generate_ui
 		function SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
 			if specific_vars then

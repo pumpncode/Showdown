@@ -1,13 +1,9 @@
-SMODS.Atlas({key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95})
-SMODS.Atlas({key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43})
-
-SMODS.Sound({key = "cronch", path = "cronch.ogg"})
+local cronch = {type = 'Sound', key = "cronch", path = "cronch.ogg"}
 
 ---- Final Rarity
 
-SMODS.Rarity{
+local final = {
+    type = 'Rarity',
     key = "Final",
     default_weight = 0,
     badge_colour = HEX("b5a653"),
@@ -21,15 +17,17 @@ SMODS.Rarity{
 
 ---- Jokers
 
---filesystem.load(itemsPath.."JokerJeanPaul.lua")()
-
-create_joker({ -- Crouton
-    name = 'crouton',
+local crouton = {
+    type = 'Joker',
+    key = 'crouton',
 	atlas = "showdown_jokers",
     pos = coordinate(2), soul = coordinate(3),
-    vars = {{x_mult = 1.5}},
-    rarity = 'Legendary', --cost = 5,
-    blueprint = true, eternal = true, perishable = true,
+    config = {extra = {x_mult = 1.5}},
+    loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.x_mult } }
+	end,
+    rarity = 4, cost = 20,
+    blueprint_compat = true, eternal_compat = true, perishable_compat = true,
     unlocked = false,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.hand then
@@ -39,15 +37,19 @@ create_joker({ -- Crouton
             }
         end
     end
-})
+}
 
-create_joker({ -- Pinpoint
-    name = 'pinpoint',
+local pinpoint = {
+    type = 'Joker',
+    key = 'pinpoint',
 	atlas = "showdown_jokers",
 	pos = coordinate(4),
-    vars = {{x_chips = 1.5}},
-    rarity = 'Rare', --cost = 5,
-    blueprint = true, perishable = true, eternal = true,
+    config = {extra = {x_chips = 1.5}},
+    loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.x_chips } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
 	unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
@@ -70,19 +72,20 @@ create_joker({ -- Pinpoint
             }
         end
     end
-})
+}
 
-create_joker({ -- Math Teacher
-    name = 'math_teacher',
+local math_teacher = {
+    type = 'Joker',
+    key = 'math_teacher',
 	atlas = "showdown_jokers",
 	pos = coordinate(5),
-    vars = {{chips = 0}, {chip_mod = 2.5}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips = 0, chip_mod = 2.5}},
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 		return { vars = { card.ability.extra.chips, card.ability.extra.chip_mod } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
@@ -108,18 +111,19 @@ create_joker({ -- Math Teacher
 			}
 		end
     end
-})
+}
 
-create_joker({ -- Gruyère
-    name = 'gruyere',
+local gruyere = {
+    type = 'Joker',
+    key = 'gruyere',
 	atlas = "showdown_jokers",
 	pos = coordinate(6),
-    vars = {{mult = 0}, {mult_mod = 2}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {mult = 0, mult_mod = 2}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.mult, card.ability.extra.mult_mod } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and SMODS.is_zero(context.other_card) and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod
@@ -132,18 +136,19 @@ create_joker({ -- Gruyère
 			}
 		end
     end
-})
+}
 
-create_joker({ -- Mirror
-    name = 'mirror',
+local mirror = {
+    type = 'Joker',
+    key = 'mirror',
 	atlas = "showdown_jokers",
 	pos = coordinate(7),
-    custom_config = {extra = {retrigger = 1}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {retrigger = 1}},
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play then
             print(context.other_card.base.value..": "..context.other_card:get_id())
@@ -156,18 +161,19 @@ create_joker({ -- Mirror
 			end
 		end
     end
-})
-
---[[create_joker({ -- Crime Scene
-    name = 'crime_scene',
+}
+--[[
+local crime_scene = {
+    type = 'Joker',
+    key = 'crime_scene',
     atlas = "showdown_jokers",
     pos = coordinate(8),
-    vars = {{x_mult = 1}, {x_mult_mod = 0.1}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {x_mult = 1, x_mult_mod = 0.1}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_mod } }
     end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and context.other_card.debuff then
             card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_mod
@@ -182,12 +188,13 @@ create_joker({ -- Mirror
     end
 })]]--
 
-create_joker({ -- Ping Pong
-    name = 'ping_pong',
+local ping_pong = {
+    type = 'Joker',
+    key = 'ping_pong',
     atlas = "showdown_jokers",
     pos = coordinate(9),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
             for i=1, #context.scoring_hand do
@@ -206,14 +213,15 @@ create_joker({ -- Ping Pong
             end
         end
     end
-})
+}
 
-create_joker({ -- Color Splash
-    name = 'color_splash',
+local color_splash = {
+    type = 'Joker',
+    key = 'color_splash',
     atlas = "showdown_jokers",
     pos = coordinate(10),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
@@ -244,14 +252,15 @@ create_joker({ -- Color Splash
             end
         end
     end
-})
+}
 
-create_joker({ -- Blue
-    name = 'blue',
+local blue = {
+    type = 'Joker',
+    key = 'blue',
     atlas = "showdown_jokers",
     pos = coordinate(11),
-    rarity = 'Common', cost = 1,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 1,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'chip_score' then
@@ -274,18 +283,19 @@ create_joker({ -- Blue
     add_to_deck = function(self, card, from_debuff)
         check_for_unlock({type = 'blued'})
     end,
-})
+}
 
-create_joker({ -- Spotted Joker
-    name = 'spotted_joker',
+local spotted_joker = {
+    type = 'Joker',
+    key = 'spotted_joker',
 	atlas = "showdown_jokers",
 	pos = coordinate(12),
-    vars = {{chips = 0}, {chip_mod = 0.5}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips = 0, chip_mod = 0.5}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.chips, card.ability.extra.chip_mod } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and SMODS.is_zero(context.other_card) then
             card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
@@ -294,18 +304,19 @@ create_joker({ -- Spotted Joker
             }
         end
     end
-})
+}
 
-create_joker({ -- Golden Roulette
-    name = 'golden_roulette',
+local golden_roulette = {
+    type = 'Joker',
+    key = 'golden_roulette',
     atlas = "showdown_jokers",
     pos = coordinate(13),
-    vars = {{money = 6}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {money = 6}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = false,
+    rarity = 2, cost = 7,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = false,
     calculate = function(self, card, context)
         if context.end_of_round and not context.repetition and not context.individual then
             if not context.blueprint and pseudorandom('golden_roulette') < G.GAME.probabilities.normal / 6 then
@@ -339,14 +350,15 @@ create_joker({ -- Golden Roulette
             end
 		end
     end
-})
+}
 
-create_joker({ -- Bacteria
-    name = 'bacteria',
+local bacteria = {
+    type = 'Joker',
+    key = 'bacteria',
     atlas = "showdown_jokers",
     pos = coordinate(14),
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
             local eval = evaluate_poker_hand(context.scoring_hand)
@@ -367,18 +379,19 @@ create_joker({ -- Bacteria
             end
         end
     end
-})
+}
 
-create_joker({ -- Empty Joker
-    name = 'empty_joker',
+local empty_joker = {
+    type = 'Joker',
+    key = 'empty_joker',
     atlas = "showdown_jokers",
     pos = coordinate(15),
-    vars = {{mult = 12}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {mult = 12}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.mult } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.joker_main then
             for i=1, #context.scoring_hand do
@@ -392,15 +405,16 @@ create_joker({ -- Empty Joker
             
         end
     end
-})
+}
 --[[
-create_joker({ -- Baby Jimbo
-    name = 'baby_jimbo',
+local baby_jimbo = {
+    type = 'Joker',
+    key = 'baby_jimbo',
     atlas = "showdown_jokers",
     pos = coordinate(16),
-    vars = {{sold = false}},
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    config = {extra = {sold = false}},
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if
             context.removing_card
@@ -437,12 +451,13 @@ create_joker({ -- Baby Jimbo
     end
 })
 ]]--
-create_joker({ -- Parmesan
-    name = 'parmesan',
+local parmesan = {
+    type = 'Joker',
+    key = 'parmesan',
     atlas = "showdown_jokers",
     pos = coordinate(17),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and not context.repetition then
             local lowestRank = 11
@@ -462,14 +477,15 @@ create_joker({ -- Parmesan
             end
         end
     end
-})
+}
 
-create_joker({ -- Chaos Card
-    name = 'chaos_card',
+local chaos_card = {
+    type = 'Joker',
+    key = 'chaos_card',
     atlas = "showdown_jokers",
     pos = coordinate(18),
-    rarity = 'Rare', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
@@ -502,33 +518,36 @@ create_joker({ -- Chaos Card
             end
         end
     end
-})
+}
 
-create_joker({ -- SIM Card
-    name = 'sim_card',
+local sim_card = {
+    type = 'Joker',
+    key = 'sim_card',
     atlas = "showdown_jokers",
     pos = coordinate(19),
-    custom_vars = function(self, info_queue, card)
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
-})
+    rarity = 3, cost = 8,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+}
 
-create_joker({ -- Wall
-    name = 'wall',
+local wall = {
+    type = 'Joker',
+    key = 'wall',
     atlas = "showdown_jokers",
     pos = coordinate(20),
-    rarity = 'Rare', cost = 1,
-    blueprint = false, perishable = false, eternal = true,
-})
+    rarity = 3, cost = 1,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = true,
+}
 
-create_joker({ -- one doller
-    name = 'one_doller',
+local one_doller = {
+    type = 'Joker',
+    key = 'one_doller',
     atlas = "showdown_jokers",
     pos = coordinate(21),
-    rarity = 'Common', cost = 1,
-    blueprint = false, perishable = false, eternal = true,
+    rarity = 1, cost = 1,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'buying_card' then
@@ -546,14 +565,15 @@ create_joker({ -- one doller
             }
         end
     end
-})
+}
 
-create_joker({ -- Revolution
-    name = 'revolution',
+local revolution = {
+    type = 'Joker',
+    key = 'revolution',
     atlas = "showdown_jokers",
     pos = coordinate(22),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker and not next(find_joker('Pareidolia')) then
             local ranks = get_all_ranks({noFace = true})
@@ -571,18 +591,19 @@ create_joker({ -- Revolution
             end
         end
     end
-})
+}
 
-create_joker({ -- Fruit Sticker
-    name = 'fruit_sticker',
+local fruit_sticker = {
+    type = 'Joker',
+    key = 'fruit_sticker',
     atlas = "showdown_jokers",
     pos = coordinate(23),
-    vars = {{x_mult = 1.75}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {x_mult = 1.75}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.x_mult } }
 	end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if G.STAGE == G.STAGES.RUN and G.jokers then
@@ -611,18 +632,19 @@ create_joker({ -- Fruit Sticker
             end
         end
     end
-})
+}
 
-create_joker({ -- Sinful Joker
-    name = 'sinful_joker',
+local sinful_joker = {
+    type = 'Joker',
+    key = 'sinful_joker',
     atlas = "showdown_jokers",
     pos = coordinate(24),
-    vars = {{scaling = 3}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {scaling = 3}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.scaling } }
 	end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if next(find_joker('Greedy Joker')) and next(find_joker('Lusty Joker')) and next(find_joker('Wrathful Joker')) and next(find_joker('Gluttonous Joker')) then
@@ -648,18 +670,19 @@ create_joker({ -- Sinful Joker
             end
         end
     end
-})
+}
 
-create_joker({ -- Egg Drawing
-    name = 'egg_drawing',
+local egg_drawing = {
+    type = 'Joker',
+    key = 'egg_drawing',
     atlas = "showdown_jokers",
     pos = coordinate(25),
-    vars = {{money = 4}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {money = 4}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 1, cost = 5,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'selling_card' then
@@ -678,47 +701,52 @@ create_joker({ -- Egg Drawing
             }
         end
     end
-})
+}
 
-create_joker({ -- Jimbo's Makeup
-    name = 'jimbo_makeup',
+local jimbo_makeup = {
+    type = 'Joker',
+    key = 'jimbo_makeup',
     atlas = "showdown_jokers",
     pos = coordinate(26),
-    rarity = 'Rare',
-    blueprint = false, perishable = false, eternal = false,
-})
+    rarity = 3, cost = 2,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
+}
 
-create_joker({ -- Jimbo's Hat
-    name = 'jimbo_hat',
+local jimbo_hat = {
+    type = 'Joker',
+    key = 'jimbo_hat',
     atlas = "showdown_jokers",
     pos = coordinate(27),
-    rarity = 'Rare',
-    blueprint = false, perishable = false, eternal = false,
-})
+    rarity = 3, cost = 2,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
+}
 
-create_joker({ -- Jimbo's Bells
-    name = 'jimbo_bells',
+local jimbo_bells = {
+    type = 'Joker',
+    key = 'jimbo_bells',
     atlas = "showdown_jokers",
     pos = coordinate(28),
-    rarity = 'Rare',
-    blueprint = false, perishable = false, eternal = false,
-})
+    rarity = 3, cost = 2,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
+}
 
-create_joker({ -- Jimbo's Collar
-    name = 'jimbo_collar',
+local jimbo_collar = {
+    type = 'Joker',
+    key = 'jimbo_collar',
     atlas = "showdown_jokers",
     pos = coordinate(29),
-    rarity = 'Rare',
-    blueprint = false, perishable = false, eternal = false,
-})
+    rarity = 3, cost = 2,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
+}
 
-create_joker({ -- Gary McCready
-    name = 'gary_mccready',
+local gary_mccready = {
+    type = 'Joker',
+    key = 'gary_mccready',
     atlas = "showdown_jokers",
     pos = coordinate(30),
-    vars = {{created = false}},
-    rarity = 'Rare',
-    blueprint = false, perishable = false, eternal = false,
+    config = {extra = {created = false}},
+    rarity = 3, cost = 4,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)
         if not context.blueprint and not card.ability.extra.created then
             local makeup, hat, bells, collar = find_joker('jimbo_makeup'), find_joker('jimbo_hat'), find_joker('jimbo_bells'), find_joker('jimbo_collar')
@@ -754,17 +782,19 @@ create_joker({ -- Gary McCready
             end
         end
     end
-})
+}
 
-create_joker({ -- Ultimate Joker
-    name = 'ultimate_joker',
+local ultimate_joker = {
+    type = 'Joker',
+    key = 'ultimate_joker',
     atlas = "showdown_jokers",
     pos = coordinate(31),
-    custom_vars = function(self, info_queue, card)
+    loc_vars = function(self, info_queue, card)
 		return { vars = { G.GAME.round } }
 	end,
     rarity = 'showdown_Final', cost = 20,
-    blueprint = true, perishable = true, eternal = true,
+    in_pool = function(self, args) return false end,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.joker_main and G.GAME.round > 1 then
             return {
@@ -779,14 +809,15 @@ create_joker({ -- Ultimate Joker
     add_to_deck = function(self, card, from_debuff)
         check_for_unlock({type = 'jimbodia'})
     end,
-})
+}
 
-create_joker({ -- Strainer
-    name = 'strainer',
+local strainer = {
+    type = 'Joker',
+    key = 'strainer',
     atlas = "showdown_jokers",
     pos = coordinate(32),
-    vars = {{money = 0}, {moneyRequirement = 10}, {boss_shop = false}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {money = 0, moneyRequirement = 10, boss_shop = false}},
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
         if card.ability.extra.boss_shop then
             return { key = "j_showdown_strainer_active", vars = { card.ability.extra.moneyRequirement, card.ability.extra.money } }
@@ -794,8 +825,8 @@ create_joker({ -- Strainer
             return { key = "j_showdown_strainer", vars = { card.ability.extra.moneyRequirement } }
         end
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = false,
+    rarity = 2, cost = 7,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = false,
     calculate = function(self, card, context)
         if not context.blueprint then
             if G.GAME and G.GAME.blind and G.GAME.blind.boss then
@@ -844,14 +875,15 @@ create_joker({ -- Strainer
             end
         end
     end
-})
+}
 --[[
-create_joker({ -- Billiard
-    name = 'billiard',
+local billiard = {
+    type = 'Joker',
+    key = 'billiard',
     atlas = "showdown_jokers",
     pos = coordinate(33),
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         --
@@ -875,28 +907,30 @@ create_joker({ -- Billiard
     end
 })
 ]]
-create_joker({ -- Hiding in the Details
-    name = 'hiding_details',
+local hiding_details = {
+    type = 'Joker',
+    key = 'hiding_details',
     atlas = "showdown_jokers",
     pos = coordinate(34),
-    custom_vars = function(self, info_queue, card)
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
-})
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+}
 
-create_joker({ -- What a Steel!
-    name = 'what_a_steel',
+local what_a_steel = {
+    type = 'Joker',
+    key = 'what_a_steel',
     atlas = "showdown_jokers",
     pos = coordinate(35),
-    vars = {{steel_tally = 0}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {steel_tally = 0}},
+    loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS['m_steel']
         return { vars = { card.ability.extra.steel_tally, G.GAME.discount_percent } }
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'playing_card_added' then
@@ -925,22 +959,24 @@ create_joker({ -- What a Steel!
             return true end }))
         end
     end
-})
+}
 
-create_joker({ -- Diplomatic Immunity
-    name = 'diplomatic_immunity',
+local diplomatic_immunity = {
+    type = 'Joker',
+    key = 'diplomatic_immunity',
     atlas = "showdown_jokers",
     pos = coordinate(36),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true
-})
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true
+}
 
-create_joker({ -- Nitroglycerin
-    name = 'nitroglycerin',
+local nitroglycerin = {
+    type = 'Joker',
+    key = 'nitroglycerin',
     atlas = "showdown_jokers",
     pos = coordinate(37),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = false, eternal = false,
+    rarity = 2, cost = 4,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)
         if context.selling_self and not context.blueprint and not G.booster_pack then
             for i=#G.hand.cards, 1, -1 do
@@ -951,22 +987,23 @@ create_joker({ -- Nitroglycerin
             end
         end
     end
-})
+}
 
-create_joker({ -- Substitute Teacher
-    name = 'substitute_teacher',
+local substitute_teacher = {
+    type = 'Joker',
+    key = 'substitute_teacher',
     atlas = "showdown_jokers",
     pos = coordinate(38),
-    vars = {{chips_scale = 4}, {mult_scale = 2}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips_scale = 4, mult_scale = 2}},
+    loc_vars = function(self, info_queue, card)
         local mathUsed = G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic or 0
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.mult_scale, mathUsed * card.ability.extra.chips_scale, mathUsed * card.ability.extra.mult_scale } }
 	end,
     locked_vars = function(self, info_queue, card)
         return { vars = { 20, math.max(G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used or 0, 20) } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used >= 20 then
@@ -990,18 +1027,19 @@ create_joker({ -- Substitute Teacher
             }
         end
     end
-})
+}
 
-create_joker({ -- World Map
-    name = 'world_map',
+local world_map = {
+    type = 'Joker',
+    key = 'world_map',
     atlas = "showdown_jokers",
     pos = coordinate(39),
-    vars = {{chips_scale = 12.5}, {chips = 0}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips_scale = 12.5, chips = 0}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers then
             if context.joker_main and card.ability.extra.chips > 0 then
@@ -1030,20 +1068,21 @@ create_joker({ -- World Map
             end
         end
     end
-})
+}
 --[[ 
-create_joker({ -- Bugged Seed
-    name = 'bugged_seed',
+local bugged_seed = {
+    type = 'Joker',
+    key = 'bugged_seed',
     atlas = "showdown_jokers",
     pos = coordinate(40),
     locked_vars = function(self, info_queue, card)
-        if false then -- If Erratic Deck hasn't been discovered
+        if false then -- If Erratic Deck isn't discovered
             return { key = "j_showdown_bugged_seed_unknown" }
         end
         return { key = "j_showdown_bugged_seed" }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if G.GAME.seeded and args.type == '7LB2WVPK' then
@@ -1054,13 +1093,14 @@ create_joker({ -- Bugged Seed
         --
     end
 })
- ]]
-create_joker({ -- Sick Trick
-    name = 'sick_trick',
+]]--
+local sick_trick = {
+    type = 'Joker',
+    key = 'sick_trick',
     atlas = "showdown_jokers",
     pos = coordinate(41),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker and #context.scoring_hand > 1 then
             local idx = 1
@@ -1080,18 +1120,19 @@ create_joker({ -- Sick Trick
             end
         end
     end
-})
+}
 
-create_joker({ -- Jaws
-    name = 'jaws',
+local jaws = {
+    type = 'Joker',
+    key = 'jaws',
     atlas = "showdown_jokers",
     pos = coordinate(42),
-    vars = {{chips_scale = 2}, {chips = 0}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips_scale = 2, chips = 0}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'discard_custom' then
@@ -1118,22 +1159,23 @@ create_joker({ -- Jaws
             }
         end
     end
-})
+}
 
-create_joker({ -- 4 Locks
-    name = '4_locks',
+local locks = {
+    type = 'Joker',
+    key = '4_locks',
     atlas = "showdown_jokers",
     pos = coordinate(43),
-    vars = {{locks = {false, false, false, false}}, {created = false}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {locks = {false, false, false, false}, created = false}},
+    loc_vars = function(self, info_queue, card)
         local locks = {'Locked', 'Locked', 'Locked', 'Locked'}
         for i=1, #card.ability.extra.locks do
             locks[i] = card.ability.extra.locks[i] and 'Unlocked' or 'Locked'
         end
         return { vars = locks }
 	end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = false, perishable = false, eternal = false,
+    rarity = 3, cost = 8,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'win_ultimate' then unlock_card(self) end
@@ -1172,14 +1214,16 @@ create_joker({ -- 4 Locks
             end
         end
     end
-})
+}
 
-create_joker({ -- Unshackled Joker
-    name = 'unshackled_joker',
+local unshackled_joker = {
+    type = 'Joker',
+    key = 'unshackled_joker',
     atlas = "showdown_jokers",
     pos = coordinate(44),
     rarity = 'showdown_Final', cost = 20,
-    blueprint = true, perishable = true, eternal = true,
+    in_pool = function(self, args) return false end,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.joker_main then
             local text = G.FUNCS.get_poker_hand_info(context.scoring_hand)
@@ -1194,33 +1238,35 @@ create_joker({ -- Unshackled Joker
     add_to_deck = function(self, card, from_debuff)
         check_for_unlock({type = 'chains'})
     end,
-})
+}
 
-create_joker({ -- Red Coins
-    name = 'red_coins',
+local red_coins = {
+    type = 'Joker',
+    key = 'red_coins',
     atlas = "showdown_jokers",
     pos = coordinate(45),
-    vars = {{money = 1}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {money = 1}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     add_to_deck = function(self, card, from_debuff)
         if next(find_joker('money_cutter')) then check_for_unlock({type = 'green_deck_home'}) end
     end,
-})
+}
 
-create_joker({ -- Money Cutter
-    name = 'money_cutter',
+local money_cutter = {
+    type = 'Joker',
+    key = 'money_cutter',
     atlas = "showdown_jokers",
     pos = coordinate(46),
-    vars = {{money = 1}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {money = 1}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = false, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'interest' and args.money >= 20 then unlock_card(self) end
@@ -1232,18 +1278,19 @@ create_joker({ -- Money Cutter
     remove_from_deck = function(self, card, from_debuff)
         G.GAME.modifiers.no_interest = G.GAME.selected_back.effect.config.no_interest
     end,
-})
+}
 
-create_joker({ -- Passage of Time
-    name = 'passage_of_time',
+local passage_of_time = {
+    type = 'Joker',
+    key = 'passage_of_time',
     atlas = "showdown_jokers",
     pos = coordinate(47),
-    vars = {{chips_mult = 0}, {scale = 2}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {chips_mult = 0, scale = 2}},
+    loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.scale, card.ability.extra.chips_mult } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
             card.ability.extra.chips_mult = card.ability.extra.chips_mult + card.ability.extra.scale
@@ -1262,18 +1309,19 @@ create_joker({ -- Passage of Time
             }
         end
     end
-})
+}
 
-create_joker({ -- Colored Classes
-    name = 'colored_glasses',
+local colored_glasses = {
+    type = 'Joker',
+    key = 'colored_glasses',
     atlas = "showdown_jokers",
     pos = coordinate(48),
-    vars = {{mult_scale = 4}, {mult = 0}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {mult_scale = 4, mult = 0}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = false, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
             return {
@@ -1300,16 +1348,15 @@ create_joker({ -- Colored Classes
             end
         end
     end
-})
-
---filesystem.load(itemsPath.."JokerVersatile.lua")()
+}
 --[[
-create_joker({ -- Joker Variance Authority
-    name = 'joker_variance_authorithy',
+local joker_variance_authorithy = {
+    type = 'Joker',
+    key = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
     pos = coordinate(49),
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if pseudorandom('joker_variant') < 1 / 50 then
             G.GAME.showdown_JVA = coordinate(math.random(1, 20))
@@ -1323,40 +1370,18 @@ create_joker({ -- Joker Variance Authority
     end
 })
 ]]--
-SMODS.Joker:take_ownership('joker', {
-    update = function(self, card, front)
-        if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then
-            if card.config.center.pos ~= G.GAME.showdown_JVA then
-                card.config.center.atlas = 'showdown_joker_variants'
-                card.config.center.pos = G.GAME.showdown_JVA
-                card:set_sprites(card.config.center)
-            end
-        elseif card.config.center.atlas ~= 'Joker' then
-            card.config.center.atlas = 'Joker'
-            card.config.center.pos = { x = 0, y = 0 }
-            card:set_sprites(card.config.center)
-        end
-    end,
-    load = function(self, card, card_table, other_card)
-        if G.GAME.showdown_JVA then
-            card.config.center.atlas = 'showdown_joker_variants'
-            card.config.center.pos = G.GAME.showdown_JVA
-            card:set_sprites(card.config.center)
-        end
-    end
-}, true)
-
-create_joker({ -- banana
-    name = 'banana',
+local banana = {
+    type = 'Joker',
+    key = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
     display_size = { w = 35, h = 43 },
-    vars = {{mult = 15}, {mult_scale = 5}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {mult = 15, mult_scale = 5}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
 	end,
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'extinct' and args.name == 'Cavendish' then unlock_card(self) end
@@ -1404,71 +1429,16 @@ create_joker({ -- banana
             }
         end
     end
-})
+}
 
-local updateRef = Game.update
-banana_dt = 0
-function Game:update(dt)
-    updateRef(self, dt)
-    banana_dt = banana_dt + dt
-    if G.P_CENTERS and G.P_CENTERS.j_showdown_banana and banana_dt > 0.1 then
-        banana_dt = 0
-        local obj = G.P_CENTERS.j_showdown_banana
-        if obj.pos.x == 7 then
-            obj.pos.x = 0
-        elseif obj.pos.x < 7 then
-            obj.pos.x = obj.pos.x + 1
-        end
-    end
-end
-
-local function reroll_tags_and_blind(blind)
-    local blindUpper = blind:gsub("^%l", string.upper)
-    G.GAME.round_resets.blind_tags[blindUpper] = get_next_tag_key()
-    G.E_MANAGER:add_event(Event({
-        trigger = 'immediate',
-        func = function()
-          play_sound('other1')
-          G.blind_select_opts[blind]:set_role({xy_bond = 'Weak'})
-          G.blind_select_opts[blind].alignment.offset.y = 20
-          return true
-        end
-      }))
-    G.E_MANAGER:add_event(Event({
-        trigger = 'after',
-        delay = 0.3,
-        func = (function()
-            local par = G.blind_select_opts[blind].parent
-
-            G.blind_select_opts[blind]:remove()
-            G.blind_select_opts[blind] = UIBox{
-                T = {par.T.x, 0, 0, 0, },
-                definition =
-                {n=G.UIT.ROOT, config={align = "cm", colour = G.C.CLEAR}, nodes={
-                    UIBox_dyn_container({create_UIBox_blind_choice(blindUpper)},false,get_blind_main_colour(blindUpper))
-                }},
-                config = {align="bmi",
-                        offset = {x=0,y=G.ROOM.T.y + 9},
-                        major = par,
-                        xy_bond = 'Weak'
-                        }
-            }
-            par.config.object = G.blind_select_opts[blind]
-            par.config.object:recalculate()
-            G.blind_select_opts[blind].parent = par
-            G.blind_select_opts[blind].alignment.offset.y = 0
-            return true
-        end)
-    }))
-end
-
-create_joker({ -- Label
-    name = 'label',
+local label = {
+    type = 'Joker',
+    key = 'label',
     atlas = "showdown_jokers",
     pos = coordinate(50),
-    vars = {{can_reroll = true}},
-    rarity = 'Common', cost = 3,
-    blueprint = false, perishable = false, eternal = false,
+    config = {extra = {can_reroll = true}},
+    rarity = 1, cost = 3,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'tag_used' and (G.GAME.tag_used or 0) >= 12 then unlock_card(self) end
@@ -1501,14 +1471,15 @@ create_joker({ -- Label
             }
         end
     end,
-})
+}
 
-create_joker({ -- Silver Stars
-    name = 'silver_stars',
+local silver_stars = {
+    type = 'Joker',
+    key = 'silver_stars',
     atlas = "showdown_jokers",
     pos = coordinate(51),
-    rarity = 'Uncommon', --cost = 4,
-    blueprint = false, perishable = false, eternal = false,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.before and not context.blueprint then
             local steel = 0
@@ -1532,19 +1503,20 @@ create_joker({ -- Silver Stars
             end
         end
     end,
-})
+}
 
-create_joker({ -- Gold Star
-    name = 'gold_star',
+local gold_star = {
+    type = 'Joker',
+    key = 'gold_star',
     atlas = "showdown_jokers",
     pos = coordinate(52),
-    vars = {{xchips = 3}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {xchips = 3}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xchips } }
 	end,
-    rarity = 'Uncommon', --cost = 4,
+    rarity = 2, cost = 6,
     in_pool = function(self, args) return false end,
-    blueprint = true, perishable = true, eternal = true,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.joker_main then
             return {
@@ -1552,18 +1524,19 @@ create_joker({ -- Gold Star
             }
         end
     end,
-})
+}
 
-create_joker({ -- Shady Dealer
-    name = 'shady_dealer',
+local shady_dealer = {
+    type = 'Joker',
+    key = 'shady_dealer',
     atlas = "showdown_jokers",
     pos = coordinate(53),
-    vars = {{hands = 3}, {money = 0}},
-    custom_vars = function(self, info_queue, card)
+    config = {extra = {hands = 3, money = 0}},
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.hands, card.ability.extra.money } }
 	end,
-    rarity = 'Common', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'money' and G.GAME.dollars <= -20 then unlock_card(self) end
@@ -1576,15 +1549,16 @@ create_joker({ -- Shady Dealer
             return true end }))
         end
     end,
-})
+}
 
-create_joker({ -- Yipeee
-    name = 'yipeee',
+local yipeee = {
+    type = 'Joker',
+    key = 'yipeee',
     atlas = "showdown_jokers",
     pos = coordinate(54),
-    vars = {{sold = false}},
-    rarity = 'Common', --cost = 4,
-    blueprint = false, perishable = false, eternal = false,
+    config = {extra = {sold = false}},
+    rarity = 1, cost = 3,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)
         if context.selling_self and not context.blueprint then
             card.ability.extra.sold = true
@@ -1605,13 +1579,14 @@ create_joker({ -- Yipeee
             }))
         end
     end,
-})
+}
 
-create_joker({ -- Dealer Luigi
-    name = 'dealer_luigi',
+local dealer_luigi = {
+    type = 'Joker',
+    key = 'dealer_luigi',
     atlas = "showdown_jokers",
     pos = coordinate(55),
-	custom_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_flower'}
@@ -1619,8 +1594,8 @@ create_joker({ -- Dealer Luigi
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mario'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_star'}
 	end,
-    rarity = 'Rare', --cost = 4,
-    blueprint = true, perishable = true, eternal = true,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if context.end_of_round and not context.repetition and not context.individual then
             local no_casino_stickers = {}
@@ -1635,4 +1610,162 @@ create_joker({ -- Dealer Luigi
             end
         end
     end,
-})
+}
+
+return {
+	enabled = Showdown.config["Jokers"]["Normal"],
+	list = function ()
+		local list = {
+			cronch,
+            final,
+            crouton,
+            --crime_scene,
+            ping_pong,
+            color_splash,
+            blue,
+            golden_roulette,
+            --baby_jimbo,
+            parmesan,
+            chaos_card,
+            wall,
+            one_doller,
+            revolution,
+            sinful_joker,
+            egg_drawing,
+            --billiard,
+            what_a_steel,
+            diplomatic_immunity,
+            nitroglycerin,
+            --bugged_seed,
+            sick_trick,
+            jaws,
+            red_coins,
+            money_cutter,
+            passage_of_time,
+            colored_glasses,
+            --joker_variance_authorithy,
+            banana,
+            label,
+            silver_stars,
+            gold_star,
+            shady_dealer,
+            yipeee,
+            fruit_sticker,
+		}
+		if Showdown.config["Ranks"] then
+			table.insert(list, pinpoint)
+			table.insert(list, math_teacher)
+			table.insert(list, gruyere)
+			table.insert(list, mirror)
+			table.insert(list, spotted_joker)
+			table.insert(list, bacteria)
+			table.insert(list, empty_joker)
+			table.insert(list, sim_card)
+			table.insert(list, strainer)
+			table.insert(list, hiding_details)
+			table.insert(list, world_map)
+		end
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, jimbo_makeup)
+			table.insert(list, jimbo_hat)
+			table.insert(list, jimbo_bells)
+			table.insert(list, jimbo_collar)
+			table.insert(list, gary_mccready)
+			table.insert(list, ultimate_joker)
+			table.insert(list, locks)
+			table.insert(list, unshackled_joker)
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, substitute_teacher)
+		end
+		if Showdown.config["Stickers"] then
+			table.insert(list, dealer_luigi)
+		end
+		return list
+	end,
+	atlases = {
+		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
+        {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
+        {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
+	},
+	exec = function ()
+        SMODS.Joker:take_ownership('joker', {
+            update = function(self, card, front)
+                if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then
+                    if card.config.center.pos ~= G.GAME.showdown_JVA then
+                        card.config.center.atlas = 'showdown_joker_variants'
+                        card.config.center.pos = G.GAME.showdown_JVA
+                        card:set_sprites(card.config.center)
+                    end
+                elseif card.config.center.atlas ~= 'Joker' then
+                    card.config.center.atlas = 'Joker'
+                    card.config.center.pos = { x = 0, y = 0 }
+                    card:set_sprites(card.config.center)
+                end
+            end,
+            load = function(self, card, card_table, other_card)
+                if G.GAME.showdown_JVA then
+                    card.config.center.atlas = 'showdown_joker_variants'
+                    card.config.center.pos = G.GAME.showdown_JVA
+                    card:set_sprites(card.config.center)
+                end
+            end
+        }, true)
+
+        local updateRef = Game.update
+        banana_dt = 0
+        function Game:update(dt)
+            updateRef(self, dt)
+            banana_dt = banana_dt + dt
+            if G.P_CENTERS and G.P_CENTERS.j_showdown_banana and banana_dt > 0.1 then
+                banana_dt = 0
+                local obj = G.P_CENTERS.j_showdown_banana
+                if obj.pos.x == 7 then
+                    obj.pos.x = 0
+                elseif obj.pos.x < 7 then
+                    obj.pos.x = obj.pos.x + 1
+                end
+            end
+        end
+
+        function reroll_tags_and_blind(blind)
+            local blindUpper = blind:gsub("^%l", string.upper)
+            G.GAME.round_resets.blind_tags[blindUpper] = get_next_tag_key()
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate',
+                func = function()
+                play_sound('other1')
+                G.blind_select_opts[blind]:set_role({xy_bond = 'Weak'})
+                G.blind_select_opts[blind].alignment.offset.y = 20
+                return true
+                end
+            }))
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.3,
+                func = (function()
+                    local par = G.blind_select_opts[blind].parent
+
+                    G.blind_select_opts[blind]:remove()
+                    G.blind_select_opts[blind] = UIBox{
+                        T = {par.T.x, 0, 0, 0, },
+                        definition =
+                        {n=G.UIT.ROOT, config={align = "cm", colour = G.C.CLEAR}, nodes={
+                            UIBox_dyn_container({create_UIBox_blind_choice(blindUpper)},false,get_blind_main_colour(blindUpper))
+                        }},
+                        config = {align="bmi",
+                                offset = {x=0,y=G.ROOM.T.y + 9},
+                                major = par,
+                                xy_bond = 'Weak'
+                                }
+                    }
+                    par.config.object = G.blind_select_opts[blind]
+                    par.config.object:recalculate()
+                    G.blind_select_opts[blind].parent = par
+                    G.blind_select_opts[blind].alignment.offset.y = 0
+                    return true
+                end)
+            }))
+        end
+	end,
+}

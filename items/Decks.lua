@@ -60,7 +60,7 @@ local cheater = {
 		if context.post_hand then
 			local cards = 1
 			for _, joker in pairs(find_joker('versatile_joker')) do
-				cards = cards + joker.ability.extra.card
+				cards = cards + joker.ability.extra.extra_card
 			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
@@ -100,9 +100,10 @@ return {
 		end
 		return list
 	end,
+	atlases = {
+		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
+	},
 	exec = function()
-		SMODS.Atlas({key = "showdown_decks", path = "Decks.png", px = 71, py = 95})
-
 		local function give_starter()
 			G.E_MANAGER:add_event(Event({
 				func = function()
@@ -147,7 +148,12 @@ return {
 		local Backapply_to_runRef = Back.apply_to_run
 		function Back:apply_to_run()
 			Backapply_to_runRef(self)
-			if self.effect.config.showdown_calculus then G.GAME.first_booster_calculus = true end
+			if self.effect.config.counterpart_replacing then
+				G.GAME.starting_params.counterpart_replacing = true
+			end
+			if self.effect.config.showdown_calculus then
+				G.GAME.first_booster_calculus = true
+			end
 			if self.effect.config.showdown_starter then
 				G.GAME.starting_params.dollars = -5
 				give_starter()
@@ -156,7 +162,13 @@ return {
 				G.PROFILES[G.SETTINGS.profile].starter_next_run = false
 				give_starter()
 			end
-			if self.effect.config.showdown_cheater then G.GAME.cheater_destroy_odd = 6 end
+			if self.effect.config.showdown_cheater then
+				G.GAME.showdown_cheater = true
+				G.GAME.cheater_destroy_odd = 6
+			end
+			if self.effect.config.showdown_engineer then
+				G.GAME.showdown_engineer = true
+			end
 		end
 	end
 }

@@ -7,6 +7,7 @@ return {
     ["Enhancements"] = true,
     ["Jokers"] = {
         ["Normal"] = true,
+        ["Final"] = true,
         ["Jean-Paul"] = true,
         ["Versatile"] = true,
     },

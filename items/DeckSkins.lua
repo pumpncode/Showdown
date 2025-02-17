@@ -31,8 +31,8 @@ return {
 		}
 		return list
 	end,
-	exec = function()
-		SMODS.Atlas({key = "showdown_jean_paul", path = "DeckSkins/jean_paul.png", px = 71, py = 95})
-		SMODS.Atlas({key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png", px = 71, py = 95})
-	end
+	atlases = {
+		{key = "showdown_jean_paul", path = "DeckSkins/jean_paul.png", px = 71, py = 95},
+		{key = "showdown_jean_paul_hc", path = "DeckSkins/jean_paul_hc.png", px = 71, py = 95},
+	}
 }
