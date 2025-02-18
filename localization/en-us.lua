@@ -151,10 +151,11 @@ return {
             j_showdown_infection = {
                 name = 'Infection',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{}',
+                    '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{} at the end of round',
                     'Cards in shop and boosters can',
                     'be {C:attention}replaced{} by {C:attention}Strange Thing{}',
-                    'Future {C:attention}Strange Thing{} values are {C:attention}doubled{}',
+                    'Future {C:attention}Strange Thing{} values',
+                    'are {C:attention}doubled{} when self-destroyed',
                 }
             },
             j_showdown_math_teacher = {
@@ -886,7 +887,9 @@ return {
             j_showdown_joker_variance_authorithy = {
                 name = 'Joker Variance Authority',
                 text = {
-                    'idk',
+                    'This joker gain {C:mult}+#1#{} mult when',
+                    'a {C:attention}Joker{} joker is sold',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 },
             },
             j_showdown_banana = {
@@ -947,6 +950,18 @@ return {
                     'Apply a random {C:attention}Casino Sticker{} to a',
                     '{C:attention}random joker{} at the end of round',
                 },
+            },
+            j_showdown_whatever = {
+                name = 'Whatever',
+                text = {
+                    'Last played hand {C:planet}level up{} by',
+                    'amount equals to {C:attention}sell value',
+                    '{C:inactive}(Last played hand: {C:attention}#1#{C:inactive})',
+                },
+                unlock = {
+                    'Have at least {C:attention}15{} levels',
+                    'on one {C:attention}secret hand',
+                }
             },
         },
         Other={
@@ -1404,9 +1419,8 @@ return {
             c_showdown_strange_thing = {
                 name = 'Strange Thing',
                 text = {
-                    'Creates a {C:attention}special joker{}',
-                    'with a random value',
-                    'from {C:attention}#1#{} to {C:attention}#2#{}',
+                    'Creates a {C:attention}special joker{} with',
+                    'a random value from {C:attention}#1#{} to {C:attention}#2#{}',
                 }
             }
         }
@@ -1481,6 +1495,7 @@ return {
             k_downgrade_ex="Downgrade!",
             k_can_reroll="Can reroll",
             k_cannot_reroll="Cannot reroll",
+            k_bye_bye = "Bye Bye!",
             b_mathematic_cards = "Mathematic Cards",
             b_logic_cards = "Logic Cards",
             b_pull = "PULL",

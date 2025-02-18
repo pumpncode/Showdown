@@ -488,3 +488,14 @@ payload = '''
 G.GAME.tag_used = (G.GAME.tag_used or 0) + 1
 check_for_unlock({type = 'tag_used', tag = self})
 '''
+
+# Whatever last played hand
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = '''set_hand_usage(text)'''
+position = 'after'
+payload = '''
+G.GAME.last_played_hand = text
+'''

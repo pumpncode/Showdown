@@ -1352,17 +1352,34 @@ local colored_glasses = {
         end
     end
 }
---[[
+
 local joker_variance_authorithy = {
     type = 'Joker',
     key = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
     pos = coordinate(49),
+    config = {extra = {mult = 0, mult_scale = 4}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
+	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
         if pseudorandom('joker_variant') < 1 / 50 then
             G.GAME.showdown_JVA = coordinate(math.random(1, 20))
+        end
+        if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult
+            }
+        elseif not context.blueprint and context.selling_card and context.card.ability.name == 'Joker' then
+            card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.MULT,
+                card = card
+            }
         end
     end,
     add_to_deck = function(self, card, from_debuff)
@@ -1371,8 +1388,8 @@ local joker_variance_authorithy = {
     remove_from_deck = function(self, card, from_debuff)
         G.GAME.showdown_JVA = nil
     end
-})
-]]--
+}
+
 local banana = {
     type = 'Joker',
     key = 'banana',
@@ -1615,6 +1632,82 @@ local dealer_luigi = {
     end,
 }
 
+local whatever = {
+    type = 'Joker',
+    key = 'whatever',
+    atlas = "showdown_jokers",
+    pos = coordinate(56),
+    loc_vars = function(self, info_queue, card)
+        return { vars = { G.GAME.last_played_hand or localize('k_none') } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'upgrade_hand' and not SMODS.PokerHand.obj_table[args.hand].visible and args.level >= 15 then
+            unlock_card(self)
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.selling_self and not context.blueprint then
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(G.GAME.last_played_hand, 'poker_hands'),chips = G.GAME.hands[G.GAME.last_played_hand].chips, mult = G.GAME.hands[G.GAME.last_played_hand].mult, level=G.GAME.hands[G.GAME.last_played_hand].level})
+            level_up_hand(nil, G.GAME.last_played_hand, nil, card.sell_cost)
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+        end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        card.base_cost = 4
+        card:set_cost()
+    end,
+}
+
+-- Cryptid
+
+local infection = {
+	type = 'Joker',
+    name = 'infection',
+    atlas = "showdown_cryptidJokers",
+    pos = coordinate(1),
+    config = {extra = {Xmult = 1}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.config.extra.Xmult } }
+	end,
+    rarity = 'cry_cursed', cost = 4,
+    blueprint = true, perishable = false, eternal = false,
+    calculate = function(self, card, context)
+        if context.joker_main and card.ability.extra.Xmult > 1 then
+            return {
+                message = localize{type='variable',key='a_xmult',vars={card.ability.extra.Xmult}},
+                Xmult_mod = card.ability.extra.Xmult,
+            }
+        elseif context.end_of_round and not context.repetition and not context.individual then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    play_sound('tarot1')
+                    card.T.r = -0.2
+                    card:juice_up(0.3, 0.4)
+                    card.states.drag.is = true
+                    card.children.center.pinch.x = true
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                        func = function()
+                            card:remove()
+                            card = nil
+                        return true; end}))
+                    return true
+                end
+            }))
+            G.GAME.infection_value = (G.GAME.infection_value or 1) * 2
+            return {
+                message = localize('k_bye_bye'),
+                destroyed = true
+            }
+        end
+    end,
+    in_pool = function()
+        return false
+    end,
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = function ()
@@ -1646,7 +1739,7 @@ return {
             money_cutter,
             passage_of_time,
             colored_glasses,
-            --joker_variance_authorithy,
+            joker_variance_authorithy,
             banana,
             label,
             silver_stars,
@@ -1654,6 +1747,7 @@ return {
             shady_dealer,
             yipeee,
             fruit_sticker,
+            whatever,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, pinpoint)
@@ -1684,12 +1778,16 @@ return {
 		if Showdown.config["Stickers"] then
 			table.insert(list, dealer_luigi)
 		end
+        if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
+			table.insert(list, infection)
+        end
 		return list
 	end,
 	atlases = {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
         {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
+        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95},
 	},
 	exec = function ()
         SMODS.Joker:take_ownership('joker', {
@@ -1769,6 +1867,12 @@ return {
                     return true
                 end)
             }))
+        end
+
+        if Cryptid and Cryptid.food then
+            table.insert(Cryptid.food, 'j_showdown_gruyere')
+            table.insert(Cryptid.food, 'j_showdown_parmesan')
+            table.insert(Cryptid.food, 'j_showdown_banana')
         end
 	end,
 }

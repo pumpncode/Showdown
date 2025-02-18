@@ -6,7 +6,7 @@ local mirror = {
 	pos = coordinate(1),
 	config = {counterpart_replacing = true},
 	loc_vars = function(self)
-		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
+		--return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
 	end
 }
 
@@ -19,7 +19,7 @@ local calculus = {
 	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true },
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic >= 10 then
+		if G.GAME.consumeable_usage_total and (G.GAME.consumeable_usage_total.mathematic or 0) >= 10 then
 			unlock_card(self)
 		end
 	end

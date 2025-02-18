@@ -157,10 +157,11 @@ return {
 
 		local cardCalculate_jokerRef = Card.calculate_joker
 		function Card:calculate_joker(context)
-			cardCalculate_jokerRef(self, context)
+			local eval = cardCalculate_jokerRef(self, context)
 			if self.ability.showdown_static then
 				self.states.drag.can = false
 			end
+			return eval
 		end
 		
 		if prequire("debugplus") then
@@ -170,7 +171,7 @@ return {
 				if controller.hovering.target and controller.hovering.target:is(Card) then
 					local _card = controller.hovering.target
 					if key == "t" then
-						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
+						if _card.ability.set == 'Joker' then
 							SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
 						end
 					elseif key == "y" then

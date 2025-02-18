@@ -323,6 +323,14 @@ return {
         end }
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
         Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_cheater', pos = coordinate(21), blueprint = false }
+        if (SMODS.Mods["Bunco"] or {}).can_load and Showdown.config["CrossMod"]["Bunco"] then
+            Showdown.versatile['Fairy Deck'] = { desc = 'j_showdown_versatile_joker_fairy', pos = coordinate(22), blueprint = false, effect = function(self, card, context)
+                --
+            end }
+            Showdown.versatile['Digital Deck'] = { desc = 'j_showdown_versatile_joker_digital', pos = coordinate(23), blueprint = false, effect = function(self, card, context)
+                --
+            end }
+        end
 
         ---Get deck specifications for Versatile Joker
         ---@param type string
