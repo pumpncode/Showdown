@@ -4,6 +4,7 @@
     "display_name": "Showdown",
 	"author": ["Mistyk__"],
 	"description": "A balatro mod made for fun. Thanks to Neyako for testing the mod!",
+    "website_url": "https://github.com/Mistyk1/Showdown",
 	"prefix": "showdown",
 	"main_file": "main.lua",
 	"priority": 0,

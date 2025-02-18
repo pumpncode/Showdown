@@ -6,7 +6,10 @@ local mirror = {
 	pos = coordinate(1),
 	config = {counterpart_replacing = true},
 	loc_vars = function(self)
-		--return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
+		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
+	end,
+	apply = function(self, back)
+		-- change cards here
 	end
 }
 
@@ -22,6 +25,9 @@ local calculus = {
 		if G.GAME.consumeable_usage_total and (G.GAME.consumeable_usage_total.mathematic or 0) >= 10 then
 			unlock_card(self)
 		end
+	end,
+	apply = function(self, back)
+		G.GAME.first_booster_calculus = true
 	end
 }
 
@@ -37,6 +43,10 @@ local starter = {
 		if G.jokers and #G.jokers.cards >= 8 then
 			unlock_card(self)
 		end
+	end,
+	apply = function(self, back)
+		G.GAME.starting_params.dollars = -5
+		give_starter()
 	end
 }
 
@@ -66,6 +76,9 @@ local cheater = {
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
 			create_cards_in_deck(ranks, suits, cards)
 		end
+	end,
+	apply = function(self, back)
+		-- Change cards here
 	end
 }
 
@@ -79,6 +92,9 @@ local engineer = { -- Not done at all
 	unlocked = false,
 	check_for_unlock = function (self, args)
 		--
+	end,
+	apply = function(self, back)
+		G.GAME.showdown_engineer = true
 	end
 }
 
@@ -104,7 +120,7 @@ return {
 		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
 	},
 	exec = function()
-		local function give_starter()
+		function give_starter()
 			G.E_MANAGER:add_event(Event({
 				func = function()
 					if G.jokers then
@@ -151,13 +167,6 @@ return {
 			if self.effect.config.counterpart_replacing then
 				G.GAME.starting_params.counterpart_replacing = true
 			end
-			if self.effect.config.showdown_calculus then
-				G.GAME.first_booster_calculus = true
-			end
-			if self.effect.config.showdown_starter then
-				G.GAME.starting_params.dollars = -5
-				give_starter()
-			end
 			if G.PROFILES[G.SETTINGS.profile].starter_next_run then
 				G.PROFILES[G.SETTINGS.profile].starter_next_run = false
 				give_starter()
@@ -165,9 +174,6 @@ return {
 			if self.effect.config.showdown_cheater then
 				G.GAME.showdown_cheater = true
 				G.GAME.cheater_destroy_odd = 6
-			end
-			if self.effect.config.showdown_engineer then
-				G.GAME.showdown_engineer = true
 			end
 		end
 	end

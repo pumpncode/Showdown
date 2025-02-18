@@ -26,5 +26,6 @@ return {
     ["CrossMod"] = {
         ["Cryptid"] = true,
         ["Bunco"] = true,
+        ["CardSleeves"] = true,
     },
 }

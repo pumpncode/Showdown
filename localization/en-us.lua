@@ -57,6 +57,80 @@ return {
                 }
             },
         },
+        Sleeve = {
+            sleeve_showdown_Mirror = {
+                name = "Mirror Sleeve",
+                text = {
+                    'All faces, 8s, 5s and',
+                    '2s are replaced',
+                    'by their {C:counterpart_ranks,T:counterpart_ranks}counterpart{}',
+                    'Aces are replaced by 0s',
+                }
+            },
+            sleeve_showdown_Mirror_alt = {
+                name = "Mirror Sleeve",
+                text = {
+                    '???',
+                }
+            },
+            sleeve_showdown_Calculus = {
+                name = "Calculus Sleeve",
+                text = {
+                    'First booster in the shop is',
+                    'always a {C:showdown_calculus}Calculus Booster{}',
+                    'You start with a {C:purple}Genie{} tarot',
+                    'card and {C:attention}Number Theory{}',
+                }
+            },
+            sleeve_showdown_Calculus_alt = {
+                name = "Calculus Sleeve",
+                text = {
+                    '???',
+                }
+            },
+            sleeve_showdown_Starter = {
+                name = "Starter Sleeve",
+                text = {
+                    'Start with a {C:attention}random',
+                    'joker, consumable,',
+                    'voucher and {C:money}$-5',
+                }
+            },
+            sleeve_showdown_Starter_alt = {
+                name = "Starter Sleeve",
+                text = {
+                    'You start with a',
+                    '{C:red}rare{} joker and {C:money}$0',
+                }
+            },
+            sleeve_showdown_Cheater = {
+                name = "Cheater Sleeve",
+                text = {
+                    'Start with all faces and a 0',
+                    'Played hand creates a face or a 0',
+                    'Scored card have a {C:green}#1# in 6{}',
+                    'chance to be {C:red}destroyed',
+                }
+            },
+            sleeve_showdown_Cheater_alt = {
+                name = "Cheater Sleeve",
+                text = {
+                    '???',
+                }
+            },
+            sleeve_showdown_Engineer = {
+                name = "Engineer Sleeve",
+                text = {
+                    '???',
+                }
+            },
+            sleeve_showdown_Engineer_alt = {
+                name = "Engineer Sleeve",
+                text = {
+                    '???',
+                }
+            },
+        },
         Blind={
             bl_showdown_latch = {
                 name = 'The Latch',
@@ -1486,6 +1560,7 @@ return {
             showdown_config_unloaded = "Mods in gray are not present/unloaded",
             showdown_config_cryptid = "Cryptid",
             showdown_config_bunco = "Bunco",
+            showdown_config_cardsleeves = "Card Sleeves",
             
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_final = 'Final',

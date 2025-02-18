@@ -162,6 +162,7 @@ return {
 		return list
 	end,
 	atlases = {
+		{key = "showdown_vouchers", path = "Consumables/Vouchers.png", px = 71, py = 95},
 		{key = "showdown_cryptidVouchers", path = "CrossMod/Cryptid/Vouchers.png", px = 71, py = 95},
 	},
 }

@@ -11,25 +11,36 @@ for _, file in ipairs(files) do
 	sendTraceMessage("Loading file "..file, "Showdown")
 	local f, err = SMODS.load_file("Items/" .. file)
 	if err then
-		sendErrorMessage("Error loading file: "..err, "Showdown")
+		sendErrorMessage("Error loading "..file..": "..err, "Showdown")
 	else
 		local item = f()
 		if item and item.enabled then
 			if item.exec then item.exec() end
-			if item.atlases then
-				for _, atlas in ipairs(item.atlases) do
-					SMODS.Atlas(atlas)
-				end
-			end
-			if item.list then
-				local list = item.list()
-				for _, obj in ipairs(list) do
-					if obj.type and SMODS[obj.type] then
-						SMODS[obj.type](obj)
+			if not item.class then item.class = SMODS end
+			if item.class then
+				if item.atlases then
+					for _, atlas in ipairs(item.atlases) do
+						SMODS.Atlas(atlas)
 					end
 				end
+				if item.list then
+					local list = item.list()
+					for _, obj in ipairs(list) do
+						if obj.type then
+							if item.class and item.class[obj.type] then
+								item.class[obj.type](obj)
+							else
+								sendErrorMessage("Error creating "..obj.key.." in file "..file..": Type does not exist in this class", "Showdown")
+							end
+						else
+							sendErrorMessage("Error creating "..obj.key.." in file "..file..": No type was given", "Showdown")
+						end
+					end
+				end
+				if item.post_exec then item.post_exec() end
+			else
+				sendErrorMessage("Error loading file "..file..": Used class does not exist", "Showdown")
 			end
-			if item.post_exec then item.post_exec() end
 		end
 	end
 end
@@ -41,6 +52,7 @@ end
 local showdown_config_tab = function()
 	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
 	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
+	local cardsleeves = (SMODS.Mods["CardSleeves"] or {}).can_load
 	return {
 		{
 		label = localize("showdown_content_config"),
@@ -160,6 +172,7 @@ local showdown_config_tab = function()
 	
 									create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
+									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
 	
 								}},
 							}},
