@@ -24,7 +24,7 @@ return {
     ["Vouchers"] = true,
     ["Stickers"] = true,
     ["CrossMod"] = {
-        ["Cryptid"] = false,
-        ["Bunco"] = false,
+        ["Cryptid"] = true,
+        ["Bunco"] = true,
     },
 }

@@ -1482,6 +1482,10 @@ return {
             showdown_config_consumeables_spectrals = "Spectrals",
             showdown_config_consumeables_mathematics = "Mathematics",
             showdown_config_consumeables_logics = "Logics (no)",
+            showdown_crossmod_config = "Crossmod Config",
+            showdown_config_unloaded = "Mods in gray are not present/unloaded",
+            showdown_config_cryptid = "Cryptid",
+            showdown_config_bunco = "Bunco",
             
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_final = 'Final',

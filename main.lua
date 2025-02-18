@@ -39,7 +39,9 @@ function shdwn.save_config(self)
 end
 
 local showdown_config_tab = function()
-	return{
+	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
+	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
+	return {
 		{
 		label = localize("showdown_content_config"),
 		chosen = true,
@@ -62,7 +64,7 @@ local showdown_config_tab = function()
 						{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_restart"), colour = G.C.RED, scale = 0.4}}}},
 						}},
 				
-					{n=G.UIT.R, config={align = "cm"}, nodes={ --Base Box containing everything
+					{n=G.UIT.R, config={align = "cm"}, nodes={ -- Base Box containing everything
 		
 						-- Left Side Column
 						{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
@@ -126,6 +128,47 @@ local showdown_config_tab = function()
 		}
 		end
 		},
+		
+		{
+			label = localize("showdown_crossmod_config"),
+			chosen = true,
+			tab_definition_function = function()
+			return {
+				n = G.UIT.ROOT,
+					config = {
+						emboss = 0.05,
+						minh = 6,
+						r = 0.1,
+						minw = 10,
+						align = "cm",
+						padding = 0.2,
+						colour = G.C.BLACK,
+					},
+					nodes = {
+					
+						{n=G.UIT.R, config={align = "cm"}, nodes={
+							{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_restart"), colour = G.C.RED, scale = 0.4}}}},
+						}},
+						{n=G.UIT.R, config={align = "cm"}, nodes={
+							{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_unloaded"), colour = G.C.UI.TEXT_INACTIVE, scale = 0.4}}}},
+						}},
+					
+						{n=G.UIT.R, config={align = "cm"}, nodes={ -- Base Box containing everything
+			
+							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
+								{n=G.UIT.R, config={align = "cl"}, nodes={ -- Don't be fooled, label_color is implemented with a lovely patch (see misc.toml)
+	
+									create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
+									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
+	
+								}},
+							}},
+						
+						}}
+					},
+			}
+			end
+			},
 	}
 end
 

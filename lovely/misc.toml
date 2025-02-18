@@ -58,3 +58,14 @@ Showdown.extraSuits = {}
 Showdown.versatile = {}
 Showdown.casino = {}
 '''
+
+# Text color on toggle buttons
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+match_indent = true
+pattern = '''{n=G.UIT.T, config={text = args.label, scale = args.label_scale, colour = G.C.UI.TEXT_LIGHT}},'''
+position = "at"
+payload = '''
+{n=G.UIT.T, config={text = args.label, scale = args.label_scale, colour = args.label_color or G.C.UI.TEXT_LIGHT}},
+'''
