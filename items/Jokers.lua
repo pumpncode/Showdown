@@ -958,7 +958,10 @@ local what_a_steel = {
                 end
             return true end }))
         end
-    end
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        G.GAME.discount_percent = G.GAME.used_vouchers.v_liquidation and 50 or G.GAME.used_vouchers.v_clearance_sale and 25 or 0
+    end,
 }
 
 local diplomatic_immunity = {

@@ -1,0 +1,17 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Casino stickers apply
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if card.ability.consumeable and not skip_materialize then card:start_materialize() end"
+position = "after"
+match_indent = true
+payload = '''
+if (card.ability.set == 'Joker' or card.ability.set == 'Default' or card.ability.set == 'Enhanced') and G.GAME.casino_rate and pseudorandom('casino') < G.GAME.casino_rate then
+    pseudorandom_element(Showdown.casino, pseudoseed('casino')):apply(card, true)
+end
+'''

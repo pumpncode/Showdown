@@ -41,7 +41,7 @@ end
 local showdown_config_tab = function()
 	return{
 		{
-		label = localize("showdown_config"),
+		label = localize("showdown_content_config"),
 		chosen = true,
 		tab_definition_function = function()
 		return {

@@ -967,14 +967,13 @@ return {
             showdown_mushroom = {
                 name = "Mushroom",
                 text = {
-                    "{C:attention}+1{} hand size",
+                    "idk",
                 },
             },
             showdown_flower = {
                 name = "Flower",
                 text = {
-                    "{C:attention}+1{} consumeable",
-                    "slot",
+                    "idk",
                 },
             },
             showdown_luigi = {
@@ -1446,7 +1445,7 @@ return {
         collabs={},
         dictionary={
             -- Config
-            showdown_config = "Config",
+            showdown_content_config = "Content Config",
             showdown_config_restart = "Restart is Required to Apply Effects",
             showdown_config_ranks = "Ranks",
             showdown_config_achievements = "Achievements",

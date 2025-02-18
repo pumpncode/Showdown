@@ -4,7 +4,6 @@ local static = {
 	atlas = 'showdown_stickers',
 	pos = coordinate(1, 5),
 	badge_colour = HEX("727272"),
-	default_compat = true,
 	apply = function(self, card, val)
 		card.ability[self.key] = val
 		card.states.drag.can = not val
@@ -47,12 +46,6 @@ local mushroom = {
 	badge_colour = HEX("F00808"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val, forced)
-		card.ability[self.key] = val
-		if forced then
-			if G.hand then G.hand:change_size(forced[1] and 1 or -1) end
-		end
-	end,
 }
 
 local flower = {
@@ -63,12 +56,6 @@ local flower = {
 	badge_colour = HEX("F87800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
-	apply = function(self, card, val, forced)
-		card.ability[self.key] = val
-		if forced then
-			if G.hand then G.consumeables:change_size(forced[1] and 1 or -1) end
-		end
-	end,
 }
 
 local luigi = {
@@ -139,7 +126,7 @@ return {
 	enabled = Showdown.config["Stickers"],
 	list = function ()
 		local list = {
-			--static,
+			static,
 			cloud,
 			mushroom,
 			flower,
@@ -162,26 +149,18 @@ return {
 				or card.ability.showdown_star
 		end
 		
-		local cardAdd_to_deckRef = Card.add_to_deck
-		function Card:add_to_deck(from_debuff)
-			cardAdd_to_deckRef(self, from_debuff)
-			if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(1) end
-			elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(1) end end
-		end
-		
-		local cardRemoveRef = Card.remove
-		function Card:remove()
-			if not (self.area == G.shop_jokers or self.area == G.pack_cards) then
-				if self.ability.showdown_mushroom then if G.hand then G.hand:change_size(-1) end
-				elseif self.ability.showdown_flower then if G.consumeables then G.consumeables:change_size(-1) end end
-			end
-			cardRemoveRef(self)
-		end
-		
 		local cardSetDebuffRef = Card.set_debuff
 		function Card:set_debuff(should_debuff)
 			if self.ability.showdown_star then self.debuff = false
 			else cardSetDebuffRef(self, should_debuff) end
+		end
+
+		local cardCalculate_jokerRef = Card.calculate_joker
+		function Card:calculate_joker(context)
+			cardCalculate_jokerRef(self, context)
+			if self.ability.showdown_static then
+				self.states.drag.can = false
+			end
 		end
 		
 		if prequire("debugplus") then
@@ -192,19 +171,18 @@ return {
 					local _card = controller.hovering.target
 					if key == "t" then
 						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
-							--SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
-							print('no static sticker for u :P')
+							SMODS.Sticker.obj_table.showdown_static:apply(_card, not _card.ability.showdown_static)
 						end
 					elseif key == "y" then
 						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
 							if _card.ability.showdown_cloud then
 								SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {true})
+								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
 							elseif _card.ability.showdown_mushroom then
-								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom, {false})
-								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {true})
+								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
 							elseif _card.ability.showdown_flower then
-								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower, {false})
+								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
 								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 							elseif _card.ability.showdown_luigi then
 								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
