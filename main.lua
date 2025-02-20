@@ -6,6 +6,45 @@ Showdown.config = shdwn.config
 filesystem.load(mod_path.."functions.lua")()
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
+---Execute a given item. Items can have these params (all paramters are optional):
+---- enabled: file will be executed or not
+---- exec: code that will be executed **before** loading the list of content
+---- post_exec: code that will be executed **after** loading the list of content
+---- list: the list of content in this file
+---- atlases: the list of atlas that will be loaded for this file
+---- class: the class used to load the file content (used for mod compatibilities, SMODS by default)
+---@param item any The given item
+local function execute_item(item)
+	if item and item.enabled then
+		if item.exec then item.exec() end
+		if not item.class then item.class = SMODS end
+		if item.class then
+			if item.atlases then
+				for _, atlas in ipairs(item.atlases) do
+					SMODS.Atlas(atlas)
+				end
+			end
+			if item.list then
+				local list = item.list()
+				for _, obj in ipairs(list) do
+					if obj.type then
+						if item.class and item.class[obj.type] then
+							item.class[obj.type](obj)
+						else
+							sendErrorMessage("Error creating "..obj.key.." in file "..file..": Type does not exist in this class", "Showdown")
+						end
+					else
+						sendErrorMessage("Error creating "..obj.key.." in file "..file..": No type was given", "Showdown")
+					end
+				end
+			end
+			if item.post_exec then item.post_exec() end
+		else
+			sendErrorMessage("Error loading file "..file..": Used class does not exist", "Showdown")
+		end
+	end
+end
+
 local files = filesystem.getDirectoryItems(mod_path.."items/")
 for _, file in ipairs(files) do
 	sendTraceMessage("Loading file "..file, "Showdown")
@@ -13,35 +52,7 @@ for _, file in ipairs(files) do
 	if err then
 		sendErrorMessage("Error loading "..file..": "..err, "Showdown")
 	else
-		local item = f()
-		if item and item.enabled then
-			if item.exec then item.exec() end
-			if not item.class then item.class = SMODS end
-			if item.class then
-				if item.atlases then
-					for _, atlas in ipairs(item.atlases) do
-						SMODS.Atlas(atlas)
-					end
-				end
-				if item.list then
-					local list = item.list()
-					for _, obj in ipairs(list) do
-						if obj.type then
-							if item.class and item.class[obj.type] then
-								item.class[obj.type](obj)
-							else
-								sendErrorMessage("Error creating "..obj.key.." in file "..file..": Type does not exist in this class", "Showdown")
-							end
-						else
-							sendErrorMessage("Error creating "..obj.key.." in file "..file..": No type was given", "Showdown")
-						end
-					end
-				end
-				if item.post_exec then item.post_exec() end
-			else
-				sendErrorMessage("Error loading file "..file..": Used class does not exist", "Showdown")
-			end
-		end
+		execute_item(f(), file)
 	end
 end
 

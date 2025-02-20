@@ -70,7 +70,9 @@ return {
             sleeve_showdown_Mirror_alt = {
                 name = "Mirror Sleeve",
                 text = {
-                    '???',
+                    '{C:counterpart_ranks,T:counterpart_ranks}Non-counterpart{C:attention} Cards',
+                    'will no longer appear',
+                    'during the run',
                 }
             },
             sleeve_showdown_Calculus = {

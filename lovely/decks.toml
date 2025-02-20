@@ -12,31 +12,7 @@ pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face t
 position = 'after'
 match_indent = true
 payload = '''
-if not (self.GAME.starting_params.counterpart_replacing or self.GAME.showdown_cheater) and (SMODS.Ranks[v.value].counterpart or _r == 'showdown_Z') then 
-    keep = false
-end
-'''
-
-# Mirror deck cards, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'functions/misc_functions.lua'
-pattern = "erratic_suits_and_ranks = false,"
-position = 'after'
-match_indent = true
-payload = '''
-counterpart_replacing = false,
-'''
-
-# Mirror deck cards, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face then keep = false end"
-position = 'after'
-match_indent = true
-payload = '''
-if self.GAME.starting_params.counterpart_replacing and (_r == 'K' or _r == 'Q' or _r == 'J' or _r == '2' or _r == '5' or _r == '8' or _r == 'A') then 
+if SMODS.Ranks[v.value].counterpart or _r == 'showdown_Z' then
     keep = false
 end
 '''
@@ -64,35 +40,6 @@ payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
 '''
 
-# Cheater deck cards, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'functions/misc_functions.lua'
-pattern = "erratic_suits_and_ranks = false,"
-position = 'after'
-match_indent = true
-payload = '''
-showdown_cheater = false,
-'''
-
-# Cheater deck cards, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face then keep = false end"
-position = 'after'
-match_indent = true
-payload = '''
-if self.GAME.showdown_cheater and not SMODS.Ranks[v.value].face then
-    if _r == 'showdown_Z' and not self.GAME.showdown_cheater_zero then
-        keep = true
-        self.GAME.showdown_cheater_zero = true
-    else
-        keep = false
-    end
-end
-'''
-
 # Cheater deck card destruction
 [[patches]]
 [patches.pattern]
@@ -117,18 +64,7 @@ payload = '''
 SMODS.calculate_context({post_hand = true})
 '''
 
-# Engineer deck, part 1/2
-[[patches]]
-[patches.pattern]
-target = 'functions/misc_functions.lua'
-pattern = "erratic_suits_and_ranks = false,"
-position = 'after'
-match_indent = true
-payload = '''
-showdown_engineer = false,
-'''
-
-# Engineer deck, part 2/2
+# Engineer deck
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
@@ -136,5 +72,5 @@ pattern = "local _pool, _pool_key = get_current_pool('Tag', nil, nil, append)"
 position = "at"
 match_indent = true
 payload = '''
-local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or'Tag', nil, nil, append)
+local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
 '''

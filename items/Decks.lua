@@ -4,12 +4,21 @@ local mirror = {
 	key = "Mirror",
 	atlas = "showdown_decks",
 	pos = coordinate(1),
-	config = {counterpart_replacing = true},
-	loc_vars = function(self)
-		return {vars = {self.config.counterpart_replacing, localize{type = 'name_text', set = 'Other', key = 'counterpart_ranks'}}}
-	end,
 	apply = function(self, back)
-		-- change cards here
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				for i = #G.playing_cards, 1, -1 do
+					local card = G.playing_cards[i]
+					local count = get_counterpart(card.base.value)
+					if count then
+						assert(SMODS.change_base(card, nil, count))
+					elseif card.base.value == 'Ace' then
+						assert(SMODS.change_base(card, nil, 'showdown_Zero'))
+					end
+				end
+				return true
+			end
+		}))
 	end
 }
 
@@ -45,8 +54,10 @@ local starter = {
 		end
 	end,
 	apply = function(self, back)
-		G.GAME.starting_params.dollars = -5
-		give_starter()
+		if G.GAME.selected_sleeve and G.GAME.selected_sleeve ~= 'sleeve_showdown_Starter' then
+			G.GAME.starting_params.dollars = -5
+			give_starter()
+		end
 	end
 }
 
@@ -78,7 +89,28 @@ local cheater = {
 		end
 	end,
 	apply = function(self, back)
-		-- Change cards here
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				local hasZero = false
+				local countFaces = {
+					['2'] = 'showdown_Lord',
+					['3'] = 'showdown_Princess',
+					['4'] = 'showdown_Butler',
+				}
+				for i = #G.playing_cards, 1, -1 do
+					local card = G.playing_cards[i]
+					if not hasZero and not countFaces[card.base.value] and not card:is_face() then
+						assert(SMODS.change_base(card, nil, 'showdown_Zero'))
+						hasZero = true
+					elseif countFaces[card.base.value] and not G.GAME.starting_params.no_faces then
+						assert(SMODS.change_base(card, nil, countFaces[card.base.value]))
+					elseif not card:is_face() then
+						card:remove()
+					end
+				end
+				return true
+			end
+		}))
 	end
 }
 
@@ -120,11 +152,11 @@ return {
 		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
 	},
 	exec = function()
-		function give_starter()
+		function give_starter(starter_sleeve)
 			G.E_MANAGER:add_event(Event({
 				func = function()
 					if G.jokers then
-						local card = create_card("Joker", G.jokers, nil, nil, nil, nil, nil, "showdown_starter")
+						local card = create_card("Joker", G.jokers, nil, starter_sleeve and 1, nil, nil, nil, "showdown_starter")
 						card:add_to_deck()
 						card:start_materialize()
 						G.jokers:emplace(card)
@@ -164,9 +196,6 @@ return {
 		local Backapply_to_runRef = Back.apply_to_run
 		function Back:apply_to_run()
 			Backapply_to_runRef(self)
-			if self.effect.config.counterpart_replacing then
-				G.GAME.starting_params.counterpart_replacing = true
-			end
 			if G.PROFILES[G.SETTINGS.profile].starter_next_run then
 				G.PROFILES[G.SETTINGS.profile].starter_next_run = false
 				give_starter()
