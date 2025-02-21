@@ -9,9 +9,9 @@ local mirror = {
 			func = function()
 				for i = #G.playing_cards, 1, -1 do
 					local card = G.playing_cards[i]
-					local count = get_counterpart(card.base.value)
-					if count then
-						assert(SMODS.change_base(card, nil, count))
+					local count = SMODS.Ranks[card.base.value].counterpart
+					if count and not count.is then
+						assert(SMODS.change_base(card, nil, count.value))
 					elseif card.base.value == 'Ace' then
 						assert(SMODS.change_base(card, nil, 'showdown_Zero'))
 					end

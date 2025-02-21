@@ -1211,7 +1211,7 @@ return {
                 name = 'Vision',
                 text = {
                     'All cards held in hand {C:attention}converts{} into',
-                    'their higher or equal decimal {C:counterpart_ranks}counterpart{}',
+                    'their higher or equal {C:counterpart_ranks}counterpart{}',
                     'but loses their {C:attention}enhancement{}, {C:attention}edition{}',
                     'or {C:attention}seal{}',
                 }

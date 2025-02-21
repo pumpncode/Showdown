@@ -13,18 +13,60 @@ local mirror = {
 		if self.get_current_deck_key() ~= "b_showdown_Mirror" then
             SMODS.Back.obj_table["b_showdown_Mirror"].apply(self, sleeve)
         else
-            if self.allowed_card_centers == nil then
+			if self.allowed_card_centers == nil then
 				self.allowed_card_centers = {}
 				self.skip_trigger_effect = true
-				for _, card_center in pairs(G.P_CARDS) do
-					local card_instance = Card(0, 0, 0, 0, card_center, G.P_CENTERS.c_base)
-					if SMODS.Ranks[card_instance.base.value].counterpart then
-						self.allowed_card_centers[#self.allowed_card_centers+1] = card_center
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						for i = #G.playing_cards, 1, -1 do
+							local card = G.playing_cards[i]
+							local count = SMODS.Ranks[card.base.value].counterpart
+							if not (count and count.is) then
+								card:remove()
+							end
+						end
+						
+						for _, card_center in pairs(G.P_CARDS) do
+							local card_instance = Card(0, 0, 0, 0, card_center, G.P_CENTERS.c_base)
+							if SMODS.Ranks[card_instance.base.value].counterpart then
+								self.allowed_card_centers[#self.allowed_card_centers+1] = card_center
+							end
+							card_instance:remove()
+						end
+						return true
 					end
-					card_instance:remove()
-				end
+				}))
 				self.skip_trigger_effect = false
+				self.get_next_counterpart = function(value)
+					local count = {
+						['showdown_2.5'] = 'showdown_5.5',
+						['showdown_5.5'] = 'showdown_8.5',
+						['showdown_8.5'] = 'showdown_Butler',
+						['showdown_Butler'] = 'showdown_Princess',
+						['showdown_Princess'] = 'showdown_Lord',
+						['showdown_Lord'] = 'showdown_2.5',
+					}
+					return count[value]
+				end
 			end
+			--[[
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					local checked = {}
+					for i = #G.playing_cards, 1, -1 do
+						local card = G.playing_cards[i]
+						local playing_card = card.base.suit..'_'..card.base.value
+						local has_been_checked = findInTable(playing_card, checked)
+						if not has_been_checked then
+							table.insert(checked, playing_card)
+						else
+							card:remove()
+						end
+					end
+					return true
+				end
+			}))
+			]]
         end
 	end,
     calculate = function(self, sleeve, context)
@@ -51,10 +93,15 @@ local mirror = {
             sleeve.in_ouija = nil
             sleeve.ouija_rank = nil
         elseif (context.create_card or context.modify_playing_card) and card and is_playing_card then
-            if not SMODS.Ranks[card.base.value].counterpart then
-                local initial = G.GAME.blind == nil or context.create_card
+			local initial = G.GAME.blind == nil or context.create_card
+            if SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is then -- ?????
+				if sleeve.in_strength then
+                    local base_key = SMODS.Suits[card.base.suit].card_key .. "_" .. sleeve.get_next_counterpart(card.base.value)
+                    card:set_base(G.P_CARDS[base_key], initial)
+				end
+			else
                 if sleeve.in_strength then
-                    local base_key = SMODS.Suits[card.base.suit].card_key .. "_" .. sleeve.get_rank_after_10() -- à modifier
+                    local base_key = SMODS.Suits[card.base.suit].card_key .. "_showdown_2.5"
                     card:set_base(G.P_CARDS[base_key], initial)
                 elseif sleeve.in_ouija then
                     if sleeve.ouija_rank == nil then
@@ -127,7 +174,7 @@ local cheater = {
 	unlock_condition = {deck = "b_showdown_Cheater", stake = "stake_blue"},
 	loc_vars = function(self)
         local key, vars
-        if self.get_current_deck_key() ~= "b_showdown_Mirror" then
+        if self.get_current_deck_key() ~= "b_showdown_Cheater" then
             key = self.key
             vars = { (G.GAME and G.GAME.probabilities.normal) or 1 }
         else

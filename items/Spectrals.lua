@@ -46,8 +46,9 @@ local vision = {
 				local changed = false
 				while not changed do
 					local rawRank = _card.base.value
-					if get_counterpart(rawRank) then
-						assert(SMODS.change_base(_card, nil, get_counterpart(rawRank)))
+					local count = SMODS.Ranks[rawRank].counterpart
+					if count then
+						assert(SMODS.change_base(_card, nil, count.value))
 						local upgrades = {}
 						if _card.config.center.name ~= "Default Base" then table.insert(upgrades, "enhancement") end
 						if _card.edition then table.insert(upgrades, "edition") end

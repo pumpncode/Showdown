@@ -12,7 +12,8 @@ local reflection = {
 	can_use = function(self)
 		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             for i=1, #G.hand.highlighted do
-				if not get_counterpart(G.hand.highlighted[i].base.value) then return false end
+				local card = G.hand.highlighted[i]
+				if not SMODS.Ranks[card.base.value].counterpart then return false end
 			end
 			return true
         end
@@ -23,7 +24,7 @@ local reflection = {
         delay(0.2)
 		for i=1, #G.hand.highlighted do
             event({trigger = 'after', delay = 0.1, func = function()
-				assert(SMODS.change_base(G.hand.highlighted[i], nil, get_counterpart(G.hand.highlighted[i].base.value)))
+				assert(SMODS.change_base(G.hand.highlighted[i], nil, SMODS.Ranks[G.hand.highlighted[i].base.value].counterpart.value))
             return true end })
         end
 		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end

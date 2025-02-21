@@ -73,7 +73,7 @@ pattern = "bonus_chips = (self.ability.bonus + (self.ability.perma_bonus or 0)) 
 position = "after"
 match_indent = true
 payload = '''
-act_as = get_counterpart(self.base.value, true),
+act_as = SMODS.Ranks[self.base.value].counterpart and SMODS.Ranks[self.base.value].counterpart.is and SMODS.Ranks[self.base.value].counterpart.value,
 default_wild = SMODS.is_zero(self),
 '''
 

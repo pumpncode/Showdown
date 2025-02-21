@@ -191,30 +191,6 @@ function get_card_from_rank_suit(rank, suit)
 	sendWarnMessage(rank.." of "..suit.." does not exist", 'Showdown')
 end
 
-function get_counterpart(rank, onlyCounterpart)
-	local counterparts
-	if onlyCounterpart then
-		counterparts = {
-			["showdown_2.5"] = "2",
-			["showdown_5.5"] = "5",
-			["showdown_8.5"] = "8",
-			["showdown_Butler"] = "Jack",
-			["showdown_Princess"] = "Queen",
-			["showdown_Lord"] = "King",
-		}
-	else
-		counterparts = {
-			["showdown_2.5"] = "2", ["2"] = "showdown_2.5",
-			["showdown_5.5"] = "5", ["5"] = "showdown_5.5",
-			["showdown_8.5"] = "8", ["8"] = "showdown_8.5",
-			["showdown_Butler"] = "Jack", ["Jack"] = "showdown_Butler",
-			["showdown_Princess"] = "Queen", ["Queen"] = "showdown_Princess",
-			["showdown_Lord"] = "King", ["King"] = "showdown_Lord",
-		}
-	end
-	return counterparts[rank]
-end
-
 function get_lowest_rank(hand)
 	local lowestRank = 11
 	for i=1, #hand do
