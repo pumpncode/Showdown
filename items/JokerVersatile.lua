@@ -126,6 +126,7 @@ local versatile_joker_all_in_one = {
         }}
     end,
     rarity = 4, cost = 20,
+    in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
 	no_collection = true,
     calculate = function(self, card, context)
