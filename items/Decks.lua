@@ -83,6 +83,9 @@ local cheater = {
 			for _, joker in pairs(find_joker('versatile_joker')) do
 				cards = cards + joker.ability.extra.extra_card
 			end
+			for _, joker in pairs(find_joker('versatile_joker_all_in_one')) do
+				cards = cards + joker.ability.extra.extra_card
+			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
 			create_cards_in_deck(ranks, suits, cards)
@@ -204,6 +207,50 @@ return {
 				G.GAME.showdown_cheater = true
 				G.GAME.cheater_destroy_odd = 6
 			end
+		end
+		
+        Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
+		if Showdown.config["Ranks"] then
+			Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, calculate = function(self, card, context)
+				if context.before and not context.blueprint then
+					local hazZero = false
+					for i=1, #context.scoring_hand do
+						hazZero = hazZero or SMODS.is_zero(context.scoring_hand[i])
+					end
+					local enhancements = {}
+					for _, v in ipairs(G.hand.cards) do
+						if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and not findInTable(v.config.center, enhancements) then
+							table.insert(enhancements, v.config.center)
+						end
+					end
+					if #enhancements > 0 then
+						for i=1, #context.scoring_hand do
+							local _card = context.scoring_hand[i]
+							if _card.config.center == G.P_CENTERS.c_base and not _card.debuff then
+								_card:set_ability(pseudorandom_element(enhancements, pseudoseed('versatile_mirror')), nil, true)
+							end
+						end
+					end
+				end
+			end }
+			Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_cheater', pos = coordinate(21), blueprint = false }
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = true, calculate = function(self, card, context)
+				if context.using_consumeable and context.consumeable.ability.set == 'Mathematic' then
+					G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+					local _card = copy_card(pseudorandom_element(G.hand.cards, pseudoseed('versatile_calculus')), nil, nil, G.playing_card)
+					_card:add_to_deck()
+					G.deck.config.card_limit = G.deck.config.card_limit + 1
+					table.insert(G.playing_cards, _card)
+					G.hand:emplace(_card)
+					_card:start_materialize()
+					playing_card_joker_effects({_card})
+				end
+			end }
+		end
+		if Showdown.config["Tags"]["Switches"] then
+			Showdown.versatile['Engineer Deck'] = { desc = 'j_showdown_versatile_joker_engineer', pos = coordinate(22), blueprint = false }
 		end
 	end
 }

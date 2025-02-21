@@ -577,18 +577,7 @@ return {
                     'idk',
                 },
                 unlock = {
-                    'Win a run with {C:attention}Erratic Deck{}',
-                    'on the {C:attention,E:1}7LB2WVPK{} seed',
-                }
-            },
-            j_showdown_bugged_seed_unknown = {
-                name = 'Bugged Seed',
-                text = {
-                    'idk',
-                },
-                unlock = {
-                    'Win a run with {C:attention}??????{}',
-                    'on the {C:attention,E:1}7LB2WVPK{} seed',
+                    'Win the {C:attention,E:1}7LB2WVPK{} challenge',
                 }
             },
             j_showdown_sick_trick = {
@@ -959,6 +948,51 @@ return {
                     'deck on at least',
                     '{C:attention}Black Stake{} difficulty',
                 }
+            },
+            j_showdown_versatile_joker_engineer = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    '???',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
+            j_showdown_versatile_joker_all_in_one = {
+                name = 'Versatile Joker',
+                text = {
+                    '{s:0.8}Combine all the {C:attention,s:0.8}Versatile Joker{s:0.8} effects',
+                    '{s:0.8}Discards give {C:money,s:0.8}$#1#',
+                    '{s:0.8}This joker gains {X:red,C:white,s:0.8}X#2#{s:0.8} Mult for every played {C:attention,s:0.8}hand',
+                    '{s:0.8}Gains {C:attention,s:0.8}sell value{s:0.8} equal to {C:attention,s:0.8}interest{s:0.8} at end of round',
+                    '{s:0.8}You gain {C:attention,s:0.8}interest{s:0.8} back',
+                    '{s:0.8}Earn an extra {C:money,s:0.8}$1{s:0.8} of {C:attention,s:0.8}interest{s:0.8} for every {C:money,s:0.8}$5{s:0.8} you have at end of round',
+                    '{C:blue,s:0.8}Common{s:0.8} and {C:red,s:0.8}Rare{s:0.8} Jokers each give {X:blue,C:white,s:0.8}X#4#{s:0.8} Chips',
+                    '{C:attention,s:0.8}+1{s:0.8} Consumable slot',
+                    '{C:purple,s:0.8}The Fool{s:0.8} creates {C:attention,s:0.8}#5#{s:0.8} additional card',
+                    '{C:planet,s:0.8}Planet{s:0.8} cards give {C:attention,s:0.8}#3#{s:0.8} additional level',
+                    '{s:0.8}All {C:spectral,s:0.8}Spectral{s:0.8} cards and {C:spectral,s:0.8}Spectral Packs{s:0.8} in the shop are {C:attention,s:0.8}free',
+                    '{C:attention,s:0.8}Non-face{s:0.8} cards are retriggered {C:attention,s:0.8}#7#{s:0.8} additional time',
+                    '{s:0.8}Played cards with {C:hearts,s:0.8}Heart{s:0.8} suit give {C:mult,s:0.8}+#8#{s:0.8} Mult when scored',
+                    '{C:green,s:0.8}#10# in #11#{s:0.8} chance for played cards with {C:spades,s:0.8}Spade{s:0.8} suit to give {X:chips,C:white,s:0.8}X#9#{s:0.8} Chips when scored',
+                    '{s:0.8}Using a {C:planet,s:0.8}Planet{s:0.8} or {C:purple,s:0.8}Tarot{s:0.8} card has a {C:green,s:0.8}#12# in #13#{s:0.8} chance to generate a new {C:planet,s:0.8}Planet{s:0.8} or {C:purple,s:0.8}Tarot{s:0.8} card',
+                    '{C:dark_edition,s:0.8}+2{C:attention,s:0.8} Joker{s:0.8} slots',
+                    '{s:0.8}When getting a {C:attention,s:0.8}Double Tag{s:0.8}, you get {C:attention,s:0.8}#14#{s:0.8} additional {C:attention,s:0.8}Double Tag',
+                    '{s:0.8}Instead of balancing {C:chips,s:0.8}Chips{s:0.8} and {C:mult,s:0.8}Mult{s:0.8}, adds the {C:attention,s:0.8}quarter{s:0.8} of both to both',
+                    '{s:0.8}At the end of each round, {C:attention,s:0.8}creates{s:0.8} a card with rank and suit {C:attention,s:0.8}equals{s:0.8} to {C:attention,s:0.8}highest count{s:0.8} of rank and suit in deck',
+                    '{C:blue,s:0.8}+1{s:0.8} hand and {C:red,s:0.8}+1{s:0.8} discard each round',
+                    '{C:attention,s:0.8}This bonus can\'t be modified',
+                    '{s:0.8,C:inactive}#16#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
+                    '{s:0.8,C:inactive}#17#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
+                    '{s:0.8,C:inactive}#19#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
+                    '{s:0.8,C:inactive}#16#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
+                    '{s:0.8,C:inactive}#16#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
+                    '{s:0.8,C:inactive}#18#{s:0.8}???',
+                    '{C:inactive,s:0.8}(Currently {X:red,C:white,s:0.8}X#3#{C:inactive,s:0.8} Mult, must have room)',
+                },
             },
             j_showdown_joker_variance_authorithy = {
                 name = 'Joker Variance Authority',

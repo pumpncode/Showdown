@@ -52,7 +52,7 @@ for _, file in ipairs(files) do
 	if err then
 		sendErrorMessage("Error loading "..file..": "..err, "Showdown")
 	else
-		execute_item(f(), file)
+		execute_item(f())
 	end
 end
 

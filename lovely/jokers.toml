@@ -321,7 +321,7 @@ match_indent = true
 pattern = "local tot = args.chips + args.mult"
 position = "before"
 payload = '''
-if next(find_joker('versatile_joker')) and G.GAME.selected_back.name == 'Plasma Deck' then
+if (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one'))) and G.GAME.selected_back.name == 'Plasma Deck' then
     local tot = args.chips + args.mult
     args.chips = args.chips + math.floor(tot/4)
     args.mult = args.mult + math.floor(tot/4)
@@ -347,7 +347,7 @@ match_indent = true
 pattern = "inc_career_stat('c_wins', 1)"
 position = "after"
 payload = '''
-if G.GAME.selected_back.name == 'Starter Deck' and next(find_joker('versatile_joker')) then
+if G.GAME.selected_back.name == 'Starter Deck' and (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one'))) then
     G.PROFILES[G.SETTINGS.profile].starter_next_run = true
 end
 '''
@@ -387,6 +387,10 @@ pattern = "update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay 
 position = "before"
 payload = '''
 local versatile, amount = find_joker('versatile_joker'), 1
+if #versatile > 0 and G.GAME.selected_back.name == 'Nebula Deck' then
+    for i=1, #versatile do amount = amount + versatile[i].ability.extra.planet end
+end
+versatile = find_joker('versatile_joker_all_in_one')
 if #versatile > 0 and G.GAME.selected_back.name == 'Nebula Deck' then
     for i=1, #versatile do amount = amount + versatile[i].ability.extra.planet end
 end
@@ -438,7 +442,7 @@ match_indent = true
 pattern = "if (self.ability.set == 'Planet' or (self.ability.set == 'Booster' and self.ability.name:find('Celestial'))) and #find_joker('Astronomer') > 0 then self.cost = 0 end"
 position = "after"
 payload = '''
-if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and #find_joker('versatile_joker') > 0 and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
+if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and (#find_joker('versatile_joker') > 0 or #find_joker('versatile_joker_all_in_one') > 0) and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
 '''
 
 # Joker on Joker stickers effects
