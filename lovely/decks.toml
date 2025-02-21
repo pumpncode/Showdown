@@ -1,7 +1,6 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-#priority = -20
 priority = 0
 
 # Other decks don't have counterpart
@@ -12,7 +11,7 @@ pattern = "if self.GAME.starting_params.no_faces and SMODS.Ranks[v.value].face t
 position = 'after'
 match_indent = true
 payload = '''
-if SMODS.Ranks[v.value].counterpart or _r == 'showdown_Z' then
+if (SMODS.Ranks[v.value].counterpart and SMODS.Ranks[v.value].counterpart.is) or _r == 'showdown_Z' then
     keep = false
 end
 '''

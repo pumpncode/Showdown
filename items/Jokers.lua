@@ -20,6 +20,7 @@ local final = {
 local crouton = {
     type = 'Joker',
     key = 'crouton',
+    name = 'crouton',
 	atlas = "showdown_jokers",
     pos = coordinate(2), soul_pos = coordinate(3),
     config = {extra = {x_mult = 1.5}},
@@ -30,7 +31,7 @@ local crouton = {
     blueprint_compat = true, eternal_compat = true, perishable_compat = true,
     unlocked = false,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.hand then
+        if context.individual and context.cardarea == G.hand and not context.end_of_round then
             return {
                 x_mult = card.ability.extra.x_mult,
                 card = card
@@ -42,6 +43,7 @@ local crouton = {
 local pinpoint = {
     type = 'Joker',
     key = 'pinpoint',
+    name = 'pinpoint',
 	atlas = "showdown_jokers",
 	pos = coordinate(4),
     config = {extra = {x_chips = 1.5}},
@@ -77,6 +79,7 @@ local pinpoint = {
 local math_teacher = {
     type = 'Joker',
     key = 'math_teacher',
+    name = 'math_teacher',
 	atlas = "showdown_jokers",
 	pos = coordinate(5),
     config = {extra = {chips = 0, chip_mod = 2.5}},
@@ -104,7 +107,7 @@ local math_teacher = {
             card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chip_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.CHIPS, true)
         end
-		if context.joker_main then
+		if context.joker_main and card.ability.extra.chips > 0 then
 			return {
 				message = localize({ type = "variable", key = "a_chips", vars = { card.ability.extra.chips } }),
 				chip_mod = card.ability.extra.chips,
@@ -116,6 +119,7 @@ local math_teacher = {
 local gruyere = {
     type = 'Joker',
     key = 'gruyere',
+    name = 'gruyere',
 	atlas = "showdown_jokers",
 	pos = coordinate(6),
     config = {extra = {mult = 0, mult_mod = 2}},
@@ -141,6 +145,7 @@ local gruyere = {
 local mirror = {
     type = 'Joker',
     key = 'mirror',
+    name = 'mirror',
 	atlas = "showdown_jokers",
 	pos = coordinate(7),
     config = {extra = {retrigger = 1}},
@@ -166,6 +171,7 @@ local mirror = {
 local crime_scene = {
     type = 'Joker',
     key = 'crime_scene',
+    name = 'crime_scene',
     atlas = "showdown_jokers",
     pos = coordinate(8),
     config = {extra = {x_mult = 1, x_mult_mod = 0.1}},
@@ -191,6 +197,7 @@ local crime_scene = {
 local ping_pong = {
     type = 'Joker',
     key = 'ping_pong',
+    name = 'ping_pong',
     atlas = "showdown_jokers",
     pos = coordinate(9),
     rarity = 2, cost = 6,
@@ -218,6 +225,7 @@ local ping_pong = {
 local color_splash = {
     type = 'Joker',
     key = 'color_splash',
+    name = 'color_splash',
     atlas = "showdown_jokers",
     pos = coordinate(10),
     rarity = 2, cost = 6,
@@ -257,6 +265,7 @@ local color_splash = {
 local blue = {
     type = 'Joker',
     key = 'blue',
+    name = 'blue',
     atlas = "showdown_jokers",
     pos = coordinate(11),
     rarity = 1, cost = 1,
@@ -288,6 +297,7 @@ local blue = {
 local spotted_joker = {
     type = 'Joker',
     key = 'spotted_joker',
+    name = 'spotted_joker',
 	atlas = "showdown_jokers",
 	pos = coordinate(12),
     config = {extra = {chips = 0, chip_mod = 0.5}},
@@ -309,6 +319,7 @@ local spotted_joker = {
 local golden_roulette = {
     type = 'Joker',
     key = 'golden_roulette',
+    name = 'golden_roulette',
     atlas = "showdown_jokers",
     pos = coordinate(13),
     config = {extra = {money = 6}},
@@ -355,6 +366,7 @@ local golden_roulette = {
 local bacteria = {
     type = 'Joker',
     key = 'bacteria',
+    name = 'bacteria',
     atlas = "showdown_jokers",
     pos = coordinate(14),
     rarity = 1, cost = 4,
@@ -384,6 +396,7 @@ local bacteria = {
 local empty_joker = {
     type = 'Joker',
     key = 'empty_joker',
+    name = 'empty_joker',
     atlas = "showdown_jokers",
     pos = coordinate(15),
     config = {extra = {mult = 12}},
@@ -410,6 +423,7 @@ local empty_joker = {
 local baby_jimbo = {
     type = 'Joker',
     key = 'baby_jimbo',
+    name = 'baby_jimbo',
     atlas = "showdown_jokers",
     pos = coordinate(16),
     config = {extra = {sold = false}},
@@ -454,6 +468,7 @@ local baby_jimbo = {
 local parmesan = {
     type = 'Joker',
     key = 'parmesan',
+    name = 'parmesan',
     atlas = "showdown_jokers",
     pos = coordinate(17),
     rarity = 2, cost = 6,
@@ -482,6 +497,7 @@ local parmesan = {
 local chaos_card = {
     type = 'Joker',
     key = 'chaos_card',
+    name = 'chaos_card',
     atlas = "showdown_jokers",
     pos = coordinate(18),
     rarity = 3, cost = 8,
@@ -523,6 +539,7 @@ local chaos_card = {
 local sim_card = {
     type = 'Joker',
     key = 'sim_card',
+    name = 'sim_card',
     atlas = "showdown_jokers",
     pos = coordinate(19),
     loc_vars = function(self, info_queue, card)
@@ -535,6 +552,7 @@ local sim_card = {
 local wall = {
     type = 'Joker',
     key = 'wall',
+    name = 'wall',
     atlas = "showdown_jokers",
     pos = coordinate(20),
     rarity = 3, cost = 1,
@@ -544,6 +562,7 @@ local wall = {
 local one_doller = {
     type = 'Joker',
     key = 'one_doller',
+    name = 'one_doller',
     atlas = "showdown_jokers",
     pos = coordinate(21),
     rarity = 1, cost = 1,
@@ -570,6 +589,7 @@ local one_doller = {
 local revolution = {
     type = 'Joker',
     key = 'revolution',
+    name = 'revolution',
     atlas = "showdown_jokers",
     pos = coordinate(22),
     rarity = 2, cost = 6,
@@ -596,6 +616,7 @@ local revolution = {
 local fruit_sticker = {
     type = 'Joker',
     key = 'fruit_sticker',
+    name = 'fruit_sticker',
     atlas = "showdown_jokers",
     pos = coordinate(23),
     config = {extra = {x_mult = 1.75}},
@@ -637,6 +658,7 @@ local fruit_sticker = {
 local sinful_joker = {
     type = 'Joker',
     key = 'sinful_joker',
+    name = 'sinful_joker',
     atlas = "showdown_jokers",
     pos = coordinate(24),
     config = {extra = {scaling = 3}},
@@ -675,6 +697,7 @@ local sinful_joker = {
 local egg_drawing = {
     type = 'Joker',
     key = 'egg_drawing',
+    name = 'egg_drawing',
     atlas = "showdown_jokers",
     pos = coordinate(25),
     config = {extra = {money = 4}},
@@ -706,6 +729,7 @@ local egg_drawing = {
 local jimbo_makeup = {
     type = 'Joker',
     key = 'jimbo_makeup',
+    name = 'jimbo_makeup',
     atlas = "showdown_jokers",
     pos = coordinate(26),
     rarity = 3, cost = 2,
@@ -715,6 +739,7 @@ local jimbo_makeup = {
 local jimbo_hat = {
     type = 'Joker',
     key = 'jimbo_hat',
+    name = 'jimbo_hat',
     atlas = "showdown_jokers",
     pos = coordinate(27),
     rarity = 3, cost = 2,
@@ -724,6 +749,7 @@ local jimbo_hat = {
 local jimbo_bells = {
     type = 'Joker',
     key = 'jimbo_bells',
+    name = 'jimbo_bells',
     atlas = "showdown_jokers",
     pos = coordinate(28),
     rarity = 3, cost = 2,
@@ -733,6 +759,7 @@ local jimbo_bells = {
 local jimbo_collar = {
     type = 'Joker',
     key = 'jimbo_collar',
+    name = 'jimbo_collar',
     atlas = "showdown_jokers",
     pos = coordinate(29),
     rarity = 3, cost = 2,
@@ -742,6 +769,7 @@ local jimbo_collar = {
 local gary_mccready = {
     type = 'Joker',
     key = 'gary_mccready',
+    name = 'gary_mccready',
     atlas = "showdown_jokers",
     pos = coordinate(30),
     config = {extra = {created = false}},
@@ -787,6 +815,7 @@ local gary_mccready = {
 local ultimate_joker = {
     type = 'Joker',
     key = 'ultimate_joker',
+    name = 'ultimate_joker',
     atlas = "showdown_jokers",
     pos = coordinate(31),
     loc_vars = function(self, info_queue, card)
@@ -814,6 +843,7 @@ local ultimate_joker = {
 local strainer = {
     type = 'Joker',
     key = 'strainer',
+    name = 'strainer',
     atlas = "showdown_jokers",
     pos = coordinate(32),
     config = {extra = {money = 0, moneyRequirement = 10, boss_shop = false}},
@@ -844,8 +874,8 @@ local strainer = {
                     while card.ability.extra.money >= card.ability.extra.moneyRequirement do
                         local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
                         local suit = pseudorandom_element(suits, pseudoseed('strainer'))
+                        card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
                         if create_card_in_deck(rank, suit) then
-                            card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
                             created_cards = created_cards + 1
                             if created_cards >= 20 then
                                 check_for_unlock({type = 'whole_new_deck'})
@@ -880,6 +910,7 @@ local strainer = {
 local billiard = {
     type = 'Joker',
     key = 'billiard',
+    name = 'billiard',
     atlas = "showdown_jokers",
     pos = coordinate(33),
     rarity = 3, cost = 8,
@@ -910,6 +941,7 @@ local billiard = {
 local hiding_details = {
     type = 'Joker',
     key = 'hiding_details',
+    name = 'hiding_details',
     atlas = "showdown_jokers",
     pos = coordinate(34),
     loc_vars = function(self, info_queue, card)
@@ -922,6 +954,7 @@ local hiding_details = {
 local what_a_steel = {
     type = 'Joker',
     key = 'what_a_steel',
+    name = 'what_a_steel',
     atlas = "showdown_jokers",
     pos = coordinate(35),
     config = {extra = {steel_tally = 0}},
@@ -967,6 +1000,7 @@ local what_a_steel = {
 local diplomatic_immunity = {
     type = 'Joker',
     key = 'diplomatic_immunity',
+    name = 'diplomatic_immunity',
     atlas = "showdown_jokers",
     pos = coordinate(36),
     rarity = 2, cost = 6,
@@ -976,6 +1010,7 @@ local diplomatic_immunity = {
 local nitroglycerin = {
     type = 'Joker',
     key = 'nitroglycerin',
+    name = 'nitroglycerin',
     atlas = "showdown_jokers",
     pos = coordinate(37),
     rarity = 2, cost = 4,
@@ -995,6 +1030,7 @@ local nitroglycerin = {
 local substitute_teacher = {
     type = 'Joker',
     key = 'substitute_teacher',
+    name = 'substitute_teacher',
     atlas = "showdown_jokers",
     pos = coordinate(38),
     config = {extra = {chips_scale = 4, mult_scale = 2}},
@@ -1035,6 +1071,7 @@ local substitute_teacher = {
 local world_map = {
     type = 'Joker',
     key = 'world_map',
+    name = 'world_map',
     atlas = "showdown_jokers",
     pos = coordinate(39),
     config = {extra = {chips_scale = 12.5, chips = 0}},
@@ -1076,6 +1113,7 @@ local world_map = {
 local bugged_seed = {
     type = 'Joker',
     key = 'bugged_seed',
+    name = 'bugged_seed',
     atlas = "showdown_jokers",
     pos = coordinate(40),
     locked_vars = function(self, info_queue, card)
@@ -1100,6 +1138,7 @@ local bugged_seed = {
 local sick_trick = {
     type = 'Joker',
     key = 'sick_trick',
+    name = 'sick_trick',
     atlas = "showdown_jokers",
     pos = coordinate(41),
     rarity = 2, cost = 6,
@@ -1128,6 +1167,7 @@ local sick_trick = {
 local jaws = {
     type = 'Joker',
     key = 'jaws',
+    name = 'jaws',
     atlas = "showdown_jokers",
     pos = coordinate(42),
     config = {extra = {chips_scale = 2, chips = 0}},
@@ -1167,6 +1207,7 @@ local jaws = {
 local locks = {
     type = 'Joker',
     key = '4_locks',
+    name = '4_locks',
     atlas = "showdown_jokers",
     pos = coordinate(43),
     config = {extra = {locks = {false, false, false, false}, created = false}},
@@ -1222,6 +1263,7 @@ local locks = {
 local unshackled_joker = {
     type = 'Joker',
     key = 'unshackled_joker',
+    name = 'unshackled_joker',
     atlas = "showdown_jokers",
     pos = coordinate(44),
     rarity = 'showdown_Final', cost = 20,
@@ -1246,6 +1288,7 @@ local unshackled_joker = {
 local red_coins = {
     type = 'Joker',
     key = 'red_coins',
+    name = 'red_coins',
     atlas = "showdown_jokers",
     pos = coordinate(45),
     config = {extra = {money = 1}},
@@ -1262,6 +1305,7 @@ local red_coins = {
 local money_cutter = {
     type = 'Joker',
     key = 'money_cutter',
+    name = 'money_cutter',
     atlas = "showdown_jokers",
     pos = coordinate(46),
     config = {extra = {money = 1}},
@@ -1286,6 +1330,7 @@ local money_cutter = {
 local passage_of_time = {
     type = 'Joker',
     key = 'passage_of_time',
+    name = 'passage_of_time',
     atlas = "showdown_jokers",
     pos = coordinate(47),
     config = {extra = {chips_mult = 0, scale = 2}},
@@ -1317,6 +1362,7 @@ local passage_of_time = {
 local colored_glasses = {
     type = 'Joker',
     key = 'colored_glasses',
+    name = 'colored_glasses',
     atlas = "showdown_jokers",
     pos = coordinate(48),
     config = {extra = {mult_scale = 4, mult = 0}},
@@ -1356,6 +1402,7 @@ local colored_glasses = {
 local joker_variance_authorithy = {
     type = 'Joker',
     key = 'joker_variance_authorithy',
+    name = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
     pos = coordinate(49),
     config = {extra = {mult = 0, mult_scale = 4}},
@@ -1393,6 +1440,7 @@ local joker_variance_authorithy = {
 local banana = {
     type = 'Joker',
     key = 'banana',
+    name = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
     display_size = { w = 35, h = 43 },
@@ -1454,9 +1502,10 @@ local banana = {
 local label = {
     type = 'Joker',
     key = 'label',
+    name = 'label',
     atlas = "showdown_jokers",
     pos = coordinate(50),
-    config = {extra = {can_reroll = true}},
+    config = {extra = {can_reroll = false}},
     rarity = 1, cost = 3,
     blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     unlocked = false,
@@ -1479,6 +1528,12 @@ local label = {
             end
         end
     end,
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_reroll =
+            ((not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide'))
+            or not (G.GAME.round_resets.blind_states.Big == 'Defeated' or G.GAME.round_resets.blind_states.Big == 'Skipped' or G.GAME.round_resets.blind_states.Big == 'Hide'))
+            and G.STATE == G.STATES.BLIND_SELECT
+    end,
     generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
         SMODS.Joker.super.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
         if G.GAME and card.area == G.jokers then
@@ -1496,6 +1551,7 @@ local label = {
 local silver_stars = {
     type = 'Joker',
     key = 'silver_stars',
+    name = 'silver_stars',
     atlas = "showdown_jokers",
     pos = coordinate(51),
     rarity = 2, cost = 6,
@@ -1528,6 +1584,7 @@ local silver_stars = {
 local gold_star = {
     type = 'Joker',
     key = 'gold_star',
+    name = 'gold_star',
     atlas = "showdown_jokers",
     pos = coordinate(52),
     config = {extra = {xchips = 3}},
@@ -1549,6 +1606,7 @@ local gold_star = {
 local shady_dealer = {
     type = 'Joker',
     key = 'shady_dealer',
+    name = 'shady_dealer',
     atlas = "showdown_jokers",
     pos = coordinate(53),
     config = {extra = {hands = 3, money = 0}},
@@ -1574,6 +1632,7 @@ local shady_dealer = {
 local yipeee = {
     type = 'Joker',
     key = 'yipeee',
+    name = 'yipeee',
     atlas = "showdown_jokers",
     pos = coordinate(54),
     config = {extra = {sold = false}},
@@ -1604,6 +1663,7 @@ local yipeee = {
 local dealer_luigi = {
     type = 'Joker',
     key = 'dealer_luigi',
+    name = 'dealer_luigi',
     atlas = "showdown_jokers",
     pos = coordinate(55),
 	loc_vars = function(self, info_queue, card)
@@ -1635,6 +1695,7 @@ local dealer_luigi = {
 local whatever = {
     type = 'Joker',
     key = 'whatever',
+    name = 'whatever',
     atlas = "showdown_jokers",
     pos = coordinate(56),
     loc_vars = function(self, info_queue, card)
@@ -1665,6 +1726,7 @@ local whatever = {
 
 local infection = {
 	type = 'Joker',
+    key = 'infection',
     name = 'infection',
     atlas = "showdown_cryptidJokers",
     pos = coordinate(1),

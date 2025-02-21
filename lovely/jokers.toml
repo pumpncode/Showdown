@@ -88,7 +88,7 @@ payload = '''
 check_for_unlock({type = 'playing_card_added', card = c1})
 '''
 
-# Debuff last scored card (diplomatic immunity)
+# Debuff first scored card (diplomatic immunity)
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
@@ -96,8 +96,8 @@ pattern = "for i=1, #pures do"
 position = "before"
 match_indent = true
 payload = '''
-if next(find_joker('diplomatic_immunity')) and scoring_hand[#scoring_hand].debuff then
-    scoring_hand[#scoring_hand]:set_debuff(false)
+if next(find_joker('diplomatic_immunity')) and scoring_hand[1].debuff then
+    scoring_hand[1]:set_debuff(false)
 end
 '''
 

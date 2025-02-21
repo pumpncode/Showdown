@@ -539,7 +539,7 @@ return {
             j_showdown_diplomatic_immunity = {
                 name = 'Diplomatic Immunity',
                 text = {
-                    'Last {C:attention}scored{} card',
+                    'First {C:attention}scored{} card',
                     '{C:attention}cannot{} be debuffed',
                 }
             },

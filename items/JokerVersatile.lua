@@ -1,6 +1,7 @@
 local versatile_joker = {
     type = 'Joker',
     key = 'versatile_joker',
+    name = 'versatile_joker',
     atlas = "showdown_versatile_joker",
     pos = coordinate(1),
     config = { sprite = {x = 0, y = 0, blueprint = false}, extra = {

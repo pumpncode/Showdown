@@ -376,7 +376,7 @@ for i = 1, 4 do
                         G.E_MANAGER:add_event(Event({
                             trigger = 'immediate',
                             func = function()
-                                if G.draw_hand_math then G.FUNCS.draw_from_deck_to_hand() end
+                                if G.GAME.draw_hand_math then G.FUNCS.draw_from_deck_to_hand() end
                                 G.E_MANAGER:add_event(Event({
                                     trigger = 'after',
                                     delay = 0.5,
@@ -454,7 +454,7 @@ return {
 		function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
 			if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
 				if card.ability.set == "Mathematic" then
-					if G.draw_hand_math then
+					if G.GAME.draw_hand_math then
 						return {
 							n = G.UIT.ROOT,
 							config = { padding = -0.1, colour = G.C.CLEAR },

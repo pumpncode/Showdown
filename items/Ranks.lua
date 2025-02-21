@@ -29,7 +29,7 @@ local count2 = { -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
-	counterpart = true,
+	counterpart = { is = true, value = '2' },
 	hidden = true,
 	max_id = {
 		value = -3,
@@ -51,7 +51,7 @@ local count5 = { -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
-	counterpart = true,
+	counterpart = { is = true, value = '5' },
 	hidden = true,
 	max_id = {
 		value = -6,
@@ -73,7 +73,7 @@ local count8 = { -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
-	counterpart = true,
+	counterpart = { is = true, value = '8' },
 	hidden = true,
 	max_id = {
 		value = -9,
@@ -97,7 +97,7 @@ local countButler = { -- Butler Card
 	face_nominal = 0.1,
 	next = { 'showdown_Princess', 'Queen' },
 	face = true,
-	counterpart = true,
+	counterpart = { is = true, value = 'Jack' },
 	hidden = true,
 	max_id = {
 		value = -12,
@@ -121,7 +121,7 @@ local countPrincess = { -- Princess Card
 	face_nominal = 0.2,
 	next = { 'showdown_Lord', 'King' },
 	face = true,
-	counterpart = true,
+	counterpart = { is = true, value = 'Queen' },
 	hidden = true,
 	max_id = {
 		value = -13,
@@ -145,7 +145,7 @@ local countLord = { -- Lord Card
 	face_nominal = 0.3,
 	next = { 'Ace' },
 	face = true,
-	counterpart = true,
+	counterpart = { is = true, value = 'King' },
 	hidden = true,
 	max_id = {
 		value = -14,
@@ -217,15 +217,26 @@ return {
 		table.insert(SMODS.Ranks["Queen"].next, "showdown_Lord")
 		--
 
+		SMODS.Ranks["2"].counterpart = { is = false, value = "showdown_2.5"}
+		SMODS.Ranks["5"].counterpart = { is = false, value = "showdown_5.5"}
+		SMODS.Ranks["8"].counterpart = { is = false, value = "showdown_8.5"}
+		SMODS.Ranks["Jack"].counterpart = { is = false, value = "showdown_Butler"}
+		SMODS.Ranks["Queen"].counterpart = { is = false, value = "showdown_Princess"}
+		SMODS.Ranks["King"].counterpart = { is = false, value = "showdown_Lord"}
+
 		local SMODShas_any_suitRef = SMODS.has_any_suit
 		function SMODS.has_any_suit(card)
+			if
+				SMODS.is_zero(card)
+				or (next(find_joker('sim_card')) and SMODS.is_counterpart(card))
+			then
+				return true
+			end
 			SMODShas_any_suitRef(card)
-			if SMODS.is_zero(card) then return true end
-			if next(find_joker('sim_card')) and SMODS.is_counterpart(card) then return true end
 		end
 
 		function SMODS.is_counterpart(card)
-			return next(find_joker("hiding_details")) or card.base.id < 0
+			return next(find_joker("hiding_details")) or (SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is)
 		end
 
 		function SMODS.is_zero(card)

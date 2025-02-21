@@ -9,8 +9,9 @@ local latch = {
 	boss = { min = 1 },
 	mult = 3,
 	defeat = function(self)
-		if next(find_joker('4_locks')) then
-			local lockJ = find_joker('4_locks')[next(find_joker('4_locks'))]
+		local lock = find_joker('4_locks')
+		if next(lock) then
+			local lockJ = lock[next(lock)]
 			if not lockJ.ability.extra.locks[4] then
 				lockJ.ability.extra.locks[4] = true
 				forced_message(localize('k_unlocked'), lockJ, G.C.YELLOW, true)
@@ -18,7 +19,8 @@ local latch = {
 		end
 	end,
 	in_pool = function(self, args)
-		return next(find_joker('4_locks')) and not find_joker('4_locks')[next(find_joker('4_locks'))].ability.extra.locks[4]
+		local lock = find_joker('4_locks')
+		return next(lock) and not lock[next(lock)].ability.extra.locks[4]
 	end
 }
 

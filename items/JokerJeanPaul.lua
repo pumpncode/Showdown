@@ -1,6 +1,7 @@
 local jean_paul = {
     type = 'Joker',
     key = 'jean_paul',
+    name = 'jean_paul',
 	atlas = "showdown_jokers",
 	pos = coordinate(1),
     config = {extra = {talk = 0, inBlind = false}},

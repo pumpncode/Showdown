@@ -33,7 +33,7 @@ local axiom_infinity = {
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				G.draw_hand_math = true
+				G.GAME.draw_hand_math = true
 				return true
 			end,
 		}))
@@ -41,7 +41,7 @@ local axiom_infinity = {
 	unredeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				G.draw_hand_math = false
+				G.GAME.draw_hand_math = false
 				return true
 			end,
 		}))

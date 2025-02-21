@@ -188,7 +188,7 @@ function get_card_from_rank_suit(rank, suit)
 	for _, v in pairs(G.P_CARDS) do
 		if v.value == rank and v.suit == suit then return v end
 	end
-	print(rank.." of "..suit.." does not exist")
+	sendWarnMessage(rank.." of "..suit.." does not exist", 'Showdown')
 end
 
 function get_counterpart(rank, onlyCounterpart)

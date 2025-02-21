@@ -85,6 +85,14 @@ local calculus = {
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Calculus" and "_alt" or "") }
 	end,
+	apply = function(self, sleeve)
+        CardSleeves.Sleeve.apply(self)
+		if self.get_current_deck_key() ~= "b_showdown_Calculus" then
+            SMODS.Back.obj_table["b_showdown_Calculus"].apply(self, sleeve)
+        else
+            --
+        end
+	end
 }
 
 local starter = {
