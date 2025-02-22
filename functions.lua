@@ -232,8 +232,9 @@ function create_card_in_deck(rank, suit)
 	return card
 end
 
-function create_cards_in_deck(rank_list, suit_list, nb)
+function create_cards_in_deck(rank_list, suit_list, nb, args)
 	local cards = {}
+	print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 	for _=1, nb do
 		local rank, suit = pseudorandom_element(rank_list, pseudoseed('create_card')), pseudorandom_element(suit_list, pseudoseed('create_card'))
 		local created_card, card = get_card_from_rank_suit(rank, suit), nil
@@ -245,6 +246,11 @@ function create_cards_in_deck(rank_list, suit_list, nb)
 					card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 					G.play:emplace(card)
 					table.insert(G.playing_cards, card)
+					if args.cheater_add_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+						local seal = SMODS.poll_seal({guaranteed = true})
+						print(seal)
+						card:set_seal(seal, nil, true)
+					end
 					cards[#cards+1] = card
 					return true
 			end}))
@@ -265,6 +271,7 @@ function create_cards_in_deck(rank_list, suit_list, nb)
 	end}))
 	playing_card_joker_effects(cards)
 	delay(0.2)
+	return cards
 end
 
 function prequire(m)

@@ -28,7 +28,7 @@ local calculus = {
 	key = "Calculus",
 	atlas = "showdown_decks",
 	pos = coordinate(2),
-	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true },
+	config = { vouchers = { "v_showdown_number" }, consumables = { 'c_showdown_genie' } },
 	unlocked = false,
 	check_for_unlock = function (self, args)
 		if G.GAME.consumeable_usage_total and (G.GAME.consumeable_usage_total.mathematic or 0) >= 10 then
@@ -88,7 +88,7 @@ local cheater = {
 			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
-			create_cards_in_deck(ranks, suits, cards)
+			create_cards_in_deck(ranks, suits, cards, { cheater_add_seal = G.GAME.cheater_seal })
 		end
 	end,
 	apply = function(self, back)
@@ -123,7 +123,6 @@ local engineer = { -- Not done at all
 	key = "Engineer",
 	atlas = "showdown_decks",
 	pos = coordinate(5),
-	config = { showdown_engineer = true },
 	unlocked = false,
 	check_for_unlock = function (self, args)
 		--

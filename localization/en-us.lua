@@ -15,8 +15,8 @@ return {
                 text = {
                     'First booster in the shop is',
                     'always a {C:showdown_calculus}Calculus Booster{}',
-                    'You start with a {C:purple}Genie{} tarot',
-                    'card and {C:attention}Number Theory{}',
+                    'You start with a {C:purple,T:c_showdown_genie}Genie{} tarot',
+                    'card and {C:attention,T:v_showdown_number}Number Theory{}',
                 },
                 unlock = {
                     'Use 10 {C:showdown_calculus}Mathematic',
@@ -80,14 +80,15 @@ return {
                 text = {
                     'First booster in the shop is',
                     'always a {C:showdown_calculus}Calculus Booster{}',
-                    'You start with a {C:purple}Genie{} tarot',
-                    'card and {C:attention}Number Theory{}',
+                    'You start with a {C:purple,T:c_showdown_genie}Genie{} tarot',
+                    'card and {C:attention,T:v_showdown_number}Number Theory{}',
                 }
             },
             sleeve_showdown_Calculus_alt = {
                 name = "Calculus Sleeve",
                 text = {
-                    '???',
+                    "Start run with the {C:attention,T:v_showdown_axiom}Axiom of Infinity",
+                    "voucher and another {C:purple,T:c_showdown_genie}Genie{} tarot card",
                 }
             },
             sleeve_showdown_Starter = {
@@ -110,14 +111,17 @@ return {
                 text = {
                     'Start with all faces and a 0',
                     'Played hand creates a face or a 0',
-                    'Scored card have a {C:green}#1# in 6{}',
+                    'Scored card have a {C:green}#1# in 6',
                     'chance to be {C:red}destroyed',
                 }
             },
             sleeve_showdown_Cheater_alt = {
                 name = "Cheater Sleeve",
                 text = {
-                    '???',
+                    'Created card have a {C:green}#1# in 6',
+                    'chance to have a {C:attention}Seal',
+                    'Deck cannot destroy cards',
+                    'with a {C:attention}Seal',
                 }
             },
             sleeve_showdown_Engineer = {

@@ -126,20 +126,19 @@ local calculus = {
 	key = "Calculus",
 	atlas = "showdown_sleeves",
 	pos = coordinate(2),
-	config = { vouchers = { "v_showdown_number" }, consumables = {'c_showdown_genie'}, showdown_calculus = true },
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Calculus", stake = "stake_black"},
 	loc_vars = function(self)
-		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Calculus" and "_alt" or "") }
-	end,
-	apply = function(self, sleeve)
-        CardSleeves.Sleeve.apply(self)
-		if self.get_current_deck_key() ~= "b_showdown_Calculus" then
-            SMODS.Back.obj_table["b_showdown_Calculus"].apply(self, sleeve)
+		local key, vars
+        if self.get_current_deck_key() ~= "b_showdown_Calculus" then
+            key = self.key
+			self.config = { vouchers = { "v_showdown_number" }, consumables = { 'c_showdown_genie' } }
         else
-            --
+            key = self.key .. "_alt"
+			self.config = { vouchers = { "v_showdown_axiom" }, consumables = { 'c_showdown_genie' } }
         end
-	end
+		return { key = key, vars = vars }
+	end,
 }
 
 local starter = {
@@ -173,28 +172,14 @@ local cheater = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Cheater", stake = "stake_blue"},
 	loc_vars = function(self)
-        local key, vars
-        if self.get_current_deck_key() ~= "b_showdown_Cheater" then
-            key = self.key
-            vars = { (G.GAME and G.GAME.probabilities.normal) or 1 }
-        else
-            key = self.key .. "_alt"
-        end
-		return { key = key, vars = vars }
-	end,
-	calculate = function(self, card, context)
-        if self.get_current_deck_key() ~= "b_showdown_Cheater" then
-            SMODS.Back.obj_table["b_showdown_Cheater"].calculate(self, card, context)
-        else
-            --
-        end
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Cheater" and "_alt" or ""), vars = { (G.GAME and G.GAME.probabilities.normal) or 1 } }
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Cheater" then
             SMODS.Back.obj_table["b_showdown_Cheater"].apply(self, sleeve)
         else
-            --
+            G.GAME.cheater_seal = true
         end
 	end
 }
@@ -204,12 +189,19 @@ local engineer = { -- Not done at all
 	key = "Engineer",
 	atlas = "showdown_sleeves",
 	pos = coordinate(5),
-	config = { showdown_engineer = true },
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Engineer", stake = "stake_purple"},
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
 	end,
+	apply = function(self, sleeve)
+        CardSleeves.Sleeve.apply(self)
+		if self.get_current_deck_key() ~= "b_showdown_Engineer" then
+            SMODS.Back.obj_table["b_showdown_Cheater"].apply(self, sleeve)
+        else
+            --
+        end
+	end
 }
 
 return {

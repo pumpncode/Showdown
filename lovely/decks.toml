@@ -47,7 +47,14 @@ pattern = "if scoring_hand and SMODS.has_enhancement(card, 'm_glass') and not ca
 position = "before"
 match_indent = true
 payload = '''
-if scoring_hand and G.GAME.showdown_cheater and not card.debuff and pseudorandom('cheater') < G.GAME.probabilities.normal/6 and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one'))) then
+if
+    scoring_hand
+    and G.GAME.showdown_cheater
+    and not card.debuff
+    and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
+    and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not card:get_seal())) -- This is for the Cheater Sleeve
+    and pseudorandom('cheater') < G.GAME.probabilities.normal/6
+then
     destroyed = true
 end
 '''
