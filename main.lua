@@ -99,6 +99,7 @@ local showdown_config_tab = function()
 								create_toggle({label = localize("showdown_config_decks"), ref_table = Showdown.config, ref_value = 'Decks', callback = function() shdwn:save_config() end}),
 								create_toggle({label = localize("showdown_config_deckskins"), ref_table = Showdown.config, ref_value = 'DeckSkins', callback = function() shdwn:save_config() end}),
 								create_toggle({label = localize("showdown_config_enhancements"), ref_table = Showdown.config, ref_value = 'Enhancements', callback = function() shdwn:save_config() end}),
+								create_toggle({label = localize("showdown_config_stakes"), ref_table = Showdown.config, ref_value = 'Stakes', callback = function() shdwn:save_config() end}),
 
 							}},
 						}},

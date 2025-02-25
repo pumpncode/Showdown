@@ -28,4 +28,5 @@ return {
         ["Bunco"] = true,
         ["CardSleeves"] = true,
     },
+    ["Stakes"] = false,
 }

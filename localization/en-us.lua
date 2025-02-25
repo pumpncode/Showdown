@@ -1125,6 +1125,14 @@ return {
                     "debuffed",
                 },
             },
+            showdown_ruby_sticker = {
+                name = "Ruby Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Ruby",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
             counterpart_ranks = {
                 name = 'Counterparts',
                 text = {
@@ -1225,7 +1233,15 @@ return {
                 }
             },
         },
-        Stake={},
+        Stake={
+            stake_showdown_ruby={
+                name="Ruby Stake",
+                text={
+                    "idk",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+        },
         Tag={
             tag_showdown_green_key = {
                 name = "Key Tag",
@@ -1589,6 +1605,7 @@ return {
             showdown_config_tags_switches = "Switches (no)",
             showdown_config_vouchers = "Vouchers",
             showdown_config_stickers = "Stickers",
+            showdown_config_stakes = "Stakes (no)",
             showdown_config_consumeables_header = "Consumeables",
             showdown_config_consumeables_tarots = "Tarots",
             showdown_config_consumeables_spectrals = "Spectrals",
