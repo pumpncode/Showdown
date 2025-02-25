@@ -117,3 +117,14 @@ match_indent = true
 payload = '''
 if SMODS.is_zero(self) then return true end
 '''
+
+# Secret ranks are not shown if not in deck
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/overrides.lua"]'''
+pattern = '''if rank_tallies[rank_name_mapping[i]] ~= 0 or not SMODS.Ranks[rank_name_mapping[i]].in_pool or SMODS.Ranks[rank_name_mapping[i]]:in_pool({suit=''}) then'''
+position = "at"
+match_indent = true
+payload = '''
+if rank_tallies[rank_name_mapping[i]] ~= 0 or ((not SMODS.Ranks[rank_name_mapping[i]].in_pool or SMODS.Ranks[rank_name_mapping[i]]:in_pool({suit=''})) and not SMODS.Ranks[rank_name_mapping[i]].secret) then
+'''

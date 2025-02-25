@@ -53,7 +53,7 @@ if
     and not card.debuff
     and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
     and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not card:get_seal())) -- This is for the Cheater Sleeve
-    and pseudorandom('cheater') < G.GAME.probabilities.normal/6
+    and pseudorandom('cheater') < G.GAME.probabilities.normal/4
 then
     destroyed = true
 end

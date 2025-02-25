@@ -30,7 +30,7 @@ local count2 = { -- 2.5 Card
 	nominal = 2.5,
 	next = { '3' },
 	counterpart = { is = true, value = '2' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -3,
 	},
@@ -52,7 +52,7 @@ local count5 = { -- 5.5 Card
 	nominal = 5.5,
 	next = { '6' },
 	counterpart = { is = true, value = '5' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -6,
 	},
@@ -74,7 +74,7 @@ local count8 = { -- 8.5 Card
 	nominal = 8.5,
 	next = { '9' },
 	counterpart = { is = true, value = '8' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -9,
 	},
@@ -98,7 +98,7 @@ local countButler = { -- Butler Card
 	next = { 'showdown_Princess', 'Queen' },
 	face = true,
 	counterpart = { is = true, value = 'Jack' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -12,
 	},
@@ -122,7 +122,7 @@ local countPrincess = { -- Princess Card
 	next = { 'showdown_Lord', 'King' },
 	face = true,
 	counterpart = { is = true, value = 'Queen' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -13,
 	},
@@ -146,7 +146,7 @@ local countLord = { -- Lord Card
 	next = { 'Ace' },
 	face = true,
 	counterpart = { is = true, value = 'King' },
-	hidden = true,
+	secret = true,
 	max_id = {
 		value = -14,
 	},
@@ -167,7 +167,7 @@ local zero = { -- 0 Card (counts as any suit and can't be converted to a wild ca
 	pos = { x = 6 },
 	nominal = 0,
 	next = { 'Ace' },
-	hidden = true,
+	secret = true,
 	suit_map = {
 		Hearts = 0,
 		Clubs = 0,

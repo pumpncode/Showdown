@@ -39,7 +39,7 @@ return {
                 text = {
                     'Start with all faces and a 0',
                     'Played hand creates a face or a 0',
-                    'Scored card have a {C:green}#1# in 6{}',
+                    'Scored card have a {C:green}#1# in 4',
                     'chance to be {C:red}destroyed',
                 },
                 unlock = {
@@ -70,9 +70,7 @@ return {
             sleeve_showdown_Mirror_alt = {
                 name = "Mirror Sleeve",
                 text = {
-                    '{C:counterpart_ranks,T:counterpart_ranks}Non-counterpart{C:attention} Cards',
-                    'will no longer appear',
-                    'during the run',
+                    '???',
                 }
             },
             sleeve_showdown_Calculus = {
@@ -111,7 +109,7 @@ return {
                 text = {
                     'Start with all faces and a 0',
                     'Played hand creates a face or a 0',
-                    'Scored card have a {C:green}#1# in 6',
+                    'Scored card have a {C:green}#1# in 4',
                     'chance to be {C:red}destroyed',
                 }
             },

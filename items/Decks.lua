@@ -79,16 +79,50 @@ local cheater = {
 	end,
 	calculate = function(self, card, context)
 		if context.post_hand then
-			local cards = 1
+			local nbCards = 1
 			for _, joker in pairs(find_joker('versatile_joker')) do
-				cards = cards + joker.ability.extra.extra_card
+				nbCards = nbCards + joker.ability.extra.extra_card
 			end
 			for _, joker in pairs(find_joker('versatile_joker_all_in_one')) do
-				cards = cards + joker.ability.extra.extra_card
+				nbCards = nbCards + joker.ability.extra.extra_card
 			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
 			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
-			create_cards_in_deck(ranks, suits, cards, { cheater_add_seal = G.GAME.cheater_seal })
+			local cards = {}
+			for _=1, nbCards do
+				local rank, suit = pseudorandom_element(ranks, pseudoseed('create_card')), pseudorandom_element(suits, pseudoseed('create_card'))
+				local created_card, _card = get_card_from_rank_suit(rank, suit), nil
+				if created_card then
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+							_card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+							_card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+							G.play:emplace(_card)
+							table.insert(G.playing_cards, _card)
+							if G.GAME.cheater_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+								_card:set_seal(SMODS.poll_seal({guaranteed = true}), nil, true)
+							end
+							cards[#cards+1] = _card
+							return true
+					end}))
+				end
+				delay(0.2)
+			end
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					G.deck.config.card_limit = G.deck.config.card_limit + nbCards
+					return true
+			end}))
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					for i=1, #cards do
+						draw_card(G.play, G.deck, i*100/#cards,'up', nil ,cards[i])
+					end
+					return true
+			end}))
+			playing_card_joker_effects(cards)
+			delay(0.2)
 		end
 	end,
 	apply = function(self, back)
@@ -177,8 +211,10 @@ return {
 				end,
 			}))
 			local vouchers = {}
+			local back = G.P_CENTERS[G.GAME.selected_back.effect.center.key]
+			local given_by_deck = back.config.vouchers or (back.config.voucher and {back.config.voucher}) or {}
 			for _, v in pairs(G.P_CENTER_POOLS.Voucher) do
-				if not (v.requires and next(v.requires)) then
+				if v.unlocked and not (v.requires and next(v.requires)) and not findInTable(v.key, given_by_deck) then
 					table.insert(vouchers, v.key)
 				end
 			end
