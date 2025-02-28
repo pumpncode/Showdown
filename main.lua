@@ -14,7 +14,8 @@ SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 ---- atlases: the list of atlas that will be loaded for this file
 ---- class: the class used to load the file content (used for mod compatibilities, SMODS by default)
 ---@param item any The given item
-local function execute_item(item)
+---@param fileName any The name of the file
+local function execute_item(item, fileName)
 	if item and item.enabled then
 		if item.exec then item.exec() end
 		if not item.class then item.class = SMODS end
@@ -28,19 +29,19 @@ local function execute_item(item)
 				local list = item.list()
 				for _, obj in ipairs(list) do
 					if obj.type then
-						if item.class and item.class[obj.type] then
+						if item.class[obj.type] then
 							item.class[obj.type](obj)
 						else
-							sendErrorMessage("Error creating "..obj.key.." in file "..file..": Type does not exist in this class", "Showdown")
+							sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
 						end
 					else
-						sendErrorMessage("Error creating "..obj.key.." in file "..file..": No type was given", "Showdown")
+						sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": No type was given", "Showdown")
 					end
 				end
 			end
 			if item.post_exec then item.post_exec() end
 		else
-			sendErrorMessage("Error loading file "..file..": Used class does not exist", "Showdown")
+			sendErrorMessage("Error loading file "..fileName..": Class does not exist", "Showdown")
 		end
 	end
 end
@@ -52,7 +53,7 @@ for _, file in ipairs(files) do
 	if err then
 		sendErrorMessage("Error loading "..file..": "..err, "Showdown")
 	else
-		execute_item(f())
+		execute_item(f(), file)
 	end
 end
 

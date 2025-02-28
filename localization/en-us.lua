@@ -1075,6 +1075,12 @@ return {
                     'on one {C:attention}secret hand',
                 }
             },
+            j_showdown_madotsuki = {
+                name = 'Madotsuki',
+                text = {
+                    'idk',
+                },
+            },
         },
         Other={
             showdown_static = {

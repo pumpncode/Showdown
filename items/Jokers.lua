@@ -1,4 +1,6 @@
 local cronch = {type = 'Sound', key = "cronch", path = "cronch.ogg"}
+local mado_no1 = {type = 'Sound', key = "mado_no1", path = "madotsuki/no1.ogg"}
+local mado_no2 = {type = 'Sound', key = "mado_no2", path = "madotsuki/no2.ogg"}
 
 ---- Final Rarity
 
@@ -1721,7 +1723,23 @@ local whatever = {
         card:set_cost()
     end,
 }
-
+--[[
+local madotsuki = {
+    type = 'Joker',
+    key = 'madotsuki',
+    name = 'madotsuki',
+    atlas = "showdown_jokers",
+    pos = coordinate(57),
+    loc_vars = function(self, info_queue, card)
+        --
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+]]--
 -- Cryptid
 
 local infection = {
@@ -1775,6 +1793,8 @@ return {
 	list = function ()
 		local list = {
 			cronch,
+            mado_no1,
+            mado_no2,
             final,
             crouton,
             --crime_scene,
@@ -1810,6 +1830,7 @@ return {
             yipeee,
             fruit_sticker,
             whatever,
+            madotsuki,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, pinpoint)
@@ -1929,6 +1950,31 @@ return {
                     return true
                 end)
             }))
+        end
+
+        G.FUNCS.no_sell_madotsuki = function(e)
+            if pseudorandom('mado_no') < 1/2 then
+                play_sound('showdown_mado_no1')
+            else
+                play_sound('showdown_mado_no2')
+            end
+        end
+
+        local GFUNCSCan_sell_cardRef = G.FUNCS.can_sell_card
+        G.FUNCS.can_sell_card = function(e)
+            GFUNCSCan_sell_cardRef(e)
+            local card = e.config.ref_table
+            if not card:can_sell_card() and card.ability.name == 'madotsuki' then
+                e.config.button_alt = 'no_sell_madotsuki'
+            end
+        end
+
+        local UIElementClickRef = UIElement.click
+        function UIElement:click()
+            UIElementClickRef(self)
+            if self.config.button_alt then
+                G.FUNCS[self.config.button_alt](self)
+            end
         end
 
         if Cryptid and Cryptid.food then
