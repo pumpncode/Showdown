@@ -1,6 +1,9 @@
+local order_nb = 0
 local function make_achievement(key, hidden)
+	order_nb = order_nb + 1
 	return {
 		type = 'Achievement',
+		order = order_nb,
 		key = key,
 		hidden_text = hidden or false,
 		bypass_all_unlocked = true,

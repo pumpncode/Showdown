@@ -1,5 +1,6 @@
 local mirror = {
 	type = 'Back',
+	order = 1,
 	name = "Mirror Deck",
 	key = "Mirror",
 	atlas = "showdown_decks",
@@ -24,6 +25,7 @@ local mirror = {
 
 local calculus = {
 	type = 'Back',
+	order = 2,
 	name = "Calculus Deck",
 	key = "Calculus",
 	atlas = "showdown_decks",
@@ -42,6 +44,7 @@ local calculus = {
 
 local starter = {
 	type = 'Back',
+	order = 3,
 	name = "Starter Deck",
 	key = "Starter",
 	atlas = "showdown_decks",
@@ -63,6 +66,7 @@ local starter = {
 
 local cheater = {
 	type = 'Back',
+	order = 4,
 	name = "Cheater Deck",
 	key = "Cheater",
 	atlas = "showdown_decks",
@@ -153,6 +157,7 @@ local cheater = {
 
 local engineer = { -- Not done at all
 	type = 'Back',
+	order = 5,
 	name = "Engineer Deck",
 	key = "Engineer",
 	atlas = "showdown_decks",

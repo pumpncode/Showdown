@@ -21,6 +21,7 @@ local final = {
 
 local crouton = {
     type = 'Joker',
+    order = 1,
     key = 'crouton',
     name = 'crouton',
 	atlas = "showdown_jokers",
@@ -44,6 +45,7 @@ local crouton = {
 
 local pinpoint = {
     type = 'Joker',
+    order = 2,
     key = 'pinpoint',
     name = 'pinpoint',
 	atlas = "showdown_jokers",
@@ -80,6 +82,7 @@ local pinpoint = {
 
 local math_teacher = {
     type = 'Joker',
+    order = 3,
     key = 'math_teacher',
     name = 'math_teacher',
 	atlas = "showdown_jokers",
@@ -120,6 +123,7 @@ local math_teacher = {
 
 local gruyere = {
     type = 'Joker',
+    order = 4,
     key = 'gruyere',
     name = 'gruyere',
 	atlas = "showdown_jokers",
@@ -146,6 +150,7 @@ local gruyere = {
 
 local mirror = {
     type = 'Joker',
+    order = 5,
     key = 'mirror',
     name = 'mirror',
 	atlas = "showdown_jokers",
@@ -172,6 +177,7 @@ local mirror = {
 --[[
 local crime_scene = {
     type = 'Joker',
+    order = 6,
     key = 'crime_scene',
     name = 'crime_scene',
     atlas = "showdown_jokers",
@@ -198,6 +204,7 @@ local crime_scene = {
 
 local ping_pong = {
     type = 'Joker',
+    order = 7,
     key = 'ping_pong',
     name = 'ping_pong',
     atlas = "showdown_jokers",
@@ -226,6 +233,7 @@ local ping_pong = {
 
 local color_splash = {
     type = 'Joker',
+    order = 8,
     key = 'color_splash',
     name = 'color_splash',
     atlas = "showdown_jokers",
@@ -266,6 +274,7 @@ local color_splash = {
 
 local blue = {
     type = 'Joker',
+    order = 9,
     key = 'blue',
     name = 'blue',
     atlas = "showdown_jokers",
@@ -298,6 +307,7 @@ local blue = {
 
 local spotted_joker = {
     type = 'Joker',
+    order = 10,
     key = 'spotted_joker',
     name = 'spotted_joker',
 	atlas = "showdown_jokers",
@@ -320,6 +330,7 @@ local spotted_joker = {
 
 local golden_roulette = {
     type = 'Joker',
+    order = 11,
     key = 'golden_roulette',
     name = 'golden_roulette',
     atlas = "showdown_jokers",
@@ -367,6 +378,7 @@ local golden_roulette = {
 
 local bacteria = {
     type = 'Joker',
+    order = 12,
     key = 'bacteria',
     name = 'bacteria',
     atlas = "showdown_jokers",
@@ -397,6 +409,7 @@ local bacteria = {
 
 local empty_joker = {
     type = 'Joker',
+    order = 13,
     key = 'empty_joker',
     name = 'empty_joker',
     atlas = "showdown_jokers",
@@ -424,6 +437,7 @@ local empty_joker = {
 --[[
 local baby_jimbo = {
     type = 'Joker',
+    order = 14,
     key = 'baby_jimbo',
     name = 'baby_jimbo',
     atlas = "showdown_jokers",
@@ -469,6 +483,7 @@ local baby_jimbo = {
 ]]--
 local parmesan = {
     type = 'Joker',
+    order = 15,
     key = 'parmesan',
     name = 'parmesan',
     atlas = "showdown_jokers",
@@ -498,6 +513,7 @@ local parmesan = {
 
 local chaos_card = {
     type = 'Joker',
+    order = 16,
     key = 'chaos_card',
     name = 'chaos_card',
     atlas = "showdown_jokers",
@@ -540,6 +556,7 @@ local chaos_card = {
 
 local sim_card = {
     type = 'Joker',
+    order = 17,
     key = 'sim_card',
     name = 'sim_card',
     atlas = "showdown_jokers",
@@ -553,6 +570,7 @@ local sim_card = {
 
 local wall = {
     type = 'Joker',
+    order = 18,
     key = 'wall',
     name = 'wall',
     atlas = "showdown_jokers",
@@ -563,6 +581,7 @@ local wall = {
 
 local one_doller = {
     type = 'Joker',
+    order = 19,
     key = 'one_doller',
     name = 'one_doller',
     atlas = "showdown_jokers",
@@ -590,6 +609,7 @@ local one_doller = {
 
 local revolution = {
     type = 'Joker',
+    order = 20,
     key = 'revolution',
     name = 'revolution',
     atlas = "showdown_jokers",
@@ -617,6 +637,7 @@ local revolution = {
 
 local fruit_sticker = {
     type = 'Joker',
+    order = 21,
     key = 'fruit_sticker',
     name = 'fruit_sticker',
     atlas = "showdown_jokers",
@@ -659,6 +680,7 @@ local fruit_sticker = {
 
 local sinful_joker = {
     type = 'Joker',
+    order = 22,
     key = 'sinful_joker',
     name = 'sinful_joker',
     atlas = "showdown_jokers",
@@ -698,6 +720,7 @@ local sinful_joker = {
 
 local egg_drawing = {
     type = 'Joker',
+    order = 23,
     key = 'egg_drawing',
     name = 'egg_drawing',
     atlas = "showdown_jokers",
@@ -730,6 +753,7 @@ local egg_drawing = {
 
 local jimbo_makeup = {
     type = 'Joker',
+    order = 24,
     key = 'jimbo_makeup',
     name = 'jimbo_makeup',
     atlas = "showdown_jokers",
@@ -740,6 +764,7 @@ local jimbo_makeup = {
 
 local jimbo_hat = {
     type = 'Joker',
+    order = 25,
     key = 'jimbo_hat',
     name = 'jimbo_hat',
     atlas = "showdown_jokers",
@@ -750,6 +775,7 @@ local jimbo_hat = {
 
 local jimbo_bells = {
     type = 'Joker',
+    order = 26,
     key = 'jimbo_bells',
     name = 'jimbo_bells',
     atlas = "showdown_jokers",
@@ -760,6 +786,7 @@ local jimbo_bells = {
 
 local jimbo_collar = {
     type = 'Joker',
+    order = 27,
     key = 'jimbo_collar',
     name = 'jimbo_collar',
     atlas = "showdown_jokers",
@@ -770,6 +797,7 @@ local jimbo_collar = {
 
 local gary_mccready = {
     type = 'Joker',
+    order = 28,
     key = 'gary_mccready',
     name = 'gary_mccready',
     atlas = "showdown_jokers",
@@ -816,6 +844,7 @@ local gary_mccready = {
 
 local ultimate_joker = {
     type = 'Joker',
+    order = 29,
     key = 'ultimate_joker',
     name = 'ultimate_joker',
     atlas = "showdown_jokers",
@@ -844,6 +873,7 @@ local ultimate_joker = {
 
 local strainer = {
     type = 'Joker',
+    order = 30,
     key = 'strainer',
     name = 'strainer',
     atlas = "showdown_jokers",
@@ -911,6 +941,7 @@ local strainer = {
 --[[
 local billiard = {
     type = 'Joker',
+    order = 31,
     key = 'billiard',
     name = 'billiard',
     atlas = "showdown_jokers",
@@ -942,6 +973,7 @@ local billiard = {
 ]]
 local hiding_details = {
     type = 'Joker',
+    order = 32,
     key = 'hiding_details',
     name = 'hiding_details',
     atlas = "showdown_jokers",
@@ -955,6 +987,7 @@ local hiding_details = {
 
 local what_a_steel = {
     type = 'Joker',
+    order = 33,
     key = 'what_a_steel',
     name = 'what_a_steel',
     atlas = "showdown_jokers",
@@ -1001,6 +1034,7 @@ local what_a_steel = {
 
 local diplomatic_immunity = {
     type = 'Joker',
+    order = 34,
     key = 'diplomatic_immunity',
     name = 'diplomatic_immunity',
     atlas = "showdown_jokers",
@@ -1011,6 +1045,7 @@ local diplomatic_immunity = {
 
 local nitroglycerin = {
     type = 'Joker',
+    order = 35,
     key = 'nitroglycerin',
     name = 'nitroglycerin',
     atlas = "showdown_jokers",
@@ -1031,6 +1066,7 @@ local nitroglycerin = {
 
 local substitute_teacher = {
     type = 'Joker',
+    order = 36,
     key = 'substitute_teacher',
     name = 'substitute_teacher',
     atlas = "showdown_jokers",
@@ -1072,6 +1108,7 @@ local substitute_teacher = {
 
 local world_map = {
     type = 'Joker',
+    order = 37,
     key = 'world_map',
     name = 'world_map',
     atlas = "showdown_jokers",
@@ -1114,6 +1151,7 @@ local world_map = {
 --[[ 
 local bugged_seed = {
     type = 'Joker',
+    order = 38,
     key = 'bugged_seed',
     name = 'bugged_seed',
     atlas = "showdown_jokers",
@@ -1139,6 +1177,7 @@ local bugged_seed = {
 ]]--
 local sick_trick = {
     type = 'Joker',
+    order = 39,
     key = 'sick_trick',
     name = 'sick_trick',
     atlas = "showdown_jokers",
@@ -1168,6 +1207,7 @@ local sick_trick = {
 
 local jaws = {
     type = 'Joker',
+    order = 40,
     key = 'jaws',
     name = 'jaws',
     atlas = "showdown_jokers",
@@ -1208,6 +1248,7 @@ local jaws = {
 
 local locks = {
     type = 'Joker',
+    order = 41,
     key = '4_locks',
     name = '4_locks',
     atlas = "showdown_jokers",
@@ -1264,6 +1305,7 @@ local locks = {
 
 local unshackled_joker = {
     type = 'Joker',
+    order = 42,
     key = 'unshackled_joker',
     name = 'unshackled_joker',
     atlas = "showdown_jokers",
@@ -1289,6 +1331,7 @@ local unshackled_joker = {
 
 local red_coins = {
     type = 'Joker',
+    order = 43,
     key = 'red_coins',
     name = 'red_coins',
     atlas = "showdown_jokers",
@@ -1306,6 +1349,7 @@ local red_coins = {
 
 local money_cutter = {
     type = 'Joker',
+    order = 44,
     key = 'money_cutter',
     name = 'money_cutter',
     atlas = "showdown_jokers",
@@ -1331,6 +1375,7 @@ local money_cutter = {
 
 local passage_of_time = {
     type = 'Joker',
+    order = 45,
     key = 'passage_of_time',
     name = 'passage_of_time',
     atlas = "showdown_jokers",
@@ -1363,6 +1408,7 @@ local passage_of_time = {
 
 local colored_glasses = {
     type = 'Joker',
+    order = 46,
     key = 'colored_glasses',
     name = 'colored_glasses',
     atlas = "showdown_jokers",
@@ -1403,6 +1449,7 @@ local colored_glasses = {
 
 local joker_variance_authorithy = {
     type = 'Joker',
+    order = 47,
     key = 'joker_variance_authorithy',
     name = 'joker_variance_authorithy',
     atlas = "showdown_jokers",
@@ -1441,6 +1488,7 @@ local joker_variance_authorithy = {
 
 local banana = {
     type = 'Joker',
+    order = 48,
     key = 'banana',
     name = 'banana',
     atlas = "showdown_banana",
@@ -1503,6 +1551,7 @@ local banana = {
 
 local label = {
     type = 'Joker',
+    order = 49,
     key = 'label',
     name = 'label',
     atlas = "showdown_jokers",
@@ -1552,6 +1601,7 @@ local label = {
 
 local silver_stars = {
     type = 'Joker',
+    order = 50,
     key = 'silver_stars',
     name = 'silver_stars',
     atlas = "showdown_jokers",
@@ -1585,6 +1635,7 @@ local silver_stars = {
 
 local gold_star = {
     type = 'Joker',
+    order = 51,
     key = 'gold_star',
     name = 'gold_star',
     atlas = "showdown_jokers",
@@ -1607,6 +1658,7 @@ local gold_star = {
 
 local shady_dealer = {
     type = 'Joker',
+    order = 52,
     key = 'shady_dealer',
     name = 'shady_dealer',
     atlas = "showdown_jokers",
@@ -1633,6 +1685,7 @@ local shady_dealer = {
 
 local yipeee = {
     type = 'Joker',
+    order = 53,
     key = 'yipeee',
     name = 'yipeee',
     atlas = "showdown_jokers",
@@ -1664,6 +1717,7 @@ local yipeee = {
 
 local dealer_luigi = {
     type = 'Joker',
+    order = 54,
     key = 'dealer_luigi',
     name = 'dealer_luigi',
     atlas = "showdown_jokers",
@@ -1696,6 +1750,7 @@ local dealer_luigi = {
 
 local whatever = {
     type = 'Joker',
+    order = 55,
     key = 'whatever',
     name = 'whatever',
     atlas = "showdown_jokers",
@@ -1726,6 +1781,7 @@ local whatever = {
 --[[
 local madotsuki = {
     type = 'Joker',
+    order = 56,
     key = 'madotsuki',
     name = 'madotsuki',
     atlas = "showdown_jokers",
@@ -1744,6 +1800,7 @@ local madotsuki = {
 
 local infection = {
 	type = 'Joker',
+    order = 1000,
     key = 'infection',
     name = 'infection',
     atlas = "showdown_cryptidJokers",
@@ -1830,7 +1887,7 @@ return {
             yipeee,
             fruit_sticker,
             whatever,
-            madotsuki,
+            --madotsuki,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, pinpoint)

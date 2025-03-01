@@ -1,5 +1,6 @@
 local reflection = {
 	type = 'Consumable',
+	order = 1,
 	key = 'reflection',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -37,6 +38,7 @@ local reflection = {
 
 local vessel = {
 	type = 'Consumable',
+	order = 2,
 	key = 'vessel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -75,6 +77,7 @@ local vessel = {
 
 local genie = {
 	type = 'Consumable',
+	order = 3,
 	key = 'genie',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -107,6 +110,7 @@ local genie = {
 
 local lost = {
 	type = 'Consumable',
+	order = 4,
 	key = 'lost',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -120,6 +124,7 @@ local lost = {
 
 local angel = {
 	type = 'Consumable',
+	order = 5,
 	key = 'angel',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -136,6 +141,7 @@ local angel = {
 
 local red_key_piece_1 = {
 	type = 'Consumable',
+	order = 6,
 	key = 'red_key_piece_1',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -158,6 +164,7 @@ local red_key_piece_1 = {
 
 local red_key_piece_2 = {
 	type = 'Consumable',
+	order = 7,
 	key = 'red_key_piece_2',
 	set = 'Tarot',
 	atlas = 'showdown_tarots',
@@ -184,6 +191,7 @@ local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
 
 local beast = {
 	type = 'Consumable',
+	order = 1000,
 	key = 'beast',
 	set = 'Tarot',
 	atlas = 'showdown_buncoTarots',

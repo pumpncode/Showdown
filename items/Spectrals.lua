@@ -1,5 +1,6 @@
 local mist = {
 	type = 'Consumable',
+	order = 1,
 	key = 'mist',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
@@ -28,6 +29,7 @@ local mist = {
 
 local vision = {
 	type = 'Consumable',
+	order = 2,
 	key = 'vision',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',
@@ -78,6 +80,7 @@ local vision = {
 
 local blue_key = {
 	type = 'Consumable',
+	order = 3,
 	key = 'blue_key',
 	set = 'Spectral',
 	atlas = 'showdown_spectrals',

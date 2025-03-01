@@ -1,5 +1,6 @@
 local green_key = {
 	type = 'Tag',
+	order = 1,
 	key = "green_key",
 	atlas = "showdown_tags",
 	pos = coordinate(1),
@@ -27,6 +28,7 @@ local green_key = {
 
 local jean_paul = {
 	type = 'Tag',
+	order = 2,
 	key = "jean_paul",
 	atlas = "showdown_tags",
 	pos = coordinate(2),
@@ -55,6 +57,7 @@ local jean_paul = {
 
 local theorem = {
 	type = 'Tag',
+	order = 3,
 	key = "theorem",
 	atlas = "showdown_tags",
 	pos = coordinate(3),

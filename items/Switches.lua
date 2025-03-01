@@ -1,5 +1,6 @@
 local mystery = {
 	type = 'Switch',
+	order = 1,
 	key = "mystery_switch",
 	pos = coordinate(1),
 	min_ante = 1,
@@ -29,6 +30,7 @@ local mystery = {
 
 local money = {
 	type = 'Switch',
+	order = 2,
 	key = "money_switch",
 	pos = coordinate(2),
 	config = { type = "eval", triggers = 4, dollars = 5 },
@@ -58,6 +60,7 @@ local money = {
 
 local nebula = {
 	type = 'Switch',
+	order = 3,
 	key = "nebula_switch",
 	pos = coordinate(3),
 	config = { type = "immediate", triggers = 3 },
@@ -90,6 +93,7 @@ local nebula = {
 
 local gift = {
 	type = 'Switch',
+	order = 4,
 	key = "gift_switch",
 	pos = coordinate(4),
 	config = { type = "immediate", money = 10 },
@@ -131,6 +135,7 @@ local gift = {
 
 local burning = {
 	type = 'Switch',
+	order = 5,
 	key = "burning_switch",
 	pos = coordinate(5),
 	min_ante = 2,
@@ -148,6 +153,7 @@ local burning = {
 
 local duplicate = {
 	type = 'Switch',
+	order = 6,
 	key = "duplicate_switch",
 	pos = coordinate(6),
 	config = { type = "immediate", tags = 3 },

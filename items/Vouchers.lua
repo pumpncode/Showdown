@@ -1,5 +1,6 @@
 local number_theory = {
 	type = 'Voucher',
+	order = 1,
 	key = 'number',
 	atlas = 'showdown_vouchers',
     unlocked = true,
@@ -24,6 +25,7 @@ local number_theory = {
 
 local axiom_infinity = {
 	type = 'Voucher',
+	order = 2,
 	key = 'axiom',
 	atlas = 'showdown_vouchers',
     --unlocked = false,
@@ -50,6 +52,7 @@ local axiom_infinity = {
 
 local LUI = {
 	type = 'Voucher',
+	order = 3,
 	key = 'lui',
 	atlas = 'showdown_vouchers',
     unlocked = true,
@@ -82,6 +85,7 @@ local LUI = {
 
 local GI = {
 	type = 'Voucher',
+	order = 4,
 	key = 'gi',
 	atlas = 'showdown_vouchers',
     --unlocked = false,
@@ -121,6 +125,7 @@ local GI = {
 
 local collatz = {
 	type = 'Voucher',
+	order = 1000,
 	key = 'collatz',
 	atlas = 'showdown_cryptidVouchers',
     unlocked = true,

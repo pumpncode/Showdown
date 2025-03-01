@@ -17,32 +17,36 @@ SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 ---@param fileName any The name of the file
 local function execute_item(item, fileName)
 	if item and item.enabled then
-		if item.exec then item.exec() end
 		if not item.class then item.class = SMODS end
-		if item.class then
-			if item.atlases then
-				for _, atlas in ipairs(item.atlases) do
-					SMODS.Atlas(atlas)
-				end
+		if item.exec then item.exec() end
+		if item.atlases then
+			for _, atlas in ipairs(item.atlases) do
+				SMODS.Atlas(atlas)
 			end
-			if item.list then
-				local list = item.list()
-				for _, obj in ipairs(list) do
-					if obj.type then
-						if item.class[obj.type] then
-							item.class[obj.type](obj)
-						else
-							sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
-						end
-					else
-						sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": No type was given", "Showdown")
-					end
-				end
-			end
-			if item.post_exec then item.post_exec() end
-		else
-			sendErrorMessage("Error loading file "..fileName..": Class does not exist", "Showdown")
 		end
+		if item.list then
+			local load_list = {}
+			local list = item.list()
+			for _, obj in ipairs(list) do
+				if not obj.order then obj.order = 0 end
+				if obj.type then
+					if item.class[obj.type] then
+						table.insert(load_list, obj)
+					else
+						sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
+					end
+				else
+					sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": No type was given", "Showdown")
+				end
+			end
+			table.sort(load_list, function(a, b)
+				return a.order < b.order
+			end)
+			for _, obj in ipairs(load_list) do
+				item.class[obj.type](obj)
+			end
+		end
+		if item.post_exec then item.post_exec() end
 	end
 end
 
@@ -51,7 +55,8 @@ for _, file in ipairs(files) do
 	sendTraceMessage("Loading file "..file, "Showdown")
 	local f, err = SMODS.load_file("Items/" .. file)
 	if err then
-		sendErrorMessage("Error loading "..file..": "..err, "Showdown")
+		--sendErrorMessage("Error loading "..file..": "..err, "Showdown")
+		error(err)
 	else
 		execute_item(f(), file)
 	end

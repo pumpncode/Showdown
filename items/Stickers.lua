@@ -1,5 +1,6 @@
 local static = {
 	type = 'Sticker',
+	order = 1,
 	key = 'static',
 	atlas = 'showdown_stickers',
 	pos = coordinate(1, 5),
@@ -12,6 +13,7 @@ local static = {
 
 local cloud = {
 	type = 'Sticker',
+	order = 2,
 	key = 'cloud',
 	atlas = 'showdown_stickers',
 	pos = coordinate(2, 5),
@@ -40,6 +42,7 @@ local cloud = {
 
 local mushroom = {
 	type = 'Sticker',
+	order = 3,
 	key = 'mushroom',
 	atlas = 'showdown_stickers',
 	pos = coordinate(3, 5),
@@ -50,6 +53,7 @@ local mushroom = {
 
 local flower = {
 	type = 'Sticker',
+	order = 4,
 	key = 'flower',
 	atlas = 'showdown_stickers',
 	pos = coordinate(4, 5),
@@ -60,6 +64,7 @@ local flower = {
 
 local luigi = {
 	type = 'Sticker',
+	order = 5,
 	key = 'luigi',
 	atlas = 'showdown_stickers',
 	pos = coordinate(5, 5),
@@ -86,6 +91,7 @@ local luigi = {
 
 local mario = {
 	type = 'Sticker',
+	order = 6,
 	key = 'mario',
 	atlas = 'showdown_stickers',
 	pos = coordinate(6, 5),
@@ -110,6 +116,7 @@ local mario = {
 
 local star = {
 	type = 'Sticker',
+	order = 7,
 	key = 'star',
 	atlas = 'showdown_stickers',
 	pos = coordinate(7, 5),
@@ -128,8 +135,8 @@ return {
 		local list = {
 			static,
 			cloud,
-			mushroom,
-			flower,
+			--mushroom,
+			--flower,
 			luigi,
 			mario,
 			star,

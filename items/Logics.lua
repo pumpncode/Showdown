@@ -15,6 +15,7 @@ local undiscovered_sprite = {
 
 local logic_and = {
     type = 'Consumable',
+	order = 1,
 	key = 'and',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -31,6 +32,7 @@ local logic_and = {
 
 local logic_or = {
     type = 'Consumable',
+	order = 2,
 	key = 'or',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -47,6 +49,7 @@ local logic_or = {
 
 local logic_xor = {
     type = 'Consumable',
+	order = 3,
 	key = 'xor',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -63,6 +66,7 @@ local logic_xor = {
 
 local logic_not = {
     type = 'Consumable',
+	order = 4,
 	key = 'not',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -79,6 +83,7 @@ local logic_not = {
 
 local logic_nand = {
     type = 'Consumable',
+	order = 5,
 	key = 'nand',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -95,6 +100,7 @@ local logic_nand = {
 
 local logic_nor = {
     type = 'Consumable',
+	order = 6,
 	key = 'nor',
 	set = 'Logic',
 	atlas = 'showdown_logic',
@@ -111,6 +117,7 @@ local logic_nor = {
 
 local logic_xnor = {
     type = 'Consumable',
+	order = 7,
 	key = 'xnor',
 	set = 'Logic',
 	atlas = 'showdown_logic',

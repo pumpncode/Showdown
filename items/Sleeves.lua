@@ -1,5 +1,6 @@
 local mirror = {
 	type = 'Sleeve',
+	order = 1,
 	key = "Mirror",
 	atlas = "showdown_sleeves",
 	pos = coordinate(1),
@@ -20,6 +21,7 @@ local mirror = {
 
 local calculus = {
 	type = 'Sleeve',
+	order = 2,
 	key = "Calculus",
 	atlas = "showdown_sleeves",
 	pos = coordinate(2),
@@ -40,6 +42,7 @@ local calculus = {
 
 local starter = {
 	type = 'Sleeve',
+	order = 3,
 	key = "Starter",
 	atlas = "showdown_sleeves",
 	pos = coordinate(3),
@@ -63,6 +66,7 @@ local starter = {
 
 local cheater = {
 	type = 'Sleeve',
+	order = 4,
 	key = "Cheater",
 	atlas = "showdown_sleeves",
 	pos = coordinate(4),
@@ -82,6 +86,7 @@ local cheater = {
 
 local engineer = { -- Not done at all
 	type = 'Sleeve',
+	order = 5,
 	key = "Engineer",
 	atlas = "showdown_sleeves",
 	pos = coordinate(5),
@@ -107,7 +112,7 @@ return {
 			starter,
 		}
 		if Showdown.config["Ranks"] then
-			table.insert(list, mirror)
+			--table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
 		if Showdown.config["Consumeables"]["Mathematics"] then

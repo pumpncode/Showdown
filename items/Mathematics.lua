@@ -15,6 +15,7 @@ local undiscovered_sprite = {
 
 local constant = {
 	type = 'Consumable',
+	order = 1,
 	key = 'constant',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -54,6 +55,7 @@ local constant = {
 
 local variable = {
 	type = 'Consumable',
+	order = 2,
 	key = 'variable',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -78,6 +80,7 @@ local variable = {
 
 local func = {
 	type = 'Consumable',
+	order = 3,
 	key = 'function',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -114,6 +117,7 @@ local func = {
 
 local shape = {
 	type = 'Consumable',
+	order = 4,
 	key = 'shape',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -148,6 +152,7 @@ local shape = {
 
 local vector = {
 	type = 'Consumable',
+	order = 5,
 	key = 'vector',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -175,6 +180,7 @@ end
 
 local probability = {
 	type = 'Consumable',
+	order = 6,
 	key = 'probability',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -240,6 +246,7 @@ local probability = {
 
 local sequence = {
 	type = 'Consumable',
+	order = 7,
 	key = 'sequence',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -269,6 +276,7 @@ local sequence = {
 
 local operation = {
 	type = 'Consumable',
+	order = 8,
 	key = 'operation',
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
@@ -342,6 +350,7 @@ local boosters = {}
 for i = 1, 4 do
     table.insert(boosters, {
 		type = 'Booster',
+		order = 8 + i,
         key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
         config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
         create_card = function(self, card)

@@ -1,5 +1,6 @@
 local ghost = {
 	type = 'Enhancement',
+	order = 1,
 	key = 'ghost',
 	atlas = 'showdown_enhancements',
 	pos = coordinate(1, 7),
@@ -23,6 +24,7 @@ local ghost = {
 
 local holy = {
 	type = 'Enhancement',
+	order = 2,
 	key = 'holy',
 	atlas = 'showdown_enhancements',
 	pos = coordinate(2, 7),

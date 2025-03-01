@@ -1,5 +1,6 @@
 local latch = {
 	type = 'Blind',
+	order = 1,
 	key = "latch",
 	name = "The Latch",
 	atlas = "showdown_blinds",
@@ -26,6 +27,7 @@ local latch = {
 
 local patient = {
 	type = 'Blind',
+	order = 2,
 	key = "patient",
 	name = "The Patient",
 	atlas = "showdown_blinds",
@@ -37,6 +39,7 @@ local patient = {
 
 local wasteful = {
 	type = 'Blind',
+	order = 3,
 	key = "wasteful",
 	name = "The Wasteful",
 	atlas = "showdown_blinds",
@@ -51,6 +54,7 @@ local wasteful = {
 
 local shameful = {
 	type = 'Blind',
+	order = 4,
 	key = "shameful",
 	name = "The Shameful",
 	atlas = "showdown_blinds",

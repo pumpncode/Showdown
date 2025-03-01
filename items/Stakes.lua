@@ -1,5 +1,6 @@
 local ruby = {
 	type = 'StakeAlt',
+	order = 1,
     key = 'ruby',
 	atlas = "showdown_stakes", sticker_atlas = "showdown_stake_stickers",
 	pos = coordinate(2), sticker_pos = coordinate(2),

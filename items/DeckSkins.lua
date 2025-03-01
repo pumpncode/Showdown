@@ -1,5 +1,6 @@
 local jean_paul = {
 	type = 'DeckSkin',
+	order = 1,
 	key = "JeanPaul",
 	suit = "Clubs",
 	loc_txt = {
