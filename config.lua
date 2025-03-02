@@ -29,4 +29,5 @@ return {
         ["CardSleeves"] = true,
     },
     ["Stakes"] = false,
+    ["Challenges"] = true,
 }

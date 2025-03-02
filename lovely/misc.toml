@@ -69,3 +69,16 @@ position = "at"
 payload = '''
 {n=G.UIT.T, config={text = args.label, scale = args.label_scale, colour = args.label_color or G.C.UI.TEXT_LIGHT}},
 '''
+
+# Set seed 7LB2WVPK for the 7LB2WVPK challenge
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+match_indent = true
+pattern = '''G:start_run(args)'''
+position = "before"
+payload = '''
+if args.challenge and args.challenge.id == 'c_showdown_7LB2WVPK' then
+    args.seed = '7LB2WVPK'
+end
+'''

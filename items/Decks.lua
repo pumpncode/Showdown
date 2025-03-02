@@ -116,6 +116,7 @@ local cheater = {
 			G.E_MANAGER:add_event(Event({
 				func = function()
 					G.deck.config.card_limit = G.deck.config.card_limit + nbCards
+					playing_card_joker_effects(cards)
 					return true
 			end}))
 			G.E_MANAGER:add_event(Event({
@@ -125,7 +126,6 @@ local cheater = {
 					end
 					return true
 			end}))
-			playing_card_joker_effects(cards)
 			delay(0.2)
 		end
 	end,

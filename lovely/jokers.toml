@@ -101,6 +101,19 @@ if next(find_joker('diplomatic_immunity')) and scoring_hand[1].debuff then
 end
 '''
 
+# First scored card can't be destroyed (diplomatic immunity)
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+pattern = "local eval, post = eval_card(card, context)"
+position = "before"
+match_indent = true
+payload = '''
+if next(find_joker('diplomatic_immunity')) and (scoring_hand or context.cardarea.cards)[1] == card then
+    destroyed = false
+end
+'''
+
 # Reloading speeching abilities of Jean-Paul into a game
 [[patches]]
 [patches.pattern]
@@ -159,15 +172,15 @@ if card.config.center.set == 'Mathematic' then
 end
 '''
 
-# Bugged Seed unlock (doesn't work)
+# Bugged Seed unlock
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = "function win_game()"
-position = "after"
+pattern = "check_for_unlock({type = 'win_challenge'})"
+position = "before"
 match_indent = true
 payload = '''
-if G.GAME.seeded and G.GAME.selected_back.name == G.P_CENTERS.b_erratic.name and G.GAME.pseudorandom.seed == '7LB2WVPK' then
+if G.GAME.challenge == 'c_showdown_7LB2WVPK' then
     check_for_unlock({type = '7LB2WVPK'})
 end
 '''

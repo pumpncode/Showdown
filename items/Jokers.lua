@@ -1148,7 +1148,7 @@ local world_map = {
         end
     end
 }
---[[ 
+
 local bugged_seed = {
     type = 'Joker',
     order = 38,
@@ -1156,25 +1156,43 @@ local bugged_seed = {
     name = 'bugged_seed',
     atlas = "showdown_jokers",
     pos = coordinate(40),
-    locked_vars = function(self, info_queue, card)
-        if false then -- If Erratic Deck isn't discovered
-            return { key = "j_showdown_bugged_seed_unknown" }
-        end
-        return { key = "j_showdown_bugged_seed" }
-	end,
     rarity = 1, cost = 4,
-    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if G.GAME.seeded and args.type == '7LB2WVPK' then
-            unlock_card(self)
+        if args.type == '7LB2WVPK' and self.unlocked == false then -- This is litteraly the unlock_card function without the challenge/seeded check
+            if self.unlocked or self.wip then return end
+            G:save_notify(self)
+            self.unlocked = true
+            if self.set == 'Back' then discover_card(self) end
+            table.sort(G.P_CENTER_POOLS["Back"], function (a, b) return (a.order - (a.unlocked and 100 or 0)) < (b.order - (b.unlocked and 100 or 0)) end)
+            G:save_progress()
+            G.FILE_HANDLER.force = true
+            notify_alert(self.key, self.set)
         end
     end,
     calculate = function(self, card, context)
-        --
+        if context.cardarea == G.jokers and context.after then
+            local compatible_cards = {}
+            for _, _card in ipairs(G.play.cards) do
+                if not (_card.base.value == '10' and _card.base.suit == 'Spades') then
+                    table.insert(compatible_cards, _card)
+                end
+            end
+            if #compatible_cards > 0 then
+                local _card = pseudorandom_element(compatible_cards, pseudoseed('bugged_seed'))
+                flipCard(_card, nil, #G.play.cards)
+                delay(0.2)
+                event({trigger = 'after', delay = 0.15, func = function()
+                    assert(SMODS.change_base(_card, 'Spades', '10'))
+                return true end})
+                unflipCard(_card, nil, #G.play.cards)
+                delay(0.6)
+            end
+        end
     end
-})
-]]--
+}
+
 local sick_trick = {
     type = 'Joker',
     order = 39,
@@ -1871,7 +1889,6 @@ return {
             what_a_steel,
             diplomatic_immunity,
             nitroglycerin,
-            --bugged_seed,
             sick_trick,
             jaws,
             red_coins,
@@ -1917,6 +1934,9 @@ return {
 		end
 		if Showdown.config["Stickers"] then
 			table.insert(list, dealer_luigi)
+		end
+		if Showdown.config["Challenges"] then
+			table.insert(list, bugged_seed)
 		end
         if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
 			table.insert(list, infection)

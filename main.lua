@@ -66,6 +66,14 @@ function shdwn.save_config(self)
     SMODS.save_mod_config(self)
 end
 
+local function create_config_toggle(loc, value, category)
+	return create_toggle({label = localize(loc), ref_table = category and Showdown.config[category] or Showdown.config, ref_value = value, callback = function() shdwn:save_config() end})
+end
+
+local function create_config_header(loc)
+	return {n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize(loc), colour = G.C.ORANGE, scale = 0.5}}}}
+end
+
 local showdown_config_tab = function()
 	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
 	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
@@ -99,13 +107,13 @@ local showdown_config_tab = function()
 						{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 							{n=G.UIT.R, config={align = "cl"}, nodes={
 
-								create_toggle({label = localize("showdown_config_ranks"), ref_table = Showdown.config, ref_value = 'Ranks', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_achievements"), ref_table = Showdown.config, ref_value = 'Achievements', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_blinds"), ref_table = Showdown.config, ref_value = 'Blinds', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_decks"), ref_table = Showdown.config, ref_value = 'Decks', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_deckskins"), ref_table = Showdown.config, ref_value = 'DeckSkins', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_enhancements"), ref_table = Showdown.config, ref_value = 'Enhancements', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_stakes"), ref_table = Showdown.config, ref_value = 'Stakes', callback = function() shdwn:save_config() end}),
+								create_config_toggle('showdown_config_ranks', 'Ranks'),
+								create_config_toggle('showdown_config_achievements', 'Achievements'),
+								create_config_toggle('showdown_config_blinds', 'Blinds'),
+								create_config_toggle('showdown_config_decks', 'Decks'),
+								create_config_toggle('showdown_config_deckskins', 'DeckSkins'),
+								create_config_toggle('showdown_config_enhancements', 'Enhancements'),
+								create_config_toggle('showdown_config_stakes', 'Stakes'),
 
 							}},
 						}},
@@ -114,19 +122,19 @@ local showdown_config_tab = function()
 						{n=G.UIT.C, config={align = "cl"}, nodes={
 							{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-								{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_jokers_header"), colour = G.C.ORANGE, scale = 0.5}}}},
-								create_toggle({label = localize("showdown_config_jokers_normal"), ref_table = Showdown.config["Jokers"], ref_value = 'Normal', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_jokers_final"), ref_table = Showdown.config["Jokers"], ref_value = 'Final', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_jokers_jean_paul"), ref_table = Showdown.config["Jokers"], ref_value = 'Jean-Paul', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_jokers_versatile"), ref_table = Showdown.config["Jokers"], ref_value = 'Versatile', callback = function() shdwn:save_config() end}),
+								create_config_header('showdown_config_jokers_header'),
+								create_config_toggle('showdown_config_jokers_normal', 'Normal', 'Jokers'),
+								create_config_toggle('showdown_config_jokers_final', 'Final', 'Jokers'),
+								create_config_toggle('showdown_config_jokers_jean_paul', 'Jean-Paul', 'Jokers'),
+								create_config_toggle('showdown_config_jokers_versatile', 'Versatile', 'Jokers'),
 							
 							}},
 
 							{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-								{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_tags_header"), colour = G.C.ORANGE, scale = 0.5}}}},
-								create_toggle({label = localize("showdown_config_tags_classic"), ref_table = Showdown.config["Tags"], ref_value = 'Classic', callback = function() shdwn:save_config() end}),
-								create_toggle({label = localize("showdown_config_tags_switches"), ref_table = Showdown.config["Tags"], ref_value = 'Switches', callback = function() shdwn:save_config() end}),
+								create_config_header('showdown_config_tags_header'),
+								create_config_toggle('showdown_config_tags_classic', 'Classic', 'Tags'),
+								create_config_toggle('showdown_config_tags_switches', 'Switches', 'Tags'),
 							
 							}},
 						}},
@@ -136,17 +144,18 @@ local showdown_config_tab = function()
 							{n=G.UIT.R, config={align = "cl"}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-									create_toggle({label = localize("showdown_config_vouchers"), ref_table = Showdown.config, ref_value = 'Vouchers', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_stickers"), ref_table = Showdown.config, ref_value = 'Stickers', callback = function() shdwn:save_config() end}),
+									create_config_toggle('showdown_config_vouchers', 'Vouchers'),
+									create_config_toggle('showdown_config_stickers', 'Stickers'),
+									create_config_toggle('showdown_config_challenges', 'Challenges'),
 								
 								}},
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-									{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_consumeables_header"), colour = G.C.ORANGE, scale = 0.5}}}},
-									create_toggle({label = localize("showdown_config_consumeables_tarots"), ref_table = Showdown.config["Consumeables"], ref_value = 'Tarots', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_consumeables_spectrals"), ref_table = Showdown.config["Consumeables"], ref_value = 'Spectrals', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_consumeables_mathematics"), ref_table = Showdown.config["Consumeables"], ref_value = 'Mathematics', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_consumeables_logics"), ref_table = Showdown.config["Consumeables"], ref_value = 'Logics', callback = function() shdwn:save_config() end}),
+									create_config_header('showdown_config_consumeables_header'),
+									create_config_toggle('showdown_config_consumeables_tarots', 'Tarots', 'Consumeables'),
+									create_config_toggle('showdown_config_consumeables_spectrals', 'Spectrals', 'Consumeables'),
+									create_config_toggle('showdown_config_consumeables_mathematics', 'Mathematics', 'Consumeables'),
+									create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
 								
 								}}
 							

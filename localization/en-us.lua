@@ -543,6 +543,7 @@ return {
                 text = {
                     'First {C:attention}scored{} card',
                     '{C:attention}cannot{} be debuffed',
+                    'or destroyed',
                 }
             },
             j_showdown_nitroglycerin = {
@@ -576,7 +577,9 @@ return {
             j_showdown_bugged_seed = {
                 name = 'Bugged Seed',
                 text = {
-                    'idk',
+                    'When a {C:attention}10{} of {C:spades}Spade{} is played,',
+                    '{C:attention}convert{} another played card',
+                    'into a {C:attention}10{} of {C:spades}Spade{}',
                 },
                 unlock = {
                     'Win the {C:attention,E:1}7LB2WVPK{} challenge',
@@ -1589,7 +1592,9 @@ return {
             ach_showdown_whole_new_deck = 'A whole new deck',
         },
         blind_states={},
-        challenge_names={},
+        challenge_names={
+            c_showdown_7LB2WVPK = '7LB2WVPK',
+        },
         collabs={},
         dictionary={
             -- Config
@@ -1611,6 +1616,7 @@ return {
             showdown_config_tags_switches = "Switches (no)",
             showdown_config_vouchers = "Vouchers",
             showdown_config_stickers = "Stickers",
+            showdown_config_challenges = "Challenges",
             showdown_config_stakes = "Stakes (no)",
             showdown_config_consumeables_header = "Consumeables",
             showdown_config_consumeables_tarots = "Tarots",
@@ -2592,6 +2598,10 @@ return {
         v_dictionary={
             a_chips_mult = '+#1# Chips, +#2# Mult',
         },
-        v_text={},
+        v_text={
+            ch_c_showdown_bugged_seed = {
+                'You play on seed {C:attention,E:1}7LB2WVPK',
+            },
+        },
     },
 }
