@@ -1594,6 +1594,7 @@ return {
         blind_states={},
         challenge_names={
             c_showdown_7LB2WVPK = '7LB2WVPK',
+            c_showdown_all_in_one = 'All in One',
         },
         collabs={},
         dictionary={
@@ -2601,6 +2602,9 @@ return {
         v_text={
             ch_c_showdown_bugged_seed = {
                 'You play on seed {C:attention,E:1}7LB2WVPK',
+            },
+            ch_c_showdown_exponential_blinds = {
+                'Blind requirement is {C:attention}multiplied{} by current {C:attention}Ante',
             },
         },
     },

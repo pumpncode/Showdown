@@ -1,0 +1,15 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# All in One blind scaling
+[[patches]]
+[patches.pattern]
+target = 'blind.lua'
+match_indent = true
+pattern = '''self.chips = get_blind_amount(G.GAME.round_resets.ante)*self.mult*G.GAME.starting_params.ante_scaling'''
+position = 'after'
+payload = '''
+self.chips = self.chips*(G.GAME.modifiers.no_extra_hand_money and G.GAME.round_resets.ante or 1)
+'''

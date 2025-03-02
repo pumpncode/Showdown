@@ -24,7 +24,7 @@ return {
 		{key = "showdown_stakes", path = "Stakes.png", px = 29, py = 29},
 		{key = "showdown_stake_stickers", path = "StakeStickers.png", px = 71, py = 95},
 	},
-    exec = function ()
+    exec = function()
         Showdown.StakeAlt = SMODS.Stake:extend{
             --
         }

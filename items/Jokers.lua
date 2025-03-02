@@ -1949,7 +1949,7 @@ return {
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
         {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95},
 	},
-	exec = function ()
+	exec = function()
         SMODS.Joker:take_ownership('joker', {
             update = function(self, card, front)
                 if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then

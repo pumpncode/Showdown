@@ -429,7 +429,7 @@ return {
 		{key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', px = 71, py = 95},
 		{key = 'showdown_booster_packs_mathematic', path = 'BoostersMathematic.png', px = 71, py = 95},
 	},
-	exec = function ()
+	exec = function()
 		function mathDestroyCard(card, args)
 			if not card then return end
 			if not args then args = {} end

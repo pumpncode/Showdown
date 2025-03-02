@@ -90,7 +90,7 @@ return {
         }
 		return list
 	end,
-    exec = function ()
+    exec = function()
         local function lookFor(card)
             local jokers = find_joker(card.ability.name)
             if G.shop_jokers then

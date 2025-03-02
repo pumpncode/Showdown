@@ -20,6 +20,7 @@ local cloud = {
 	badge_colour = HEX("D0B0B8"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 	calculate = function(self, card, context)
 		if
 			not context.repetition
@@ -49,6 +50,7 @@ local mushroom = {
 	badge_colour = HEX("F00808"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 }
 
 local flower = {
@@ -60,6 +62,7 @@ local flower = {
 	badge_colour = HEX("F87800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 }
 
 local luigi = {
@@ -71,6 +74,7 @@ local luigi = {
 	badge_colour = HEX("006800"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 	calculate = function(self, card, context)
 		if
 			not context.repetition
@@ -98,6 +102,7 @@ local mario = {
 	badge_colour = HEX("B00000"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 	calculate = function(self, card, context)
 		if
 			-- Joker (doesn't work)
@@ -123,6 +128,7 @@ local star = {
 	badge_colour = HEX("F8B000"),
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
+	casino = true,
 	apply = function(self, card, val)
 		card.ability[self.key] = val
 		card:set_debuff()
@@ -146,7 +152,7 @@ return {
 	atlases = {
 		{key = "showdown_stickers", path = "Stickers.png", px = 71, py = 95},
 	},
-	exec = function ()
+	exec = function()
 		function have_casino_sticker(card)
 			return card.ability.showdown_cloud
 				or card.ability.showdown_mushroom
@@ -210,17 +216,10 @@ return {
 			end
 		end
 	end,
-	post_exec = function ()
+	post_exec = function()
 		for _, v in ipairs(SMODS.Sticker.obj_buffer) do
 			local sticker = SMODS.Stickers[v]
-			if
-				sticker.key == 'showdown_cloud'
-				or sticker.key == 'showdown_mushroom'
-				or sticker.key == 'showdown_flower'
-				or sticker.key == 'showdown_luigi'
-				or sticker.key == 'showdown_mario'
-				or sticker.key == 'showdown_star'
-			then
+			if sticker.casino then
 				table.insert(Showdown.casino, sticker)
 			end
 		end

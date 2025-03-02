@@ -195,7 +195,7 @@ return {
 	atlases = {
 		{key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34},
 	},
-	exec = function ()
+	exec = function()
 		SMODS.Switch = SMODS.Tag:extend{
 			atlas = 'showdown_switches',
 			set = 'Switch',
