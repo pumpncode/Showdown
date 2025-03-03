@@ -70,15 +70,34 @@ payload = '''
 {n=G.UIT.T, config={text = args.label, scale = args.label_scale, colour = args.label_color or G.C.UI.TEXT_LIGHT}},
 '''
 
-# Set seed 7LB2WVPK for the 7LB2WVPK challenge
+# Show required decks for the Versatility achievement, part 1/2
 [[patches]]
 [patches.pattern]
-target = "functions/button_callbacks.lua"
+target = '''=[SMODS _ "src/ui.lua"]'''
 match_indent = true
-pattern = '''G:start_run(args)'''
-position = "before"
+pattern = '''temp_achievement.hovering = true'''
+position = "after"
 payload = '''
-if args.challenge and args.challenge.id == 'c_showdown_7LB2WVPK' then
-    args.seed = '7LB2WVPK'
+if v.key == 'ach_showdown_versatility' then
+    Showdown.versatility_description(temp_achievement)
+end
+'''
+
+# Show required decks for the Versatility achievement, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/ui.lua"]'''
+match_indent = true
+pattern = '''temp_achievement.stop_hover = function() temp_achievement.hovering = false; Node.stop_hover(temp_achievement); temp_achievement.hover_tilt = 0 end'''
+position = "at"
+payload = '''
+temp_achievement.stop_hover = function()
+    temp_achievement.hovering = false
+    if temp_achievement.children.speech_bubble then
+        temp_achievement.children.speech_bubble:remove()
+        temp_achievement.children.speech_bubble = nil
+    end
+    Node.stop_hover(temp_achievement)
+    temp_achievement.hover_tilt = 0
 end
 '''

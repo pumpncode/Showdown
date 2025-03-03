@@ -128,15 +128,19 @@ return {
             end
         end
         
-        function speech_bubble(text_key, loc_vars)
+        function Showdown.speech_bubble(text_key, type, loc_vars)
             local text = {}
-            if loc_vars and loc_vars.quip then
-              localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
+            if type then
+                if type.quip then
+                    localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
+                elseif type.ach then
+                    localize{type = 'achievement_misc', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
+                end
             else
               localize{type = 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
             end
             local row = {}
-            for k, v in ipairs(text) do
+            for _, v in ipairs(text) do
               row[#row+1] =  {n=G.UIT.R, config={align = "cl"}, nodes=v}
             end
             local t = {n = G.UIT.ROOT, config = {align = "cm", minh = 0, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
@@ -151,7 +155,7 @@ return {
         -- I originally used card_character to make Jean-Paul speak, but on top of being annoying to use here, I couldn't load it when reloading a game
         -- So I decided to give speech directly to the card :3
         -- If i did things right, giveSpeech and say are public functions which means that is you want to, you can give speech to any joker you want
-        -- (If you do this, think about updating your lovely patches like I did for Jean-Paul (lines 290 to 300))
+        -- (If you do this, think about updating your lovely patches like I did for Jean-Paul (lines 117 to 127 in jokers.toml))
         function SMODS.giveSpeech(card)
             card.hasSpeech = true
         
@@ -159,7 +163,7 @@ return {
                 if card.children.speech_bubble then card.children.speech_bubble:remove() end
                 card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
                 card.children.speech_bubble = UIBox{
-                    definition = speech_bubble(text_key, loc_vars, card),
+                    definition = Showdown.speech_bubble(text_key, loc_vars),
                     config = card.config.speech_bubble_align
                 }
                 card.children.speech_bubble:set_role{

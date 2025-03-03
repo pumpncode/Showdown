@@ -279,3 +279,17 @@ function prequire(m)
 	if not ok then return nil, err end
 	return err
 end
+
+function Showdown.versatility_description(temp_achievement) -- HOLY SHIT this puts the bubble under the achievement text HOW DO I PUT IT ABOVE
+	temp_achievement.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = temp_achievement}
+	temp_achievement.children.speech_bubble = UIBox{
+		definition = Showdown.speech_bubble('ach_showdown_versatility', { ach = true }, { 'belbelebelb' }),
+		config = temp_achievement.config.speech_bubble_align
+	}
+	temp_achievement.children.speech_bubble:set_role{
+		role_type = 'Major',
+		xy_bond = 'Strong',
+		r_bond = 'Strong',
+		major = temp_achievement,
+	}
+end
