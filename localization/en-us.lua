@@ -1591,12 +1591,6 @@ return {
             ach_showdown_rico_kaboom = 'Yes Rico, kaboom',
             ach_showdown_whole_new_deck = 'A whole new deck',
         },
-        achievement_misc={
-            ach_showdown_versatility = {
-                'test test test test test test test test',
-                '#1#',
-            }
-        },
         blind_states={},
         challenge_names={
             c_showdown_7LB2WVPK = '7LB2WVPK',
@@ -2589,6 +2583,11 @@ return {
                 'I love',
                 'cheese.',
             },
+
+            -- Versatility achievement
+            versatility_desc = {
+                'You haven\'t got Versatile Joker in these decks:',
+            }
         },
         ranks={
             ['showdown_2.5'] = '2.5',

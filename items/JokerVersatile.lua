@@ -410,7 +410,7 @@ return {
         function check_versatility()
             local versatile = true
             for k, _ in pairs(Showdown.versatile) do
-                versatile = versatile and G.PROFILES[G.SETTINGS.profile].versatility[k]
+                versatile = versatile and findInTable(k, G.PROFILES[G.SETTINGS.profile].versatility) > 0
             end
             if versatile then check_for_unlock({type = 'versatility'}) end
         end

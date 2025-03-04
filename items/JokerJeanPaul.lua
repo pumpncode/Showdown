@@ -111,11 +111,11 @@ return {
             if not args.prob and not args.guaranteed then print(card.ability.name.." tried to speak. But sadly, he doesn't know how to count...") return end
             if not args then args = {} end
             if args.guaranteed or math.random(args.prob) == 1 then
-                card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '', {quip = true})
+                card.add_speech_bubble(args.blabla and (args.blabla..'_'..math.random(args.quotesNb or 10)) or '')
                 local queue = card.ability.name..'_'..lookFor(card)
                 if not G.E_MANAGER.queues[queue] then G.E_MANAGER.queues[queue] = {}
                 else G.E_MANAGER:clear_queue(queue) end
-                card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5), nil, queue)
+                card.say_stuff(5 * (math.min(G.SETTINGS.GAMESPEED, 16) ^ 0.5), true, queue)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'after',
                     delay = args.delay or G.SETTINGS.GAMESPEED * 5,
@@ -128,20 +128,15 @@ return {
             end
         end
         
-        function Showdown.speech_bubble(text_key, type, loc_vars)
+        function Showdown.speech_bubble(text_key, type, loc_vars, align_text, additional_text)
             local text = {}
-            if type then
-                if type.quip then
-                    localize{type = 'quips', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
-                elseif type.ach then
-                    localize{type = 'achievement_misc', key = text_key or 'lq_1', vars = loc_vars or {}, nodes = text}
-                end
-            else
-              localize{type = 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
-            end
+            localize{type = type or 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
             local row = {}
+            for _, v in ipairs(additional_text) do
+                localize{type = v.type or 'tutorial', set = v.set, key = v.key or 'sb_1', vars = v.loc_vars or {}, nodes = text}
+            end
             for _, v in ipairs(text) do
-              row[#row+1] =  {n=G.UIT.R, config={align = "cl"}, nodes=v}
+              row[#row+1] =  {n=G.UIT.R, config={align = align_text and 'cm' or "cl"}, nodes = v}
             end
             local t = {n = G.UIT.ROOT, config = {align = "cm", minh = 0, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
                           {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.1, minw = 1, colour = G.C.WHITE}, nodes = {
@@ -163,7 +158,7 @@ return {
                 if card.children.speech_bubble then card.children.speech_bubble:remove() end
                 card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
                 card.children.speech_bubble = UIBox{
-                    definition = Showdown.speech_bubble(text_key, loc_vars),
+                    definition = Showdown.speech_bubble(text_key, 'quips', loc_vars),
                     config = card.config.speech_bubble_align
                 }
                 card.children.speech_bubble:set_role{
@@ -179,20 +174,19 @@ return {
                 if card.children.speech_bubble then card.children.speech_bubble:remove(); card.children.speech_bubble = nil end
             end
         
-            card.say_stuff = function(n, not_first, queue)
-                if not not_first then
+            card.say_stuff = function(n, first, queue)
+                if first then
                     G.E_MANAGER:add_event(Event({
                         trigger = 'after',
                         delay = 0.1,
                         func = function()
                             if card.children.speech_bubble then card.children.speech_bubble.states.visible = true end
-                            card.say_stuff(n, true)
+                            card.say_stuff(n, false)
                           return true
                         end
                     }), queue)
                 else
                     if n <= 0 then return end
-                    --play_sound('voice'..math.random(1, 11), G.SPEEDFACTOR*(math.random()*0.2+1), 0.5)
                     play_sound('voice'..math.random(1, 11), (math.random()*0.2+1), 0.5)
                     card:juice_up(nil, 0.05)
                     G.E_MANAGER:add_event(Event({
@@ -200,7 +194,7 @@ return {
                         blockable = false, blocking = false,
                         delay = 0.13,
                         func = function()
-                            card.say_stuff(n-1, true)
+                            card.say_stuff(n-1, false)
                         return true
                         end
                     }), queue)
