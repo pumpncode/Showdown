@@ -219,7 +219,7 @@ return {
 			local back = G.P_CENTERS[G.GAME.selected_back.effect.center.key]
 			local given_by_deck = back.config.vouchers or (back.config.voucher and {back.config.voucher}) or {}
 			for _, v in pairs(G.P_CENTER_POOLS.Voucher) do
-				if v.unlocked and not (v.requires and next(v.requires)) and not findInTable(v.key, given_by_deck) then
+				if v.unlocked and not (v.requires and next(v.requires)) and findInTable(v.key, given_by_deck) == -1 then
 					table.insert(vouchers, v.key)
 				end
 			end
@@ -259,7 +259,7 @@ return {
 					end
 					local enhancements = {}
 					for _, v in ipairs(G.hand.cards) do
-						if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and not findInTable(v.config.center, enhancements) then
+						if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and findInTable(v.config.center, enhancements) == -1 then
 							table.insert(enhancements, v.config.center)
 						end
 					end

@@ -54,7 +54,7 @@ local versatile_joker = {
     add_to_deck = function(self, card, from_debuff)
         if get_versatile('add_to_deck') then return get_versatile('add_to_deck')(self, card, from_debuff) end
         if not G.PROFILES[G.SETTINGS.profile].versatility then G.PROFILES[G.SETTINGS.profile].versatility = {} end
-        if not findInTable(G.GAME.selected_back.name, G.PROFILES[G.SETTINGS.profile].versatility) then
+        if findInTable(G.GAME.selected_back.name, G.PROFILES[G.SETTINGS.profile].versatility) == -1 then
             table.insert(G.PROFILES[G.SETTINGS.profile].versatility, G.GAME.selected_back.name)
         end
         check_versatility()
@@ -410,7 +410,7 @@ return {
         function check_versatility()
             local versatile = true
             for k, _ in pairs(Showdown.versatile) do
-                versatile = versatile and findInTable(k, G.PROFILES[G.SETTINGS.profile].versatility) > 0
+                versatile = versatile and findInTable(k, G.PROFILES[G.SETTINGS.profile].versatility) > -1
             end
             if versatile then check_for_unlock({type = 'versatility'}) end
         end

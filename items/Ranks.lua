@@ -7,7 +7,7 @@ local function inject_p_card_suit_compat(suit, rank)
 		lc_atlas = rank.suit_map[suit.key] and rank.lc_atlas or suit.lc_atlas,
 		hc_atlas = rank.suit_map[suit.key] and rank.hc_atlas or suit.hc_atlas,
 	}
-	if not findInTable(card.suit, baseSuits) then
+	if findInTable(card.suit, baseSuits) == -1 then
 		if not Showdown.extraSuits[card.suit] then
 			sendWarnMessage("Unknown suit for "..card.name, "Showdown")
 			card.lc_atlas = 'showdown_unknownSuit'

@@ -196,10 +196,13 @@ return {
 		{key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34},
 	},
 	exec = function()
-		SMODS.Switch = SMODS.Tag:extend{
+		G.P_CENTER_POOLS['Switch'] = {}
+		Showdown.Switch = SMODS.Tag:extend{
 			atlas = 'showdown_switches',
-			set = 'Switch',
+			in_pool = function(self, args)
+				return G.GAME.showdown_engineer
+			end,
 		}
-		G.P_CENTER_POOLS.Switch = {}
 	end,
+    class = Showdown,
 }

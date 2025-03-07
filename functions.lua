@@ -37,7 +37,7 @@ function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
 	for k, v in pairs(G.P_CENTER_POOLS.Enhanced) do
-		if not findInTable(v.key, blacklist) then
+		if findInTable(v.key, blacklist) == -1 then
 			cen_pool[#cen_pool+1] = v
 		end
 	end
@@ -119,7 +119,7 @@ function get_all_suits(args)
 	local suits = {}
 	for i=1, #SMODS.Suit.obj_buffer do
 		local suit = SMODS.Suit.obj_table[SMODS.Suit.obj_buffer[i]]
-		if (not args.noVanilla and findInTable(suit.key, baseSuits)) or
+		if (not args.noVanilla and findInTable(suit.key, baseSuits) > -1) or
 			(not args.noModded and
 				((suit.key == "bunc_Fleurons" or suit.key == "bunc_Halberds") and args.exotic)
 			)
@@ -150,10 +150,10 @@ function get_all_ranks(args)
 	local counterparts = {"showdown_2.5", "showdown_5.5", "showdown_8.5", "showdown_Butler", "showdown_Princess", "showdown_Lord", }
 	for i=1, #SMODS.Rank.obj_buffer do
 		local rank = SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[i]]
-		if not args.blacklist or (args.blacklist and not findInTable(rank.key, args.blacklist)) then
+		if not args.blacklist or (args.blacklist and findInTable(rank.key, args.blacklist) == -1) then
 			if not args.noVanilla then -- Vanilla
 				if
-					findInTable(rank.key, baseRanks)
+					findInTable(rank.key, baseRanks) > -1
 					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
 					and not args.onlyCounterpart
 				then
@@ -162,8 +162,8 @@ function get_all_ranks(args)
 			end
 			if not args.noModded then -- Modded
 				if
-					not findInTable(rank.key, baseRanks)
-					and ((not findInTable(rank.key, counterparts) and not args.noCounterpart) or (findInTable(rank.key, counterparts) and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
+					findInTable(rank.key, baseRanks) == -1
+					and ((findInTable(rank.key, counterparts) == -1 and not args.noCounterpart) or (findInTable(rank.key, counterparts) > -1 and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
 					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
 				then
 					table.insert(ranks, rank.key)
@@ -173,7 +173,7 @@ function get_all_ranks(args)
 	end
 	if args.whitelist then
 		for i=1, #args.whitelist do
-			if not findInTable(args.whitelist[i], ranks) then
+			if findInTable(args.whitelist[i], ranks) == -1 then
 				table.insert(ranks, args.whitelist[i])
 			end
 		end
@@ -296,12 +296,11 @@ function Showdown.versatility_description(ach)
 	end)
 	for k, v in pairs(decks) do
 		if v.unlocked then
-			table.insert(no_versatile_deck, { -- help this won't show
-				type = 'name',
+			table.insert(no_versatile_deck, { -- does not work
+				type = 'name_text',
 				set = 'Back',
 				key = k,
 			})
-			print(k)
 		else
 			table.insert(no_versatile_deck, {
 				type = 'quips',

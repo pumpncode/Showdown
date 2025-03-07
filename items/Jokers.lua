@@ -246,7 +246,7 @@ local color_splash = {
             local text,disp_text,poker_hands,scoring_hand,non_loc_disp_text = G.FUNCS.get_poker_hand_info(args.cards)
             local suits = {}
             for i = 1, #args.cards do
-                if not findInTable(args.cards[i], scoring_hand) and not findInTable(args.cards[i].base.suit, suits) then
+                if findInTable(args.cards[i], scoring_hand) == -1 and findInTable(args.cards[i].base.suit, suits) == -1 then
                     table.insert(suits, args.cards[i].base.suit)
                 end
             end
@@ -258,7 +258,7 @@ local color_splash = {
             local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
             for i=1, #G.play.cards do
                 local _card = G.play.cards[i]
-                if _card:get_id() ~= 1 and not findInTable(_card, context.scoring_hand) then
+                if _card:get_id() ~= 1 and findInTable(_card, context.scoring_hand) == -1 then
                     flipCard(_card, i, #G.play.cards)
                     delay(0.2)
                     event({trigger = 'after', delay = 0.15, func = function()
@@ -1447,7 +1447,7 @@ local colored_glasses = {
             local suits, wild, twoSuits = {}, 0, false
             for i=1, #G.play.cards do
                 if SMODS.has_any_suit(G.play.cards[i]) then wild = wild + 1
-                elseif not findInTable(G.play.cards[i].base.suit, suits) then table.insert(suits, G.play.cards[i].base.suit) end
+                elseif findInTable(G.play.cards[i].base.suit, suits) == -1 then table.insert(suits, G.play.cards[i].base.suit) end
             end
             while wild >= 0 and not twoSuits do
                 twoSuits = twoSuits or #suits + wild == 2

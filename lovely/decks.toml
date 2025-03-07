@@ -71,12 +71,12 @@ SMODS.calculate_context({post_hand = true})
 '''
 
 # Engineer deck
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = "local _pool, _pool_key = get_current_pool('Tag', nil, nil, append)"
-position = "at"
-match_indent = true
-payload = '''
-local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
-'''
+#[[patches]]
+#[patches.pattern]
+#target = "functions/common_events.lua"
+#pattern = "local _pool, _pool_key = get_current_pool('Tag', nil, nil, append)"
+#position = "at"
+#match_indent = true
+#payload = '''
+#local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
+#'''

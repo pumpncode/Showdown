@@ -1280,7 +1280,6 @@ return {
             },
         },
         Switch={
-            
             tag_showdown_mystery_switch = {
                 name = "Mystery Switch",
                 text = {
