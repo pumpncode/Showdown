@@ -13,7 +13,7 @@ return {
     },
     ["Tags"] = {
         ["Classic"] = true,
-        ["Switches"] = false,
+        ["Switches"] = true,
     },
     ["Consumeables"] = {
         ["Tarots"] = true,

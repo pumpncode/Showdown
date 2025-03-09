@@ -1,7 +1,7 @@
 local mystery = {
 	type = 'Switch',
 	order = 1,
-	key = "mystery_switch",
+	key = "mystery",
 	pos = coordinate(1),
 	min_ante = 1,
 	apply = function(self, tag, context)
@@ -31,7 +31,7 @@ local mystery = {
 local money = {
 	type = 'Switch',
 	order = 2,
-	key = "money_switch",
+	key = "money",
 	pos = coordinate(2),
 	config = { type = "eval", triggers = 4, dollars = 5 },
 	loc_vars = function(self, info_queue, tag)
@@ -61,7 +61,7 @@ local money = {
 local nebula = {
 	type = 'Switch',
 	order = 3,
-	key = "nebula_switch",
+	key = "nebula",
 	pos = coordinate(3),
 	config = { type = "immediate", triggers = 3 },
 	loc_vars = function(self, info_queue, tag)
@@ -94,7 +94,7 @@ local nebula = {
 local gift = {
 	type = 'Switch',
 	order = 4,
-	key = "gift_switch",
+	key = "gift",
 	pos = coordinate(4),
 	config = { type = "immediate", money = 10 },
 	loc_vars = function(self, info_queue, tag)
@@ -136,7 +136,7 @@ local gift = {
 local burning = {
 	type = 'Switch',
 	order = 5,
-	key = "burning_switch",
+	key = "burning",
 	pos = coordinate(5),
 	min_ante = 2,
 	apply = function(self, tag, context)
@@ -154,15 +154,15 @@ local burning = {
 local duplicate = {
 	type = 'Switch',
 	order = 6,
-	key = "duplicate_switch",
+	key = "duplicate",
 	pos = coordinate(6),
-	config = { type = "immediate", tags = 3 },
+	config = { type = "tag_add", tags = 3 },
 	loc_vars = function(self, info_queue, tag)
 		return { vars = { tag.config.tags } }
 	end,
 	min_ante = 2,
 	apply = function(self, tag, context)
-		if context.type == "immediate" then
+		if context.type == "tag_add" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
@@ -170,6 +170,159 @@ local duplicate = {
 					add_tag(Tag(pseudorandom_element(SMODS.Tag.obj_table, pseudoseed('duplicate_switch')).key))
 					G.orbital_hand = nil
 				end
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local souvenir = {
+	type = 'Switch',
+	order = 7,
+	key = "souvenir",
+	pos = coordinate(7),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local vacuum = {
+	type = 'Switch',
+	order = 8,
+	key = "vacuum",
+	pos = coordinate(8),
+	config = { type = "immediate", dollars = 4 },
+	loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.dollars } }
+	end,
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				local money = 0
+				for i = #G.GAME.tags-1, 1, -1 do
+					G.GAME.tags[i]:yep('-', G.C.BLUE,function()
+						return true
+					end)
+					G.E_MANAGER:add_event(Event({
+						trigger = 'immediate',
+						func = function()
+							money = money + tag.config.dollars
+							return true
+						end
+					}))
+				end
+				G.E_MANAGER:add_event(Event({
+					trigger = 'immediate',
+					func = function()
+						ease_dollars(money)
+						return true
+					end
+				}))
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local conversion = {
+	type = 'Switch',
+	order = 9,
+	key = "conversion",
+	pos = coordinate(9, 8),
+	config = { type = "tag_add" },
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "tag_add" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				local new_tag = 0
+				for i=#G.GAME.tags-1, 1, -1 do
+					G.GAME.tags[i]:yep('-', G.C.BLUE,function()
+						return true
+					end)
+					G.E_MANAGER:add_event(Event({
+						trigger = 'immediate',
+						func = function()
+							new_tag = new_tag + 1
+							return true
+						end
+					}))
+				end
+				G.E_MANAGER:add_event(Event({
+					trigger = 'immediate',
+					func = function()
+						for _=1, new_tag do
+							add_tag('tag_handy')
+						end
+						return true
+					end
+				}))
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local splendid = {
+	type = 'Switch',
+	order = 10,
+	key = "splendid",
+	pos = coordinate(10, 8),
+	config = { type = "immediate" },
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local void = {
+	type = 'Switch',
+	order = 11,
+	key = "void",
+	pos = coordinate(11, 8),
+	config = { type = "immediate" },
+	min_ante = 2,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -189,6 +342,11 @@ return {
 			gift,
 			burning,
 			duplicate,
+			souvenir,
+			vacuum,
+			conversion,
+			splendid,
+			void,
 		}
 		return list
 	end,
@@ -199,10 +357,13 @@ return {
 		G.P_CENTER_POOLS['Switch'] = {}
 		Showdown.Switch = SMODS.Tag:extend{
 			atlas = 'showdown_switches',
-			in_pool = function(self, args)
-				return G.GAME.showdown_engineer
+			set = 'Switch',
+			inject = function(self)
+				if not G.P_CENTER_POOLS[self.set] then G.P_CENTER_POOLS[self.set] = {} end
+				SMODS.Tag.inject(self)
 			end,
 		}
 	end,
+	order = 1,
     class = Showdown,
 }

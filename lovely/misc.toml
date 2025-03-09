@@ -57,6 +57,7 @@ Showdown = {}
 Showdown.extraSuits = {}
 Showdown.versatile = {}
 Showdown.casino = {}
+Showdown.tag_related_joker = {}
 '''
 
 # Text color on toggle buttons

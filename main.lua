@@ -14,8 +14,7 @@ SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 ---- atlases: the list of atlas that will be loaded for this file
 ---- class: the class used to load the file content (used for mod compatibilities, SMODS by default)
 ---@param item any The given item
----@param fileName any The name of the file
-local function execute_item(item, fileName)
+local function execute_item(item)
 	if item and item.enabled then
 		if not item.class then item.class = SMODS end
 		if item.exec then item.exec() end
@@ -33,10 +32,10 @@ local function execute_item(item, fileName)
 					if item.class[obj.type] then
 						table.insert(load_list, obj)
 					else
-						sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
+						sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
 					end
 				else
-					sendErrorMessage("Error creating "..obj.key.." in file "..fileName..": No type was given", "Showdown")
+					sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": No type was given", "Showdown")
 				end
 			end
 			table.sort(load_list, function(a, b)
@@ -51,6 +50,7 @@ local function execute_item(item, fileName)
 end
 
 local files = filesystem.getDirectoryItems(mod_path.."items/")
+local sortedItems = {}
 for _, file in ipairs(files) do
 	sendTraceMessage("Loading file "..file, "Showdown")
 	local f, err = SMODS.load_file("Items/" .. file)
@@ -58,8 +58,17 @@ for _, file in ipairs(files) do
 		--sendErrorMessage("Error loading "..file..": "..err, "Showdown")
 		error(err)
 	else
-		execute_item(f(), file)
+		local result = f()
+		result.fileName = file
+		if not result.order then result.order = 0 end
+		table.insert(sortedItems, result)
 	end
+end
+table.sort(sortedItems, function(a, b)
+	return a.order < b.order
+end)
+for _, item in ipairs(sortedItems) do
+	execute_item(item)
 end
 
 function shdwn.save_config(self)

@@ -1814,6 +1814,20 @@ local madotsuki = {
     end,
 }
 ]]--
+
+local pop_up = {
+    type = 'Joker',
+    order = 57,
+    key = 'pop_up',
+    name = 'pop_up',
+    atlas = "showdown_jokers",
+    pos = coordinate(57),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
 -- Cryptid
 
 local infection = {
@@ -2054,10 +2068,33 @@ return {
             end
         end
 
+        Showdown.tag_related_joker['j_diet_cola'] = true
+        Showdown.tag_related_joker['j_showdown_label'] = true
+        Showdown.tag_related_joker['j_showdown_pop_up'] = true
+        if (SMODS.Mods["Cryptid"] or {}).can_load then
+            Showdown.tag_related_joker['j_cry_pickle'] = true
+            Showdown.tag_related_joker['j_cry_pity_prize'] = true
+            Showdown.tag_related_joker['j_cry_smallestm'] = true
+            Showdown.tag_related_joker['j_cry_energia'] = true
+        end
+        if (SMODS.Mods["Bunco"] or {}).can_load then
+            Showdown.tag_related_joker['j_bunc_zero_shapiro'] = true
+            Showdown.tag_related_joker['j_bunc_headache'] = true
+        end
+        if (SMODS.Mods["UnStable"] or {}).can_load then
+            Showdown.tag_related_joker['j_unstb_king_of_pop'] = true
+            Showdown.tag_related_joker['j_unstb_quintuplets'] = true
+            Showdown.tag_related_joker['j_unstb_graphic_card'] = true
+        end
+        if (SMODS.Mods["Ortalab"] or {}).can_load then
+            Showdown.tag_related_joker['j_ortalab_mystery_soda'] = true
+        end
+
         if Cryptid and Cryptid.food then
             table.insert(Cryptid.food, 'j_showdown_gruyere')
             table.insert(Cryptid.food, 'j_showdown_parmesan')
             table.insert(Cryptid.food, 'j_showdown_banana')
         end
 	end,
+    order = 2,
 }

@@ -78,7 +78,9 @@ local cheater = {
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
-		if self.get_current_deck_key() == "b_showdown_Cheater" then
+		if self.get_current_deck_key() ~= "b_showdown_Cheater" then
+			SMODS.Back.obj_table["b_showdown_Cheater"].apply(self, sleeve)
+		else
             G.GAME.cheater_seal = true
         end
 	end,
@@ -98,7 +100,7 @@ local engineer = { -- Not done at all
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Engineer" then
-            SMODS.Back.obj_table["b_showdown_Cheater"].apply(self, sleeve)
+            SMODS.Back.obj_table["b_showdown_Engineer"].apply(self, sleeve)
         else
             --
         end
@@ -126,5 +128,6 @@ return {
 	atlases = {
 		{key = "showdown_sleeves", path = "CrossMod/CardSleeves/sleeves.png", px = 73, py = 94},
 	},
+	order = 1,
     class = CardSleeves,
 }

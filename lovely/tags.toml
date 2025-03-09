@@ -3,6 +3,17 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
+# Switches in pool
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''elseif _type == 'Tag' then'''
+position = 'at'
+payload = '''
+elseif _type == 'Tag' or _type == 'Switch' then
+'''
+
 # Money Switch, part 1/2
 [[patches]]
 [patches.pattern]

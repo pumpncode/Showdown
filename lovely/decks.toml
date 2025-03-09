@@ -70,13 +70,29 @@ payload = '''
 SMODS.calculate_context({post_hand = true})
 '''
 
-# Engineer deck
-#[[patches]]
-#[patches.pattern]
-#target = "functions/common_events.lua"
-#pattern = "local _pool, _pool_key = get_current_pool('Tag', nil, nil, append)"
-#position = "at"
-#match_indent = true
-#payload = '''
-#local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
-#'''
+# Engineer deck, part 1/2
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "local _pool, _pool_key = get_current_pool('Tag', nil, nil, append)"
+position = "at"
+match_indent = true
+payload = '''
+local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
+'''
+
+# Engineer deck, part 2/2 (Thanks Cardsauce)
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "_pool[#_pool + 1] = v.key"
+position = "before"
+match_indent = true
+payload = '''
+if G.GAME.showdown_engineer and Showdown.tag_related_joker[v.key] then
+    for i=1, 3 do
+        _pool[#_pool + 1] = v.key
+        _pool_size = _pool_size + 1
+    end
+end
+'''

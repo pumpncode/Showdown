@@ -247,6 +247,7 @@ return {
 				G.GAME.showdown_cheater = true
 				G.GAME.cheater_destroy_odd = 6
 			end
+			Showdown.tag_related_joker['j_showdown_versatile'] = G.GAME.selected_back.name == 'Anaglyph Deck' and G.GAME.showdown_engineer
 		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }

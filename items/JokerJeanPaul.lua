@@ -128,12 +128,14 @@ return {
             end
         end
         
-        function Showdown.speech_bubble(text_key, type, loc_vars, align_text, additional_text)
+        function Showdown.speech_bubble(text_key, text_type, loc_vars, align_text, additional_text)
             local text = {}
-            localize{type = type or 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
+            localize{type = text_type or 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
             local row = {}
-            for _, v in ipairs(additional_text) do
-                localize{type = v.type or 'tutorial', set = v.set, key = v.key or 'sb_1', vars = v.loc_vars or {}, nodes = text}
+            if additional_text and type(additional_text) == 'table' then
+                for _, v in ipairs(additional_text) do
+                    localize{type = v.type or 'tutorial', set = v.set, key = v.key or 'sb_1', vars = v.loc_vars or {}, nodes = text}
+                end
             end
             for _, v in ipairs(text) do
               row[#row+1] =  {n=G.UIT.R, config={align = align_text and 'cm' or "cl"}, nodes = v}

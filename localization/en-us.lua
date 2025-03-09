@@ -50,11 +50,10 @@ return {
             b_showdown_Engineer = {
                 name = 'Engineer Deck',
                 text = {
-                    'idk',
+                    'Tags are replaced with {C:attention}Switches',
+                    'Tag and Switch related cards',
+                    'are {X:attention,C:white}X4{} more common',
                 },
-                unlock = {
-                    '???',
-                }
             },
         },
         Sleeve = {
@@ -125,7 +124,9 @@ return {
             sleeve_showdown_Engineer = {
                 name = "Engineer Sleeve",
                 text = {
-                    '???',
+                    'Tags are replaced with {C:attention}Switches',
+                    'Tag and Switch related cards',
+                    'are {X:attention,C:white}X4{} more common',
                 }
             },
             sleeve_showdown_Engineer_alt = {
@@ -1280,45 +1281,83 @@ return {
             },
         },
         Switch={
-            tag_showdown_mystery_switch = {
+            tag_showdown_mystery = {
                 name = "Mystery Switch",
                 text = {
                     'Give a free',
                     '{C:attention}Random Pack',
                 },
             },
-            tag_showdown_money_switch = {
+            tag_showdown_money = {
                 name = "Money Switch",
                 text = {
                     'Gain {C:money}$#1#{} per Blind for',
                     'the next {C:attention}#2#{} blinds',
                 },
             },
-            tag_showdown_nebula_switch = {
+            tag_showdown_nebula = {
                 name = "Nebula Switch",
                 text = {
                     'Upgrades {C:attention}3 random hands',
                     'by {C:attention}1 level',
                 },
             },
-            tag_showdown_gift_switch = {
+            tag_showdown_gift = {
                 name = "Gift Switch",
                 text = {
                     'Get either a {C:attention}random',
                     'joker, consumable or {C:money}$#1#',
                 },
             },
-            tag_showdown_burning_switch = {
+            tag_showdown_burning = {
                 name = "Burning Switch",
                 text = {
                     'Next blind gives {C:attention}no money',
                     'but hands give {C:attention}double money',
                 },
             },
-            tag_showdown_duplicate_switch = {
+            tag_showdown_duplicate = {
                 name = "Duplicate Switch",
                 text = {
-                    'Gain {C:attention}3{} random tags',
+                    'Gain {C:attention}#1#{} random tags',
+                },
+            },
+            
+            tag_showdown_souvenir = {
+                name = "Souvenir Switch",
+                text = {
+                    'Gives a copy of the',
+                    '{C:attention}last tag{} used',
+                    '{C:inactive}(Last Tag: {C:attention}#1#{C:inactive})',
+                },
+            },
+            tag_showdown_vacuum = {
+                name = "Vacuum Switch",
+                text = {
+                    '{C:attention}Destroy{} all of your tags',
+                    'Gain {C:money}$#1#{} per destroyed tag',
+                },
+            },
+            tag_showdown_conversion = {
+                name = "Conversion Switch",
+                text = {
+                    'Converts your tags into',
+                    'the {C:attention}next{} chosen tag',
+                },
+            },
+            tag_showdown_splendid = {
+                name = "Splendid Switch",
+                text = {
+                    'Gives a {C:attention}random{} edition',
+                    'to a {C:attention}random{} joker',
+                    '{C:inactive}({C:dark_edition}Negative{C:inactive} excluded)',
+                },
+            },
+            tag_showdown_void = {
+                name = "Void Switch",
+                text = {
+                    'Destroy a {C:attention}random{} joker and',
+                    'gives {C:dark_edition}Negative{} to another one',
                 },
             },
         },
@@ -1613,7 +1652,7 @@ return {
             showdown_config_jokers_versatile = "Versatile",
             showdown_config_tags_header = "Tags",
             showdown_config_tags_classic = "Classic",
-            showdown_config_tags_switches = "Switches (no)",
+            showdown_config_tags_switches = "Switches",
             showdown_config_vouchers = "Vouchers",
             showdown_config_stickers = "Stickers",
             showdown_config_challenges = "Challenges",
