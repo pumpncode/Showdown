@@ -174,7 +174,7 @@ local mirror = {
 		end
     end
 }
---[[
+
 local crime_scene = {
     type = 'Joker',
     order = 6,
@@ -182,12 +182,24 @@ local crime_scene = {
     name = 'crime_scene',
     atlas = "showdown_jokers",
     pos = coordinate(8),
-    config = {extra = {x_mult = 1, x_mult_mod = 0.1}},
+    config = {extra = {x_mult = 1, x_mult_mod = 0.25}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_mod } }
     end,
     rarity = 3, cost = 8,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'hand_contents' then
+            local all_debuffed = true
+            for _, card in ipairs(args.cards) do
+                all_debuffed = all_debuffed and card.debuff
+            end
+            if all_debuffed and #args.cards >= 5 then
+                unlock_card(self)
+            end
+        end
+    end,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and context.other_card.debuff then
             card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_mod
@@ -200,7 +212,7 @@ local crime_scene = {
             }
         end
     end
-})]]--
+}
 
 local ping_pong = {
     type = 'Joker',
@@ -938,7 +950,7 @@ local strainer = {
         end
     end
 }
---[[
+
 local billiard = {
     type = 'Joker',
     order = 31,
@@ -946,31 +958,30 @@ local billiard = {
     name = 'billiard',
     atlas = "showdown_jokers",
     pos = coordinate(33),
-    rarity = 3, cost = 8,
+    rarity = 2, cost = 6,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    unlocked = false,
-    check_for_unlock = function(self, args)
-        --
-    end,
     calculate = function(self, card, context)
-        if context.scoring_hand and context.cardarea == G.play then
-            local idx = findInTable(context.card, G.play.cards)
-            print(idx)
-            local rep = 0
-            if idx and ((idx > 1 and SMODS.is_zero(G.play.cards[idx-1])) or (idx < #G.play.cards and SMODS.is_zero(G.play.cards[idx+1]))) then
-                rep = rep + 1
-            end
-            if rep > 0 then
-                return {
-                    message = localize("k_again_ex"),
-                    repetitions = rep,
-                    card = context.card,
-                }
+        if context.scoring_hand and context.other_card and context.cardarea == G.play then
+            local idx = findInTable(context.other_card, G.play.cards)
+            if idx > -1 then
+                local rep = 0
+                if idx > 1 and SMODS.is_zero(G.play.cards[idx-1]) then
+                    rep = rep + 1
+                end
+                if idx < #G.play.cards and SMODS.is_zero(G.play.cards[idx+1]) then
+                    rep = rep + 1
+                end
+                if rep > 0 then
+                    return {
+                        repetitions = rep,
+                        card = context.other_card,
+                    }
+                end
             end
 		end
     end
-})
-]]
+}
+
 local hiding_details = {
     type = 'Joker',
     order = 32,
@@ -1796,7 +1807,7 @@ local whatever = {
         card:set_cost()
     end,
 }
---[[
+
 local madotsuki = {
     type = 'Joker',
     order = 56,
@@ -1813,7 +1824,7 @@ local madotsuki = {
         --
     end,
 }
-]]--
+
 
 local pop_up = {
     type = 'Joker',
@@ -1828,6 +1839,63 @@ local pop_up = {
         --
     end,
 }
+
+local matplotlib = {
+    type = 'Joker',
+    order = 58,
+    key = 'matplotlib',
+    name = 'matplotlib',
+    atlas = "showdown_jokers",
+    pos = coordinate(58),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local cake = {
+    type = 'Joker',
+    order = 59,
+    key = 'cake',
+    name = 'cake',
+    atlas = "showdown_jokers",
+    pos = coordinate(59),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local window = {
+    type = 'Joker',
+    order = 60,
+    key = 'window',
+    name = 'window',
+    atlas = "showdown_jokers",
+    pos = coordinate(60),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local break_the_ice = {
+    type = 'Joker',
+    order = 61,
+    key = 'break_the_ice',
+    name = 'break_the_ice',
+    atlas = "showdown_jokers",
+    pos = coordinate(61),
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
 -- Cryptid
 
 local infection = {
@@ -1886,7 +1954,7 @@ return {
             mado_no2,
             final,
             crouton,
-            --crime_scene,
+            crime_scene,
             ping_pong,
             color_splash,
             blue,
@@ -1899,7 +1967,6 @@ return {
             revolution,
             sinful_joker,
             egg_drawing,
-            --billiard,
             what_a_steel,
             diplomatic_immunity,
             nitroglycerin,
@@ -1918,7 +1985,10 @@ return {
             yipeee,
             fruit_sticker,
             whatever,
-            --madotsuki,
+            madotsuki,
+            matplotlib,
+            window,
+            break_the_ice,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, pinpoint)
@@ -1930,8 +2000,11 @@ return {
 			table.insert(list, empty_joker)
 			table.insert(list, sim_card)
 			table.insert(list, strainer)
+			table.insert(list, billiard)
 			table.insert(list, hiding_details)
 			table.insert(list, world_map)
+			table.insert(list, pop_up)
+			table.insert(list, cake)
 		end
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, jimbo_makeup)
@@ -2094,6 +2167,7 @@ return {
             table.insert(Cryptid.food, 'j_showdown_gruyere')
             table.insert(Cryptid.food, 'j_showdown_parmesan')
             table.insert(Cryptid.food, 'j_showdown_banana')
+            table.insert(Cryptid.food, 'j_showdown_cake')
         end
 	end,
     order = 2,

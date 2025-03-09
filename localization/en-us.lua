@@ -50,7 +50,7 @@ return {
             b_showdown_Engineer = {
                 name = 'Engineer Deck',
                 text = {
-                    'Tags are replaced with {C:attention}Switches',
+                    'Tags are replaced by {C:attention}Switches',
                     'Tag and Switch related cards',
                     'are {X:attention,C:white}X4{} more common',
                 },
@@ -124,7 +124,7 @@ return {
             sleeve_showdown_Engineer = {
                 name = "Engineer Sleeve",
                 text = {
-                    'Tags are replaced with {C:attention}Switches',
+                    'Tags are replaced by {C:attention}Switches',
                     'Tag and Switch related cards',
                     'are {X:attention,C:white}X4{} more common',
                 }
