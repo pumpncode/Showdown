@@ -25,7 +25,7 @@ local function execute_item(item)
 		end
 		if item.list then
 			local load_list = {}
-			local list = item.list()
+			local list = item.list() -- i have to change the list functions to values or else lua will shout at me :(
 			for _, obj in ipairs(list) do
 				if not obj.order then obj.order = 0 end
 				if obj.type then

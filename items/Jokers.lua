@@ -1,6 +1,10 @@
 local cronch = {type = 'Sound', key = "cronch", path = "cronch.ogg"}
 local mado_no1 = {type = 'Sound', key = "mado_no1", path = "madotsuki/no1.ogg"}
 local mado_no2 = {type = 'Sound', key = "mado_no2", path = "madotsuki/no2.ogg"}
+local uro_no1 = {type = 'Sound', key = "uro_no1", path = "urotsuki/no1.ogg"}
+local uro_no2 = {type = 'Sound', key = "uro_no2", path = "urotsuki/no2.ogg"}
+local uro_no3 = {type = 'Sound', key = "uro_no3", path = "urotsuki/no3.ogg"}
+local minna_no = {type = 'Sound', key = "minna_no", path = "minnatsuki/no.ogg"}
 
 ---- Final Rarity
 
@@ -1825,54 +1829,46 @@ local madotsuki = {
     end,
 }
 
+local urotsuki = {
+    type = 'Joker',
+    order = 57,
+    key = 'urotsuki',
+    name = 'urotsuki',
+    atlas = "showdown_jokers",
+    pos = coordinate(58),
+    loc_vars = function(self, info_queue, card)
+        --
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local minnatsuki = {
+    type = 'Joker',
+    order = 58,
+    key = 'minnatsuki',
+    name = 'minnatsuki',
+    atlas = "showdown_jokers",
+    pos = coordinate(59),
+    loc_vars = function(self, info_queue, card)
+        --
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
 
 local pop_up = {
     type = 'Joker',
-    order = 57,
+    order = 59,
     key = 'pop_up',
     name = 'pop_up',
-    atlas = "showdown_jokers",
-    pos = coordinate(57),
-    rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    calculate = function(self, card, context)
-        --
-    end,
-}
-
-local matplotlib = {
-    type = 'Joker',
-    order = 58,
-    key = 'matplotlib',
-    name = 'matplotlib',
-    atlas = "showdown_jokers",
-    pos = coordinate(58),
-    rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    calculate = function(self, card, context)
-        --
-    end,
-}
-
-local cake = {
-    type = 'Joker',
-    order = 59,
-    key = 'cake',
-    name = 'cake',
-    atlas = "showdown_jokers",
-    pos = coordinate(59),
-    rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    calculate = function(self, card, context)
-        --
-    end,
-}
-
-local window = {
-    type = 'Joker',
-    order = 60,
-    key = 'window',
-    name = 'window',
     atlas = "showdown_jokers",
     pos = coordinate(60),
     rarity = 1, cost = 4,
@@ -1882,13 +1878,55 @@ local window = {
     end,
 }
 
-local break_the_ice = {
+local matplotlib = {
+    type = 'Joker',
+    order = 60,
+    key = 'matplotlib',
+    name = 'matplotlib',
+    atlas = "showdown_jokers",
+    pos = coordinate(61),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local cake = {
     type = 'Joker',
     order = 61,
+    key = 'cake',
+    name = 'cake',
+    atlas = "showdown_jokers",
+    pos = coordinate(62),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local window = {
+    type = 'Joker',
+    order = 62,
+    key = 'window',
+    name = 'window',
+    atlas = "showdown_jokers",
+    pos = coordinate(63),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        --
+    end,
+}
+
+local break_the_ice = {
+    type = 'Joker',
+    order = 63,
     key = 'break_the_ice',
     name = 'break_the_ice',
     atlas = "showdown_jokers",
-    pos = coordinate(61),
+    pos = coordinate(64),
     rarity = 2, cost = 6,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
@@ -1952,6 +1990,10 @@ return {
 			cronch,
             mado_no1,
             mado_no2,
+            uro_no1,
+            uro_no2,
+            uro_no3,
+            minna_no,
             final,
             crouton,
             crime_scene,
@@ -1986,6 +2028,8 @@ return {
             fruit_sticker,
             whatever,
             madotsuki,
+            urotsuki,
+            minnatsuki,
             matplotlib,
             window,
             break_the_ice,
@@ -2116,7 +2160,7 @@ return {
             }))
         end
 
-        G.FUNCS.no_sell_madotsuki = function(e)
+        G.FUNCS.no_sell_madotsuki = function()
             if pseudorandom('mado_no') < 1/2 then
                 play_sound('showdown_mado_no1')
             else
@@ -2124,12 +2168,37 @@ return {
             end
         end
 
+        G.FUNCS.no_sell_urotsuki = function()
+            local no = pseudorandom('uro_no')
+            if no < 1/3 then
+                play_sound('showdown_uro_no1')
+            elseif no > 2/3 then
+                play_sound('showdown_uro_no2')
+            else
+                play_sound('showdown_uro_no3')
+            end
+        end
+
+        G.FUNCS.no_sell_minnatsuki = function()
+            if pseudorandom('minna_no') < 1/2 then
+                play_sound('showdown_minna_no1')
+            else
+                play_sound('showdown_minna_no2')
+            end
+        end
+
         local GFUNCSCan_sell_cardRef = G.FUNCS.can_sell_card
         G.FUNCS.can_sell_card = function(e)
             GFUNCSCan_sell_cardRef(e)
             local card = e.config.ref_table
-            if not card:can_sell_card() and card.ability.name == 'madotsuki' then
-                e.config.button_alt = 'no_sell_madotsuki'
+            if not card:can_sell_card() then
+                if card.ability.name == 'madotsuki' then
+                    e.config.button_alt = 'no_sell_madotsuki'
+                elseif card.ability.name == 'urotsuki' then
+                    e.config.button_alt = 'no_sell_urotsuki'
+                elseif card.ability.name == 'minnatsuki' then
+                    e.config.button_alt = 'no_sell_minnatsuki'
+                end
             end
         end
 
