@@ -2180,11 +2180,7 @@ return {
         end
 
         G.FUNCS.no_sell_minnatsuki = function()
-            if pseudorandom('minna_no') < 1/2 then
-                play_sound('showdown_minna_no1')
-            else
-                play_sound('showdown_minna_no2')
-            end
+            play_sound('showdown_minna_no')
         end
 
         local GFUNCSCan_sell_cardRef = G.FUNCS.can_sell_card
