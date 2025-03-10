@@ -50,6 +50,7 @@ local crouton = {
 local pinpoint = {
     type = 'Joker',
     order = 2,
+    activated = { Showdown.config["Ranks"] },
     key = 'pinpoint',
     name = 'pinpoint',
 	atlas = "showdown_jokers",
@@ -87,6 +88,7 @@ local pinpoint = {
 local math_teacher = {
     type = 'Joker',
     order = 3,
+    activated = { Showdown.config["Ranks"] },
     key = 'math_teacher',
     name = 'math_teacher',
 	atlas = "showdown_jokers",
@@ -128,6 +130,7 @@ local math_teacher = {
 local gruyere = {
     type = 'Joker',
     order = 4,
+    activated = { Showdown.config["Ranks"] },
     key = 'gruyere',
     name = 'gruyere',
 	atlas = "showdown_jokers",
@@ -155,6 +158,7 @@ local gruyere = {
 local mirror = {
     type = 'Joker',
     order = 5,
+    activated = { Showdown.config["Ranks"] },
     key = 'mirror',
     name = 'mirror',
 	atlas = "showdown_jokers",
@@ -324,6 +328,7 @@ local blue = {
 local spotted_joker = {
     type = 'Joker',
     order = 10,
+    activated = { Showdown.config["Ranks"] },
     key = 'spotted_joker',
     name = 'spotted_joker',
 	atlas = "showdown_jokers",
@@ -395,6 +400,7 @@ local golden_roulette = {
 local bacteria = {
     type = 'Joker',
     order = 12,
+    activated = { Showdown.config["Ranks"] },
     key = 'bacteria',
     name = 'bacteria',
     atlas = "showdown_jokers",
@@ -426,6 +432,7 @@ local bacteria = {
 local empty_joker = {
     type = 'Joker',
     order = 13,
+    activated = { Showdown.config["Ranks"] },
     key = 'empty_joker',
     name = 'empty_joker',
     atlas = "showdown_jokers",
@@ -573,6 +580,7 @@ local chaos_card = {
 local sim_card = {
     type = 'Joker',
     order = 17,
+    activated = { Showdown.config["Ranks"] },
     key = 'sim_card',
     name = 'sim_card',
     atlas = "showdown_jokers",
@@ -770,6 +778,7 @@ local egg_drawing = {
 local jimbo_makeup = {
     type = 'Joker',
     order = 24,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'jimbo_makeup',
     name = 'jimbo_makeup',
     atlas = "showdown_jokers",
@@ -781,6 +790,7 @@ local jimbo_makeup = {
 local jimbo_hat = {
     type = 'Joker',
     order = 25,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'jimbo_hat',
     name = 'jimbo_hat',
     atlas = "showdown_jokers",
@@ -792,6 +802,7 @@ local jimbo_hat = {
 local jimbo_bells = {
     type = 'Joker',
     order = 26,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'jimbo_bells',
     name = 'jimbo_bells',
     atlas = "showdown_jokers",
@@ -803,6 +814,7 @@ local jimbo_bells = {
 local jimbo_collar = {
     type = 'Joker',
     order = 27,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'jimbo_collar',
     name = 'jimbo_collar',
     atlas = "showdown_jokers",
@@ -814,6 +826,7 @@ local jimbo_collar = {
 local gary_mccready = {
     type = 'Joker',
     order = 28,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'gary_mccready',
     name = 'gary_mccready',
     atlas = "showdown_jokers",
@@ -861,6 +874,7 @@ local gary_mccready = {
 local ultimate_joker = {
     type = 'Joker',
     order = 29,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'ultimate_joker',
     name = 'ultimate_joker',
     atlas = "showdown_jokers",
@@ -890,6 +904,7 @@ local ultimate_joker = {
 local strainer = {
     type = 'Joker',
     order = 30,
+    activated = { Showdown.config["Ranks"] },
     key = 'strainer',
     name = 'strainer',
     atlas = "showdown_jokers",
@@ -958,6 +973,7 @@ local strainer = {
 local billiard = {
     type = 'Joker',
     order = 31,
+    activated = { Showdown.config["Ranks"] },
     key = 'billiard',
     name = 'billiard',
     atlas = "showdown_jokers",
@@ -989,6 +1005,7 @@ local billiard = {
 local hiding_details = {
     type = 'Joker',
     order = 32,
+    activated = { Showdown.config["Ranks"] },
     key = 'hiding_details',
     name = 'hiding_details',
     atlas = "showdown_jokers",
@@ -1082,6 +1099,7 @@ local nitroglycerin = {
 local substitute_teacher = {
     type = 'Joker',
     order = 36,
+    activated = { Showdown.config["Consumeables"]["Mathematics"] },
     key = 'substitute_teacher',
     name = 'substitute_teacher',
     atlas = "showdown_jokers",
@@ -1124,6 +1142,7 @@ local substitute_teacher = {
 local world_map = {
     type = 'Joker',
     order = 37,
+    activated = { Showdown.config["Ranks"] },
     key = 'world_map',
     name = 'world_map',
     atlas = "showdown_jokers",
@@ -1167,6 +1186,7 @@ local world_map = {
 local bugged_seed = {
     type = 'Joker',
     order = 38,
+    activated = { Showdown.config["Challenges"] },
     key = 'bugged_seed',
     name = 'bugged_seed',
     atlas = "showdown_jokers",
@@ -1282,6 +1302,7 @@ local jaws = {
 local locks = {
     type = 'Joker',
     order = 41,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = '4_locks',
     name = '4_locks',
     atlas = "showdown_jokers",
@@ -1339,6 +1360,7 @@ local locks = {
 local unshackled_joker = {
     type = 'Joker',
     order = 42,
+    activated = { Showdown.config["Jokers"]["Final"] },
     key = 'unshackled_joker',
     name = 'unshackled_joker',
     atlas = "showdown_jokers",
@@ -1751,6 +1773,7 @@ local yipeee = {
 local dealer_luigi = {
     type = 'Joker',
     order = 54,
+    activated = { Showdown.config["Stickers"] },
     key = 'dealer_luigi',
     name = 'dealer_luigi',
     atlas = "showdown_jokers",
@@ -1863,7 +1886,6 @@ local minnatsuki = {
     end,
 }
 
-
 local pop_up = {
     type = 'Joker',
     order = 59,
@@ -1885,20 +1907,48 @@ local matplotlib = {
     name = 'matplotlib',
     atlas = "showdown_jokers",
     pos = coordinate(61),
+    config = {extra = {mult = 5, chips = 15}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult, card.ability.extra.chips } }
+	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if context.other_joker and card ~= context.other_joker then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    context.other_joker:juice_up(0.5, 0.5)
+                    return true
+                end
+            }))
+            if context.other_joker.rank < card.rank then
+                return {
+                    message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                    mult_mod = card.ability.extra.mult
+                }
+            else
+                return {
+                    message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                    chip_mod = card.ability.extra.chips
+                }
+            end
+        end
     end,
 }
 
 local cake = {
     type = 'Joker',
     order = 61,
+    activated = { Showdown.config["Ranks"] },
     key = 'cake',
     name = 'cake',
     atlas = "showdown_jokers",
     pos = coordinate(62),
+    config = {extra = {mult = 0, mult_scale = 1.5}},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
+	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
@@ -1913,6 +1963,10 @@ local window = {
     name = 'window',
     atlas = "showdown_jokers",
     pos = coordinate(63),
+    config = {extra = {mult = 0, mult_scale = 8}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
+	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
@@ -1927,6 +1981,11 @@ local break_the_ice = {
     name = 'break_the_ice',
     atlas = "showdown_jokers",
     pos = coordinate(64),
+    config = {extra = {chips = 0, chips_scale = 75}},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_glass
+        return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
+	end,
     rarity = 2, cost = 6,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
@@ -1939,6 +1998,7 @@ local break_the_ice = {
 local infection = {
 	type = 'Joker',
     order = 1000,
+    activated = { (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] },
     key = 'infection',
     name = 'infection',
     atlas = "showdown_cryptidJokers",
@@ -1985,8 +2045,8 @@ local infection = {
 
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
-	list = function ()
-		local list = {
+	list = {
+            --- Sounds
 			cronch,
             mado_no1,
             mado_no2,
@@ -1994,13 +2054,16 @@ return {
             uro_no2,
             uro_no3,
             minna_no,
+            --- Rarities
             final,
+            --- Jokers
             crouton,
             crime_scene,
             ping_pong,
             color_splash,
             blue,
             golden_roulette,
+            empty_joker,
             --baby_jimbo,
             parmesan,
             chaos_card,
@@ -2030,50 +2093,40 @@ return {
             madotsuki,
             urotsuki,
             minnatsuki,
+            pop_up,
             matplotlib,
             window,
             break_the_ice,
-		}
-		if Showdown.config["Ranks"] then
-			table.insert(list, pinpoint)
-			table.insert(list, math_teacher)
-			table.insert(list, gruyere)
-			table.insert(list, mirror)
-			table.insert(list, spotted_joker)
-			table.insert(list, bacteria)
-			table.insert(list, empty_joker)
-			table.insert(list, sim_card)
-			table.insert(list, strainer)
-			table.insert(list, billiard)
-			table.insert(list, hiding_details)
-			table.insert(list, world_map)
-			table.insert(list, pop_up)
-			table.insert(list, cake)
-		end
-		if Showdown.config["Jokers"]["Final"] then
-			table.insert(list, jimbo_makeup)
-			table.insert(list, jimbo_hat)
-			table.insert(list, jimbo_bells)
-			table.insert(list, jimbo_collar)
-			table.insert(list, gary_mccready)
-			table.insert(list, ultimate_joker)
-			table.insert(list, locks)
-			table.insert(list, unshackled_joker)
-		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
-			table.insert(list, substitute_teacher)
-		end
-		if Showdown.config["Stickers"] then
-			table.insert(list, dealer_luigi)
-		end
-		if Showdown.config["Challenges"] then
-			table.insert(list, bugged_seed)
-		end
-        if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
-			table.insert(list, infection)
-        end
-		return list
-	end,
+            infection, -- Cryptid
+            --- Ranks Jokers
+            pinpoint,
+            math_teacher,
+            gruyere,
+            mirror,
+            spotted_joker,
+            bacteria,
+            sim_card,
+            strainer,
+            billiard,
+            hiding_details,
+            world_map,
+            cake,
+            --- Final Jokers
+            jimbo_makeup,
+			jimbo_hat,
+			jimbo_bells,
+			jimbo_collar,
+			gary_mccready,
+			ultimate_joker,
+			locks,
+			unshackled_joker,
+            --- Mathematic Jokers
+            substitute_teacher,
+            --- Sticker Jokers
+            dealer_luigi,
+            --- Challenge Jokers
+            bugged_seed,
+    },
 	atlases = {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
         {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
@@ -2205,6 +2258,22 @@ return {
                 G.FUNCS[self.config.button_alt](self)
             end
         end
+
+        --[[local tagYepRef = Tag.yep
+        function Tag:yep(message, _colour, func)
+            tagYepRef(message, _colour, func)
+            G.E_MANAGER:add_event(Event({
+                func = (function()
+                    for _=1, #find_joker('pop_up') do
+                        play_sound('timpani')
+                        local card = create_card('Tarot_Planet', G.consumeables, nil, nil, nil, nil, nil, 'pop_up')
+                        card:add_to_deck()
+                        G.consumeables:emplace(card)
+                    end
+                    return true
+                end)
+            }))
+        end]]--
 
         Showdown.tag_related_joker['j_diet_cola'] = true
         Showdown.tag_related_joker['j_showdown_label'] = true

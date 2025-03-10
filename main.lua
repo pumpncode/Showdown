@@ -23,19 +23,20 @@ local function execute_item(item)
 				SMODS.Atlas(atlas)
 			end
 		end
-		if item.list then
+		if item.list and (type(item.list) == 'function' or type(item.list) == 'table') then
 			local load_list = {}
-			local list = item.list() -- i have to change the list functions to values or else lua will shout at me :(
-			for _, obj in ipairs(list) do
-				if not obj.order then obj.order = 0 end
-				if obj.type then
-					if item.class[obj.type] then
-						table.insert(load_list, obj)
+			for _, obj in ipairs(type(item.list) == 'function' and item.list() or item.list) do
+				if not obj.activated or obj.activated[1] then
+					if not obj.order then obj.order = 0 end
+					if obj.type then
+						if item.class[obj.type] then
+							table.insert(load_list, obj)
+						else
+							sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
+						end
 					else
-						sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": Type "..(item.type or "nil").." does not exist in class", "Showdown")
+						sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": No type was given", "Showdown")
 					end
-				else
-					sendErrorMessage("Error creating "..obj.key.." in file "..item.fileName..": No type was given", "Showdown")
 				end
 			end
 			table.sort(load_list, function(a, b)

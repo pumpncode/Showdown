@@ -1085,6 +1085,57 @@ return {
                     'idk',
                 },
             },
+            j_showdown_urotsuki = {
+                name = 'Urotsuki',
+                text = {
+                    'idk',
+                },
+            },
+            j_showdown_minnatsuki = {
+                name = 'Minnatsuki',
+                text = {
+                    'idk',
+                },
+            },
+            j_showdown_pop_up = {
+                name = 'Pop-Up',
+                text = {
+                    'Creates a {C:attention}random {C:tarot}tarot{} card or',
+                    '{C:planet}planet{} card when a tag is used',
+                    '{C:inactive}(Must have room)',
+                },
+            },
+            j_showdown_matplotlib = {
+                name = 'matplotlib',
+                text = {
+                    'Each joker on its {C:attention}right{} gives {C:mult}+#1#{} Mult',
+                    'Each joker on its {C:attention}left{} gives {C:chips}+#2#{} Chips',
+                },
+            },
+            j_showdown_cake = {
+                name = 'Cake',
+                text = {
+                    'This joker gains {C:mult}+#1#{} Mult for each',
+                    '{C:counterpart_ranks}counterpart{} in hand when {C:attention}scoring',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
+                },
+            },
+            j_showdown_window = {
+                name = 'Window',
+                text = {
+                    'This joker gains {C:mult}+#1#{} Mult when played',
+                    'hand contains a {C:attention}Four of a Kind',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
+                },
+            },
+            j_showdown_break_the_ice = {
+                name = 'Break the Ice',
+                text = {
+                    'This joker gains {C:chips}+#1#{} Chips for',
+                    'every {C:attention}Glass Card{} that is destroyed',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
+                },
+            },
         },
         Other={
             showdown_static = {

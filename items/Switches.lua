@@ -259,9 +259,7 @@ local conversion = {
 			tag:yep('+', G.C.BLUE,function()
 				local new_tag = 0
 				for i=#G.GAME.tags-1, 1, -1 do
-					G.GAME.tags[i]:yep('-', G.C.BLUE,function()
-						return true
-					end)
+					G.GAME.tags[i]:nope()
 					G.E_MANAGER:add_event(Event({
 						trigger = 'immediate',
 						func = function()
