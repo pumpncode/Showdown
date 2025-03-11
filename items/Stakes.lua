@@ -113,6 +113,7 @@ return {
 		{key = "showdown_stakes", path = "Stakes.png", px = 29, py = 29},
 		{key = "showdown_stake_stickers", path = "StakeStickers.png", px = 71, py = 95},
 	},
+	order = 1,
     exec = function()
         Showdown.StakeAlt = SMODS.Stake:extend{
 			atlas = "showdown_stakes", sticker_atlas = "showdown_stake_stickers",

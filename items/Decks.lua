@@ -5,6 +5,8 @@ local mirror = {
 	key = "Mirror",
 	atlas = "showdown_decks",
 	pos = coordinate(1),
+	unlocked = false,
+	unlock_condition = { type = 'win_stake' },
 	apply = function(self, back)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -178,6 +180,7 @@ return {
 			starter,
 		}
 		if Showdown.config["Ranks"] then
+			mirror.unlock_condition.stake = Showdown.get_stake_index('stake_showdown_ruby') -- fuck the stake unlock condition, i hate the way its implemented so much
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
@@ -192,6 +195,7 @@ return {
 	atlases = {
 		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
 	},
+	order = 2,
 	exec = function()
 		function give_starter(starter_sleeve)
 			G.E_MANAGER:add_event(Event({
@@ -292,6 +296,13 @@ return {
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			Showdown.versatile['Engineer Deck'] = { desc = 'j_showdown_versatile_joker_engineer', pos = coordinate(22), blueprint = false }
+		end
+
+		function Showdown.get_stake_index(stake)
+			for i, v in ipairs(G.P_CENTER_POOLS.Stake) do
+				print(v.key)
+				if v.key == stake then return i end
+			end
 		end
 	end
 }

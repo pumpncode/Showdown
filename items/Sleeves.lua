@@ -114,7 +114,7 @@ return {
 			starter,
 		}
 		if Showdown.config["Ranks"] then
-			--table.insert(list, mirror)
+			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
 		if Showdown.config["Consumeables"]["Mathematics"] then
@@ -128,6 +128,6 @@ return {
 	atlases = {
 		{key = "showdown_sleeves", path = "CrossMod/CardSleeves/sleeves.png", px = 73, py = 94},
 	},
-	order = 1,
+	order = 2,
     class = CardSleeves,
 }
