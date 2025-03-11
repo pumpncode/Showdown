@@ -7,7 +7,7 @@
     "website_url": "https://github.com/Mistyk1/Showdown",
 	"prefix": "showdown",
 	"main_file": "main.lua",
-	"priority": 0,
+	"priority": 5,
 	"badge_colour": "#4287f5",
 	"badge_text_colour": "#000917",
 	"version": "1.2.1",

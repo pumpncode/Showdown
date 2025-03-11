@@ -1194,6 +1194,54 @@ return {
                     "{C:attention}Stake{} difficulty",
                 },
             },
+            showdown_emerald_sticker = {
+                name = "Emerald Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Emerald",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
+            showdown_onyx_sticker = {
+                name = "Onyx Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Onyx",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
+            showdown_sapphire_sticker = {
+                name = "Sapphire Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Sapphire",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
+            showdown_amethyst_sticker = {
+                name = "Amethyst Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Amethyst",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
+            showdown_topaz_sticker = {
+                name = "Topaz Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Topaz",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
+            showdown_diamond_sticker = {
+                name = "Diamond Stake",
+                text = {
+                    "Used this Joker",
+                    "to win on {C:attention}Diamond",
+                    "{C:attention}Stake{} difficulty",
+                },
+            },
             counterpart_ranks = {
                 name = 'Counterparts',
                 text = {
@@ -1296,9 +1344,64 @@ return {
         },
         Stake={
             stake_showdown_ruby={
-                name="Ruby Stake",
-                text={
-                    "idk",
+                name = "Ruby Stake",
+				colour = "Ruby",
+                text = {
+                    "{C:attention}Boss Blind{} gives",
+                    "no reward money",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_emerald={
+                name = "Emerald Stake",
+				colour = "Emerald",
+                text = {
+                    "Required score scales",
+					"faster for each {C:attention}Ante",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_onyx={
+                name = "Onyx Stake",
+				colour = "Onyx",
+                text = {
+                    "Shop can have {C:attention}Static{} Jokers",
+                    "{C:inactive,s:0.8}(Can't be moved)",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_sapphire={
+                name = "Sapphire Stake",
+				colour = "Sapphire",
+                text = {
+                    "{C:blue}-1{} Hand",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_amethyst={
+                name = "Amethyst Stake",
+				colour = "Amethyst",
+                text = {
+                    "Required score scales",
+					"faster for each {C:attention}Ante",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_topaz={
+                name = "Topaz Stake",
+				colour = "Topaz",
+                text = {
+                    "Shop can have {C:attention}Eternal{} Jokers",
+                    "{C:inactive,s:0.8}(Can't be sold or destroyed)",
+                    "{s:0.8}Applies all previous Stakes",
+                },
+            },
+            stake_showdown_diamond={
+                name = "Diamond Stake",
+				colour = "Diamond",
+                text = {
+                    "You earn less {C:attention}Interest{}",
+                    "{C:inactive,s:0.8}Upgrades are also affected",
                     "{s:0.8}Applies all previous Stakes",
                 },
             },
@@ -1707,7 +1810,7 @@ return {
             showdown_config_vouchers = "Vouchers",
             showdown_config_stickers = "Stickers",
             showdown_config_challenges = "Challenges",
-            showdown_config_stakes = "Stakes (no)",
+            showdown_config_stakes = "Stakes",
             showdown_config_consumeables_header = "Consumeables",
             showdown_config_consumeables_tarots = "Tarots",
             showdown_config_consumeables_spectrals = "Spectrals",
@@ -1721,6 +1824,7 @@ return {
             
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_final = 'Final',
+            k_final = "Final",
             k_BAM = "BAM!",
             k_strainer_broke = "Broken!",
             k_showdown_mysterious_tarot = 'Tarot?',
@@ -1740,6 +1844,8 @@ return {
         },
         high_scores={},
         labels={
+            k_final = "Final",
+            k_showdown_final = 'Final',
             showdown_static = "Static",
             showdown_cloud = "Cloud",
             showdown_mushroom = "Mushroom",

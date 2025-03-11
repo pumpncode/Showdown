@@ -10,15 +10,12 @@ local minna_no = {type = 'Sound', key = "minna_no", path = "minnatsuki/no.ogg"}
 
 local final = {
     type = 'Rarity',
-    key = "Final",
+    key = "final",
     default_weight = 0,
     badge_colour = HEX("b5a653"),
     get_weight = function(self, weight, object_type)
         return weight
     end,
-    gradient = function(self, dt)
-        --
-    end
 }
 
 ---- Jokers
@@ -882,7 +879,7 @@ local ultimate_joker = {
     loc_vars = function(self, info_queue, card)
 		return { vars = { G.GAME.round } }
 	end,
-    rarity = 'showdown_Final', cost = 20,
+    rarity = 'showdown_final', cost = 20,
     in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
@@ -1365,7 +1362,7 @@ local unshackled_joker = {
     name = 'unshackled_joker',
     atlas = "showdown_jokers",
     pos = coordinate(44),
-    rarity = 'showdown_Final', cost = 20,
+    rarity = 'showdown_final', cost = 20,
     in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)

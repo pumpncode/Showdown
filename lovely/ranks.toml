@@ -1,7 +1,6 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-#priority = -20
 priority = 0
 
 # Counterparts counts as original
