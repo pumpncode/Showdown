@@ -179,6 +179,39 @@ local showdown_config_tab = function()
 		},
 		
 		{
+			label = localize("showdown_technical_config"),
+			chosen = true,
+			tab_definition_function = function()
+			return {
+				n = G.UIT.ROOT,
+					config = {
+						emboss = 0.05,
+						minh = 6,
+						r = 0.1,
+						minw = 10,
+						align = "cm",
+						padding = 0.2,
+						colour = G.C.BLACK,
+					},
+					nodes = {
+					
+						{n=G.UIT.R, config={align = "cm"}, nodes={ -- Base Box containing everything
+			
+							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
+								{n=G.UIT.R, config={align = "cl"}, nodes={
+
+									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 5, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
+	
+								}},
+							}},
+						
+						}}
+					},
+			}
+			end
+		},
+		
+		{
 			label = localize("showdown_crossmod_config"),
 			chosen = true,
 			tab_definition_function = function()
@@ -218,18 +251,9 @@ local showdown_config_tab = function()
 					},
 			}
 			end
-			},
+		},
 	}
 end
 
 shdwn.extra_tabs = showdown_config_tab
 shdwn.config_tab = true
-
----- Mod Compatibility
-
---[[ if (SMODS.Mods["Bunco"] or {}).can_load then
-	modCompatibility("Bunco", "compat/buncoCompat.lua")
-end
-if (SMODS.Mods["Cryptid"] or {}).can_load then
-	modCompatibility("Cryptid", "compat/cryptidCompat.lua")
-end ]]

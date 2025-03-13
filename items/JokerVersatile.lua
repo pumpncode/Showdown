@@ -14,7 +14,8 @@ local versatile_joker = {
         hearts = 20, spades = 1.5, spades_odd = 2,    -- Checkered Deck
         generate_odd = 4,                            -- Zodiac Deck
         double_tag = 1,                              -- Anaglyph Deck
-        extra_card = 1,                              -- Cheater Deck
+        extra_card = 1,                             -- Cheater Deck
+        tag_switch_mult = 1.5,                        -- Engineer Deck
     }},
     loc_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
@@ -39,6 +40,8 @@ local versatile_joker = {
                 loc.vars = { card.ability.extra.double_tag }
             elseif G.GAME.selected_back.name == 'Cheater Deck' then
                 loc.vars = { card.ability.extra.extra_card }
+            elseif G.GAME.selected_back.name == 'Engineer Deck' then
+                loc.vars = { card.ability.extra.tag_switch_mult }
             end
             return loc
         end
@@ -103,6 +106,7 @@ local versatile_joker_all_in_one = {
         generate_odd = 4,                            -- Zodiac Deck
         double_tag = 1,                              -- Anaglyph Deck
         extra_card = 1,                              -- Cheater Deck
+        tag_switch_mult = 4,                         -- Engineer Deck
     }},
     loc_vars = function(self, info_queue, card)
         local decks, ranks, maths, switches =
@@ -121,6 +125,7 @@ local versatile_joker_all_in_one = {
             G.GAME.probabilities.normal, card.ability.extra.generate_odd,
             card.ability.extra.double_tag,
             card.ability.extra.extra_card,
+            card.ability.extra.tag_switch_mult,
             -- Config values for indicating if an effect is active or not
             ranks, maths, switches, decks
         }}

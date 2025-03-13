@@ -30,4 +30,7 @@ return {
     },
     ["Stakes"] = true,
     ["Challenges"] = true,
+    ["Technical"] = {
+        ["Engineer Versatile Weight Limit"] = 100,
+    },
 }

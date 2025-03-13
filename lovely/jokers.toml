@@ -1,7 +1,7 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = 0
+priority = 1
 
 # Addition of removing_card context
 [[patches]]
@@ -515,4 +515,30 @@ pattern = '''set_hand_usage(text)'''
 position = 'after'
 payload = '''
 G.GAME.last_played_hand = text
+'''
+
+# Pop-Up
+[[patches]]
+[patches.pattern]
+target = 'tag.lua'
+match_indent = true
+pattern = '''function Tag:yep(message, _colour, func)'''
+position = 'after'
+payload = '''
+for i=1, #find_joker('pop_up') do
+    G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+    G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.0,
+        func = function()
+            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                local _card = SMODS.create_card({set = 'Tarot_Planet', area = G.consumeables})
+                _card:add_to_deck()
+                G.consumeables:emplace(_card)
+            end
+            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer - 1
+            return true
+        end
+    }))
+end
 '''

@@ -81,18 +81,33 @@ payload = '''
 local _pool, _pool_key = get_current_pool(G.GAME.showdown_engineer and 'Switch' or 'Tag', nil, nil, append)
 '''
 
-# Engineer deck, part 2/2 (Thanks Cardsauce)
+# Engineer deck, part 2/2 (Versatile Joker too i guess) (Thanks Cardsauce)
 [[patches]]
 [patches.pattern]
 target = "functions/common_events.lua"
-pattern = "_pool[#_pool + 1] = v.key"
-position = "before"
+pattern = '''
+_pool[#_pool + 1] = v.key
+_pool_size = _pool_size + 1
+'''
+position = "at"
 match_indent = true
 payload = '''
 if G.GAME.showdown_engineer and Showdown.tag_related_joker[v.key] then
-    for i=1, 3 do
-        _pool[#_pool + 1] = v.key
-        _pool_size = _pool_size + 1
+    local weight = 4
+    if G.GAME.selected_back.name == 'Engineer Deck' then
+        local versatile = find_joker('versatile_joker')
+        if #versatile > 0 then
+            for i=1, #versatile do weight = math.floor(weight * versatile[i].ability.extra.tag_switch_mult) end
+        end
     end
+    -- can crash the game if weight is too high
+    -- there's a configurable limit (100 by default) and a hardcoded limit (200)
+    for i=1, math.min(weight, Showdown.config["Technical"]["Engineer Versatile Weight Limit"], 200) do
+        _pool[#_pool + 1] = v.key -- no touchy
+        _pool_size = _pool_size + 1 -- this is for not letting other mods mess with these 2 lines of code
+    end
+else
+    _pool[#_pool + 1] = v.key
+    _pool_size = _pool_size + 1
 end
 '''

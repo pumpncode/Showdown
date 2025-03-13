@@ -483,7 +483,7 @@ local baby_jimbo = {
                     local _card = SMODS.create_card({set = 'Spectral', area = G.consumeables, edition = {negative = true}})
                     _card:add_to_deck()
                     G.consumeables:emplace(_card)
-                    G.GAME.consumeable_buffer = 0
+                    G.GAME.consumeable_buffer = G.GAME.consumeable_buffer - 1
                     return true
                 end
             }))
@@ -1891,10 +1891,8 @@ local pop_up = {
     atlas = "showdown_jokers",
     pos = coordinate(60),
     rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    calculate = function(self, card, context)
-        --
-    end,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    --calculate = function(self, card, context) end,
 }
 
 local matplotlib = {
@@ -1949,7 +1947,21 @@ local cake = {
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if not context.blueprint and context.individual and context.cardarea == G.hand and context.full_hand then
+            if SMODS.is_counterpart(context.other_card) then
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+                return {
+                    message = localize('k_upgrade_ex'),
+                    colour = G.C.MULT,
+                    card = card
+                }
+            end
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult
+            }
+        end
     end,
 }
 
@@ -1967,7 +1979,22 @@ local window = {
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if context.cardarea == G.jokers and context.before and not context.blueprint then
+            local eval = evaluate_poker_hand(context.scoring_hand)
+            if next(eval['Four of a Kind']) then
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+                return {
+                    message = localize('k_upgrade_ex'),
+                    colour = G.C.MULT,
+                    card = card
+                }
+            end
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult
+            }
+        end
     end,
 }
 
@@ -1986,7 +2013,45 @@ local break_the_ice = {
     rarity = 2, cost = 6,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if
+            not context.blueprint
+            and (
+                context.cards_destroyed
+                or context.remove_playing_cards
+                or (context.using_consumeable and context.consumeable.ability.name == 'The Hanged Man')
+            )
+        then
+            local glasses = 0
+            if (context.using_consumeable and context.consumeable.ability.name == 'The Hanged Man') then
+                for _, v in ipairs(G.hand.highlighted) do
+                    if SMODS.has_enhancement(v, 'm_glass') then glasses = glasses + 1 end
+                end
+            else
+                for _, v in ipairs(context.cards_destroyed and context.glass_shattered or context.remove_playing_cards and context.removed) do
+                    if v.shattered then glasses = glasses + 1 end
+                end
+            end
+            if glasses > 0 then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale*glasses
+                                return true
+                            end
+                        }))
+                        card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize{type = 'variable', key = 'a_chips', vars = {card.ability.extra.chips + card.ability.extra.chips_scale*glasses}}})
+                        return true
+                    end
+                }))
+            end
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.chips > 0 then
+            return {
+                message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                chip_mod = card.ability.extra.chips,
+                colour = G.C.CHIPS
+            }
+        end
     end,
 }
 

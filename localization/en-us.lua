@@ -969,7 +969,9 @@ return {
                 name = 'Versatile Joker',
                 text = {
                     'Effect depends of {C:attention}played deck',
-                    '???',
+                    'Tag and Switch related cards are {X:attention,C:white}X#1#{} more',
+                    'common and may appear multiple times',
+                    'Effect stacks {C:attention}multiplicatively{}',
                 },
                 unlock = {
                     'Win a run with any',
@@ -1001,12 +1003,12 @@ return {
                     '{s:0.8}At the end of each round, {C:attention,s:0.8}creates{s:0.8} a card with rank and suit {C:attention,s:0.8}equals{s:0.8} to {C:attention,s:0.8}highest count{s:0.8} of rank and suit in deck',
                     '{C:blue,s:0.8}+1{s:0.8} hand and {C:red,s:0.8}+1{s:0.8} discard each round',
                     '{C:attention,s:0.8}This bonus can\'t be modified',
-                    '{s:0.8,C:inactive}#16#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
-                    '{s:0.8,C:inactive}#17#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
-                    '{s:0.8,C:inactive}#19#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
-                    '{s:0.8,C:inactive}#16#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
-                    '{s:0.8,C:inactive}#16#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
-                    '{s:0.8,C:inactive}#18#{s:0.8}???',
+                    '{s:0.8,C:inactive}#17#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
+                    '{s:0.8,C:inactive}#18#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
+                    '{s:0.8,C:inactive}#20#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
+                    '{s:0.8,C:inactive}#17#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
+                    '{s:0.8,C:inactive}#17#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
+                    '{s:0.8,C:inactive}#19#{s:0.8}Tag and Switch related cards are {s:0.8,X:attention,C:white}X#16#{s:0.8} more common and may appear multiple times',
                     '{C:inactive,s:0.8}(Currently {X:red,C:white,s:0.8}X#3#{C:inactive,s:0.8} Mult, must have room)',
                 },
             },
@@ -1806,7 +1808,7 @@ return {
         },
         collabs={},
         dictionary={
-            -- Config
+            -- Content Config
             showdown_content_config = "Content Config",
             showdown_config_restart = "Restart is Required to Fully Apply Effects",
             showdown_config_ranks = "Ranks",
@@ -1832,6 +1834,10 @@ return {
             showdown_config_consumeables_spectrals = "Spectrals",
             showdown_config_consumeables_mathematics = "Mathematics",
             showdown_config_consumeables_logics = "Logics (no)",
+            -- Technical Config
+            showdown_technical_config = "Technical Config",
+            showdown_config_engineer_versatile_weight_limit = "Versatile Joker (Engineer) Weight Limit",
+            -- Crossmod Config
             showdown_crossmod_config = "Crossmod Config",
             showdown_config_unloaded = "Mods in gray are not present/unloaded",
             showdown_config_cryptid = "Cryptid",
