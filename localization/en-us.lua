@@ -8,6 +8,11 @@ return {
                     '2s are replaced',
                     'by their {C:counterpart_ranks,T:counterpart_ranks}counterpart{}',
                     'Aces are replaced by 0s',
+                },
+                unlock = {
+                    "Win a run with any",
+                    "deck on at least",
+                    "{V:1}#1#{} difficulty",
                 }
             },
             b_showdown_Calculus = {
@@ -54,6 +59,11 @@ return {
                     'Tag and Switch related cards',
                     'are {X:attention,C:white}X4{} more common',
                 },
+                unlock = {
+                    "Win a run with any",
+                    "deck on at least",
+                    "{V:1}#1#{} difficulty",
+                }
             },
         },
         Sleeve = {

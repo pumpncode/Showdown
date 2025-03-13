@@ -94,7 +94,8 @@ local diamond = {
 	shiny = true,
 	alternate = true,
     modifiers = function ()
-        --
+        G.GAME.interest_cap = 15
+        G.GAME.modifiers.less_interest = true
     end
 }
 
@@ -157,6 +158,13 @@ return {
 				end
 				if _stake then return G.sticker_map[_stake] end
 			end
+		end
+
+		local GameStart_runRef = Game.start_run
+		function Game:start_run(args)
+			GameStart_runRef(self, args)
+			self.P_CENTERS.v_seed_money.config.extra = self.GAME.modifiers.less_interest and 30 or 50
+			self.P_CENTERS.v_money_tree.config.extra = self.GAME.modifiers.less_interest and 60 or 100
 		end
     end,
     class = Showdown,

@@ -1,7 +1,7 @@
 [manifest]
 version = "1.0.0"
 dump_lua = true
-priority = 0
+priority = 1
 
 # Alternative stake stickers, part 1/14
 [[patches]]
@@ -201,10 +201,25 @@ end
 [[patches]]
 [patches.pattern]
 target = '''functions/common_events.lua'''
-pattern = '''elseif G.GAME.modifiers.enable_perishables_in_shop and ((eternal_perishable_poll > 0.4) and (eternal_perishable_poll <= 0.7)) and not SMODS.Stickers["perishable"].should_apply then'''
+pattern = '''if G.GAME.modifiers.enable_rentals_in_shop and pseudorandom((area == G.pack_cards and 'packssjr' or 'ssjr')..G.GAME.round_resets.ante) > 0.7 and not SMODS.Stickers["rental"].should_apply then'''
 position = "before"
 match_indent = true
 payload = '''
-elseif G.GAME.modifiers.enable_statics_in_shop and ((eternal_perishable_poll > 0.4) and (eternal_perishable_poll <= 0.7)) and not SMODS.Stickers["showdown_static"].should_apply then
+if G.GAME.modifiers.enable_statics_in_shop and pseudorandom((area == G.pack_cards and 'packssjs' or 'ssjs')..G.GAME.round_resets.ante) > 0.7 and not SMODS.Stickers["showdown_static"].should_apply then
     SMODS.Stickers["showdown_static"].apply(card, true)
+end
+'''
+
+# Avoid unlocking all stake decks when winning in an alternate stake
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+pattern = '''if get_deck_win_stake() >= card.unlock_condition.stake then'''
+position = "at"
+match_indent = true
+payload = '''
+if
+    get_deck_win_stake() >= card.unlock_condition.stake
+    and G.P_CENTER_POOLS.Stake[card.unlock_condition.stake].alternate == G.P_CENTER_POOLS.Stake[G.GAME.stake].alternate
+then
 '''

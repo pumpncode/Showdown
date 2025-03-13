@@ -5,8 +5,17 @@ local mirror = {
 	key = "Mirror",
 	atlas = "showdown_decks",
 	pos = coordinate(1),
+	config = { unlock_stake = "stake_showdown_ruby" },
+	locked_loc_vars = function(self, info_queue, card)
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
 	unlocked = false,
-	unlock_condition = { type = 'win_stake' },
+	check_for_unlock = function (self, args)
+		if args.type == 'win_stake' and get_deck_win_stake() >= Showdown.get_stake_index(self.config.unlock_stake) then
+			unlock_card(self)
+		end
+	end,
 	apply = function(self, back)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -164,9 +173,16 @@ local engineer = { -- Not done at all
 	key = "Engineer",
 	atlas = "showdown_decks",
 	pos = coordinate(5),
+	config = { unlock_stake = "stake_showdown_onyx" },
+	locked_loc_vars = function(self, info_queue, card)
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		--
+		if args.type == 'win_stake' and get_deck_win_stake() >= Showdown.get_stake_index(self.config.unlock_stake) then
+			unlock_card(self)
+		end
 	end,
 	apply = function(self, back)
 		G.GAME.showdown_engineer = true
@@ -180,7 +196,6 @@ return {
 			starter,
 		}
 		if Showdown.config["Ranks"] then
-			mirror.unlock_condition.stake = Showdown.get_stake_index('stake_showdown_ruby') -- fuck the stake unlock condition, i hate the way its implemented so much
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
@@ -300,7 +315,6 @@ return {
 
 		function Showdown.get_stake_index(stake)
 			for i, v in ipairs(G.P_CENTER_POOLS.Stake) do
-				print(v.key)
 				if v.key == stake then return i end
 			end
 		end
