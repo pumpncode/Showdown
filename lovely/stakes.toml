@@ -213,7 +213,7 @@ position = "before"
 match_indent = true
 payload = '''
 if G.GAME.modifiers.enable_statics_in_shop and pseudorandom((area == G.pack_cards and 'packssjs' or 'ssjs')..G.GAME.round_resets.ante) > 0.7 and not SMODS.Stickers["showdown_static"].should_apply then
-    SMODS.Stickers["showdown_static"].apply(card, true)
+    SMODS.Stickers["showdown_static"]:apply(card)
 end
 '''
 

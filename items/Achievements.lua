@@ -53,10 +53,12 @@ return {
 			--table.insert(list, rico_kaboom)
 			table.insert(list, whole_new_deck)
 		end
-		if Showdown.config["Stakes"] then
+		if Showdown.config["Vouchers"] then
 			table.insert(list, minecraft_reference)
-			table.insert(list, completionist)
-			table.insert(list, you_can_stop_now)
+		end
+		if Showdown.config["Stakes"] then
+			--table.insert(list, completionist)
+			--table.insert(list, you_can_stop_now)
 		end
 		return list
 	end,

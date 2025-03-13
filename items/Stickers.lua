@@ -5,9 +5,10 @@ local static = {
 	atlas = 'showdown_stickers',
 	pos = coordinate(1, 5),
 	badge_colour = HEX("727272"),
-	apply = function(self, card, val)
-		card.ability[self.key] = val
-		card.states.drag.can = not val
+	should_apply = false,
+	apply = function(self, card)
+		card.ability[self.key] = not card.ability[self.key]
+		card.states.drag.can = not card.states.drag.can
 	end,
 }
 
