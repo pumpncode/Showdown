@@ -166,7 +166,7 @@ local cheater = {
 	end
 }
 
-local engineer = { -- Not done at all
+local engineer = {
 	type = 'Back',
 	order = 5,
 	name = "Engineer Deck",

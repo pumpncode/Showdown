@@ -27,6 +27,9 @@ local cronch = make_achievement('cronch', true) -- cronch
 local green_deck_home = make_achievement('green_deck_home') -- We have Green Deck at home
 local rico_kaboom = make_achievement('rico_kaboom', true) -- Yes Rico, kaboom
 local whole_new_deck = make_achievement('whole_new_deck', true) -- A whole new deck
+local minecraft_reference = make_achievement('minecraft_reference', true) -- How did we get here?
+local completionist = make_achievement('completionist', true) -- Completionist+++
+local you_can_stop_now = make_achievement('you_can_stop_now', true) -- ok you can stop now
 
 return {
 	enabled = Showdown.config["Achievements"],
@@ -49,6 +52,11 @@ return {
 			table.insert(list, green_deck_home)
 			--table.insert(list, rico_kaboom)
 			table.insert(list, whole_new_deck)
+		end
+		if Showdown.config["Stakes"] then
+			table.insert(list, minecraft_reference)
+			table.insert(list, completionist)
+			table.insert(list, you_can_stop_now)
 		end
 		return list
 	end,

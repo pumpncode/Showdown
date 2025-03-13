@@ -120,7 +120,7 @@ return {
 			atlas = "showdown_stakes", sticker_atlas = "showdown_stake_stickers",
         }
 
-		-- Well i don't really know what's the issue here, i'm trying to render to stake stickers at the same time but it won't (in the collection only at least)
+		-- Well i don't really know what's the issue here, i'm trying to render 2 stake stickers at the same time but it won't (in the collection only at least)
 
 		function Showdown.get_joker_win_sticker_alt(_center, index)
 			local joker_usage = G.PROFILES[G.SETTINGS.profile].joker_usage[_center.key] or {}
@@ -157,6 +157,22 @@ return {
 					end
 				end
 				if _stake then return G.sticker_map[_stake] end
+			end
+		end
+
+		-- Cardsleeve compat
+		function Showdown.get_sleeve_win_sticker_alt(sleeve_key)
+			local profile = G.PROFILES[G.SETTINGS.profile]
+			if profile.sleeve_usage and profile.sleeve_usage[sleeve_key] and profile.sleeve_usage[sleeve_key].wins_by_key then
+				local _stake = nil
+				for key, _ in pairs(profile.sleeve_usage[sleeve_key].wins_by_key) do
+					if (G.P_STAKES[key] and G.P_STAKES[key].stake_level or 0) > (_stake and G.P_STAKES[_stake].stake_level or 0) and G.P_STAKES[key].alternate then
+						_stake = key
+					end
+				end
+				if _stake then
+					return G.sticker_map[_stake]
+				end
 			end
 		end
 

@@ -1778,6 +1778,9 @@ return {
             ach_showdown_green_deck_home = 'Have Red Coins and Money Cutter at the same time',
             ach_showdown_rico_kaboom = 'Lose by destroying your cards with Nitroglycerin',
             ach_showdown_whole_new_deck = 'Gain at least 20 cards with one Strainer',
+            ach_showdown_minecraft_reference = 'Go to Ante -1',
+            ach_showdown_completionist = 'Win with every deck at Gold Stake and Diamond Stake difficulty',
+            ach_showdown_you_can_stop_now = 'Earn a Gold Sticker and Diamond Sticker on every Joker',
         },
         achievement_names={
             ach_showdown_get_jean_paul = ':3',
@@ -1792,6 +1795,9 @@ return {
             ach_showdown_green_deck_home = 'We have Green Deck at home',
             ach_showdown_rico_kaboom = 'Yes Rico, kaboom',
             ach_showdown_whole_new_deck = 'A whole new deck',
+            ach_showdown_minecraft_reference = 'How did we get here?',
+            ach_showdown_completionist = 'Completionist+++',
+            ach_showdown_you_can_stop_now = 'ok you can stop now',
         },
         blind_states={},
         challenge_names={
@@ -1802,7 +1808,7 @@ return {
         dictionary={
             -- Config
             showdown_content_config = "Content Config",
-            showdown_config_restart = "Restart is Required to Apply Effects",
+            showdown_config_restart = "Restart is Required to Fully Apply Effects",
             showdown_config_ranks = "Ranks",
             showdown_config_achievements = "Achievements",
             showdown_config_blinds = "Blinds",
