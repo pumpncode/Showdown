@@ -206,13 +206,12 @@ local crime_scene = {
         end
     end,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play and context.other_card.debuff then
+        if context.debuffed_card then
             card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
         end
         if context.joker_main and card.ability.extra.x_mult > 1 then
             return {
-                message = localize({ type = "variable", key = "a_xmult", vars = { card.ability.extra.x_mult } }),
                 x_mult = card.ability.extra.x_mult,
             }
         end
@@ -1838,7 +1837,7 @@ local madotsuki = {
     key = 'madotsuki',
     name = 'madotsuki',
     atlas = "showdown_jokers",
-    pos = coordinate(57),
+    pos = coordinate(57), soul_pos = coordinate(58),
     loc_vars = function(self, info_queue, card)
         --
 	end,
@@ -1855,7 +1854,7 @@ local urotsuki = {
     key = 'urotsuki',
     name = 'urotsuki',
     atlas = "showdown_jokers",
-    pos = coordinate(58),
+    pos = coordinate(59), soul_pos = coordinate(60),
     loc_vars = function(self, info_queue, card)
         --
 	end,
@@ -1872,7 +1871,7 @@ local minnatsuki = {
     key = 'minnatsuki',
     name = 'minnatsuki',
     atlas = "showdown_jokers",
-    pos = coordinate(59),
+    pos = coordinate(61), soul_pos = coordinate(62),
     loc_vars = function(self, info_queue, card)
         --
 	end,
@@ -1889,7 +1888,7 @@ local pop_up = {
     key = 'pop_up',
     name = 'pop_up',
     atlas = "showdown_jokers",
-    pos = coordinate(60),
+    pos = coordinate(63),
     rarity = 1, cost = 4,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     --calculate = function(self, card, context) end,
@@ -1901,7 +1900,7 @@ local matplotlib = {
     key = 'matplotlib',
     name = 'matplotlib',
     atlas = "showdown_jokers",
-    pos = coordinate(61),
+    pos = coordinate(64),
     config = {extra = {mult = 5, chips = 15}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult, card.ability.extra.chips } }
@@ -1938,7 +1937,7 @@ local cake = {
     key = 'cake',
     name = 'cake',
     atlas = "showdown_jokers",
-    pos = coordinate(62),
+    pos = coordinate(65),
     config = {extra = {mult = 0, mult_scale = 1.5}},
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
@@ -1971,7 +1970,7 @@ local window = {
     key = 'window',
     name = 'window',
     atlas = "showdown_jokers",
-    pos = coordinate(63),
+    pos = coordinate(66),
     config = {extra = {mult = 0, mult_scale = 8}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
@@ -2004,7 +2003,7 @@ local break_the_ice = {
     key = 'break_the_ice',
     name = 'break_the_ice',
     atlas = "showdown_jokers",
-    pos = coordinate(64),
+    pos = coordinate(67),
     config = {extra = {chips = 0, chips_scale = 75}},
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.m_glass
@@ -2302,7 +2301,7 @@ return {
         G.FUNCS.can_sell_card = function(e)
             GFUNCSCan_sell_cardRef(e)
             local card = e.config.ref_table
-            if not card:can_sell_card() then
+            if not card:can_sell_card() and Showdown.config["Technical"]["Easter Eggs"] then
                 if card.ability.name == 'madotsuki' then
                     e.config.button_alt = 'no_sell_madotsuki'
                 elseif card.ability.name == 'urotsuki' then
@@ -2320,22 +2319,6 @@ return {
                 G.FUNCS[self.config.button_alt](self)
             end
         end
-
-        --[[local tagYepRef = Tag.yep
-        function Tag:yep(message, _colour, func)
-            tagYepRef(message, _colour, func)
-            G.E_MANAGER:add_event(Event({
-                func = (function()
-                    for _=1, #find_joker('pop_up') do
-                        play_sound('timpani')
-                        local card = create_card('Tarot_Planet', G.consumeables, nil, nil, nil, nil, nil, 'pop_up')
-                        card:add_to_deck()
-                        G.consumeables:emplace(card)
-                    end
-                    return true
-                end)
-            }))
-        end]]--
 
         Showdown.tag_related_joker['j_diet_cola'] = true
         Showdown.tag_related_joker['j_showdown_label'] = true

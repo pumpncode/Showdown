@@ -1836,6 +1836,7 @@ return {
             showdown_config_consumeables_logics = "Logics (no)",
             -- Technical Config
             showdown_technical_config = "Technical Config",
+            showdown_config_easter_eggs = "Easter Eggs",
             showdown_config_engineer_versatile_weight_limit = "Versatile Joker (Engineer) Weight Limit",
             -- Crossmod Config
             showdown_crossmod_config = "Crossmod Config",

@@ -542,3 +542,18 @@ for i=1, #find_joker('pop_up') do
     }))
 end
 '''
+
+# debuffed_card context
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+pattern = 'if extra and extra.playing_cards_created then'
+position = 'before'
+match_indent = true
+payload = '''
+if eval_type == 'debuff' then
+    for _, v in ipairs(G.jokers.cards) do
+        v:calculate_joker({debuffed_card = card})
+    end
+end
+'''

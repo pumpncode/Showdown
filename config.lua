@@ -31,6 +31,7 @@ return {
     ["Stakes"] = true,
     ["Challenges"] = true,
     ["Technical"] = {
+        ["Easter Eggs"] = true,
         ["Engineer Versatile Weight Limit"] = 100,
     },
 }

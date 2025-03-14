@@ -200,7 +200,8 @@ local showdown_config_tab = function()
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 
-									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 5, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
+									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
+									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 4, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
 	
 								}},
 							}},
