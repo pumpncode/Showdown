@@ -216,7 +216,7 @@ local vacuum = {
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				local money = 0
+				local vacuum_money = 0
 				for i = #G.GAME.tags-1, 1, -1 do
 					G.GAME.tags[i]:yep('-', G.C.BLUE,function()
 						return true
@@ -224,7 +224,7 @@ local vacuum = {
 					G.E_MANAGER:add_event(Event({
 						trigger = 'immediate',
 						func = function()
-							money = money + tag.config.dollars
+							vacuum_money = vacuum_money + tag.config.dollars
 							return true
 						end
 					}))
@@ -232,7 +232,7 @@ local vacuum = {
 				G.E_MANAGER:add_event(Event({
 					trigger = 'immediate',
 					func = function()
-						ease_dollars(money)
+						ease_dollars(vacuum_money)
 						return true
 					end
 				}))
@@ -257,22 +257,14 @@ local conversion = {
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				local new_tag = 0
-				for i=#G.GAME.tags-1, 1, -1 do
-					G.GAME.tags[i]:nope()
-					G.E_MANAGER:add_event(Event({
-						trigger = 'immediate',
-						func = function()
-							new_tag = new_tag + 1
-							return true
-						end
-					}))
-				end
+				local tag_key = context.tag.key
 				G.E_MANAGER:add_event(Event({
 					trigger = 'immediate',
 					func = function()
-						for _=1, new_tag do
-							add_tag('tag_handy')
+						for i = #G.GAME.tags, 1, -1 do
+							local _tag = G.GAME.tags[i]
+							if _tag.key and _tag.key ~= tag_key then _tag:change_tag(tag_key) end
+							delay(0.5)
 						end
 						return true
 					end
@@ -330,6 +322,138 @@ local void = {
 	end
 }
 
+local playing = {
+	type = 'Switch',
+	order = 12,
+	key = "playing",
+	pos = coordinate(12, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local numbered = {
+	type = 'Switch',
+	order = 13,
+	key = "numbered",
+	pos = coordinate(13, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local royal = {
+	type = 'Switch',
+	order = 14,
+	key = "royal",
+	pos = coordinate(14, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local decimal = {
+	type = 'Switch',
+	order = 15,
+	key = "decimal",
+	pos = coordinate(15, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local top = {
+	type = 'Switch',
+	order = 16,
+	key = "top",
+	pos = coordinate(16, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local buffoon = {
+	type = 'Switch',
+	order = 17,
+	key = "buffoon",
+	pos = coordinate(17, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
 return {
 	enabled = Showdown.config["Tags"]["Switches"],
 	list = function ()
@@ -345,6 +469,12 @@ return {
 			conversion,
 			splendid,
 			void,
+			playing,
+			numbered,
+			royal,
+			decimal,
+			top,
+			buffoon,
 		}
 		return list
 	end,
@@ -361,6 +491,32 @@ return {
 				SMODS.Tag.inject(self)
 			end,
 		}
+
+		function Tag:change_tag(new_key) -- needs to be finished
+			self:init(new_key)
+			play_sound('other1')
+			self:juice_up(0.05, 0.02)
+			local idx
+			for i=1, #G.HUD_tags do
+				if G.HUD_tags[i] == self.HUD_tag then idx = i end
+				break
+			end
+			if idx ~= nil then
+				HUD_tag = UIBox{
+					definition = {n=G.UIT.ROOT, config={align = "cm",padding = 0.05, colour = G.C.CLEAR}, nodes={
+						self:generate_UI()
+					}},
+					config = {
+						align = G.HUD_tags[idx].config.align,
+						offset = G.HUD_tags[idx].config.offset,
+						major = G.HUD_tags[idx].config.major,
+					}
+				}
+				G.HUD_tags[idx] = HUD_tag
+				self.HUD_tag = HUD_tag
+			end
+			-- particles here
+		end
 	end,
 	order = 1,
     class = Showdown,

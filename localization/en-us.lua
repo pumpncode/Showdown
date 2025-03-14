@@ -1526,6 +1526,48 @@ return {
                     'gives {C:dark_edition}Negative{} to another one',
                 },
             },
+            tag_showdown_playing = {
+                name = "Playing Switch",
+                text = {
+                    'Generate {C:attention}4{} random',
+                    'playing cards',
+                },
+            },
+            tag_showdown_numbered = {
+                name = "Numbered Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'number cards',
+                },
+            },
+            tag_showdown_royal = {
+                name = "Royal Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'face cards',
+                },
+            },
+            tag_showdown_decimal = {
+                name = "Decimal Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'counterpart cards',
+                },
+            },
+            tag_showdown_top = {
+                name = "Top Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'ace cards',
+                },
+            },
+            tag_showdown_buffoon = {
+                name = "Buffoon Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'jokers',
+                },
+            },
         },
         Tarot={
             c_showdown_reflection = {

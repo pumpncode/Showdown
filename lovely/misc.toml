@@ -102,3 +102,34 @@ temp_achievement.stop_hover = function()
     temp_achievement.hover_tilt = 0
 end
 '''
+
+# Add a reroll tags debug button, part 1/2
+[[patches]]
+[patches.pattern]
+target = '''functions/UI_definitions.lua'''
+match_indent = true
+pattern = '''G.FUNCS.DT_lose_game = function() if G.STAGE == G.STAGES.RUN then G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false end end'''
+position = "after"
+payload = '''
+G.FUNCS.DT_reroll_tags = function()
+    if G.GAME and G.GAME.round_resets and G.GAME.round_resets.blind_states and G.GAME.round_resets.blind_tags then
+        if not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide') then
+            reroll_tags_and_blind('small')
+        end
+        if not (G.GAME.round_resets.blind_states.Big == 'Defeated' or G.GAME.round_resets.blind_states.Big == 'Skipped' or G.GAME.round_resets.blind_states.Big == 'Hide') then
+            reroll_tags_and_blind('big')
+        end
+    end
+end
+'''
+
+# Add a reroll tags debug button, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''functions/UI_definitions.lua'''
+match_indent = true
+pattern = '''UIBox_button{ label = {"Jimbo talk"}, button = "DT_jimbo_talk", minw = 1.7, minh = 0.4, scale = 0.35},'''
+position = "after"
+payload = '''
+UIBox_button{ label = {"Reroll tags"}, button = "DT_reroll_tags", minw = 1.7, minh = 0.4, scale = 0.35},
+'''
