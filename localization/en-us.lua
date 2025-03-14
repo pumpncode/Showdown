@@ -1568,6 +1568,63 @@ return {
                     'jokers',
                 },
             },
+            tag_showdown_destiny = {
+                name = "Destiny Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'tarot card',
+                },
+            },
+            tag_showdown_exoplanet = {
+                name = "Exoplanet Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'planet card',
+                },
+            },
+            tag_showdown_summoning = {
+                name = "Summoning Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'spectral card',
+                },
+            },
+            tag_showdown_parabola = {
+                name = "Parabola Switch",
+                text = {
+                    'Generate {C:attention}2{} random',
+                    'mathematic card',
+                },
+            },
+            tag_showdown_execute = {
+                name = "Execute Switch",
+                text = {
+                    'The next joker in shop',
+                    'becomes {C:attention}Eternal{} and {C:attention}free',
+                },
+            },
+            tag_showdown_encore = {
+                name = "Encore Switch",
+                text = {
+                    'Next shop reroll gives',
+                    'you {C:attention}identical{} cards as',
+                    'before rerolling',
+                },
+            },
+            tag_showdown_offering = {
+                name = "Offering Switch",
+                text = {
+                    'The next {C:attention}voucher',
+                    'in shop is free',
+                },
+            },
+            tag_showdown_mega_mystery = {
+                name = "Mega Mystery Switch",
+                text = {
+                    'Immediatly open {C:attention}2{} free',
+                    'random {C:attention}Mega Packs',
+                },
+            },
         },
         Tarot={
             c_showdown_reflection = {

@@ -454,6 +454,186 @@ local buffoon = {
 	end
 }
 
+-----------
+
+local destiny = {
+	type = 'Switch',
+	order = 18,
+	key = "destiny",
+	pos = coordinate(18, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local exoplanet = {
+	type = 'Switch',
+	order = 19,
+	key = "exoplanet",
+	pos = coordinate(19, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local summoning = {
+	type = 'Switch',
+	order = 20,
+	key = "summoning",
+	pos = coordinate(20, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local parabola = {
+	type = 'Switch',
+	order = 21,
+	key = "parabola",
+	pos = coordinate(21, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local execute = {
+	type = 'Switch',
+	order = 22,
+	key = "execute",
+	pos = coordinate(26, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local encore = {
+	type = 'Switch',
+	order = 23,
+	key = "encore",
+	pos = coordinate(28, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local offering = {
+	type = 'Switch',
+	order = 24,
+	key = "offering",
+	pos = coordinate(29, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local mega_mystery = {
+	type = 'Switch',
+	order = 25,
+	key = "mega_mystery",
+	pos = coordinate(27, 8),
+	config = { type = "immediate" },
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			local lock = tag.ID
+			G.CONTROLLER.locks[lock] = true
+			tag:yep('+', G.C.BLUE,function()
+				print('bleeeeeh :P')
+				G.CONTROLLER.locks[lock] = nil
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+-----------
+
 return {
 	enabled = Showdown.config["Tags"]["Switches"],
 	list = function ()
@@ -475,6 +655,14 @@ return {
 			decimal,
 			top,
 			buffoon,
+			destiny,
+			exoplanet,
+			summoning,
+			parabola,
+			execute,
+			encore,
+			offering,
+			mega_mystery,
 		}
 		return list
 	end,
