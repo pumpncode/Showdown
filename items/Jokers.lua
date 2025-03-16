@@ -2054,6 +2054,35 @@ local break_the_ice = {
     end,
 }
 
+local funnel = {
+    type = 'Joker',
+    order = 64,
+    key = 'funnel',
+    name = 'funnel',
+    atlas = "showdown_jokers",
+    pos = coordinate(68),
+    config = {extra = {x_chips = 1, x_chips_scale = 0.2}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
+	end,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.using_tag and not context.blueprint then
+            card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS,
+                card = card
+            }
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.x_chips > 1 then
+            return {
+                x_chips = card.ability.extra.x_chips
+            }
+        end
+    end,
+}
+
 -- Cryptid
 
 local infection = {
@@ -2158,6 +2187,7 @@ return {
             matplotlib,
             window,
             break_the_ice,
+            funnel,
             infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
@@ -2320,9 +2350,56 @@ return {
             end
         end
 
+        local TagApply_to_runRef = Tag.apply_to_run
+        function Tag:apply_to_run(_context)
+            if not self.triggered then
+                if self.config.type == _context.type or next(find_joker('funnel')) then
+                    SMODS.calculate_context({using_tag = true, tag = self})
+                end
+                if #find_joker('funnel') == 0 then
+                    return TagApply_to_runRef(self, _context)
+                else
+                    G.E_MANAGER:add_event(Event({
+                    delay = 0.4,
+                    trigger = 'after',
+                    func = (function()
+                        attention_text({
+                            text = '-',
+                            colour = G.C.WHITE,
+                            scale = 1, 
+                            hold = 0.3/G.SETTINGS.GAMESPEED,
+                            cover = self.HUD_tag,
+                            cover_colour = G.C.CHIPS,
+                            align = 'cm',
+                            })
+                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                        play_sound('negative', 1.6 + math.random()*0.1, 0.4)
+                        return true
+                    end)
+                }))
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        self.HUD_tag.states.visible = false
+                        return true
+                    end)
+                }))
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.7,
+                    func = (function()
+                        self:remove()
+                        return true
+                    end)
+                }))
+                    self.triggered = true
+                end
+            end
+        end
+
         Showdown.tag_related_joker['j_diet_cola'] = true
         Showdown.tag_related_joker['j_showdown_label'] = true
         Showdown.tag_related_joker['j_showdown_pop_up'] = true
+        Showdown.tag_related_joker['j_showdown_funnel'] = true
         if (SMODS.Mods["Cryptid"] or {}).can_load then
             Showdown.tag_related_joker['j_cry_pickle'] = true
             Showdown.tag_related_joker['j_cry_pity_prize'] = true

@@ -1148,6 +1148,15 @@ return {
                     '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
                 },
             },
+            j_showdown_funnel = {
+                name = 'Funnel',
+                text = {
+                    'This joker gain {X:chips,C:white}X#1#{} Chips',
+                    'when a tag is {C:attention}gained',
+                    'Tag {C:attention}no longer{} triggers',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
+                },
+            },
         },
         Other={
             showdown_static = {
