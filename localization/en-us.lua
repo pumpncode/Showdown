@@ -1538,70 +1538,70 @@ return {
             tag_showdown_playing = {
                 name = "Playing Switch",
                 text = {
-                    'Generate {C:attention}4{} random',
+                    'Gives {C:attention}4{} random',
                     'playing cards',
                 },
             },
             tag_showdown_numbered = {
                 name = "Numbered Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'number cards',
                 },
             },
             tag_showdown_royal = {
                 name = "Royal Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'face cards',
                 },
             },
             tag_showdown_decimal = {
                 name = "Decimal Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'counterpart cards',
                 },
             },
             tag_showdown_top = {
                 name = "Top Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'ace cards',
                 },
             },
             tag_showdown_buffoon = {
                 name = "Buffoon Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'jokers',
                 },
             },
             tag_showdown_destiny = {
                 name = "Destiny Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'tarot card',
                 },
             },
             tag_showdown_exoplanet = {
                 name = "Exoplanet Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'planet card',
                 },
             },
             tag_showdown_summoning = {
                 name = "Summoning Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'spectral card',
                 },
             },
             tag_showdown_parabola = {
                 name = "Parabola Switch",
                 text = {
-                    'Generate {C:attention}2{} random',
+                    'Gives {C:attention}2{} random',
                     'mathematic card',
                 },
             },
@@ -1630,8 +1630,8 @@ return {
             tag_showdown_mega_mystery = {
                 name = "Mega Mystery Switch",
                 text = {
-                    'Immediatly open {C:attention}2{} free',
-                    'random {C:attention}Mega Packs',
+                    'Gives {C:attention}2{} free',
+                    '{C:attention}Random Packs',
                 },
             },
         },

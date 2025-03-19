@@ -46,3 +46,23 @@ position = 'before'
 payload = '''
 if G.GAME.burning_double_hands then G.GAME.blind.dollars = 0 end
 '''
+
+# Put switches after tags in collection
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/overrides.lua"]'
+match_indent = true
+pattern = '''local tag_tab = SMODS.collection_pool(G.P_TAGS)'''
+position = 'after'
+payload = '''
+local switches = {}
+local tags = {}
+for _, v in ipairs(tag_tab) do
+    if v.type == 'Switch' then table.insert(switches, v)
+    else table.insert(tags, v)
+    end
+end
+tag_tab = {}
+for _, v in ipairs(tags) do table.insert(tag_tab, v) end
+for _, v in ipairs(switches) do table.insert(tag_tab, v) end
+'''
