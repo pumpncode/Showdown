@@ -47,6 +47,66 @@ payload = '''
 if G.GAME.burning_double_hands then G.GAME.blind.dollars = 0 end
 '''
 
+# Offering Switch
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''if self.area and self.ability.couponed and (self.area == G.shop_jokers or self.area == G.shop_booster) then self.cost = 0 end'''
+position = 'at'
+payload = '''
+if self.area and self.ability.couponed and (self.area == G.shop_jokers or self.area == G.shop_booster or self.area == G.shop_vouchers) then self.cost = 0 end
+'''
+
+# Encore Switch, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''
+for i = #G.shop_jokers.cards,1, -1 do
+    local c = G.shop_jokers:remove_card(G.shop_jokers.cards[i])
+    c:remove()
+    c = nil
+end
+'''
+position = 'at'
+payload = '''
+local cards_to_remove = {}
+for i = #G.shop_jokers.cards,1, -1 do
+    local card = G.shop_jokers:remove_card(G.shop_jokers.cards[i])
+    table.insert(cards_to_remove, card)
+end
+G.GAME.rerolled_cards = {}
+for i = #cards_to_remove, 1, -1 do
+    local card = cards_to_remove[i]
+    local card_infos = {
+        set = card.ability.set,
+        key = card.config.center.key,
+        enhancement = card.ability.set == 'Enhanced' and card.config.center,
+        seal = card.seal,
+        edition = card.ability.edition and { [card.ability.edition] = true },
+        stickers = {}
+    }
+    for _, v in pairs(SMODS.Stickers) do
+        if card.ability[v.key] then table.insert(card_infos.stickers, v.key) end
+    end
+    table.insert(G.GAME.rerolled_cards, card_infos)
+    cards_to_remove[i]:remove()
+end
+'''
+
+# Encore Switch, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''G.GAME.round_scores.times_rerolled.amt = G.GAME.round_scores.times_rerolled.amt + 1'''
+position = 'after'
+payload = '''
+G.GAME.rerolled = true
+'''
+
 # Put switches after tags in collection
 [[patches]]
 [patches.pattern]

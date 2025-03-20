@@ -1538,71 +1538,76 @@ return {
             tag_showdown_playing = {
                 name = "Playing Switch",
                 text = {
-                    'Gives {C:attention}4{} random',
+                    'Gives {C:attention}#1#{} random',
                     'playing cards',
                 },
             },
             tag_showdown_numbered = {
                 name = "Numbered Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'number cards',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:attention}number{} cards',
                 },
             },
             tag_showdown_royal = {
                 name = "Royal Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'face cards',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:attention}face{} cards',
                 },
             },
             tag_showdown_decimal = {
                 name = "Decimal Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'counterpart cards',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:counterpart_ranks}counterpart{} cards',
                 },
             },
             tag_showdown_top = {
                 name = "Top Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'ace cards',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:attention}ace{} cards',
                 },
             },
             tag_showdown_buffoon = {
                 name = "Buffoon Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
+                    'Gives {C:attention}#1#{} random',
                     'jokers',
+                    '{C:inactive}(Must have room){}',
                 },
             },
             tag_showdown_destiny = {
                 name = "Destiny Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'tarot card',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:tarot}tarot{} card',
+                    '{C:inactive}(Must have room){}',
                 },
             },
             tag_showdown_exoplanet = {
                 name = "Exoplanet Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'planet card',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:planet}planet{} card',
+                    '{C:inactive}(Must have room){}',
                 },
             },
             tag_showdown_summoning = {
                 name = "Summoning Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'spectral card',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:spectral}spectral{} card',
+                    '{C:inactive}(Must have room){}',
                 },
             },
             tag_showdown_parabola = {
                 name = "Parabola Switch",
                 text = {
-                    'Gives {C:attention}2{} random',
-                    'mathematic card',
+                    'Gives {C:attention}#1#{} random',
+                    '{C:showdown_calculus}mathematic{} card',
+                    '{C:inactive}(Must have room){}',
                 },
             },
             tag_showdown_execute = {
@@ -1623,15 +1628,15 @@ return {
             tag_showdown_offering = {
                 name = "Offering Switch",
                 text = {
-                    'The next {C:attention}voucher',
-                    'in shop is free',
+                    'The next {C:attention}vouchers',
+                    'in shop are free',
                 },
             },
             tag_showdown_mega_mystery = {
                 name = "Mega Mystery Switch",
                 text = {
-                    'Gives {C:attention}2{} free',
-                    '{C:attention}Random Packs',
+                    'Creates {C:attention}#1#{}',
+                    '{C:attention}Mystery Switch',
                 },
             },
         },

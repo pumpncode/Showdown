@@ -287,13 +287,24 @@ local splendid = {
 	min_ante = 2,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			local can_apply_to_jokers = {}
+			if G.jokers and G.jokers.cards then
+				for _, v in ipairs(G.jokers.cards) do
+					if not v.edition then table.insert(can_apply_to_jokers, v) end
+				end
+			end
+			if #can_apply_to_jokers > 0 then
+				tag:yep('+', G.C.BLUE,function()
+					local available_editions = {}
+					for _, v in ipairs(G.P_CENTER_POOLS.Edition) do
+						table.insert(available_editions, v.key)
+					end
+					local edition = poll_edition('splendid_switch', nil, true, true, available_editions) -- this doesn't work because of edition weight problems and i want to explode
+					can_apply_to_jokers[math.random(#can_apply_to_jokers)]:set_edition(edition)
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
@@ -312,7 +323,30 @@ local void = {
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local can_apply_to_jokers = {}
+				local can_destroy_jokers = {}
+				if G.jokers and G.jokers.cards then
+					for _, v in ipairs(G.jokers.cards) do
+						if not v.edition then table.insert(can_apply_to_jokers, v) end
+						if not v.ability.eternal then table.insert(can_destroy_jokers, v) end
+					end
+				end
+				if #can_apply_to_jokers > 0 and #can_destroy_jokers > 0 then
+					local joker = can_destroy_jokers[math.random(#can_destroy_jokers)]
+					if findInTable(joker, can_apply_to_jokers) then
+						table.remove(joker)
+					end
+					if #can_apply_to_jokers > 0 then
+						tag:yep('+', G.C.BLUE,function()
+							play_sound('tarot1')
+							joker:start_dissolve(nil, true)
+							can_apply_to_jokers[math.random(#can_apply_to_jokers)]:set_edition({negative = true})
+							return true
+						end)
+					else tag:nope()
+					end
+				else tag:nope()
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -327,14 +361,24 @@ local playing = {
 	order = 12,
 	key = "playing",
 	pos = coordinate(12, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 4 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local ranks = get_all_ranks()
+				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				for _=1, tag.config.cards_generated do
+					create_card_in_deck(
+						pseudorandom_element(ranks, pseudoseed('playing')),
+						pseudorandom_element(suits, pseudoseed('playing'))
+					)
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -349,14 +393,24 @@ local numbered = {
 	order = 13,
 	key = "numbered",
 	pos = coordinate(13, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local ranks = get_all_ranks({noFace = true})
+				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				for _=1, tag.config.cards_generated do
+					create_card_in_deck(
+						pseudorandom_element(ranks, pseudoseed('playing')),
+						pseudorandom_element(suits, pseudoseed('playing'))
+					)
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -371,14 +425,24 @@ local royal = {
 	order = 14,
 	key = "royal",
 	pos = coordinate(14, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local ranks = get_all_ranks({onlyFace = true})
+				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				for _=1, tag.config.cards_generated do
+					create_card_in_deck(
+						pseudorandom_element(ranks, pseudoseed('playing')),
+						pseudorandom_element(suits, pseudoseed('playing'))
+					)
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -391,16 +455,30 @@ local royal = {
 local decimal = {
 	type = 'Switch',
 	order = 15,
+    activated = { Showdown.config["Ranks"] },
 	key = "decimal",
 	pos = coordinate(15, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local ranks = get_all_ranks({onlyCounterpart = true})
+				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				for _=1, tag.config.cards_generated do
+					create_card_in_deck(
+						pseudorandom_element(ranks, pseudoseed('playing')),
+						pseudorandom_element(suits, pseudoseed('playing'))
+					)
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -415,14 +493,24 @@ local top = {
 	order = 16,
 	key = "top",
 	pos = coordinate(16, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
 			local lock = tag.ID
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
+				local ranks = get_all_ranks({noVanilla = true, noModded = true, whitelist = {'Ace'}})
+				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				for _=1, tag.config.cards_generated do
+					create_card_in_deck(
+						pseudorandom_element(ranks, pseudoseed('playing')),
+						pseudorandom_element(suits, pseudoseed('playing'))
+					)
+				end
 				G.CONTROLLER.locks[lock] = nil
 				return true
 			end)
@@ -437,41 +525,64 @@ local buffoon = {
 	order = 17,
 	key = "buffoon",
 	pos = coordinate(17, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'buffoon')
+					card:add_to_deck()
+					G.jokers:emplace(card)
+					G.GAME.joker_buffer = G.GAME.joker_buffer - 1
+					for _=2, tag.config.cards_generated do
+						if G.jokers and #G.jokers.cards < G.jokers.config.card_limit then
+							card = create_card('Joker', G.jokers, nil, nil, nil, nil, nil, 'buffoon')
+							card:add_to_deck()
+							G.jokers:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
 	end
 }
 
------------
-
 local destiny = {
 	type = 'Switch',
 	order = 18,
 	key = "destiny",
 	pos = coordinate(18, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'destiny')
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					for _=2, tag.config.cards_generated do
+						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+							card = create_card('Tarot', G.consumeables, nil, nil, nil, nil, nil, 'destiny')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
@@ -483,17 +594,29 @@ local exoplanet = {
 	order = 19,
 	key = "exoplanet",
 	pos = coordinate(19, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'exoplanet')
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					for _=2, tag.config.cards_generated do
+						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+							card = create_card('Planet', G.consumeables, nil, nil, nil, nil, nil, 'exoplanet')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
@@ -505,17 +628,29 @@ local summoning = {
 	order = 20,
 	key = "summoning",
 	pos = coordinate(20, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'summoning')
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					for _=2, tag.config.cards_generated do
+						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+							card = create_card('Spectral', G.consumeables, nil, nil, nil, nil, nil, 'summoning')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
@@ -525,19 +660,67 @@ local summoning = {
 local parabola = {
 	type = 'Switch',
 	order = 21,
+    activated = { Showdown.config["Consumeables"]["Mathematics"] },
 	key = "parabola",
 	pos = coordinate(21, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
-			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
-				return true
-			end)
+			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Mathematic', G.consumeables, nil, nil, nil, nil, nil, 'parabola')
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					for _=2, tag.config.cards_generated do
+						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+							card = create_card('Mathematic', G.consumeables, nil, nil, nil, nil, nil, 'parabola')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
+local operation = {
+	type = 'Switch',
+	order = 22,
+    activated = { Showdown.config["Consumeables"]["Logics"] },
+	key = "operation",
+	pos = coordinate(22, 8),
+	config = { type = "immediate", cards_generated = 2 },
+    loc_vars = function(self, info_queue, tag)
+		return { vars = { tag.config.cards_generated } }
+	end,
+	min_ante = 1,
+	apply = function(self, tag, context)
+		if context.type == "immediate" then
+			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+				tag:yep('+', G.C.BLUE,function()
+					local card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+					card:add_to_deck()
+					G.consumeables:emplace(card)
+					for _=2, tag.config.cards_generated do
+						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
+							card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+						end
+					end
+					return true
+				end)
+			else tag:nope()
+			end
 			tag.triggered = true
 			return true
 		end
@@ -546,62 +729,75 @@ local parabola = {
 
 local execute = {
 	type = 'Switch',
-	order = 22,
+	order = 23,
 	key = "execute",
 	pos = coordinate(26, 8),
-	config = { type = "immediate" },
+	config = { type = "store_joker_create" },
 	min_ante = 1,
 	apply = function(self, tag, context)
-		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
+		if context.type == "store_joker_create" then -- change context to store_joker_modify
+			local card = create_card('Joker', context.area, nil, nil, nil, nil, nil, 'execute')
+			create_shop_card_ui(card, 'Joker', context.area)
+			card.states.visible = false
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
+				card:start_materialize()
+				card.ability.eternal = true
+				card.ability.couponed = true
+				card:set_cost()
 				return true
 			end)
 			tag.triggered = true
-			return true
+			return card
 		end
 	end
 }
 
-local encore = {
+local encore = { -- annoying
 	type = 'Switch',
-	order = 23,
+	order = 24,
 	key = "encore",
 	pos = coordinate(28, 8),
-	config = { type = "immediate" },
+	config = { type = "store_joker_create" },
 	min_ante = 1,
 	apply = function(self, tag, context)
-		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
+		if context.type == "store_joker_create" and G.GAME.rerolled then
+			for _, v in ipairs(G.GAME.rerolled_cards) do
+				local card = SMODS.create_card({set = v.set, area = context.area, key = v.key, enhancement = v.enhancement, seal = v.seal, edition = v.edition, stickers = v.stickers})
+				create_shop_card_ui(card, v.set, context.area)
+			end
+			local final_card
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
+				for i=1, #context.area.cards do
+					local card = context.area.cards[i]
+					card:start_materialize()
+					if i == #context.area.cards then
+						final_card = card
+					end
+				end
 				return true
 			end)
 			tag.triggered = true
-			return true
+			return final_card
 		end
 	end
 }
 
 local offering = {
 	type = 'Switch',
-	order = 24,
+	order = 25,
 	key = "offering",
 	pos = coordinate(29, 8),
-	config = { type = "immediate" },
+	config = { type = "shop_final_pass" },
 	min_ante = 1,
 	apply = function(self, tag, context)
-		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
+		if context.type == "shop_final_pass" and G.shop then
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
+				if G.shop_vouchers then
+					for _, v in pairs(G.shop_vouchers.cards) do
+						v.ability.couponed = true
+						v:set_cost()
+					end
+				end
 				return true
 			end)
 			tag.triggered = true
@@ -612,18 +808,21 @@ local offering = {
 
 local mega_mystery = {
 	type = 'Switch',
-	order = 25,
+	order = 26,
 	key = "mega_mystery",
 	pos = coordinate(27, 8),
-	config = { type = "immediate" },
+	config = { type = "immediate", tags = 2 },
+    loc_vars = function(self, info_queue, tag)
+        --info_queue[#info_queue+1] = {set = 'Switch', key = 'tag_showdown_mystery'}
+		return { vars = { tag.config.tags } }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "immediate" then
-			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
-				print('bleeeeeh :P')
-				G.CONTROLLER.locks[lock] = nil
+				for _=1, tag.config.tags do
+					add_tag(Tag('tag_showdown_mystery'))
+				end
 				return true
 			end)
 			tag.triggered = true
@@ -631,8 +830,6 @@ local mega_mystery = {
 		end
 	end
 }
-
------------
 
 return {
 	enabled = Showdown.config["Tags"]["Switches"],
@@ -643,7 +840,7 @@ return {
 		gift,
 		burning,
 		duplicate,
-		souvenir,
+		--souvenir,
 		vacuum,
 		conversion,
 		splendid,
@@ -658,6 +855,7 @@ return {
 		exoplanet,
 		summoning,
 		parabola,
+		operation,
 		execute,
 		encore,
 		offering,
@@ -701,6 +899,12 @@ return {
 				self.HUD_tag = HUD_tag
 			end
 			-- particles here
+		end
+
+		local new_roundRef = new_round
+		function new_round()
+			G.GAME.rerolled = false
+			new_roundRef()
 		end
 	end,
 	order = 1,
