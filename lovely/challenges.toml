@@ -16,7 +16,19 @@ if args.challenge and args.challenge.id == 'c_showdown_7LB2WVPK' then
 end
 '''
 
-# All in One blind scaling
+# All in One blind scaling, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+pattern = '''elseif v.id == 'no_shop_jokers' then'''
+position = 'before'
+payload = '''
+elseif v.id == 'showdown_exponential_blinds' then
+    self.GAME.modifiers.showdown_exponential_blinds = true
+'''
+
+# All in One blind scaling, part 2/3
 [[patches]]
 [patches.pattern]
 target = 'blind.lua'
@@ -24,5 +36,16 @@ match_indent = true
 pattern = '''self.chips = get_blind_amount(G.GAME.round_resets.ante)*self.mult*G.GAME.starting_params.ante_scaling'''
 position = 'after'
 payload = '''
-self.chips = self.chips*(G.GAME.modifiers.no_extra_hand_money and G.GAME.round_resets.ante or 1)
+self.chips = self.chips*(G.GAME.modifiers.showdown_exponential_blinds and G.GAME.round_resets.ante or 1)
+'''
+
+# All in One blind scaling, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+match_indent = true
+pattern = '''local blind_amt = get_blind_amount(G.GAME.round_resets.blind_ante)*blind_choice.config.mult*G.GAME.starting_params.ante_scaling'''
+position = 'after'
+payload = '''
+blind_amt = blind_amt*(G.GAME.modifiers.showdown_exponential_blinds and G.GAME.round_resets.ante or 1)
 '''

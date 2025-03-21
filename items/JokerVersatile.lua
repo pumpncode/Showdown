@@ -6,7 +6,7 @@ local versatile_joker = {
     pos = coordinate(1),
     config = { sprite = {x = 0, y = 0, blueprint = false}, extra = {
         money = 1,                                  -- Red Deck
-        xmult_mod = 0.1,                             -- Blue Deck
+        xmult_mod = 0.1, x_mult = 1,                 -- Blue Deck
         xchips = 1.5,                                -- Black Deck
         fool_copy = 1,                               -- Magic Deck
         planet = 1,                                  -- Nebula Deck
@@ -23,7 +23,7 @@ local versatile_joker = {
             if G.GAME.selected_back.name == 'Red Deck' then
                 loc.vars = { card.ability.extra.money }
             elseif G.GAME.selected_back.name == 'Blue Deck' then
-                loc.vars = { card.ability.extra.xmult_mod, card.ability.x_mult }
+                loc.vars = { card.ability.extra.xmult_mod, card.ability.extra.x_mult }
             elseif G.GAME.selected_back.name == 'Black Deck' then
                 loc.vars = { card.ability.extra.xchips }
             elseif G.GAME.selected_back.name == 'Magic Deck' then
@@ -97,7 +97,7 @@ local versatile_joker_all_in_one = {
     pos = coordinate(23), soul_pos = coordinate(24),
     config = { extra = {
         money = 1,                                  -- Red Deck
-        xmult_mod = 0.1,                             -- Blue Deck
+        xmult_mod = 0.1, x_mult = 1,                 -- Blue Deck
         xchips = 1.5,                                -- Black Deck
         fool_copy = 1,                               -- Magic Deck
         planet = 1,                                  -- Nebula Deck
@@ -116,7 +116,7 @@ local versatile_joker_all_in_one = {
             (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) '
         return { key = 'j_showdown_versatile_joker_all_in_one', vars = {
             card.ability.extra.money,
-            card.ability.extra.xmult_mod, card.ability.x_mult,
+            card.ability.extra.xmult_mod, card.ability.extra.x_mult,
             card.ability.extra.xchips,
             card.ability.extra.fool_copy,
             card.ability.extra.planet,
@@ -223,11 +223,15 @@ return {
         end }
         Showdown.versatile['Blue Deck'] = { desc = 'j_showdown_versatile_joker_blue', pos = coordinate(3), blueprint = true, calculate = function(self, card, context)
             if not context.blueprint and context.cardarea == G.jokers and context.before then
-                card.ability.x_mult = card.ability.x_mult + card.ability.extra.xmult_mod
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.xmult_mod
                 return {
                     message = localize('k_upgrade_ex'),
                     colour = G.C.MULT,
                     card = card
+                }
+            elseif context.joker_main and card.ability.extra.x_mult > 1 then
+                return {
+                    x_mult = card.ability.extra.x_mult,
                 }
             end
         end }

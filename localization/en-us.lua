@@ -1015,7 +1015,7 @@ return {
                     '{C:blue,s:0.8}Common{s:0.8} and {C:red,s:0.8}Rare{s:0.8} Jokers each give {X:blue,C:white,s:0.8}X#4#{s:0.8} Chips',
                     '{C:attention,s:0.8}+1{s:0.8} Consumable slot',
                     '{C:purple,s:0.8}The Fool{s:0.8} creates {C:attention,s:0.8}#5#{s:0.8} additional card',
-                    '{C:planet,s:0.8}Planet{s:0.8} cards give {C:attention,s:0.8}#3#{s:0.8} additional level',
+                    '{C:planet,s:0.8}Planet{s:0.8} cards give {C:attention,s:0.8}#6#{s:0.8} additional level',
                     '{s:0.8}All {C:spectral,s:0.8}Spectral{s:0.8} cards and {C:spectral,s:0.8}Spectral Packs{s:0.8} in the shop are {C:attention,s:0.8}free',
                     '{C:attention,s:0.8}Non-face{s:0.8} cards are retriggered {C:attention,s:0.8}#7#{s:0.8} additional time',
                     '{s:0.8}Played cards with {C:hearts,s:0.8}Heart{s:0.8} suit give {C:mult,s:0.8}+#8#{s:0.8} Mult when scored',
