@@ -1,6 +1,17 @@
 return {
     descriptions = {
         Back={
+            b_showdown_deactivated = {
+                name = '',
+                text = {
+                    '',
+                },
+                unlock = {
+                    "Cannot unlock Deck",
+                    "due to deactivated",
+                    "content",
+                }
+            },
             b_showdown_Mirror = {
                 name = 'Mirror Deck',
                 text = {
@@ -67,6 +78,17 @@ return {
             },
         },
         Sleeve = {
+            sleeve_showdown_deactivated = {
+                name = "",
+                text = {
+                    '',
+                },
+                unlock = {
+                    "Cannot unlock Sleeve",
+                    "due to deactivated",
+                    "content",
+                }
+            },
             sleeve_showdown_Mirror = {
                 name = "Mirror Sleeve",
                 text = {
@@ -79,7 +101,8 @@ return {
             sleeve_showdown_Mirror_alt = {
                 name = "Mirror Sleeve",
                 text = {
-                    '???',
+                    'You start with a {C:dark_edition}Negative',
+                    '{C:attention}Hiding in the Details',
                 }
             },
             sleeve_showdown_Calculus = {
@@ -142,7 +165,8 @@ return {
             sleeve_showdown_Engineer_alt = {
                 name = "Engineer Sleeve",
                 text = {
-                    '???',
+                    'You start with a {C:attention}random',
+                    'Tag-related Joker',
                 }
             },
         },
@@ -2918,7 +2942,12 @@ return {
             -- Versatility achievement
             versatility_desc = {
                 'You haven\'t got Versatile Joker in these decks:',
-            }
+            },
+            versatility_desc_bruh = {
+                'I wanted to put a deck tracker here that told you all the decks',
+                'in which you didn\'t got Versatile Joker but it\'s very annoying to',
+                'make, so in the meantime i\'ll just put that here as a placeholder',
+            },
         },
         ranks={
             ['showdown_2.5'] = '2.5',

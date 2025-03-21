@@ -557,3 +557,15 @@ if eval_type == 'debuff' then
     end
 end
 '''
+
+# Versatile Joker (Engineer Deck)
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+pattern = 'elseif not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman"))) and'
+position = 'at'
+match_indent = true
+payload = '''
+elseif (not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman")))) or
+    (((next(find_joker("versatile_joker")) and G.GAME.selected_back.name == 'Engineer Deck') or next(find_joker("versatile_joker_all_in_one"))) and Showdown.tag_related_joker[v.key]) and
+'''

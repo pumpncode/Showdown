@@ -283,6 +283,18 @@ function prequire(m)
 end
 
 function Showdown.versatility_description(ach)
+	ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}
+	ach.children.speech_bubble = UIBox{
+		definition = Showdown.speech_bubble('versatility_desc_bruh', 'quips', nil, true),
+		config = ach.config.speech_bubble_align
+	}
+	ach.children.speech_bubble:set_role{
+		role_type = 'Major',
+		xy_bond = 'Strong',
+		r_bond = 'Strong',
+		major = ach,
+	}
+	--[[
 	if not G.PROFILES[G.SETTINGS.profile].versatility then G.PROFILES[G.SETTINGS.profile].versatility = {} end
 	local no_versatile_deck = {}
 	local decks = {}
@@ -319,4 +331,5 @@ function Showdown.versatility_description(ach)
 		r_bond = 'Strong',
 		major = ach,
 	}
+	]]--
 end

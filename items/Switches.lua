@@ -290,20 +290,22 @@ local splendid = {
 			local can_apply_to_jokers = {}
 			if G.jokers and G.jokers.cards then
 				for _, v in ipairs(G.jokers.cards) do
-					if not v.edition then table.insert(can_apply_to_jokers, v) end
+					if not v.edition and findInTable(G.GAME.edition_buffer_cards, v) == -1 then table.insert(can_apply_to_jokers, v) end
 				end
 			end
-			if #can_apply_to_jokers > 0 then
+			if not G.GAME.edition_buffer_cards then
+				G.GAME.edition_buffer_cards = {}
+			end
+			if #can_apply_to_jokers - #G.GAME.edition_buffer_cards > 0 then
+				local joker = can_apply_to_jokers[math.random(#can_apply_to_jokers)]
+				table.insert(G.GAME.edition_buffer_cards, joker)
 				tag:yep('+', G.C.BLUE,function()
-					local available_editions = {}
-					for _, v in ipairs(G.P_CENTER_POOLS.Edition) do
-						table.insert(available_editions, v.key)
-					end
-					local edition = poll_edition('splendid_switch', nil, true, true, available_editions) -- this doesn't work because of edition weight problems and i want to explode
-					can_apply_to_jokers[math.random(#can_apply_to_jokers)]:set_edition(edition)
+					local edition = poll_edition('splendid_switch', nil, true, true)
+					if edition then joker:set_edition(edition)
+					else print('No edition was polled with Splendid Switch') end
+					table.remove(G.GAME.edition_buffer_cards, findInTable(joker, G.GAME.edition_buffer_cards))
 					return true
 				end)
-			else tag:nope()
 			end
 			tag.triggered = true
 			return true
@@ -333,7 +335,7 @@ local void = {
 				end
 				if #can_apply_to_jokers > 0 and #can_destroy_jokers > 0 then
 					local joker = can_destroy_jokers[math.random(#can_destroy_jokers)]
-					if findInTable(joker, can_apply_to_jokers) then
+					if findInTable(joker, can_apply_to_jokers) ~= -1 then
 						table.remove(joker)
 					end
 					if #can_apply_to_jokers > 0 then

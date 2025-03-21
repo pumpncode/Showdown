@@ -5,16 +5,26 @@ local mirror = {
 	atlas = "showdown_sleeves",
 	pos = coordinate(1),
 	unlocked = false,
-	unlock_condition = {deck = "b_showdown_Mirror", stake = "stake_green"},
+	unlock_condition = {deck = "b_showdown_Mirror", stake = "stake_showdown_emerald"},
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Mirror" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Mirror" then
             SMODS.Back.obj_table["b_showdown_Mirror"].apply(self, sleeve)
         else
-			--
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					local card = SMODS.create_card({set = 'Joker', key = 'j_showdown_hiding_details', area = G.jokers, edition = {negative = true}})
+					card:add_to_deck()
+					G.jokers:emplace(card)
+					return true
+				end
+			}))
         end
 	end,
 }
@@ -86,23 +96,37 @@ local cheater = {
 	end,
 }
 
-local engineer = { -- Not done at all
+local engineer = {
 	type = 'Sleeve',
 	order = 5,
 	key = "Engineer",
 	atlas = "showdown_sleeves",
 	pos = coordinate(5),
 	unlocked = false,
-	unlock_condition = {deck = "b_showdown_Engineer", stake = "stake_purple"},
+	unlock_condition = {deck = "b_showdown_Engineer", stake = "stake_showdown_amethyst"},
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Engineer" then
             SMODS.Back.obj_table["b_showdown_Engineer"].apply(self, sleeve)
         else
-            --
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					local keys = {}
+					for k, v in pairs(Showdown.tag_related_joker) do
+						if v then table.insert(keys, k) end
+					end
+					local card = SMODS.create_card({set = 'Joker', key = keys[math.random(#keys)], area = G.jokers})
+					card:add_to_deck()
+					G.jokers:emplace(card)
+					return true
+				end
+			}))
         end
 	end
 }
