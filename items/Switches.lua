@@ -878,15 +878,15 @@ return {
 		}
 
 		function Tag:change_tag(new_key) -- needs to be finished
-			self:init(new_key)
-			play_sound('other1')
-			self:juice_up(0.05, 0.02)
 			local idx
 			for i=1, #G.HUD_tags do
 				if G.HUD_tags[i] == self.HUD_tag then idx = i end
 				break
 			end
 			if idx ~= nil then
+				self:init(new_key, nil, self.ability._blind_type)
+				play_sound('other1')
+				self:juice_up(0.05, 0.02)
 				HUD_tag = UIBox{
 					definition = {n=G.UIT.ROOT, config={align = "cm",padding = 0.05, colour = G.C.CLEAR}, nodes={
 						self:generate_UI()

@@ -1838,13 +1838,37 @@ local madotsuki = {
     name = 'madotsuki',
     atlas = "showdown_jokers",
     pos = coordinate(57), soul_pos = coordinate(58),
+    config = {extra = {edition_chance = 10}},
     loc_vars = function(self, info_queue, card)
-        --
+        return { vars = { G.GAME.probabilities.normal, card.ability.extra.edition_chance } }
 	end,
     rarity = 3, cost = 8,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if context.cardarea == G.jokers and context.after then
+            local no_editions = {}
+            for i=1, #context.scoring_hand do
+                local _card = context.scoring_hand[i]
+                if not _card.edition then
+                    table.insert(no_editions, _card)
+                end
+            end
+            for _, _card in ipairs(no_editions) do
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'immediate',
+                    blocking = false,
+                    blockable = false,
+                    func = (function()
+                        if pseudorandom('madotsuki') < G.GAME.probabilities.normal/card.ability.extra.edition_chance then
+                            local edition = poll_edition('madotsuki', nil, true, true)
+                            if edition then _card:set_edition(edition)
+                            else print('No edition was polled with Madotsuki') end
+                            delay(0.6)
+                        end
+                    return true end)
+                }))
+            end
+        end
     end,
 }
 
@@ -1855,13 +1879,25 @@ local urotsuki = {
     name = 'urotsuki',
     atlas = "showdown_jokers",
     pos = coordinate(59), soul_pos = coordinate(60),
+    config = {extra = {x_chips_scale = 0.15, x_chips = 1}},
     loc_vars = function(self, info_queue, card)
-        --
+        return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
 	end,
     rarity = 3, cost = 8,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if context.buying_card and not context.blueprint then
+            card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS,
+                card = card
+            }
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.x_chips > 1 then
+            return {
+                x_chips = card.ability.extra.x_chips
+            }
+        end
     end,
 }
 
@@ -1872,13 +1908,33 @@ local minnatsuki = {
     name = 'minnatsuki',
     atlas = "showdown_jokers",
     pos = coordinate(61), soul_pos = coordinate(62),
+    config = {extra = {mult_scale = 2, mult = 0}},
     loc_vars = function(self, info_queue, card)
-        --
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
     rarity = 3, cost = 8,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        --
+        if context.cardarea == G.jokers and context.before and not context.blueprint then
+            card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.MULT,
+                card = card
+            }
+        elseif context.other_joker and card ~= context.other_joker then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    context.other_joker:juice_up(0.5, 0.5)
+                    return true
+                end
+            }))
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult,
+                card = context.other_joker
+            }
+        end
     end,
 }
 

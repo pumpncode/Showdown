@@ -1118,19 +1118,25 @@ return {
             j_showdown_madotsuki = {
                 name = 'Madotsuki',
                 text = {
-                    'idk',
+                    'Scored cards have a {C:green}#1# in #2#{}',
+                    'chance to get a random',
+                    '{C:dark_edition}Edition{} after scoring',
                 },
             },
             j_showdown_urotsuki = {
                 name = 'Urotsuki',
                 text = {
-                    'idk',
+                    'This Joker gains {X:chips,C:white}X#1#{} Chips',
+                    'when a card is {C:attention}purchased{}',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
                 },
             },
             j_showdown_minnatsuki = {
                 name = 'Minnatsuki',
                 text = {
-                    'idk',
+                    'This joker gains {C:mult}+#1#{} mult after scoring',
+                    'Triggers only on {C:attention}other{} jokers',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 },
             },
             j_showdown_pop_up = {
