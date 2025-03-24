@@ -1206,16 +1206,18 @@ local bugged_seed = {
         if context.cardarea == G.jokers and context.after then
             local compatible_cards = {}
             for _, _card in ipairs(G.play.cards) do
-                if not (_card.base.value == '10' and _card.base.suit == 'Spades') then
+                if not (_card.base.value == '10' and _card.base.suit == 'Spades') and not _card.ability.bugged_spade then
                     table.insert(compatible_cards, _card)
                 end
             end
             if #compatible_cards > 0 then
                 local _card = pseudorandom_element(compatible_cards, pseudoseed('bugged_seed'))
+                _card.ability.bugged_spade = true
                 flipCard(_card, nil, #G.play.cards)
                 delay(0.2)
                 event({trigger = 'after', delay = 0.15, func = function()
                     assert(SMODS.change_base(_card, 'Spades', '10'))
+                    _card.ability.bugged_spade = nil
                 return true end})
                 unflipCard(_card, nil, #G.play.cards)
                 delay(0.6)
