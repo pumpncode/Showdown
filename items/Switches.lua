@@ -754,7 +754,7 @@ local execute = {
 	end
 }
 
-local encore = { -- annoying
+local encore = {
 	type = 'Switch',
 	order = 24,
 	key = "encore",
@@ -762,24 +762,26 @@ local encore = { -- annoying
 	config = { type = "store_joker_create" },
 	min_ante = 1,
 	apply = function(self, tag, context)
-		if context.type == "store_joker_create" and G.GAME.rerolled then
-			for _, v in ipairs(G.GAME.rerolled_cards) do
-				local card = SMODS.create_card({set = v.set, area = context.area, key = v.key, enhancement = v.enhancement, seal = v.seal, edition = v.edition, stickers = v.stickers})
-				create_shop_card_ui(card, v.set, context.area)
-			end
-			local final_card
+		print(context.type)
+		if context.type == "store_joker_create" and G.GAME.encore_card then -- why is triggered on true????? it didn't even triggered????????
+			local card = SMODS.create_card({
+				set = G.GAME.encore_card.set,
+				area = context.area,
+				key = G.GAME.encore_card.key,
+				enhancement = G.GAME.encore_card.enhancement,
+				seal = G.GAME.encore_card.seal,
+				edition = G.GAME.encore_card.edition,
+				stickers = G.GAME.encore_card.stickers
+			})
+			create_shop_card_ui(card, G.GAME.encore_card.set, context.area)
+			card.states.visible = false
+			G.GAME.encore_card = nil
 			tag:yep('+', G.C.BLUE,function()
-				for i=1, #context.area.cards do
-					local card = context.area.cards[i]
-					card:start_materialize()
-					if i == #context.area.cards then
-						final_card = card
-					end
-				end
+				card:start_materialize()
 				return true
 			end)
 			tag.triggered = true
-			return final_card
+			return card
 		end
 	end
 }
@@ -905,7 +907,7 @@ return {
 
 		local new_roundRef = new_round
 		function new_round()
-			G.GAME.rerolled = false
+			G.GAME.encore_card = nil
 			new_roundRef()
 		end
 	end,

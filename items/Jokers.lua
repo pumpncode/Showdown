@@ -2410,30 +2410,33 @@ return {
 
         local TagApply_to_runRef = Tag.apply_to_run
         function Tag:apply_to_run(_context)
-            if not self.triggered then
-                if self.config.type == _context.type or next(find_joker('funnel')) then
-                    SMODS.calculate_context({using_tag = true, tag = self})
-                end
-                if #find_joker('funnel') == 0 then
-                    return TagApply_to_runRef(self, _context)
-                else
-                    G.E_MANAGER:add_event(Event({
-                    delay = 0.4,
-                    trigger = 'after',
-                    func = (function()
-                        attention_text({
-                            text = '-',
-                            colour = G.C.WHITE,
-                            scale = 1, 
-                            hold = 0.3/G.SETTINGS.GAMESPEED,
-                            cover = self.HUD_tag,
-                            cover_colour = G.C.CHIPS,
-                            align = 'cm',
-                            })
-                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
-                        play_sound('negative', 1.6 + math.random()*0.1, 0.4)
-                        return true
-                    end)
+            if self.triggered then
+                print(self.key..' has been triggered')
+                return
+            end
+            if self.config.type == _context.type or next(find_joker('funnel')) then
+                SMODS.calculate_context({using_tag = true, tag = self})
+            end
+            if #find_joker('funnel') == 0 then
+                return TagApply_to_runRef(self, _context)
+            else
+                G.E_MANAGER:add_event(Event({
+                delay = 0.4,
+                trigger = 'after',
+                func = (function()
+                    attention_text({
+                        text = '-',
+                        colour = G.C.WHITE,
+                        scale = 1, 
+                        hold = 0.3/G.SETTINGS.GAMESPEED,
+                        cover = self.HUD_tag,
+                        cover_colour = G.C.CHIPS,
+                        align = 'cm',
+                        })
+                    play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+                    play_sound('negative', 1.6 + math.random()*0.1, 0.4)
+                    return true
+                end)
                 }))
                 G.E_MANAGER:add_event(Event({
                     func = (function()
@@ -2449,8 +2452,7 @@ return {
                         return true
                     end)
                 }))
-                    self.triggered = true
-                end
+                self.triggered = true
             end
         end
 

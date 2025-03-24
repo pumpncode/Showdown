@@ -1650,9 +1650,9 @@ return {
             tag_showdown_encore = {
                 name = "Encore Switch",
                 text = {
-                    'Next shop reroll gives',
-                    'you {C:attention}identical{} cards as',
-                    'before rerolling',
+                    'Next shop reroll contains',
+                    'your last {C:attention}purchased{} card',
+                    'from current shop',
                 },
             },
             tag_showdown_offering = {
