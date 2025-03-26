@@ -32,3 +32,32 @@ for _, v in ipairs(G.P_CENTER_POOLS.Tarot) do
 end
 if tarotNb <= args.tarot_count then
 '''
+
+# Strange Thing replaces cards in pools
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = "if v.no_pool_flag and G.GAME.pool_flags[v.no_pool_flag] then add = nil end"
+position = "before"
+payload = '''
+if G.GAME.infection and G.GAME.infection.triggered > 0 and _type ~= 'Tag' then
+    local pool_temp, cpt = {}, 1
+    for _, v in ipairs(_pool) do
+        table.insert(pool_temp, v)
+    end
+    while cpt <= G.GAME.infection.triggered or #pool_temp > 0 do
+        local idx_temp = math.random(#pool_temp)
+        local target, idx = pool_temp[idx_temp], -1
+        for i, v in pairs(_pool) do
+            if v == target then idx = i; break end
+        end
+        if idx ~= -1 then
+            _pool[idx] = 'c_showdown_strange_thing'
+            table.remove(pool_temp, idx_temp)
+        end
+        cpt = cpt + 1
+    end
+end
+
+'''

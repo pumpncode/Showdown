@@ -1415,7 +1415,7 @@ local money_cutter = {
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if args.type == 'interest' and args.money >= 20 then unlock_card(self) end
+        --if args.type == 'interest' and args.money >= 20 then unlock_card(self) end
     end,
     add_to_deck = function(self, card, from_debuff)
         G.GAME.modifiers.no_interest = true
@@ -1724,7 +1724,7 @@ local shady_dealer = {
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if args.type == 'money' and G.GAME.dollars <= -20 then unlock_card(self) end
+        --if args.type == 'money' and G.GAME.dollars <= -20 then unlock_card(self) end
     end,
     calculate = function(self, card, context)
         if context.setting_blind and not (context.blueprint_card or card).getting_sliced and G.GAME.dollars <= card.ability.extra.money then
@@ -2153,7 +2153,7 @@ local infection = {
     pos = coordinate(1),
     config = {extra = {Xmult = 1}},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.config.extra.Xmult } }
+        return { vars = { card.ability.extra.Xmult } }
 	end,
     rarity = 'cry_cursed', cost = 4,
     blueprint = true, perishable = false, eternal = false,
@@ -2179,7 +2179,9 @@ local infection = {
                     return true
                 end
             }))
-            G.GAME.infection_value = (G.GAME.infection_value or 1) * 2
+            if not G.GAME.infection then G.GAME.infection = {value = 1, triggered = 0, triggered_this_shop = false} end
+            G.GAME.infection.value = tonumber(('%%.%dg'):format(2.11):format((G.GAME.infection.value * 1.25)))
+            G.GAME.infection.triggered = G.GAME.infection.triggered + 1
             return {
                 message = localize('k_bye_bye'),
                 destroyed = true

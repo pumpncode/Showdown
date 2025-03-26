@@ -6,7 +6,7 @@ local strange = {
     pos = coordinate(1),
 	config = { extra = {Xmult_min = 1, Xmult_max = 2}},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.config.extra.Xmult_min, card.config.extra.Xmult_max } }
+        return { vars = { card.ability.extra.Xmult_min, card.ability.extra.Xmult_max } }
 	end,
 	can_use = function()
         return true
@@ -15,10 +15,14 @@ local strange = {
         local _card = SMODS.create_card({set = 'Joker', area = G.jokers, key = 'j_showdown_infection', edition = { negative = true }})
         _card:add_to_deck()
         G.jokers:emplace(_card)
-        _card.ability.extra.Xmult = tonumber(('%%.%dg'):format(2.11):format(card.config.extra.Xmult_min + (math.random() * card.config.extra.Xmult_max)))
+        _card.ability.extra.Xmult = tonumber(('%%.%dg'):format(2.11):format((card.ability.extra.Xmult_min + math.random() * card.ability.extra.Xmult_max)))
     end,
-    calculate = function(self, card, context)
-        -- G.GAME.infection_value
+    set_ability = function(self, card, initial, delay_sprites)
+        if G.GAME.infection and not G.GAME.infection.triggered_this_shop then -- strange thing values persist between games
+            card.ability.extra.Xmult_min = self.config.extra.Xmult_min * (G.GAME.infection and G.GAME.infection.value or 1)
+            card.ability.extra.Xmult_max = self.config.extra.Xmult_max * (G.GAME.infection and G.GAME.infection.value or 1)
+            G.GAME.infection.triggered_this_shop = true
+        end
     end,
 }
 
@@ -34,4 +38,13 @@ return {
 	atlases = {
 		{key = "showdown_cryptidUnique", path = "CrossMod/Cryptid/Unique.png", px = 71, py = 95},
 	},
+	exec = function()
+        local GFUNCStoggle_shopRef = G.FUNCS.toggle_shop
+        G.FUNCS.toggle_shop = function(e)
+            GFUNCStoggle_shopRef(e)
+            if G.shop and G.GAME.infection then
+                G.GAME.infection.triggered_this_shop = false
+            end
+        end
+	end,
 }

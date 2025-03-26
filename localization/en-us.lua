@@ -1903,7 +1903,7 @@ return {
             c_showdown_strange_thing = {
                 name = 'Strange Thing',
                 text = {
-                    'Creates a {C:attention}special joker{} with',
+                    'Creates a {C:dark_edition,E:1}Special Joker{} with',
                     'a random value from {C:attention}#1#{} to {C:attention}#2#{}',
                 }
             }
