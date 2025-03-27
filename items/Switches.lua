@@ -770,12 +770,16 @@ local encore = {
 				enhancement = G.GAME.encore_card.enhancement,
 				seal = G.GAME.encore_card.seal,
 				edition = G.GAME.encore_card.edition,
-				stickers = G.GAME.encore_card.stickers
+				stickers = G.GAME.encore_card.stickers,
+				no_edition = true,
+				no_sticker = true,
 			})
 			create_shop_card_ui(card, G.GAME.encore_card.set, context.area)
+			card.ability.couponed = G.GAME.encore_card.couponed
 			card.states.visible = false
 			G.GAME.encore_card = nil
 			tag:yep('+', G.C.BLUE,function()
+				card:set_cost()
 				card:start_materialize()
 				return true
 			end)

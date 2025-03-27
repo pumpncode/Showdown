@@ -75,7 +75,8 @@ G.GAME.encore_card = {
     enhancement = c1.ability.set == 'Enhanced' and c1.config.center or nil,
     seal = c1.seal,
     edition = c1.edition,
-    stickers = {}
+    stickers = {},
+    couponed = c1.ability.couponed,
 }
 for _, v in pairs(SMODS.Stickers) do
     if c1.ability[v.key] then table.insert(G.GAME.encore_card.stickers, v.key) end
@@ -115,4 +116,47 @@ position = 'at'
 payload = '''
 if card then self.triggered = true end
 return card
+'''
+
+# Encore Switch doesn't add stickers, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''if (area == G.shop_jokers) or (area == G.pack_cards) then'''
+position = 'at'
+payload = '''
+if ((area == G.shop_jokers) or (area == G.pack_cards)) and not SMODS.bypass_create_card_sticker then
+'''
+
+# Encore Switch doesn't add stickers, part 2/3
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+match_indent = true
+pattern = '''SMODS.bypass_create_card_edition = t.no_edition'''
+position = 'after'
+payload = '''
+SMODS.bypass_create_card_sticker = t.no_sticker
+'''
+
+# Encore Switch doesn't add stickers, part 3/3
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+match_indent = true
+pattern = '''SMODS.bypass_create_card_edition = nil'''
+position = 'after'
+payload = '''
+SMODS.bypass_create_card_sticker = nil
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''if sticker.should_apply and type(sticker.should_apply) == 'function' and sticker:should_apply(card, center, area) then'''
+position = 'at'
+payload = '''
+if sticker.should_apply and type(sticker.should_apply) == 'function' and sticker:should_apply(card, center, area) and not SMODS.bypass_create_card_sticker then
 '''

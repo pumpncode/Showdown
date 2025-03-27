@@ -1984,7 +1984,7 @@ return {
             -- Crossmod Config
             showdown_crossmod_config = "Crossmod Config",
             showdown_config_unloaded = "Mods in gray are not present/unloaded",
-            showdown_config_cryptid = "Cryptid",
+            showdown_config_cryptid = "Cryptid (there's nothing for now lol)",
             showdown_config_bunco = "Bunco",
             showdown_config_cardsleeves = "Card Sleeves",
             
