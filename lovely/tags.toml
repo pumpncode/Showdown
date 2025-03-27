@@ -101,3 +101,18 @@ tag_tab = {}
 for _, v in ipairs(tags) do table.insert(tag_tab, v) end
 for _, v in ipairs(switches) do table.insert(tag_tab, v) end
 '''
+
+# Doesn't trigger tag with store_joker_create context if no card was created
+[[patches]]
+[patches.pattern]
+target = 'tag.lua'
+match_indent = true
+pattern = '''
+self.triggered = true
+return card
+'''
+position = 'at'
+payload = '''
+if card then self.triggered = true end
+return card
+'''

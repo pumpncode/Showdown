@@ -762,8 +762,7 @@ local encore = {
 	config = { type = "store_joker_create" },
 	min_ante = 1,
 	apply = function(self, tag, context)
-		print(context.type)
-		if context.type == "store_joker_create" and G.GAME.encore_card then -- why is triggered on true????? it didn't even triggered????????
+		if context.type == "store_joker_create" and G.GAME.encore_card then
 			local card = SMODS.create_card({
 				set = G.GAME.encore_card.set,
 				area = context.area,
