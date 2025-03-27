@@ -1415,7 +1415,7 @@ local money_cutter = {
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        --if args.type == 'interest' and args.money >= 20 then unlock_card(self) end
+        if args.type == 'interest' and (type(args.money) == 'number' and args.money or to_big(args.money)) >= 20 then unlock_card(self) end
     end,
     add_to_deck = function(self, card, from_debuff)
         G.GAME.modifiers.no_interest = true
@@ -1724,7 +1724,7 @@ local shady_dealer = {
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        --if args.type == 'money' and G.GAME.dollars <= -20 then unlock_card(self) end
+        if args.type == 'money' and (type(G.GAME.dollars) == 'number' and G.GAME.dollars or to_big(G.GAME.dollars)) <= -20 then unlock_card(self) end
     end,
     calculate = function(self, card, context)
         if context.setting_blind and not (context.blueprint_card or card).getting_sliced and G.GAME.dollars <= card.ability.extra.money then
@@ -2248,7 +2248,7 @@ return {
             window,
             break_the_ice,
             funnel,
-            infection, -- Cryptid
+            --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
             math_teacher,
