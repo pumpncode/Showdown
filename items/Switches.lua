@@ -774,11 +774,13 @@ local encore = {
 				no_edition = true,
 				no_sticker = true,
 			})
+			local playing_card = G.GAME.encore_card.card
 			create_shop_card_ui(card, G.GAME.encore_card.set, context.area)
 			card.ability.couponed = G.GAME.encore_card.couponed
 			card.states.visible = false
 			G.GAME.encore_card = nil
 			tag:yep('+', G.C.BLUE,function()
+				if playing_card then card:set_base(playing_card) end
 				card:set_cost()
 				card:start_materialize()
 				return true

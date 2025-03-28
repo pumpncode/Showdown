@@ -63,16 +63,14 @@ if self.area and self.ability.couponed and (self.area == G.shop_jokers or self.a
 [patches.pattern]
 target = 'functions/button_callbacks.lua'
 match_indent = true
-pattern = '''
-if c1.ability.consumeable then
-    G.consumeables:emplace(c1)
-'''
+pattern = '''if c1.ability.set == 'Default' or c1.ability.set == 'Enhanced' then'''
 position = 'before'
 payload = '''
 G.GAME.encore_card = {
     set = c1.ability.set,
     key = c1.config.center.key,
-    enhancement = c1.ability.set == 'Enhanced' and c1.config.center or nil,
+    enhancement = (c1.ability.set == 'Default' or c1.ability.set == 'Enhanced') and c1.config.center.key,
+    card = (c1.ability.set == 'Default' or c1.ability.set == 'Enhanced') and c1.config.card,
     seal = c1.seal,
     edition = c1.edition,
     stickers = {},

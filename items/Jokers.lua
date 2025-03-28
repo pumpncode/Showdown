@@ -2412,10 +2412,7 @@ return {
 
         local TagApply_to_runRef = Tag.apply_to_run
         function Tag:apply_to_run(_context)
-            if self.triggered then
-                print(self.key..' has been triggered')
-                return
-            end
+            if self.triggered then return end
             if self.config.type == _context.type or next(find_joker('funnel')) then
                 SMODS.calculate_context({using_tag = true, tag = self})
             end
