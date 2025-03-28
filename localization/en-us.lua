@@ -1352,17 +1352,17 @@ return {
                 }
             },
             playing_card_zero={
-                text={
+                text = {
                     " {C:light_black}#1# of {C:black}Nothing ",
                 },
             },
             act_as={
-                text={
+                text = {
                     'Act as a #1#',
                 },
             },
             default_wild={
-                text={
+                text = {
                     'Can be used',
                     'as any suit',
                 },
@@ -1637,7 +1637,7 @@ return {
                 text = {
                     'Gives {C:attention}#1#{} random',
                     '{C:showdown_calculus}mathematic{} card',
-                    '{C:inactive}(Must have room){}',
+                    '{C:inactive}(Must have room)',
                 },
             },
             tag_showdown_execute = {
@@ -1653,6 +1653,16 @@ return {
                     'Next shop reroll contains',
                     'your last {C:attention}purchased{} card',
                     'from current shop',
+                    '{C:inactive}(Last purchased card: {C:attention}#1#{C:inactive})',
+                },
+            },
+            tag_showdown_encore_playing_card = {
+                name = "Encore Switch",
+                text = {
+                    'Next shop reroll contains',
+                    'your last {C:attention}purchased{} card',
+                    'from current shop',
+                    '{C:inactive}(Last purchased card: {C:attention}#1# of #2#{C:inactive})',
                 },
             },
             tag_showdown_offering = {
@@ -2007,6 +2017,7 @@ return {
             b_pull = "PULL",
             ph_money_switch = "Money Switch",
             ph_money_switch_end = "END",
+            nothing = "Nothing",
         },
         high_scores={},
         labels={

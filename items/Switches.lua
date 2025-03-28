@@ -461,11 +461,9 @@ local decimal = {
 	key = "decimal",
 	pos = coordinate(15, 8),
 	config = { type = "immediate", cards_generated = 2 },
-    loc_vars = function(self, info_queue, tag)
-		return { vars = { tag.config.cards_generated } }
-	end,
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+		return { vars = { tag.config.cards_generated } }
 	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
@@ -760,6 +758,24 @@ local encore = {
 	key = "encore",
 	pos = coordinate(28, 8),
 	config = { type = "store_joker_create" },
+    loc_vars = function(self, info_queue, card)
+		local vars = {}
+		if G.GAME.encore_card then
+			if G.GAME.encore_card.card then
+				table.insert(vars, localize(G.GAME.encore_card.card.value, 'ranks'))
+				if G.GAME.encore_card.card.value == 'showdown_Zero' then
+					table.insert(vars, localize('nothing'))
+				else
+					table.insert(vars, localize(G.GAME.encore_card.card.suit, 'suits_plural'))
+				end
+			else
+				table.insert(vars, localize{type = 'name_text', set = G.GAME.encore_card.set, key = G.GAME.encore_card.key})
+			end
+		else
+			table.insert(vars, localize('k_none'))
+		end
+		return { key = G.GAME.encore_card and G.GAME.encore_card.card and 'tag_showdown_encore_playing_card' or 'tag_showdown_encore', vars = vars }
+	end,
 	min_ante = 1,
 	apply = function(self, tag, context)
 		if context.type == "store_joker_create" and G.GAME.encore_card then
