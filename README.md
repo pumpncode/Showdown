@@ -21,4 +21,6 @@ The mod is compatible with some other mods, check this out:
 - Bunco:
   - 1 Tarot Card
 
+The mod content is configurable! You can deactivate any category of items or any mod compatibility in the mod config.
+
 You currently need **Steamodded Alpha 1.0.0** version **1409a** at least

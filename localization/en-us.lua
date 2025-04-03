@@ -1926,7 +1926,7 @@ return {
             ach_showdown_jean_paul_tag = 'Get Jean-Paul with the J-P Tag',
             ach_showdown_jimbodia = 'Get Ultimate Joker',
             ach_showdown_chains = 'Get Unshackled Joker',
-            ach_showdown_versatility = 'Get Versatile Joker on every deck at least once',
+            ach_showdown_versatility = 'Get Versatile Joker on every deck at least once (Challenge Deck excluded)',
             ach_showdown_blued = 'Get Blue',
             ach_showdown_metal_cap = 'Get the maximum discount with What a Steel!',
             ach_showdown_cronch = 'eat the banana',

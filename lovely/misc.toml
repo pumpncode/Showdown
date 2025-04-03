@@ -133,3 +133,16 @@ position = "after"
 payload = '''
 UIBox_button{ label = {"Reroll tags"}, button = "DT_reroll_tags", minw = 1.7, minh = 0.4, scale = 0.35},
 '''
+
+# How did we get here? achievement
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+match_indent = true
+pattern = '''G.GAME.round_resets.ante = G.GAME.round_resets.ante + mod'''
+position = "after"
+payload = '''
+if G.GAME.round_resets.ante <= -1 then
+    check_for_unlock({type = 'minecraft_reference'})
+end
+'''
