@@ -461,7 +461,7 @@ local decimal = {
 	key = "decimal",
 	pos = coordinate(15, 8),
 	config = { type = "immediate", cards_generated = 2 },
-    loc_vars = function(self, info_queue, card)
+    loc_vars = function(self, info_queue, tag)
         info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
 		return { vars = { tag.config.cards_generated } }
 	end,
@@ -867,7 +867,7 @@ return {
 		duplicate,
 		--souvenir,
 		vacuum,
-		conversion,
+		--conversion,
 		splendid,
 		void,
 		playing,
