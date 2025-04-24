@@ -131,11 +131,36 @@ local engineer = {
 	end
 }
 
+local chess = {
+	type = 'Sleeve',
+	order = 6,
+	key = "Chess",
+	atlas = "showdown_sleeves",
+	pos = coordinate(6),
+	unlocked = false,
+	unlock_condition = {deck = "b_showdown_Chess", stake = "stake_showdown_amethyst"},
+	loc_vars = function(self)
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+	end,
+	apply = function(self, sleeve)
+        CardSleeves.Sleeve.apply(self)
+		if self.get_current_deck_key() ~= "b_showdown_Chess" then
+            SMODS.Back.obj_table["b_showdown_Chess"].apply(self, sleeve)
+        else
+			G.GAME.showdown_chess_boosted = true
+        end
+	end
+}
+
 return {
 	enabled = (SMODS.Mods["CardSleeves"] or {}).can_load and Showdown.config["CrossMod"]["CardSleeves"],
 	list = function()
 		local list = {
 			starter,
+			chess,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)

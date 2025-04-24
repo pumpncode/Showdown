@@ -76,6 +76,22 @@ return {
                     "{V:1}#1#{} difficulty",
                 }
             },
+            b_showdown_Chess = {
+                name = 'Chess Deck',
+                text = {
+                    'Big Blinds are replaced',
+                    'by {C:attention}Chess Binds',
+                    'Black Chess Blinds have',
+                    '{C:attention}positive{} effects',
+                    'White Chess Blinds have',
+                    '{C:attention}negative{} effects',
+                },
+                unlock = {
+                    "Win a run with any",
+                    "deck on at least",
+                    "{V:1}#1#{} difficulty",
+                }
+            },
         },
         Sleeve = {
             sleeve_showdown_deactivated = {
@@ -169,6 +185,24 @@ return {
                     'Tag-related Joker',
                 }
             },
+            sleeve_showdown_Chess = {
+                name = "Chess Sleeve",
+                text = {
+                    'Big Blinds are replaced',
+                    'by {C:attention}Chess Binds',
+                    'Black Chess Blinds have',
+                    '{C:attention}positive{} effects',
+                    'White Chess Blinds have',
+                    '{C:attention}negative{} effects',
+                }
+            },
+            sleeve_showdown_Chess_alt = {
+                name = "Chess Sleeve",
+                text = {
+                    'Chess Blinds effects',
+                    'are {C:attention}boosted',
+                }
+            },
         },
         Blind={
             bl_showdown_latch = {
@@ -199,6 +233,116 @@ return {
                     'You cannot play',
                     'while having',
                     'discards',
+                }
+            },
+            bl_showdown_white_pawn = {
+                name = 'White Pawn',
+                text = {
+                    'X#1# Mult if played hand',
+                    'contains a #2#',
+                }
+            },
+            bl_showdown_black_pawn = {
+                name = 'Black Pawn',
+                text = {
+                    'X#1# Mult if played hand',
+                    'contains a #2#',
+                }
+            },
+            bl_showdown_white_rook = {
+                name = 'White Rook',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_rook = {
+                name = 'Black Rook',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_knight = {
+                name = 'White Knight',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_knight = {
+                name = 'Black Knight',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_bishop = {
+                name = 'White Bishop',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_bishop = {
+                name = 'Black Bishop',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_queen = {
+                name = 'White Queen',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_queen = {
+                name = 'Black Queen',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_king = {
+                name = 'White King',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_king = {
+                name = 'Black King',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_unicorn = {
+                name = 'White Unicorn',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_unicorn = {
+                name = 'Black Unicorn',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_dragon = {
+                name = 'White Dragon',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_dragon = {
+                name = 'Black Dragon',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_white_princess = {
+                name = 'White Princess',
+                text = {
+                    'idk',
+                }
+            },
+            bl_showdown_black_princess = {
+                name = 'Black Princess',
+                text = {
+                    'idk',
                 }
             },
         },
