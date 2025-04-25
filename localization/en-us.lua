@@ -1331,6 +1331,18 @@ return {
                     '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
                 },
             },
+            j_showdown_jimbocoin = {
+                name = 'Jimbocoin',
+                text = {
+                    'This joker gains {C:money}$#1#{} when',
+                    'a {C:attention}gold card{} is scored',
+                    '{C:inactive}(Currently {C:money}+$#2#{C:inactive})',
+                },
+                unlock = {
+                    'Earn at least {C:money}$50{}',
+                    'in one round',
+                }
+            },
         },
         Other={
             showdown_static = {
