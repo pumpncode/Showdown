@@ -2141,6 +2141,37 @@ local funnel = {
     end,
 }
 
+local jimbocoin = {
+    type = 'Joker',
+    order = 65,
+    key = 'jimbocoin',
+    name = 'jimbocoin',
+    atlas = "showdown_jokers",
+    pos = coordinate(69),
+    config = {extra = { money_scale = 1, money = 0 }},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_gold
+        return { vars = { card.ability.extra.money_scale, card.ability.extra.money } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'money_gain_in_round' and args.money_gain >= 50 then
+            unlock_card(self)
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play and context.other_card.config.center == G.P_CENTERS.m_gold and not context.blueprint then
+            card.ability.extra.money = card.ability.extra.money + card.ability.extra.money_scale
+            forced_message(localize('k_upgrade_ex'), card, G.C.MONEY, true)
+		end
+    end,
+    calc_dollar_bonus = function(self, card)
+        if card.ability.extra.money > 0 then return card.ability.extra.money end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2248,6 +2279,7 @@ return {
             window,
             break_the_ice,
             funnel,
+            jimbocoin,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
