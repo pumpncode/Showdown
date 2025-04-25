@@ -64,6 +64,116 @@ local shameful = {
 	mult = 2,
 }
 
+function chess_blind(obj)
+	local white_piece = {
+		type = 'Blind',
+		order = obj.order,
+		key = 'white_'..obj.key,
+		name = 'White '..obj.name,
+		atlas = "showdown_blinds",
+		pos = { x = 0, y = obj.order + 1 },
+		boss_colour = {0.8, 0.8, 0.8, 1},
+		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max },
+		dollars = 4,
+		mult = 1.5,
+		modify_hand = obj.modify_hand,
+	}
+	local black_piece = {
+		type = 'Blind',
+		order = obj.order + 1,
+		key = 'black_'..obj.key,
+		name = 'Black '..obj.name,
+		atlas = "showdown_blinds",
+		pos = { x = 0, y = obj.order + 2 },
+		boss_colour = G.C.BLACK,
+		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max },
+		dollars = 4,
+		mult = 1.5,
+	}
+	return white_piece, black_piece
+end
+
+local white_pawn, black_pawn = chess_blind{
+	order = 5,
+	key = "pawn",
+	name = "Pawn",
+	chess_boss = { min = 1 },
+}
+white_pawn.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local eval = evaluate_poker_hand(cards)
+	if G.GAME.chess_blinds_hand and next(eval[G.GAME.chess_blinds_hand]) then
+		return G.GAME.showdown_chess_boosted and mult * 0.25 or mult * 0.5, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+white_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_hand or '[poker hand]'} } end
+white_pawn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_hand or 'Flush'} } end
+black_pawn.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local eval = evaluate_poker_hand(cards)
+	if G.GAME.chess_blinds_hand and next(eval[G.GAME.chess_blinds_hand]) then
+		return G.GAME.showdown_chess_boosted and mult * 4 or mult * 2, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+black_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or '[poker hand]'} } end
+black_pawn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or 'Flush'} } end
+
+local white_rook, black_rook = chess_blind{
+	order = 7,
+	key = "rook",
+	name = "Rook",
+	chess_boss = { min = 1 },
+}
+
+local white_knight, black_knight = chess_blind{
+	order = 9,
+	key = "knight",
+	name = "Knight",
+	chess_boss = { min = 1 },
+}
+
+local white_bishop, black_bishop = chess_blind{
+	order = 11,
+	key = "bishop",
+	name = "Bishop",
+	chess_boss = { min = 1 },
+}
+
+local white_queen, black_queen = chess_blind{
+	order = 13,
+	key = "queen",
+	name = "Queen",
+	chess_boss = { min = 4 },
+}
+
+local white_king, black_king = chess_blind{
+	order = 15,
+	key = "king",
+	name = "King",
+	chess_boss = { min = 4 },
+}
+
+local white_unicorn, black_unicorn = chess_blind{
+	order = 17,
+	key = "unicorn",
+	name = "Unicorn",
+	chess_boss = { min = 2 },
+}
+
+local white_dragon, black_dragon = chess_blind{
+	order = 19,
+	key = "dragon",
+	name = "Dragon",
+	chess_boss = { min = 2 },
+}
+
+local white_princess, black_princess = chess_blind{
+	order = 21,
+	key = "princess",
+	name = "Princess",
+	chess_boss = { min = 4 },
+}
+
 return {
 	enabled = Showdown.config["Blinds"],
 	list = function()
@@ -74,6 +184,26 @@ return {
 		}
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, latch)
+		end
+		if Showdown.config["Decks"] or ((SMODS.Mods["CardSleeves"] or {}).can_load and Showdown.config["CrossMod"]["CardSleeves"]) then
+			table.insert(list, white_pawn)
+			table.insert(list, black_pawn)
+			table.insert(list, white_rook)
+			table.insert(list, black_rook)
+			table.insert(list, white_knight)
+			table.insert(list, black_knight)
+			table.insert(list, white_bishop)
+			table.insert(list, black_bishop)
+			table.insert(list, white_queen)
+			table.insert(list, black_queen)
+			table.insert(list, white_king)
+			table.insert(list, black_king)
+			table.insert(list, white_unicorn)
+			table.insert(list, black_unicorn)
+			table.insert(list, white_dragon)
+			table.insert(list, black_dragon)
+			table.insert(list, white_princess)
+			table.insert(list, black_princess)
 		end
 		return list
 	end,
@@ -108,14 +238,73 @@ return {
 			end}))
 		end
 
-		local gnb = get_new_boss
-		function get_new_boss()
-			for k, _ in pairs(G.P_BLINDS) do
-				if not G.GAME.bosses_used[k] then
-					G.GAME.bosses_used[k] = 0
+		function Showdown.get_new_chess_blind()
+			--[[G.GAME.perscribed_chess_bosses = G.GAME.perscribed_chess_bosses or {}
+			if G.GAME.perscribed_chess_bosses and G.GAME.perscribed_chess_bosses[G.GAME.round_resets.ante] then
+				local ret_boss = G.GAME.perscribed_chess_bosses[G.GAME.round_resets.ante]
+				G.GAME.perscribed_chess_bosses[G.GAME.round_resets.ante] = nil
+				G.GAME.bosses_used[ret_boss] = G.GAME.bosses_used[ret_boss] + 1
+				return ret_boss
+			end
+			if G.FORCE_CHESS then return G.FORCE_CHESS end]]--
+			
+			local eligible_bosses = {}
+			for k, v in pairs(G.P_BLINDS) do
+				if not v.chess_boss then
+				elseif v.in_pool and type(v.in_pool) == 'function' then
+					local res, options = v:in_pool()
+					if
+						(((G.GAME.round_resets.ante)%G.GAME.win_ante == 0 and G.GAME.round_resets.ante >= 2) == false)
+						or (options or {}).ignore_chess_check
+					then
+						eligible_bosses[k] = res and true or nil
+					end
+				elseif v.chess_boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2) then
+					eligible_bosses[k] = true
 				end
 			end
-			return gnb()
+			for k, _ in pairs(G.GAME.banned_keys) do
+				if eligible_bosses[k] then eligible_bosses[k] = nil end
+			end
+
+			local min_use = 100
+			for k, v in pairs(G.GAME.bosses_used) do
+				if eligible_bosses[k] then
+					eligible_bosses[k] = v
+					if eligible_bosses[k] <= min_use then
+						min_use = eligible_bosses[k]
+					end
+				end
+			end
+			for k, _ in pairs(eligible_bosses) do
+				if eligible_bosses[k] then
+					if eligible_bosses[k] > min_use then
+						eligible_bosses[k] = nil
+					end
+				end
+			end
+			local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('chess_boss'))
+			G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
+
+			local _poker_hands = {}
+			for k, v in pairs(G.GAME.hands) do
+				if v.visible then _poker_hands[#_poker_hands+1] = k end
+			end
+			G.GAME.chess_blinds_hand = pseudorandom_element(_poker_hands, pseudoseed('chess_boss_hand'))
+			
+			return boss
+		end
+
+		if not (SMODS.Mods["Cryptid"] or {}).can_load then
+			local gnb = get_new_boss
+			function get_new_boss()
+				for k, _ in pairs(G.P_BLINDS) do -- this is for adding bosses mid-run
+					if not G.GAME.bosses_used[k] then
+						G.GAME.bosses_used[k] = 0
+					end
+				end
+				return gnb()
+			end
 		end
 	end
 }

@@ -195,11 +195,38 @@ local engineer = {
 	end
 }
 
+local chess = {
+	type = 'Back',
+	order = 6,
+	name = "Chess Deck",
+	key = "Chess",
+	atlas = "showdown_decks",
+	pos = coordinate(6),
+	config = { unlock_stake = "stake_showdown_topaz" },
+	locked_loc_vars = function(self, info_queue, card)
+		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if not Showdown.config["Stakes"] then return end
+		local win_stake = get_deck_win_stake()
+		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
+			unlock_card(self)
+		end
+	end,
+	apply = function(self, back)
+		G.GAME.showdown_chess = true
+	end
+}
+
 return {
 	enabled = Showdown.config["Decks"],
 	list = function()
 		local list = {
 			starter,
+			chess,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
@@ -276,6 +303,7 @@ return {
 		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
+        Showdown.versatile['Chess Deck'] = { desc = 'j_showdown_versatile_joker_chess', pos = coordinate(23), blueprint = false }
 		if Showdown.config["Ranks"] then
 			Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, calculate = function(self, card, context)
 				if context.before and not context.blueprint then
