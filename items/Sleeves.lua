@@ -113,9 +113,6 @@ local engineer = {
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
 	end,
-	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
-	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Engineer" then
@@ -137,6 +134,12 @@ local engineer = {
 	end
 }
 
+if not Showdown.config["Stakes"] then
+	engineer.locked_loc_vars = function(self)
+		return { key = 'sleeve_showdown_deactivated', vars = {colours={}} }
+	end
+end
+
 local chess = {
 	type = 'Sleeve',
 	order = 6,
@@ -148,9 +151,6 @@ local chess = {
 	loc_vars = function(self)
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or "") }
 	end,
-	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
-	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
 		if self.get_current_deck_key() ~= "b_showdown_Chess" then
@@ -160,6 +160,12 @@ local chess = {
         end
 	end
 }
+
+if not Showdown.config["Stakes"] then
+	chess.locked_loc_vars = function(self)
+		return { key = 'sleeve_showdown_deactivated', vars = {colours={}} }
+	end
+end
 
 return {
 	enabled = (SMODS.Mods["CardSleeves"] or {}).can_load and Showdown.config["CrossMod"]["CardSleeves"],
