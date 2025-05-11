@@ -111,7 +111,10 @@ local engineer = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Engineer", stake = "stake_showdown_amethyst"},
 	loc_vars = function(self)
-		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
+		return {
+			key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or ""),
+			vars = {colours={}}
+		}
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -149,7 +152,10 @@ local chess = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Chess", stake = "stake_showdown_amethyst"},
 	loc_vars = function(self)
-		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or "") }
+		return {
+			key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or ""),
+			vars = {colours={}}
+		}
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
