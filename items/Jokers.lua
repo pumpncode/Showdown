@@ -2317,32 +2317,6 @@ return {
         {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95},
 	},
 	exec = function()
-        local vanilla_atlas = nil;
-        SMODS.Joker:take_ownership('joker', {
-            update = function(self, card, front)
-                if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then
-                    if card.config.center.pos ~= G.GAME.showdown_JVA then
-                        vanilla_atlas = card.config.center.atlas
-                        card.config.center.atlas = 'showdown_joker_variants'
-                        card.config.center.pos = G.GAME.showdown_JVA
-                        card:set_sprites(card.config.center)
-                    end
-                elseif card.config.center.atlas == 'showdown_joker_variants' then
-                    card.config.center.atlas = vanilla_atlas
-                    card.config.center.pos = { x = 0, y = 0 }
-                    card:set_sprites(card.config.center)
-                end
-            end,
-            load = function(self, card, card_table, other_card)
-                if G.GAME.showdown_JVA then
-                    vanilla_atlas = card.config.center.atlas
-                    card.config.center.atlas = 'showdown_joker_variants'
-                    card.config.center.pos = G.GAME.showdown_JVA
-                    card:set_sprites(card.config.center)
-                end
-            end
-        }, true)
-
         local updateRef = Game.update
         banana_dt = 0
         function Game:update(dt)
