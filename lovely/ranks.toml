@@ -99,7 +99,7 @@ pattern = "if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PA
 position = "before"
 match_indent = true
 payload = '''
-if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G.hand and G.hand.highlighted and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.ability.max_highlighted then
+if (self.ability.name == 'The Fool' or self.ability.consumeable.suit_conv) and G.hand and G.hand.highlighted and self.ability.max_highlighted ~= nil and #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.ability.max_highlighted then
     for i=1, #G.hand.highlighted do
         if SMODS.is_zero(G.hand.highlighted[i]) then return false end
     end
