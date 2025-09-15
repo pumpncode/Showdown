@@ -92,12 +92,12 @@ check_for_unlock({type = 'playing_card_added', card = c1})
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = "for i=1, #pures do"
-position = "before"
+pattern = "-- TARGET: adding to hand effects"
+position = "after"
 match_indent = true
 payload = '''
-if next(find_joker('diplomatic_immunity')) and scoring_hand[1].debuff then
-    scoring_hand[1]:set_debuff(false)
+if next(find_joker('diplomatic_immunity')) and final_scoring_hand[1].debuff then
+    final_scoring_hand[1]:set_debuff(false)
 end
 '''
 
@@ -105,8 +105,8 @@ end
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/utils.lua"]'''
-pattern = "local eval, post = eval_card(card, context)"
-position = "before"
+pattern = "-- TARGET: card destroyed"
+position = "after"
 match_indent = true
 payload = '''
 if next(find_joker('diplomatic_immunity')) and (scoring_hand or context.cardarea.cards)[1] == card then
@@ -385,7 +385,7 @@ payload = '''
 [patches.pattern]
 target = "card.lua"
 match_indent = true
-pattern = "if pseudorandom(self.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel') < G.GAME.probabilities.normal/self.ability.extra.odds then"
+pattern = "if SMODS.pseudorandom_probability(self, self.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel', 1, self.ability.extra.odds) then"
 position = "after"
 payload = '''
 check_for_unlock({type = 'extinct', name = self.ability.name})
@@ -562,11 +562,11 @@ end
 [[patches]]
 [patches.pattern]
 target = 'functions/common_events.lua'
-pattern = 'elseif not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman"))) and'
+pattern = 'elseif not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not SMODS.showman(v.key)) and'
 position = 'at'
 match_indent = true
 payload = '''
-elseif (not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman")))) or
+elseif (not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not SMODS.showman(v.key))) or
     (((next(find_joker("versatile_joker")) and G.GAME.selected_back.name == 'Engineer Deck') or next(find_joker("versatile_joker_all_in_one"))) and Showdown.tag_related_joker[v.key]) and
 '''
 
@@ -593,4 +593,15 @@ position = 'after'
 match_indent = true
 payload = '''
 G.GAME.money_gain_in_round = 0
+'''
+
+# Don't win again at ante 8 if already won with Ultimate Joker or Unschakled Joker
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''if G.GAME.round_resets.ante == G.GAME.win_ante and G.GAME.blind:get_type() == 'Boss' then'''
+position = 'at'
+match_indent = true
+payload = '''
+if G.GAME.round_resets.ante == G.GAME.win_ante and G.GAME.blind:get_type() == 'Boss' and not G.GAME.won then
 '''

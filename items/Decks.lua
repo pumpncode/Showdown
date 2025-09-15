@@ -71,7 +71,7 @@ local starter = {
 		end
 	end,
 	apply = function(self, back)
-		if G.GAME.selected_sleeve and G.GAME.selected_sleeve ~= 'sleeve_showdown_Starter' then
+		if (G.GAME.selected_sleeve and G.GAME.selected_sleeve ~= 'sleeve_showdown_Starter') or not G.GAME.selected_sleeve then
 			G.GAME.starting_params.dollars = -5
 			give_starter()
 		end
@@ -141,6 +141,15 @@ local cheater = {
 					return true
 			end}))
 			delay(0.2)
+		elseif
+			context.destroying_card
+			and context.cardarea == G.play
+			and not context.destroy_card.debuff
+			and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
+			and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not context.destroy_card:get_seal())) -- This is for the Cheater Sleeve
+			and pseudorandom('cheater') < G.GAME.probabilities.normal/4
+		then
+            return { remove = true }
 		end
 	end,
 	apply = function(self, back)

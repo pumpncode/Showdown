@@ -67,7 +67,9 @@ local jean_paul = {
     end,
     update = function(self, card, dt)
         if card.hasSpeech and card.ability.extra.talk <= 0 then
-            if card.area == G.shop_jokers then
+            if G.STAGE == G.STAGES.MAIN_MENU then
+                say(card, {blabla = ("main_menu"), prob = 750})
+            elseif card.area == G.shop_jokers then
                 say(card, {blabla = ('shop_jokers'), prob = 250})
             elseif card.area == G.jokers and card.ability.extra.inBlind then
                 say(card, {blabla = ('in_blind'), prob = 250})
@@ -158,14 +160,14 @@ return {
         
             card.add_speech_bubble = function(text_key, loc_vars)
                 if card.children.speech_bubble then card.children.speech_bubble:remove() end
-                card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0},parent = card}
+                card.config.speech_bubble_align = {align='bm', offset = {x=0,y=0}, parent = card}
                 card.children.speech_bubble = UIBox{
                     definition = Showdown.speech_bubble(text_key, 'quips', loc_vars),
                     config = card.config.speech_bubble_align
                 }
                 card.children.speech_bubble:set_role{
-                    role_type = 'Major',
-                    xy_bond = 'Strong',
+                    role_type = 'Minor',
+                    xy_bond = 'Weak',
                     r_bond = 'Strong',
                     major = card,
                 }
@@ -214,7 +216,7 @@ return {
             local moveRef = card.move
             card.move = function(self, dt)
                 moveRef(self, dt)
-                if self.children.speech_bubble then
+                if self.children.speech_bubble and G.STAGE ~= G.STAGES.MAIN_MENU then
                     self.children.speech_bubble:set_alignment(self:align_h_popup())
                 end
             end

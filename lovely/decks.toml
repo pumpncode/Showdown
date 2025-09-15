@@ -16,7 +16,6 @@ if (SMODS.Ranks[v.value].counterpart and SMODS.Ranks[v.value].counterpart.is) or
 end
 '''
 
-# ?????
 # Calculus deck forces first booster in shop to be a Calculus booster, part 1/2
 [[patches]]
 [patches.pattern]
@@ -37,26 +36,6 @@ position = "at"
 match_indent = true
 payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
-'''
-
-# Cheater deck card destruction
-[[patches]]
-[patches.pattern]
-target = '''=[SMODS _ "src/utils.lua"]'''
-pattern = "if scoring_hand and SMODS.has_enhancement(card, 'm_glass') and not card.debuff and pseudorandom('glass') < G.GAME.probabilities.normal/(card.ability.name == 'Glass Card' and card.ability.extra or G.P_CENTERS.m_glass.config.extra) then"
-position = "before"
-match_indent = true
-payload = '''
-if
-    scoring_hand
-    and G.GAME.showdown_cheater
-    and not card.debuff
-    and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
-    and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not card:get_seal())) -- This is for the Cheater Sleeve
-    and pseudorandom('cheater') < G.GAME.probabilities.normal/4
-then
-    destroyed = true
-end
 '''
 
 # Cheater deck card creation

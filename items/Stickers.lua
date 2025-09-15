@@ -192,13 +192,14 @@ return {
 						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
 							if _card.ability.showdown_cloud then
 								SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+							--[[	SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
 							elseif _card.ability.showdown_mushroom then
 								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
 								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
 							elseif _card.ability.showdown_flower then
 								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
-								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
+								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)]]--
 							elseif _card.ability.showdown_luigi then
 								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 								SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)

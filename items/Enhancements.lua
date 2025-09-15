@@ -18,6 +18,14 @@ local ghost = {
 				x_chips = card.ability.extra.x_chips,
 				card = card
 			}
+		elseif
+			context.destroy_card
+			and context.cardarea == G.play
+			and context.destroy_card == card
+			and not card.debuff
+			and pseudorandom('ghost') < G.GAME.probabilities.normal/card.ability.extra.shatter_chance
+		then
+			return { remove = true }
 		end
 	end
 }

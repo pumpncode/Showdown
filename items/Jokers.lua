@@ -933,8 +933,8 @@ local strainer = {
                     while card.ability.extra.money >= card.ability.extra.moneyRequirement do
                         local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
                         local suit = pseudorandom_element(suits, pseudoseed('strainer'))
-                        card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
                         if create_card_in_deck(rank, suit) then
+                            card.ability.extra.money = card.ability.extra.money - card.ability.extra.moneyRequirement
                             created_cards = created_cards + 1
                             if created_cards >= 20 then
                                 check_for_unlock({type = 'whole_new_deck'})
@@ -2157,7 +2157,7 @@ local jimbocoin = {
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if args.type == 'money_gain_in_round' and args.money_gain >= 50 then
+        if args.type == 'money_gain_in_round' and args.money_gain >= 25 then
             unlock_card(self)
         end
     end,

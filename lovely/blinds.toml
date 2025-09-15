@@ -12,7 +12,7 @@ pattern = '''
 for i=1, #cards_destroyed do
     G.E_MANAGER:add_event(Event({
         func = function()
-            if SMODS.has_enhancement(cards_destroyed[i], 'm_glass') then
+            if cards_destroyed[i].shattered then
                 cards_destroyed[i]:shatter()
             else
                 cards_destroyed[i]:start_dissolve()
@@ -24,7 +24,7 @@ end
 '''
 position = 'after'
 payload = '''
-if G.GAME.blind and G.GAME.blind.name == 'The Patient' and not G.GAME.blind.disabled and G.GAME.current_round.hands_left > 0 and hand_chips*mult + G.GAME.chips >= G.GAME.blind.chips then
+if G.GAME.blind and G.GAME.blind.name == 'The Patient' and not G.GAME.blind.disabled and G.GAME.current_round.hands_left > 0 then --and hand_chips*mult + G.GAME.chips >= G.GAME.blind.chips then
     SMODS.patient_gain_score(G.GAME.blind)
 end
 '''

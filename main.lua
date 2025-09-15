@@ -84,6 +84,48 @@ local function create_config_header(loc)
 	return {n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize(loc), colour = G.C.ORANGE, scale = 0.5}}}}
 end
 
+local Gamemain_menu = Game.main_menu
+local function main_menu(change_context)
+	local ret = Gamemain_menu(change_context)
+		local newcard = Card(
+			G.title_top.T.x,
+			G.title_top.T.y,
+			G.CARD_W,
+			G.CARD_H,
+			G.P_CARDS.empty,
+			G.P_CENTERS.j_showdown_jean_paul,
+			{ bypass_discovery_center = true }
+		)
+		G.title_top.T.w = G.title_top.T.w * 1.7675
+		G.title_top.T.x = G.title_top.T.x - 0.8
+		G.title_top:emplace(newcard)
+		newcard.T.w = newcard.T.w * 1.1 * 1.2
+		newcard.T.h = newcard.T.h * 1.1 * 1.2
+		newcard.no_ui = true
+		newcard.states.visible = false
+		SMODS.giveSpeech(newcard) -- Crashes if speech bubble disappear while dragging jean-paul (only in main menu)
+
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0,
+			blockable = false,
+			blocking = false,
+			func = function()
+				if change_context == "splash" then
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, true, 2.5)
+				else
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, nil, 1.2)
+				end
+				return true
+			end,
+		}))
+
+		return ret
+end
+Game.main_menu = main_menu
+
 local showdown_config_tab = function()
 	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
 	local bunco = (SMODS.Mods["Bunco"] or {}).can_load

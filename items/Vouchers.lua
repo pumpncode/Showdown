@@ -162,7 +162,7 @@ return {
 			table.insert(list, GI)
 		end
         if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
-			table.insert(list, collatz)
+			--table.insert(list, collatz)
         end
 		return list
 	end,

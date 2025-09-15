@@ -57,7 +57,7 @@ local vessel = {
 		event({trigger = 'after', delay = 0.1, func = function()
 			assert(SMODS.change_base(G.hand.highlighted[1], nil, "showdown_Zero"))
 		return true end })
-		if pseudorandom("showdown_Probability") < 4 / 5 then
+		if pseudorandom("showdown_Probability") < 2 / 3 then
 			local cen_pool = getEnhancements({"m_wild"})
 			event({trigger = 'after', delay = 0.1, func = function()
 				G.hand.highlighted[1]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);

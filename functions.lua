@@ -210,12 +210,12 @@ function Card:change_suit(new_suit)
 end
 
 function create_card_in_deck(rank, suit)
-	local created_card, card = get_card_from_rank_suit(rank, suit), nil
+	local created_card = get_card_from_rank_suit(rank, suit)
 	if created_card then
 		G.E_MANAGER:add_event(Event({
 			func = function()
 				G.playing_card = (G.playing_card and G.playing_card + 1) or 1
-				card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+				local card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
 				card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 				G.play:emplace(card)
 				table.insert(G.playing_cards, card)
@@ -230,8 +230,9 @@ function create_card_in_deck(rank, suit)
 		draw_card(G.play,G.deck, 90,'up', nil, card)
 		playing_card_joker_effects({true})
 		delay(0.2)
+		return true
 	end
-	return card
+	return false
 end
 
 function create_cards_in_deck(rank_list, suit_list, nb, args)

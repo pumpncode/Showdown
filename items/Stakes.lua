@@ -120,8 +120,6 @@ return {
 			atlas = "showdown_stakes", sticker_atlas = "showdown_stake_stickers",
         }
 
-		-- Well i don't really know what's the issue here, i'm trying to render 2 stake stickers at the same time but it won't (in the collection only at least)
-
 		function Showdown.get_joker_win_sticker_alt(_center, index)
 			local joker_usage = G.PROFILES[G.SETTINGS.profile].joker_usage[_center.key] or {}
 			if joker_usage.wins then

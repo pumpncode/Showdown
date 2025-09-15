@@ -1339,8 +1339,9 @@ return {
                     '{C:inactive}(Currently {C:money}+$#2#{C:inactive})',
                 },
                 unlock = {
-                    'Earn at least {C:money}$50{}',
+                    'Earn at least {C:money}$25{}',
                     'in one round',
+                    '{C:inactive}(Checkout excluded)',
                 }
             },
         },
@@ -2755,7 +2756,6 @@ return {
                 'of dust in an',
                 'infinite void',
                 'deprived of feelings...',
-                
             },
             using_planet_7 = {
                 'fking {C:blue}BLUE{}',
@@ -3031,6 +3031,43 @@ return {
             in_booster_10 = {
                 '',
             },
+            main_menu_1 = {
+                'Welcome to',
+                'Balatro!',
+            },
+            main_menu_2 = {
+                'Hiiiiiiiiii! :D',
+            },
+            main_menu_3 = {
+                'Are you going',
+                'to play or...?',
+            },
+            main_menu_4 = {
+                'Wait what am',
+                'I doing in',
+                'here?!',
+            },
+            main_menu_5 = {
+                'haha funy',
+                'kard gayme',
+            },
+            main_menu_6 = {
+                'Hey there!',
+            },
+            main_menu_7 = {
+                'Click on one',
+                'of the buttons',
+                'below!',
+            },
+            main_menu_8 = {
+                '',
+            },
+            main_menu_9 = {
+                '',
+            },
+            main_menu_10 = {
+                '',
+            },
             random_1 = {
                 ':3',
             },
@@ -3089,7 +3126,7 @@ return {
             },
             random_15 = {
                 'Imagine 2 onions.',
-                'Heck, imagine 3.',
+                'Heck, imagine 3',
                 'onions.',
             },
             random_16 = {

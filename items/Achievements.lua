@@ -7,6 +7,7 @@ local function make_achievement(key, hidden)
 		key = key,
 		hidden_text = hidden or false,
 		bypass_all_unlocked = true,
+		--reset_on_startup = true,
 		unlock_condition = function(self, args)
 			if args.type == key then
 				return true

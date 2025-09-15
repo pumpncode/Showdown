@@ -7,7 +7,7 @@ priority = 0
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'G.GAME.pack_choices = self.config.center.config.choose or 1'
+pattern = 'G.GAME.pack_choices = math.min((self.ability.choose or self.config.center.config.choose or 1) + (G.GAME.modifiers.booster_choice_mod or 0), self.ability.extra and math.max(1, self.ability.extra + (G.GAME.modifiers.booster_size_mod or 0)) or self.config.center.extra and math.max(1, self.config.center.extra + (G.GAME.modifiers.booster_size_mod or 0)) or 1)'
 position = "after"
 match_indent = true
 payload = '''
