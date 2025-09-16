@@ -2314,7 +2314,7 @@ return {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
         {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
-        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95, mod = "Cryptid"},
+        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95, mod_compat = "Cryptid"},
 	},
 	exec = function()
         SMODS.Joker:take_ownership('joker', {

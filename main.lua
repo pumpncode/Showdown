@@ -20,7 +20,7 @@ local function execute_item(item)
 		if item.exec then item.exec() end
 		if item.atlases then
 			for _, atlas in ipairs(item.atlases) do
-				if (not atlas.mod) or (SMODS.Mods[atlas.mod] or {}).can_load then
+				if (not atlas.mod_compat) or (SMODS.Mods[atlas.mod_compat] or {}).can_load then
 					SMODS.Atlas(atlas)
 				end
 			end
