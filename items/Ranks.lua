@@ -201,11 +201,25 @@ return {
 		return list
 	end,
 	atlases = {
+		-- Vanilla
 		{key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95},
 		{key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95},
 		{key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95},
-		{key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95},
-		{key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95},
+		-- Bunco
+		{key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95, mod = "Bunco"},
+		{key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95, mod = "Bunco"},
+		-- Musical Suits
+		{key = "showdown_musicalCards", path = "CrossMod/Bunco/MusicalSuit/Cards.png", px = 71, py = 95, mod = "MusicalSuit"},
+		{key = "showdown_musicalCardsHC", path = "CrossMod/Bunco/MusicalSuit/CardsHC.png", px = 71, py = 95, mod = "MusicalSuit"},
+		-- Ink and Color
+		{key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95, mod = "InkAndColor"},
+		{key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95, mod = "InkAndColor"},
+		-- Paperback
+		{key = "showdown_paperbackCards", path = "CrossMod/Paperback/Ranks/Cards.png", px = 71, py = 95, mod = "Paperback"},
+		{key = "showdown_paperbackCardsHC", path = "CrossMod/Paperback/Ranks/CardsHC.png", px = 71, py = 95, mod = "Paperback"},
+		-- Madcap (not done)
+		--{key = "showdown_madcapCards", path = "CrossMod/Madcap/Ranks/Cards.png", px = 71, py = 95, mod = "Madcap"},
+		--{key = "showdown_madcapCardsHC", path = "CrossMod/Madcap/Ranks/CardsHC.png", px = 71, py = 95, mod = "Madcap"},
 	},
 	exec = function()
 		-- These are for making straights with counterparts and normal cards
@@ -244,24 +258,29 @@ return {
 		end
 
 		if (SMODS.Mods["Bunco"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 			Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 		end
 		if (SMODS.Mods["MusicalSuit"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['Notes'] = {lc_atlas = 'showdown_musicalCards', hc_atlas = 'showdown_musicalCardsHC'}
 		end
 		if (SMODS.Mods["InkAndColor"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['ink_Inks'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
 			Showdown.extraSuits['ink_Colors'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
 		end
+		if (SMODS.Mods["Paperback"] or {}).can_load then
+			Showdown.extraSuits['paperback_Stars'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
+			Showdown.extraSuits['paperback_Crowns'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
+		end
+		--[[
+		if (SMODS.Mods["Madcap"] or {}).can_load then
+			Showdown.extraSuits['rgmc_goblets'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_towers'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_blooms'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_daggers'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_voids'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_lanterns'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+		end
+		]]
 	end
 }

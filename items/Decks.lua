@@ -105,7 +105,7 @@ local cheater = {
 				nbCards = nbCards + joker.ability.extra.extra_card
 			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
-			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+			local suits = get_all_suits()
 			local cards = {}
 			for _=1, nbCards do
 				local rank, suit = pseudorandom_element(ranks, pseudoseed('create_card')), pseudorandom_element(suits, pseudoseed('create_card'))

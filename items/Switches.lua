@@ -374,7 +374,7 @@ local playing = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks()
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -406,7 +406,7 @@ local numbered = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({noFace = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -438,7 +438,7 @@ local royal = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({onlyFace = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -472,7 +472,7 @@ local decimal = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({onlyCounterpart = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -504,7 +504,7 @@ local top = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({noVanilla = true, noModded = true, whitelist = {'Ace'}})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),

@@ -318,7 +318,7 @@ local operation = {
 				seal = card2.seal
 			}
 			local _rank = pseudorandom_element(get_all_ranks(), pseudoseed('showdown_Probability'))
-			local _suit = pseudorandom_element(get_all_suits({exotic = G.GAME and G.GAME.Exotic}), pseudoseed('showdown_Probability'))
+			local _suit = pseudorandom_element(get_all_suits(), pseudoseed('showdown_Probability'))
 			local center = G.P_CENTERS.c_base
 			---- This is horrendous
 			local enhancements = {}

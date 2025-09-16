@@ -108,21 +108,29 @@ end
 ]]--
 baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
 
----Returns all vanilla and modded suits. Args can be passed to have more control over the suits:
+---Returns all vanilla and modded suits. Arguments can be passed to have more control over the suits:
 ---- noModded: Exclude Modded suits
 ---- noVanilla: Exclude Vanilla suits
 ---- exotic: Include Halberds and Fleurons (Bunco)
+---- include_stars: Include Stars (Paperback)
+---- include_crowns: Include Crowns (Paperback)
 ---@param args table|nil
 ---@return table
 function get_all_suits(args)
-	if not args then args = { exotic = true } end
+	if not args then args = {
+		exotic = G.GAME and G.GAME.Exotic,
+		include_stars = PB_UTIL and (PB_UTIL.has_suit_in_deck('paperback_Stars', true) or PB_UTIL.spectrum_played()),
+		include_crowns = PB_UTIL and (PB_UTIL.has_suit_in_deck('paperback_Crowns', true) or PB_UTIL.spectrum_played())
+	} end
 	local suits = {}
 	for i=1, #SMODS.Suit.obj_buffer do
 		local suit = SMODS.Suit.obj_table[SMODS.Suit.obj_buffer[i]]
 		if (not args.noVanilla and findInTable(suit.key, baseSuits) > -1) or
-			(not args.noModded and
+			(not args.noModded and (
 				((suit.key == "bunc_Fleurons" or suit.key == "bunc_Halberds") and args.exotic)
-			)
+				or (suit.key == "paperback_Stars" and args.include_stars)
+				or (suit.key == "paperback_Crowns" and args.include_crowns)
+			))
 		then
 			table.insert(suits, suit.key)
 		end
@@ -132,7 +140,7 @@ end
 
 local baseRanks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'}
 
----Returns all vanilla and modded ranks. Args can be passed to have more control over the ranks:
+---Returns all vanilla and modded ranks. Arguments can be passed to have more control over the ranks:
 ---- blacklist: 		Manually excluded ranks
 ---- whitelist: 		Manually included ranks
 ---- noModded: 			Exclude Modded ranks

@@ -6,7 +6,7 @@ Showdown.config = shdwn.config
 filesystem.load(mod_path.."functions.lua")()
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
----Execute a given item. Items can have these params (all paramters are optional):
+---Execute a given item. Items can have these params (all parameters are optional):
 ---- enabled: file will be executed or not
 ---- exec: code that will be executed **before** loading the list of content
 ---- post_exec: code that will be executed **after** loading the list of content
@@ -20,7 +20,9 @@ local function execute_item(item)
 		if item.exec then item.exec() end
 		if item.atlases then
 			for _, atlas in ipairs(item.atlases) do
-				SMODS.Atlas(atlas)
+				if (not atlas.mod) or (SMODS.Mods[atlas.mod] or {}).can_load then
+					SMODS.Atlas(atlas)
+				end
 			end
 		end
 		if item.list and (type(item.list) == 'function' or type(item.list) == 'table') then

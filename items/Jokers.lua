@@ -271,7 +271,7 @@ local color_splash = {
     end,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
-            local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+            local suits = get_all_suits()
             for i=1, #G.play.cards do
                 local _card = G.play.cards[i]
                 if _card:get_id() ~= 1 and findInTable(_card, context.scoring_hand) == -1 then
@@ -557,7 +557,7 @@ local chaos_card = {
     end,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
-            local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+            local suits = get_all_suits()
             local ranks = get_all_ranks()
             for i=1, #context.scoring_hand do
                 local _card = context.scoring_hand[i]
@@ -928,7 +928,7 @@ local strainer = {
                     card.ability.extra.money = card.ability.extra.money + math.max(G.GAME.current_round.reroll_cost-1, 0)
                 elseif context.ending_shop and card.ability.extra.money >= 10 then
                     local ranks = get_all_ranks({onlyCounterpart = true, noFace = true, whitelist = {"showdown_Zero"}})
-                    local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+                    local suits = get_all_suits()
                     local created_cards = 0
                     while card.ability.extra.money >= card.ability.extra.moneyRequirement do
                         local rank = pseudorandom_element(ranks, pseudoseed('strainer'))
@@ -2314,7 +2314,7 @@ return {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
         {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
-        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95},
+        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95, mod = "Cryptid"},
 	},
 	exec = function()
         SMODS.Joker:take_ownership('joker', {
