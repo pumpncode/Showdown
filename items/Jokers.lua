@@ -73,7 +73,7 @@ local pinpoint = {
         end
     end,
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.hand and context.full_hand and SMODS.is_zero(context.other_card) then
+        if context.individual and context.cardarea == G.hand and context.full_hand and not context.other_card.debuff and SMODS.is_zero(context.other_card) then
             return {
                 x_chips = card.ability.extra.x_chips,
                 card = context.other_card
