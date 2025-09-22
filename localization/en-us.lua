@@ -252,25 +252,31 @@ return {
             bl_showdown_white_rook = {
                 name = 'White Rook',
                 text = {
-                    'idk',
+                    'X#1# Mult if played hand',
+                    'contains a #2# Card',
                 }
             },
             bl_showdown_black_rook = {
                 name = 'Black Rook',
                 text = {
-                    'idk',
+                    'X#1# Mult if played hand',
+                    'contains a #2# Card',
                 }
             },
             bl_showdown_white_knight = {
                 name = 'White Knight',
                 text = {
-                    'idk',
+                    'X#1# Mult if played hand',
+                    'contains a #2#,',
+                    'a #3# or a #4#.',
                 }
             },
             bl_showdown_black_knight = {
                 name = 'Black Knight',
                 text = {
-                    'idk',
+                    'X#1# Mult if played hand',
+                    'contains a #2#,',
+                    'a #3# or a #4#.',
                 }
             },
             bl_showdown_white_bishop = {

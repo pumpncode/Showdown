@@ -1,3 +1,5 @@
+-- Boss Blinds
+
 local latch = {
 	type = 'Blind',
 	order = 1,
@@ -64,6 +66,8 @@ local shameful = {
 	mult = 2,
 }
 
+-- Chess Blinds
+
 function chess_blind(obj)
 	local white_piece = {
 		type = 'Blind',
@@ -77,6 +81,7 @@ function chess_blind(obj)
 		dollars = 4,
 		mult = 1.5,
 		modify_hand = obj.modify_hand,
+		set_blind = function() end
 	}
 	local black_piece = {
 		type = 'Blind',
@@ -124,6 +129,34 @@ local white_rook, black_rook = chess_blind{
 	name = "Rook",
 	chess_boss = { min = 1 },
 }
+white_rook.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local hasSuit = false
+	for _, card in ipairs(cards) do
+		if not hasSuit then
+			hasSuit = card:is_suit(G.GAME.chess_blinds_suit)
+		end
+	end
+	if hasSuit then
+		return G.GAME.showdown_chess_boosted and mult * 0.25 or mult * 0.5, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+white_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_suit or '[suit]'} } end
+white_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_suit or 'Spades'} } end
+black_rook.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local hasSuit = false
+	for _, card in ipairs(cards) do
+		if not hasSuit then
+			hasSuit = card:is_suit(G.GAME.chess_blinds_suit)
+		end
+	end
+	if hasSuit then
+		return G.GAME.showdown_chess_boosted and mult * 4 or mult * 2, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+black_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or '[suit]'} } end
+black_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or 'Spades'} } end
 
 local white_knight, black_knight = chess_blind{
 	order = 9,
@@ -291,6 +324,7 @@ return {
 				if v.visible then _poker_hands[#_poker_hands+1] = k end
 			end
 			G.GAME.chess_blinds_hand = pseudorandom_element(_poker_hands, pseudoseed('chess_boss_hand'))
+			G.GAME.chess_blinds_suit = pseudorandom_element(get_all_suits(), pseudoseed('chess_boss_hand'))
 			
 			return boss
 		end
