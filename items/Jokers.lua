@@ -167,7 +167,7 @@ local mirror = {
     rarity = 2, cost = 6,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        if context.repetition and context.cardarea == G.play then
+        if context.repetition then
             print(context.other_card.base.value..": "..context.other_card:get_id())
 			if SMODS.is_zero(context.other_card) or SMODS.is_counterpart(context.other_card) then
 				return {
@@ -606,6 +606,10 @@ local one_doller = {
     name = 'one_doller',
     atlas = "showdown_jokers",
     pos = coordinate(21),
+    config = {extra = {money = 1}},
+    loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.money } }
+	end,
     rarity = 1, cost = 1,
     blueprint_compat = false, perishable_compat = false, eternal_compat = true,
     unlocked = false,
@@ -618,7 +622,7 @@ local one_doller = {
         if context.buying_card or context.open_booster and not context.blueprint then
             ease_dollars(1)
             return {
-                message = localize('$')..1,
+                message = localize('$')..card.ability.extra.money,
                 colour = G.C.MONEY,
                 delay = 0.45,
                 card = card

@@ -582,7 +582,7 @@ return {
                 name = 'one doller',
                 text = {
                     'Buying something let you keep',
-                    '{C:money}$1{} of the money you used',
+                    '{C:money}$#1#{} of the money you used',
                 },
                 unlock = {
                     'Buy something for {C:attention}free{}',
@@ -1252,6 +1252,7 @@ return {
                 text = {
                     'Last played hand {C:planet}level up{} by',
                     'amount equals to {C:attention}sell value',
+                    'when sold',
                     '{C:inactive}(Last played hand: {C:attention}#1#{C:inactive})',
                 },
                 unlock = {
