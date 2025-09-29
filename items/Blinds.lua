@@ -158,12 +158,41 @@ end
 black_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or '[suit]'} } end
 black_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or 'Spades'} } end
 
-local white_knight, black_knight = chess_blind{
+local white_knight, black_knight = chess_blind{ -- fuck this i'm going to do it later
 	order = 9,
 	key = "knight",
 	name = "Knight",
 	chess_boss = { min = 1 },
 }
+local function get_chess_rank(i) return G and G.GAME and G.GAME.chess_blinds_ranks and SMODS.Rank.obj_table[SMODS.Rank.obj_buffer[G.GAME.chess_blinds_ranks[i]]] end
+white_knight.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local hasRank = false
+	for _, card in ipairs(cards) do
+		if not hasRank then
+			hasRank = findInTable(card:get_id(), G.GAME.chess_blinds_ranks) ~= -1
+		end
+	end
+	if hasRank then
+		return G.GAME.showdown_chess_boosted and mult * 0.25 or mult * 0.5, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+white_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or '[rank]', get_chess_rank(2) or '[rank]', get_chess_rank(3) or '[rank]'} } end
+white_knight.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or 'King', get_chess_rank(2) or '7', get_chess_rank(3) or 'Ace'} } end
+black_knight.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
+	local hasRank = false
+	for _, card in ipairs(cards) do
+		if not hasRank then
+			hasRank = findInTable(card:get_id(), G.GAME.chess_blinds_ranks) ~= -1
+		end
+	end
+	if hasRank then
+		return G.GAME.showdown_chess_boosted and mult * 4 or mult * 2, hand_chips, true
+	end
+	return mult, hand_chips, false
+end
+black_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or '[rank]', get_chess_rank(2) or '[rank]', get_chess_rank(3) or '[rank]'} } end
+black_knight.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or 'King', get_chess_rank(2) or '7', get_chess_rank(3) or 'Ace'} } end
 
 local white_bishop, black_bishop = chess_blind{
 	order = 11,
@@ -323,8 +352,15 @@ return {
 			for k, v in pairs(G.GAME.hands) do
 				if v.visible then _poker_hands[#_poker_hands+1] = k end
 			end
-			G.GAME.chess_blinds_hand = pseudorandom_element(_poker_hands, pseudoseed('chess_boss_hand'))
-			G.GAME.chess_blinds_suit = pseudorandom_element(get_all_suits(), pseudoseed('chess_boss_hand'))
+			G.GAME.chess_blinds_hand = pseudorandom_element(_poker_hands, pseudoseed('chess_blinds_hand'))
+			G.GAME.chess_blinds_suit = pseudorandom_element(get_all_suits(), pseudoseed('chess_blinds_suit'))
+			G.GAME.chess_blinds_ranks = {}
+			local ranks = get_all_ranks()
+			for _ = 0, 3 do
+				local rand_rank = pseudorandom_element(ranks, pseudoseed('chess_blinds_ranks'))
+				table.remove(ranks, findInTable(rand_rank, ranks))
+				table.insert(G.GAME.chess_blinds_ranks, SMODS.Ranks[rand_rank].id)
+			end
 			
 			return boss
 		end

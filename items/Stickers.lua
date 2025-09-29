@@ -28,12 +28,8 @@ local cloud = {
 			and (
 				(context.joker_main and context.cardarea == G.jokers)
 				or (context.main_scoring and context.cardarea == G.play)
-				--or ((card.ability.set == 'Default' or card.ability.set == 'Enhanced') and context.cardarea == G.hand)
 			)
 		then
-			ease_dollars(2)
-			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + 2
-			G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
 			return {
 				dollars = 2,
 				colour = G.C.MONEY
@@ -52,6 +48,15 @@ local mushroom = {
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	casino = true,
+	calculate = function(self, card, context)
+		if context.setting_blind and not (context.blueprint_card or card).getting_sliced then
+			G.E_MANAGER:add_event(Event({func = function()
+				ease_discard(1)
+				card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize{type = 'variable', key = 'a_discards', vars = {1}}})
+			return true end }))
+			return { card = card }, true
+		end
+	end
 }
 
 local flower = {
@@ -64,6 +69,15 @@ local flower = {
 	sets = { Joker = true, Default = true, Enhanced = true },
 	should_apply = false,
 	casino = true,
+	calculate = function(self, card, context)
+		if context.setting_blind and not (context.blueprint_card or card).getting_sliced then
+			G.E_MANAGER:add_event(Event({func = function()
+				ease_hands_played(1)
+				card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize{type = 'variable', key = 'a_hands', vars = {1}}})
+			return true end }))
+			return { card = card }, true
+		end
+	end
 }
 
 local luigi = {
@@ -82,11 +96,9 @@ local luigi = {
 			and (
 				(context.joker_main and context.cardarea == G.jokers)
 				or (context.main_scoring and context.cardarea == G.play)
-				--or ((card.ability.set == 'Default' or card.ability.set == 'Enhanced') and context.cardarea == G.hand)
 			)
 		then
 			return {
-                message = localize{type='variable',key='a_xmult',vars={1.5}},
                 x_mult = 1.5,
                 colour = G.C.RED,
 			}
@@ -106,7 +118,7 @@ local mario = {
 	casino = true,
 	calculate = function(self, card, context)
 		if
-			-- Joker (doesn't work)
+			-- Joker
 			(context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card)
 			-- Playing Card
 			or ((card.ability.set == "Default" or card.ability.set == "Enhanced") and context.repetition)
@@ -142,8 +154,8 @@ return {
 		local list = {
 			static,
 			cloud,
-			--mushroom,
-			--flower,
+			mushroom,
+			flower,
 			luigi,
 			mario,
 			star,
@@ -192,14 +204,13 @@ return {
 						if _card.ability.set == 'Joker' or _card.ability.set == 'Default' or _card.ability.set == 'Enhanced' then
 							if _card.ability.showdown_cloud then
 								SMODS.Sticker.obj_table.showdown_cloud:apply(_card, not _card.ability.showdown_cloud)
-								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
-							--[[	SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
+								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
 							elseif _card.ability.showdown_mushroom then
 								SMODS.Sticker.obj_table.showdown_mushroom:apply(_card, not _card.ability.showdown_mushroom)
 								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
 							elseif _card.ability.showdown_flower then
 								SMODS.Sticker.obj_table.showdown_flower:apply(_card, not _card.ability.showdown_flower)
-								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)]]--
+								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 							elseif _card.ability.showdown_luigi then
 								SMODS.Sticker.obj_table.showdown_luigi:apply(_card, not _card.ability.showdown_luigi)
 								SMODS.Sticker.obj_table.showdown_mario:apply(_card, not _card.ability.showdown_mario)

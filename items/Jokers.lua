@@ -1663,6 +1663,9 @@ local silver_stars = {
     name = 'silver_stars',
     atlas = "showdown_jokers",
     pos = coordinate(51),
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS['j_showdown_gold_star']
+	end,
     rarity = 2, cost = 6,
     blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)

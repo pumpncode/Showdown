@@ -1370,13 +1370,15 @@ return {
             showdown_mushroom = {
                 name = "Mushroom",
                 text = {
-                    "idk",
+                    "{C:red}+1{} Discard",
+                    "each round",
                 },
             },
             showdown_flower = {
                 name = "Flower",
                 text = {
-                    "idk",
+                    "{C:blue}+1{} Hand",
+                    "each round",
                 },
             },
             showdown_luigi = {
@@ -1396,8 +1398,7 @@ return {
             showdown_star = {
                 name = "Star",
                 text = {
-                    "This card",
-                    "cannot be",
+                    "Cannot be",
                     "debuffed",
                 },
             },
@@ -1941,7 +1942,7 @@ return {
                 }
             },
             v_showdown_lui = {
-                name = 'L U I',
+                name = 'Poker Night',
                 text = {
                     'Jokers and Playing Cards',
                     'have a {C:green}1 in 4{} chance to',
@@ -1949,14 +1950,16 @@ return {
                 }
             },
             v_showdown_gi = {
-                name = 'G I',
+                name = 'Luigi\'s Casino',
                 text = {
                     'Jokers and Playing Cards',
                     '{C:attention}always{} spawn with a',
                     '{C:attention}Casino Sticker',
                 },
                 unlock = {
-                    'idk',
+                    'Win a run with a',
+                    'card having a',
+                    '{C:attention}Casino sticker',
                 }
             },
         },
@@ -2150,7 +2153,7 @@ return {
             showdown_config_consumeables_tarots = "Tarots",
             showdown_config_consumeables_spectrals = "Spectrals",
             showdown_config_consumeables_mathematics = "Mathematics",
-            showdown_config_consumeables_logics = "Logics (no)",
+            showdown_config_consumeables_logics = "Logics",
             -- Technical Config
             showdown_technical_config = "Technical Config",
             showdown_config_easter_eggs = "Easter Eggs",
@@ -2158,7 +2161,7 @@ return {
             -- Crossmod Config
             showdown_crossmod_config = "Crossmod Config",
             showdown_config_unloaded = "Mods in gray are not present/unloaded",
-            showdown_config_cryptid = "Cryptid (there's nothing for now lol)",
+            showdown_config_cryptid = "Cryptid",
             showdown_config_bunco = "Bunco",
             showdown_config_cardsleeves = "Card Sleeves",
             
@@ -3180,6 +3183,7 @@ return {
         tutorial={},
         v_dictionary={
             a_chips_mult = '+#1# Chips, +#2# Mult',
+            a_discards="+#1# Discards",
         },
         v_text={
             ch_c_showdown_bugged_seed = {

@@ -6,6 +6,16 @@ Showdown.config = shdwn.config
 filesystem.load(mod_path.."functions.lua")()
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
+SMODS.current_mod.optional_features = {
+    retrigger_joker = true, -- For Mario Sticker
+    --[[post_trigger = true,
+    quantum_enhancements = true,
+    cardareas = {
+        discard = true,
+        deck = true
+    }]]
+}
+
 ---Execute a given item. Items can have these params (all parameters are optional):
 ---- enabled: file will be executed or not
 ---- exec: code that will be executed **before** loading the list of content
@@ -209,7 +219,7 @@ local showdown_config_tab = function()
 									create_config_toggle('showdown_config_consumeables_tarots', 'Tarots', 'Consumeables'),
 									create_config_toggle('showdown_config_consumeables_spectrals', 'Spectrals', 'Consumeables'),
 									create_config_toggle('showdown_config_consumeables_mathematics', 'Mathematics', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
+									--create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
 								
 								}}
 							
@@ -244,8 +254,8 @@ local showdown_config_tab = function()
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 
-									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
 									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 4, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
+									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
 	
 								}},
 							}},
@@ -285,7 +295,7 @@ local showdown_config_tab = function()
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={ -- Don't be fooled, label_color is implemented with a lovely patch (see misc.toml)
 	
-									create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
+									--create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
 	

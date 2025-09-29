@@ -1,5 +1,78 @@
 local def_list = {}
 
+--[[
+table.insert(def_list, {
+    key = 'versatile_joker',
+    text = {
+        -- Red Deck
+        { text = "$", colour = G.C.GOLD },
+        { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult", colour = G.C.GOLD },
+        -- Blue Deck
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+            colour = G.C.MULT
+        },
+        -- Green Deck
+        { text = "+$" },
+        { ref_table = "card.joker_display_values", ref_value = "dollars" },
+        -- Black Deck
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "xchips", retrigger_type = "exp" }
+            },
+            colour = G.C.CHIPS
+        },
+    },
+    reminder_text = {
+        -- Yellow Deck
+        { text = "(" },
+        { text = "$", colour = G.C.GOLD },
+        { ref_table = "card", ref_value = "sell_cost", colour = G.C.GOLD },
+        { text = ")" },
+        -- Green Deck
+        { ref_table = "card.joker_display_values", ref_value = "localized_text" },
+    },
+    --reminder_text_config = { scale = 0.35 },
+    style_function = function(card, text, reminder_text, extra)
+        if G.STAGE == G.STAGES.RUN and text and reminder_text and extra and not card.joker_display_set then
+            if G.GAME.selected_back.name ~= 'Red Deck' then
+                text.children[1] = nil
+                text.children[2] = nil
+            end
+            if G.GAME.selected_back.name ~= 'Blue Deck' then
+                text.children[3] = nil
+            end
+            if G.GAME.selected_back.name ~= 'Yellow Deck' then
+                reminder_text.children[1] = nil
+                reminder_text.children[2] = nil
+                reminder_text.children[3] = nil
+                reminder_text.children[4] = nil
+            end
+            if G.GAME.selected_back.name ~= 'Green Deck' then
+                text.children[4] = nil
+                text.children[5] = nil
+                reminder_text.children[5] = nil
+            end
+            if G.GAME.selected_back.name ~= 'Black Deck' then
+                text.children[6] = nil
+            end
+            card.joker_display_set = true
+        end
+        return false
+    end,
+    calc_function = function(card)
+        if G.GAME.selected_back.name ~= 'Green Deck' then
+            card.joker_display_values.dollars = G.GAME and G.GAME.dollars and math.max(math.min(math.floor(G.GAME.dollars / 5), G.GAME.interest_cap / 5), 0) * 1
+            card.joker_display_values.localized_text = "(" .. localize("k_round") .. ")"
+        end
+    end
+})
+]]
+
 table.insert(def_list, {
     key = 'crouton',
     text = {
@@ -136,7 +209,7 @@ table.insert(def_list, {
         { text = "+$" },
         { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult" },
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
     extra = {
         {
             { text = "(" },
@@ -193,7 +266,7 @@ table.insert(def_list, {
         { text = "$" },
         { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
 })
 
 --table.insert(def_list, { key = 'revolution' })
@@ -275,7 +348,7 @@ table.insert(def_list, {
         { text = "$" },
         { ref_table = "card.ability.extra", ref_value = "money" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
 })
 
 table.insert(def_list, { -- might need a rework
@@ -306,7 +379,7 @@ table.insert(def_list, {
         { ref_table = "card.ability.extra", ref_value = "steel_tally" },
         { text = "%" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
 })
 
 --table.insert(def_list, { key = 'diplomatic_immunity' })
@@ -358,7 +431,7 @@ table.insert(def_list, {
         { text = " " },
         { ref_table = "card.joker_display_values", ref_value = "lock3", colour = G.C.GREEN },
         { text = " " },
-        { ref_table = "card.joker_display_values", ref_value = "lock4", colour = G.C.MONEY }
+        { ref_table = "card.joker_display_values", ref_value = "lock4", colour = G.C.GOLD }
     },
     calc_function = function(card)
         for i=1, #card.ability.extra.locks do
@@ -394,7 +467,7 @@ table.insert(def_list, {
         { text = "$" },
         { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
 })
 
 table.insert(def_list, {
@@ -403,7 +476,7 @@ table.insert(def_list, {
         { text = "$" },
         { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
     reminder_text = {
         { text = "(No interest)" },
     }
@@ -643,7 +716,7 @@ table.insert(def_list, {
         { text = "+$" },
         { ref_table = "card.ability.extra", ref_value = "money", retrigger_type = "mult" }
     },
-    text_config = { colour = G.C.MONEY },
+    text_config = { colour = G.C.GOLD },
 })
 
 -- Cryptid
