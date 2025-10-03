@@ -282,13 +282,13 @@ return {
             bl_showdown_white_bishop = {
                 name = 'White Bishop',
                 text = {
-                    'idk',
+                    '-$#1# when discarding',
                 }
             },
             bl_showdown_black_bishop = {
                 name = 'Black Bishop',
                 text = {
-                    'idk',
+                    '+$#1# when discarding',
                 }
             },
             bl_showdown_white_queen = {
@@ -306,13 +306,13 @@ return {
             bl_showdown_white_king = {
                 name = 'White King',
                 text = {
-                    'idk',
+                    '-#1# Hand Size',
                 }
             },
             bl_showdown_black_king = {
                 name = 'Black King',
                 text = {
-                    'idk',
+                    '+#1# Hand Size',
                 }
             },
             bl_showdown_white_unicorn = {
@@ -330,25 +330,27 @@ return {
             bl_showdown_white_dragon = {
                 name = 'White Dragon',
                 text = {
-                    'idk',
+                    '-#1# Hand and Discard',
                 }
             },
             bl_showdown_black_dragon = {
                 name = 'Black Dragon',
                 text = {
-                    'idk',
+                    '+#1# Hand and Discard',
                 }
             },
             bl_showdown_white_princess = {
                 name = 'White Princess',
                 text = {
-                    'idk',
+                    'Destroy a random #1#',
+                    'joker when defeated',
                 }
             },
             bl_showdown_black_princess = {
                 name = 'Black Princess',
                 text = {
-                    'idk',
+                    'Creates a random #1#',
+                    'joker when defeated',
                 }
             },
         },
@@ -1153,6 +1155,19 @@ return {
                     '{C:attention}Black Stake{} difficulty',
                 }
             },
+            j_showdown_versatile_joker_chess = {
+                name = 'Versatile Joker',
+                text = {
+                    'Effect depends of {C:attention}played deck',
+                    'Disables the effect of',
+                    'every {C:attention}White Chess{} Blinds',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
             j_showdown_versatile_joker_all_in_one = {
                 name = 'Versatile Joker',
                 text = {
@@ -1183,6 +1198,7 @@ return {
                     '{s:0.8,C:inactive}#17#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
                     '{s:0.8,C:inactive}#17#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
                     '{s:0.8,C:inactive}#19#{s:0.8}Tag and Switch related cards are {s:0.8,X:attention,C:white}X#16#{s:0.8} more common and may appear multiple times',
+                    '{s:0.8,C:inactive}#19#{s:0.8}Disables the effect of every {s:0.8,C:attention}White Chess{s:0.8} Blinds',
                     '{C:inactive,s:0.8}(Currently {X:red,C:white,s:0.8}X#3#{C:inactive,s:0.8} Mult, must have room)',
                 },
             },
@@ -2168,6 +2184,7 @@ return {
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_final = 'Final',
             k_final = "Final",
+            k_rarity = "Rarity",
             k_BAM = "BAM!",
             k_strainer_broke = "Broken!",
             k_showdown_mysterious_tarot = 'Tarot?',
@@ -2184,6 +2201,7 @@ return {
             b_pull = "PULL",
             ph_money_switch = "Money Switch",
             ph_money_switch_end = "END",
+            ph_blind_disabled = "Blind Disabled!",
             nothing = "Nothing",
         },
         high_scores={},

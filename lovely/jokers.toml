@@ -605,3 +605,25 @@ match_indent = true
 payload = '''
 if G.GAME.round_resets.ante == G.GAME.win_ante and G.GAME.blind:get_type() == 'Boss' and not G.GAME.won then
 '''
+
+# Versatile Joker (Chess Deck), part 1/2
+[[patches]]
+[patches.pattern]
+target = 'blind.lua'
+match_indent = true
+pattern = "self.boss = blind and not not blind.boss"
+position = 'after'
+payload = '''
+self.chess_boss = blind and blind.chess_boss
+'''
+
+# Versatile Joker (Chess Deck), part 2/2
+[[patches]]
+[patches.pattern]
+target = 'blind.lua'
+match_indent = true
+pattern = "self.boss = blindTable.boss"
+position = 'after'
+payload = '''
+self.chess_boss = blindTable.chess_boss
+'''

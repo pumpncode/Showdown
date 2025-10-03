@@ -77,11 +77,9 @@ function chess_blind(obj)
 		atlas = "showdown_blinds",
 		pos = { x = 0, y = obj.order + 1 },
 		boss_colour = {0.8, 0.8, 0.8, 1},
-		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max },
+		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max, is_black = false },
 		dollars = 4,
 		mult = 1.5,
-		modify_hand = obj.modify_hand,
-		set_blind = function() end
 	}
 	local black_piece = {
 		type = 'Blind',
@@ -91,7 +89,7 @@ function chess_blind(obj)
 		atlas = "showdown_blinds",
 		pos = { x = 0, y = obj.order + 2 },
 		boss_colour = G.C.BLACK,
-		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max },
+		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max, is_black = true },
 		dollars = 4,
 		mult = 1.5,
 	}
@@ -111,7 +109,7 @@ white_pawn.modify_hand = function(self, cards, poker_hands, text, mult, hand_chi
 	end
 	return mult, hand_chips, false
 end
-white_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_hand or '[poker hand]'} } end
+white_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_hand or ('['..localize('k_poker_hand')..']')} } end
 white_pawn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_hand or 'Flush'} } end
 black_pawn.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
 	local eval = evaluate_poker_hand(cards)
@@ -120,7 +118,7 @@ black_pawn.modify_hand = function(self, cards, poker_hands, text, mult, hand_chi
 	end
 	return mult, hand_chips, false
 end
-black_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or '[poker hand]'} } end
+black_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or ('['..localize('k_poker_hand')..']')} } end
 black_pawn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or 'Flush'} } end
 
 local white_rook, black_rook = chess_blind{
@@ -141,7 +139,7 @@ white_rook.modify_hand = function(self, cards, poker_hands, text, mult, hand_chi
 	end
 	return mult, hand_chips, false
 end
-white_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_suit or '[suit]'} } end
+white_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_suit or ('['..localize('k_suit')..']')} } end
 white_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, G.GAME.chess_blinds_suit or 'Spades'} } end
 black_rook.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
 	local hasSuit = false
@@ -155,7 +153,7 @@ black_rook.modify_hand = function(self, cards, poker_hands, text, mult, hand_chi
 	end
 	return mult, hand_chips, false
 end
-black_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or '[suit]'} } end
+black_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or ('['..localize('k_suit')..']')} } end
 black_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or 'Spades'} } end
 
 local white_knight, black_knight = chess_blind{ -- fuck this i'm going to do it later
@@ -177,7 +175,7 @@ white_knight.modify_hand = function(self, cards, poker_hands, text, mult, hand_c
 	end
 	return mult, hand_chips, false
 end
-white_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or '[rank]', get_chess_rank(2) or '[rank]', get_chess_rank(3) or '[rank]'} } end
+white_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or ('['..localize('k_rank')..']'), get_chess_rank(2) or ('['..localize('k_rank')..']'), get_chess_rank(3) or ('['..localize('k_rank')..']')} } end
 white_knight.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or 'King', get_chess_rank(2) or '7', get_chess_rank(3) or 'Ace'} } end
 black_knight.modify_hand = function(self, cards, poker_hands, text, mult, hand_chips)
 	local hasRank = false
@@ -191,7 +189,7 @@ black_knight.modify_hand = function(self, cards, poker_hands, text, mult, hand_c
 	end
 	return mult, hand_chips, false
 end
-black_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or '[rank]', get_chess_rank(2) or '[rank]', get_chess_rank(3) or '[rank]'} } end
+black_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or ('['..localize('k_rank')..']'), get_chess_rank(2) or ('['..localize('k_rank')..']'), get_chess_rank(3) or ('['..localize('k_rank')..']')} } end
 black_knight.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 0.25 or 0.5, get_chess_rank(1) or 'King', get_chess_rank(2) or '7', get_chess_rank(3) or 'Ace'} } end
 
 local white_bishop, black_bishop = chess_blind{
@@ -200,6 +198,28 @@ local white_bishop, black_bishop = chess_blind{
 	name = "Bishop",
 	chess_boss = { min = 1 },
 }
+white_bishop.set_blind = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 + (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+white_bishop.disable = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 - (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+white_bishop.defeat = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 - (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+white_bishop.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+white_bishop.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+black_bishop.set_blind = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 - (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+black_bishop.disable = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 + (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+black_bishop.defeat = function(self)
+	G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost or 0 + (G.GAME.showdown_chess_boosted and 3 or 2)
+end
+black_bishop.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+black_bishop.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 
 local white_queen, black_queen = chess_blind{
 	order = 13,
@@ -214,6 +234,28 @@ local white_king, black_king = chess_blind{
 	name = "King",
 	chess_boss = { min = 4 },
 }
+white_king.set_blind = function(self)
+	G.hand:change_size(-(G.GAME.showdown_chess_boosted and 3 or 2))
+end
+white_king.disable = function(self)
+	G.hand:change_size(G.GAME.showdown_chess_boosted and 3 or 2)
+end
+white_king.defeat = function(self)
+	G.hand:change_size(G.GAME.showdown_chess_boosted and 3 or 2)
+end
+white_king.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+white_king.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+black_king.set_blind = function(self)
+	G.hand:change_size(G.GAME.showdown_chess_boosted and 3 or 2)
+end
+black_king.disable = function(self)
+	G.hand:change_size(-(G.GAME.showdown_chess_boosted and 3 or 2))
+end
+black_king.defeat = function(self)
+	G.hand:change_size(-(G.GAME.showdown_chess_boosted and 3 or 2))
+end
+black_king.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
+black_king.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 
 local white_unicorn, black_unicorn = chess_blind{
 	order = 17,
@@ -228,6 +270,20 @@ local white_dragon, black_dragon = chess_blind{
 	name = "Dragon",
 	chess_boss = { min = 2 },
 }
+white_dragon.set_blind = function(self)
+	ease_discard(-(G.GAME.showdown_chess_boosted and 2 or 1))
+	ease_hands_played(-(G.GAME.showdown_chess_boosted and 2 or 1))
+end
+white_dragon.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 2 or 1} } end
+white_dragon.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 2 or 1} } end
+black_dragon.set_blind = function(self)
+	ease_discard(G.GAME.showdown_chess_boosted and 2 or 1)
+	ease_hands_played(G.GAME.showdown_chess_boosted and 2 or 1)
+end
+black_dragon.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 2 or 1} } end
+black_dragon.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 2 or 1} } end
+
+Showdown.princess_blind_rarity_blacklist = { 'showdown_final', 'cry_exotic', 'cry_cursed' }
 
 local white_princess, black_princess = chess_blind{
 	order = 21,
@@ -235,6 +291,46 @@ local white_princess, black_princess = chess_blind{
 	name = "Princess",
 	chess_boss = { min = 4 },
 }
+white_princess.defeat = function(self)
+	local eligible_jokers = {}
+	for _, joker in ipairs(G.jokers.cards) do
+		if joker:is_rarity(G.GAME.princess_blind_rarity) then table.insert(eligible_jokers, joker) end
+	end
+	local destroyed_joker = pseudorandom_element(eligible_jokers, pseudoseed('white_princess'))
+	if SMODS.is_eternal(destroyed_joker) then
+		G.E_MANAGER:add_event(Event({func = function()
+			destroyed_joker:juice_up(0.4, 0.4)
+			play_sound('cancel', 0.8+(0.9 + 0.2*math.random())*0.2)
+		return true end }))
+	elseif not destroyed_joker.getting_sliced then
+		destroyed_joker.getting_sliced = true
+		G.GAME.joker_buffer = G.GAME.joker_buffer - 1
+		G.E_MANAGER:add_event(Event({func = function()
+			G.GAME.joker_buffer = 0
+			destroyed_joker:start_dissolve({HEX("57ecab")}, nil, 1.6)
+		return true end }))
+	end
+end
+white_princess.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or ('['..localize('k_rarity')..']')} } end
+white_princess.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or localize('k_uncommon')} } end
+black_princess.defeat = function(self)
+	local jokers_to_create = math.min(1, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))
+	G.GAME.joker_buffer = G.GAME.joker_buffer + jokers_to_create
+	G.E_MANAGER:add_event(Event({
+		func = function()
+			if jokers_to_create > 0 then
+				local card = create_card('Joker', G.jokers, nil, G.GAME.princess_blind_rarity, nil, nil, nil, 'black_princess')
+				card:add_to_deck()
+				G.jokers:emplace(card)
+				card:start_materialize()
+				G.GAME.joker_buffer = 0
+			end
+			return true
+		end}))
+	return nil, true
+end
+black_princess.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or ('['..localize('k_rarity')..']')} } end
+black_princess.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or localize('k_uncommon')} } end
 
 return {
 	enabled = Showdown.config["Blinds"],
@@ -312,13 +408,16 @@ return {
 			
 			local eligible_bosses = {}
 			for k, v in pairs(G.P_BLINDS) do
-				if not v.chess_boss then
+				if
+					not v.chess_boss
+					or v.chess_boss and (
+						(v.chess_boss.is_black and not G.GAME.is_black_chess)
+						or (not v.chess_boss.is_black and G.GAME.is_black_chess)
+					)
+				then
 				elseif v.in_pool and type(v.in_pool) == 'function' then
 					local res, options = v:in_pool()
-					if
-						(((G.GAME.round_resets.ante)%G.GAME.win_ante == 0 and G.GAME.round_resets.ante >= 2) == false)
-						or (options or {}).ignore_chess_check
-					then
+					if (((G.GAME.round_resets.ante)%G.GAME.win_ante == 0 and G.GAME.round_resets.ante >= 2) == false) or (options or {}).ignore_chess_check then
 						eligible_bosses[k] = res and true or nil
 					end
 				elseif v.chess_boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2) then

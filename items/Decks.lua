@@ -312,7 +312,6 @@ return {
 		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
-        Showdown.versatile['Chess Deck'] = { desc = 'j_showdown_versatile_joker_chess', pos = coordinate(23), blueprint = false }
 		if Showdown.config["Ranks"] then
 			Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, calculate = function(self, card, context)
 				if context.before and not context.blueprint then
@@ -354,6 +353,27 @@ return {
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			Showdown.versatile['Engineer Deck'] = { desc = 'j_showdown_versatile_joker_engineer', pos = coordinate(22), blueprint = false }
+		end
+		if Showdown.config["Blinds"] then
+        	Showdown.versatile['Chess Deck'] = { desc = 'j_showdown_versatile_joker_chess', pos = coordinate(25), blueprint = false, add_to_deck = function(self, card, from_debuff)
+				if G.GAME.blind and G.GAME.blind.name ~= '' and G.GAME.blind.chess_boss and not G.GAME.blind.chess_boss.is_black and not G.GAME.blind.disabled then
+					G.GAME.blind:disable()
+					play_sound('timpani')
+					card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('ph_blind_disabled')})
+				end
+			end, calculate = function(self, card, context)
+				if context.setting_blind and not card.getting_sliced and not context.blueprint and context.blind.chess_boss and not context.blind.chess_boss.is_black then
+					G.E_MANAGER:add_event(Event({func = function()
+						G.E_MANAGER:add_event(Event({func = function()
+							G.GAME.blind:disable()
+							play_sound('timpani')
+							delay(0.4)
+							return true end }))
+						card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('ph_blind_disabled')})
+					return true end }))
+					return nil, true
+				end
+			end }
 		end
 
 		function Showdown.get_stake_index(stake)

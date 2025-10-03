@@ -40,6 +40,8 @@ payload = '''
 if G.GAME.patient_scoring then G.GAME.patient_scoring = nil end
 '''
 
+# Alternate between black and white chess blinds, part 1/2
+# Rarity pool for boosted Princess Blind
 # Spawn chess blinds, part 1/6
 [[patches]]
 [patches.pattern]
@@ -48,6 +50,18 @@ match_indent = true
 pattern = "self.GAME.round_resets.blind_choices.Boss = get_new_boss()"
 position = 'before'
 payload = '''
+G.GAME.is_black_chess = math.random(0, 1) == 1
+G.GAME.princess_blind_rarity_pool = {}
+for _, v in pairs(SMODS.Rarity.obj_buffer) do
+    local in_pool = true
+    for _, w in ipairs(Showdown.princess_blind_rarity_blacklist) do
+        in_pool = in_pool and v ~= w
+    end
+    if in_pool then
+        table.insert(G.GAME.princess_blind_rarity_pool, v)
+    end
+end
+G.GAME.princess_blind_rarity = pseudorandom_element(G.GAME.showdown_chess_boosted and G.GAME.princess_blind_rarity_pool or { 'Common', 'Uncommon', 'Rare' }, pseudoseed('princess_blind_rarity'))
 if self.GAME.showdown_chess then self.GAME.round_resets.blind_choices.Big = Showdown.get_new_chess_blind() end
 '''
 
@@ -81,7 +95,7 @@ match_indent = true
 pattern = '''self.triggered = nil'''
 position = 'after'
 payload = '''
-self.chess_blind = self.config.blind.chess_boss and true or false
+self.chess_blind = self.config.blind.chess_boss and true or nil
 '''
 
 # Spawn chess blinds, part 5/6
@@ -104,6 +118,19 @@ pattern = '''elseif G.GAME.round_resets.blind == G.P_BLINDS.bl_big then'''
 position = 'at'
 payload = '''
 elseif G.GAME.round_resets.blind == G.P_BLINDS.bl_big or G.GAME.round_resets.blind.chess_boss then
+'''
+
+# Alternate between black and white chess blinds, part 2/2
+# Get random rarity for Princess blind
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = '''delay(0.4); ease_ante(1, true); delay(0.4); check_for_unlock({type = 'ante_up', ante = G.GAME.round_resets.ante + 1})'''
+position = 'before'
+payload = '''
+G.GAME.is_black_chess = not G.GAME.is_black_chess
+G.GAME.princess_blind_rarity = pseudorandom_element(G.GAME.showdown_chess_boosted and G.GAME.princess_blind_rarity_pool or { 'Common', 'Uncommon' }, pseudoseed('princess_blind_rarity'))
 '''
 
 # Chess blinds color
