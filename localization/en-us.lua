@@ -1380,6 +1380,14 @@ return {
                     '{C:inactive}(Checkout excluded)',
                 }
             },
+            j_showdown_thorn_photograph = {
+                name = 'Thorn Photograph',
+                text = {
+                    "First played {C:attention}numbered",
+                    "card gives {X:mult,C:white} X#1# {} Mult",
+                    "when scored",
+                },
+            },
         },
         Other={
             showdown_static = {

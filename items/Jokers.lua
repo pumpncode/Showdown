@@ -2179,6 +2179,36 @@ local jimbocoin = {
     end
 }
 
+local thorn_photograph = {
+    type = 'Joker',
+    order = 66,
+    key = 'thorn_photograph',
+    name = 'thorn_photograph',
+    atlas = "showdown_jokers",
+    pos = coordinate(70),
+    config = {extra = { x_mult = 1.75 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_mult } }
+	end,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play then
+            local first_numbered = nil
+            for i = 1, #context.scoring_hand do
+                if not context.scoring_hand[i]:is_face() then first_numbered = context.scoring_hand[i]; break end
+            end
+            if context.other_card == first_numbered then
+                return {
+                    x_mult = card.ability.extra.x_mult,
+                    colour = G.C.RED,
+                    card = card
+                }
+            end
+		end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2287,6 +2317,7 @@ return {
             break_the_ice,
             funnel,
             jimbocoin,
+            thorn_photograph,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
