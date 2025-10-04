@@ -268,7 +268,7 @@ return {
                 text = {
                     'X#1# Mult if played hand',
                     'contains a #2#,',
-                    'a #3# or a #4#.',
+                    'a #3# or a #4#',
                 }
             },
             bl_showdown_black_knight = {
@@ -276,7 +276,7 @@ return {
                 text = {
                     'X#1# Mult if played hand',
                     'contains a #2#,',
-                    'a #3# or a #4#.',
+                    'a #3# or a #4#',
                 }
             },
             bl_showdown_white_bishop = {
@@ -294,13 +294,22 @@ return {
             bl_showdown_white_queen = {
                 name = 'White Queen',
                 text = {
-                    'idk',
+                    'You cannot play your',
+                    'most played hand',
+                }
+            },
+            bl_showdown_white_queen_boosted = {
+                name = 'White Queen',
+                text = {
+                    'You cannot play your',
+                    'two most played hands',
                 }
             },
             bl_showdown_black_queen = {
                 name = 'Black Queen',
                 text = {
-                    'idk',
+                    'Playing your most played',
+                    'hand upgrades it by #1# level',
                 }
             },
             bl_showdown_white_king = {
@@ -318,13 +327,17 @@ return {
             bl_showdown_white_unicorn = {
                 name = 'White Unicorn',
                 text = {
-                    'idk',
+                    'Each scored card have',
+                    'a #1# in 3 chance',
+                    'to be debuffed',
                 }
             },
             bl_showdown_black_unicorn = {
                 name = 'Black Unicorn',
                 text = {
-                    'idk',
+                    'Each scored card have',
+                    'a #1# in 3 chance',
+                    'to be retriggered',
                 }
             },
             bl_showdown_white_dragon = {

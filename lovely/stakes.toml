@@ -180,7 +180,7 @@ pattern = '''for k, v in pairs(SMODS.Stickers) do'''
 position = "before"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] and self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt] then
+if Showdown.config["Stakes"] and self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt] and G.SETTINGS.run_stake_stickers then
     G.shared_stickers[self.sticker_run_alt].role.draw_major = self
     G.shared_stickers[self.sticker_run_alt]:draw_shader('dissolve', nil, nil, nil, self.children.center)
     G.shared_stickers[self.sticker_run_alt]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)

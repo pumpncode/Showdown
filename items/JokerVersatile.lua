@@ -135,11 +135,12 @@ local versatile_joker_all_in_one = {
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
 	no_collection = true,
     calculate = function(self, card, context)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.calculate then
                 local effect = deck.calculate(self, card, context)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then
@@ -152,14 +153,16 @@ local versatile_joker_all_in_one = {
                 end
             end
         end
+        if final and context.repetition and not final.repetitions then final.repetitions = 0 end
         return final
     end,
     add_to_deck = function(self, card, from_debuff)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.add_to_deck then
-                local effect = deck.add_to_deck(self, card, context)
+                local effect = deck.add_to_deck(self, card, from_debuff)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then
@@ -175,11 +178,12 @@ local versatile_joker_all_in_one = {
         return final
     end,
     remove_from_deck = function(self, card, from_debuff)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.remove_from_deck then
-                local effect = deck.remove_from_deck(self, card, context)
+                local effect = deck.remove_from_deck(self, card, from_debuff)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then

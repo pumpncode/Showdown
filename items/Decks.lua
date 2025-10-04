@@ -320,15 +320,15 @@ return {
 						hazZero = hazZero or SMODS.is_zero(context.scoring_hand[i])
 					end
 					local enhancements = {}
-					for _, v in ipairs(G.hand.cards) do
-						if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and findInTable(v.config.center, enhancements) == -1 then
-							table.insert(enhancements, v.config.center)
+					for _, _card in ipairs(G.hand.cards) do
+						if (_card.config.center ~= G.P_CENTERS.c_base and (hazZero and _card.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and findInTable(_card.config.center, enhancements) == -1 then
+							table.insert(enhancements, _card.config.center)
 						end
 					end
 					if #enhancements > 0 then
 						for i=1, #context.scoring_hand do
 							local _card = context.scoring_hand[i]
-							if _card.config.center == G.P_CENTERS.c_base and not _card.debuff then
+							if _card.config.center == G.P_CENTERS.c_base and SMODS.is_counterpart(_card) and not _card.debuff then
 								_card:set_ability(pseudorandom_element(enhancements, pseudoseed('versatile_mirror')), nil, true)
 							end
 						end

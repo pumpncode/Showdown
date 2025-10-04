@@ -360,6 +360,7 @@ for i = 1, 4 do
             ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
             ease_background_colour{new_colour = G.C.SHOWDOWN_CALCULUS, special_colour = G.C.BLACK, contrast = 2}
         end,
+        cost = (i <= 2 and 4 or i == 3 and 6 or 8),
         pos = coordinate(i),
         atlas = 'showdown_booster_packs_mathematic',
 		kind = 'booster_calculus',
