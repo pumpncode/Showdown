@@ -343,68 +343,6 @@ local operation = {
     end
 }
 
--- Booster Packs
-
-local boosters = {}
-
-for i = 1, 4 do
-    table.insert(boosters, {
-		type = 'Booster',
-		order = 8 + i,
-        key = 'calculus_'..(i <= 2 and i or i == 3 and 'jumbo' or 'mega'),
-        config = {extra = i <= 2 and 2 or 4, choose =  i <= 3 and 1 or 2},
-        create_card = function(self, card)
-            return create_card('Mathematic', G.pack_cards, nil, nil, true, true, nil, 'showdown_calculus')
-        end,
-        ease_background_colour = function(self)
-            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_CALCULUS)
-            ease_background_colour{new_colour = G.C.SHOWDOWN_CALCULUS, special_colour = G.C.BLACK, contrast = 2}
-        end,
-        cost = (i <= 2 and 4 or i == 3 and 6 or 8),
-        pos = coordinate(i),
-        atlas = 'showdown_booster_packs_mathematic',
-		kind = 'booster_calculus',
-		group_key = "k_showdown_calculus_pack",
-        in_pool = function() return (pseudorandom('calculus'..G.SEED) < 0.5) end,
-		update_pack = function(self, dt)
-            if G.buttons then G.buttons:remove(); G.buttons = nil end
-            if G.shop then G.shop.alignment.offset.y = G.ROOM.T.y+11 end
-            if not G.STATE_COMPLETE then
-                G.STATE_COMPLETE = true
-                G.CONTROLLER.interrupt.focus = true
-                G.E_MANAGER:add_event(Event({
-                    trigger = 'immediate',
-                    func = function()
-                        if self.particles and type(self.particles) == "function" then self:particles() end
-                        G.booster_pack = UIBox{
-                            definition = self:create_UIBox(),
-                            config = {align="tmi", offset = {x=0,y=G.ROOM.T.y + 9}, major = G.hand, bond = 'Weak'}
-                        }
-                        G.booster_pack.alignment.offset.y = -2.2
-                        G.ROOM.jiggle = G.ROOM.jiggle + 3
-                        self:ease_background_colour()
-                        G.E_MANAGER:add_event(Event({
-                            trigger = 'immediate',
-                            func = function()
-                                if G.GAME.draw_hand_math then G.FUNCS.draw_from_deck_to_hand() end
-                                G.E_MANAGER:add_event(Event({
-                                    trigger = 'after',
-                                    delay = 0.5,
-                                    func = function()
-                                        G.CONTROLLER:recall_cardarea_focus('pack_cards')
-                                        return true
-                                    end}))
-                                return true
-                            end
-                        }))
-                        return true
-                    end
-                }))
-            end
-        end,
-    })
-end
-
 return {
 	enabled = Showdown.config["Consumeables"]["Mathematics"],
 	list = function ()
@@ -420,15 +358,11 @@ return {
 			sequence,
 			operation,
 		}
-		for _, b in ipairs(boosters) do
-			table.insert(list, b)
-		end
 		return list
 	end,
 	atlases = {
 		{key = 'showdown_mathematic_undiscovered', path = 'Consumables/MathematicsUndiscovered.png', px = 71, py = 95},
 		{key = 'showdown_mathematic', path = 'Consumables/Mathematics.png', px = 71, py = 95},
-		{key = 'showdown_booster_packs_mathematic', path = 'BoostersMathematic.png', px = 71, py = 95},
 	},
 	exec = function()
 		function mathDestroyCard(card, args)

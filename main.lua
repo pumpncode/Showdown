@@ -219,7 +219,7 @@ local showdown_config_tab = function()
 									create_config_toggle('showdown_config_consumeables_tarots', 'Tarots', 'Consumeables'),
 									create_config_toggle('showdown_config_consumeables_spectrals', 'Spectrals', 'Consumeables'),
 									create_config_toggle('showdown_config_consumeables_mathematics', 'Mathematics', 'Consumeables'),
-									--create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
+									create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
 								
 								}}
 							

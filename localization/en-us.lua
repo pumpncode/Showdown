@@ -1553,6 +1553,38 @@ return {
                     'pull to your hand'
                 }
             },
+            p_showdown_boolean_1 = {
+                name = 'Boolean Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
+                    'pull to your hand'
+                }
+            },
+            p_showdown_boolean_2 = {
+                name = 'Boolean Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
+                    'pull to your hand'
+                }
+            },
+            p_showdown_boolean_jumbo = {
+                name = 'Jumbo Boolean Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
+                    'pull to your hand'
+                }
+            },
+            p_showdown_boolean_mega = {
+                name = 'Mega Boolean Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2# {C:showdown_boolean}Logic{} cards to',
+                    'pull to your hand'
+                }
+            },
             playing_card_zero={
                 text = {
                     " {C:light_black}#1# of {C:black}Nothing ",
@@ -1683,7 +1715,7 @@ return {
                 name = "Boolean Tag",
                 text = {
                     'Give a free',
-                    '{C:showdown_logic}Mega Boolean Pack',
+                    '{C:showdown_boolean}Mega Boolean Pack',
                 },
             },
         },
@@ -1911,7 +1943,7 @@ return {
                 name = 'The Inventor',
                 text = {
                     "Creates up to {C:attention}#1#",
-                    "random {C:showdown_logic}Logic{} card",
+                    "random {C:showdown_boolean}Logic{} card",
                     "{C:inactive}(Must have room){}",
                 }
             },
@@ -2070,10 +2102,21 @@ return {
             },
         },
         Logic = {
+            c_showdown_buffer = {
+                name = 'BUFFER',
+                text = {
+                    'Destroy a selected joker',
+                    'and creates a joker',
+                    'of the {C:attention}same rarity',
+                }
+            },
             c_showdown_and = {
                 name = 'AND',
                 text = {
-                    'idk',
+                    'Select a joker that you',
+                    'have {C:attention}multiple{} times and',
+                    'creates another copy',
+                    '{C:inactive}(Must have room)',
                 }
             },
             c_showdown_or = {
@@ -2088,26 +2131,44 @@ return {
                     'idk',
                 }
             },
+            c_showdown_imply = {
+                name = 'IMPLY',
+                text = {
+                    'Doubles the {C:attention}sell value',
+                    'of a selected joker',
+                }
+            },
             c_showdown_not = {
                 name = 'NOT',
                 text = {
-                    'idk',
+                    'Gives {C:dark_edition}Negative{} and {C:attention}Perishable{} to',
+                    'a selected joker',
+                    '{C:inactive}(Must be compatible with',
+                    '{C:inactive}Perishable)',
                 }
             },
             c_showdown_nand = {
                 name = 'NAND',
                 text = {
-                    'idk',
+                    'Gives the selected joker the',
+                    'edition of the joker on his {C:attention}right',
                 }
             },
             c_showdown_nor = {
                 name = 'NOR',
                 text = {
-                    'idk',
+                    'Remove {C:attention}#1#{} random sticker',
+                    'to a selected joker',
                 }
             },
             c_showdown_xnor = {
                 name = 'XNOR',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_nimply = {
+                name = 'NIMPLY',
                 text = {
                     'idk',
                 }
@@ -2203,6 +2264,7 @@ return {
             showdown_config_cardsleeves = "Card Sleeves",
             
             k_showdown_calculus_pack = 'Calculus Pack',
+            k_showdown_boolean_pack = 'Boolean Pack',
             k_showdown_final = 'Final',
             k_final = "Final",
             k_rarity = "Rarity",
