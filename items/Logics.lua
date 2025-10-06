@@ -28,7 +28,7 @@ local logic_buffer = {
         if one_selected then
             local joker = G.jokers.highlighted[1]
             local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
-            return findInTable(rarity, Showdown.buffer_logic_rarity_blacklist) == -1
+            return findInTable(rarity, Showdown.buffer_logic_rarity_blacklist) == -1 and not SMODS.is_eternal(joker, self)
         end
         return false
     end,
@@ -87,7 +87,7 @@ local logic_or = {
 	set = 'Logic',
 	atlas = 'showdown_logic',
     pos = coordinate(3),
-	--config = {max_highlighted = 1},
+	config = {max_highlighted = 1},
     loc_vars = function(self, info_queue, card)
         return {vars = {self.config.max_highlighted}}
     end,
@@ -241,7 +241,7 @@ local logic_xnor = {
 	set = 'Logic',
 	atlas = 'showdown_logic',
     pos = coordinate(9),
-	--config = {max_highlighted = 1},
+	config = {max_highlighted = 1},
     loc_vars = function(self, info_queue, card)
         return {vars = {self.config.max_highlighted}}
     end,
@@ -253,6 +253,14 @@ local logic_xnor = {
     end
 }
 
+Showdown.nimply_logic_rarity_cards = {
+    ['Common'] = { cards = 2, colour = G.C.RARITY[1] },
+    ['Uncommon'] = { cards = 4, colour = G.C.RARITY[2] },
+    ['Rare'] = { cards = 6, colour = G.C.RARITY[3] },
+    ['Legendary'] = { cards = 8, colour = G.C.RARITY[4] },
+    ['showdown_final'] = { cards = 8, colour = HEX("b5a653") },
+}
+
 local logic_nimply = {
     type = 'Consumable',
 	order = 10,
@@ -260,15 +268,72 @@ local logic_nimply = {
 	set = 'Logic',
 	atlas = 'showdown_logic',
     pos = coordinate(10),
-	--config = {max_highlighted = 1},
+	config = {max_highlighted = 1},
     loc_vars = function(self, info_queue, card)
-        return {vars = {self.config.max_highlighted}}
+        if G.jokers and #G.jokers.highlighted == self.config.max_highlighted then
+            local joker = G.jokers.highlighted[1]
+            local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
+            if Showdown.nimply_logic_rarity_cards[rarity] then
+                return {key = 'c_showdown_nimply', vars = { localize('k_'..(rarity:lower())), Showdown.nimply_logic_rarity_cards[rarity].cards, colours = { Showdown.nimply_logic_rarity_cards[rarity].colour } }}
+            end
+            return {key = 'c_showdown_nimply_uncompatible'}
+        end
+        return {key = 'c_showdown_nimply_no_joker'}
     end,
 	can_use = function(self)
-        --
+        local one_selected = G.jokers and #G.jokers.highlighted == self.config.max_highlighted
+        if one_selected then
+            local joker = G.jokers.highlighted[1]
+            local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
+            return Showdown.nimply_logic_rarity_cards[rarity] and not SMODS.is_eternal(joker, self)
+        end
+        return false
     end,
     use = function(self)
-		--
+        local joker = G.jokers.highlighted[1]
+        local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
+        local nbCards = Showdown.nimply_logic_rarity_cards[rarity].cards
+        local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
+        local suits = get_all_suits()
+        local cards = {}
+        for _=1, nbCards do
+            local rank, suit = pseudorandom_element(ranks, pseudoseed('logic_nimply')), pseudorandom_element(suits, pseudoseed('logic_nimply'))
+            local created_card, card = get_card_from_rank_suit(rank, suit), nil
+            if created_card then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                        card = create_card((pseudorandom(pseudoseed('logic_nimply'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.play, nil, nil, nil, true, nil, 'logic_nimply')
+                        local edition_rate = 2
+                        local edition = poll_edition('logic_nimply'..G.GAME.round_resets.ante, edition_rate, true)
+                        card:set_edition(edition)
+                        card:set_seal(SMODS.poll_seal({mod = 10}), true, true)
+                        cards[#cards+1] = card
+                        card:start_materialize({G.C.SHOWDOWN_BOOLEAN})
+                        G.play:emplace(card)
+                        return true
+                end}))
+            end
+            delay(0.2)
+        end
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                G.deck.config.card_limit = G.deck.config.card_limit + nbCards
+                playing_card_joker_effects(cards)
+                return true
+        end}))
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                for i=1, #cards do
+                    draw_card(G.play, G.deck, i*100/#cards,'up', nil ,cards[i])
+                end
+                return true
+        end}))
+        delay(0.2)
+        joker.getting_sliced = true
+        G.E_MANAGER:add_event(Event({func = function()
+            joker:start_dissolve({G.C.SHOWDOWN_BOOLEAN}, nil, 1.6)
+        return true end }))
     end
 }
 

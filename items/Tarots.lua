@@ -185,6 +185,39 @@ local red_key_piece_2 = {
 	end
 }
 
+local inventor = {
+	type = 'Consumable',
+	order = 8,
+	key = 'inventor',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	config = { create = 1 },
+    loc_vars = function(self) return {vars = {self.config.create}} end,
+    pos = coordinate(9),
+	can_use = function(self, card)
+		return #G.consumeables.cards < G.consumeables.config.card_limit or card.area == G.consumeables
+    end,
+    use = function(self, card, area, copier)
+		for i = 1, math.min(card.ability.consumeable.create, G.consumeables.config.card_limit - #G.consumeables.cards) do
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.4,
+				func = function()
+					if G.consumeables.config.card_limit > #G.consumeables.cards then
+						play_sound("timpani")
+						local _card = create_card("Logic", G.consumeables, nil, nil, nil, nil, nil, "showdown_inventor")
+						_card:add_to_deck()
+						G.consumeables:emplace(_card)
+						card:juice_up(0.3, 0.5)
+					end
+					return true
+				end,
+			}))
+		end
+		delay(0.6)
+    end
+}
+
 -- Bunco
 
 local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
@@ -250,6 +283,9 @@ return {
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, red_key_piece_1)
 			table.insert(list, red_key_piece_2)
+		end
+		if Showdown.config["Consumeables"]["Logics"] then
+			table.insert(list, inventor)
 		end
 		return list
 	end,

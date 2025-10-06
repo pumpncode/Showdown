@@ -1558,7 +1558,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
-                    'pull to your hand'
+                    'be used immediatly'
                 }
             },
             p_showdown_boolean_2 = {
@@ -1566,7 +1566,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
-                    'pull to your hand'
+                    'be used immediatly'
                 }
             },
             p_showdown_boolean_jumbo = {
@@ -1574,7 +1574,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2#{C:showdown_boolean} Logic{} cards to',
-                    'pull to your hand'
+                    'be used immediatly'
                 }
             },
             p_showdown_boolean_mega = {
@@ -1582,7 +1582,7 @@ return {
                 text = {
                     'Choose {C:attention}#1#{} of up to',
                     '{C:attention}#2# {C:showdown_boolean}Logic{} cards to',
-                    'pull to your hand'
+                    'be used immediatly'
                 }
             },
             playing_card_zero={
@@ -1711,8 +1711,8 @@ return {
                     '{C:showdown_calculus}Mega Mathematic Pack',
                 },
             },
-            tag_showdown_boolean = {
-                name = "Boolean Tag",
+            tag_showdown_logical = {
+                name = "Logical Tag",
                 text = {
                     'Give a free',
                     '{C:showdown_boolean}Mega Boolean Pack',
@@ -1846,7 +1846,7 @@ return {
                 name = "Destiny Switch",
                 text = {
                     'Gives {C:attention}#1#{} random',
-                    '{C:tarot}tarot{} card',
+                    '{C:tarot}Tarot{} card',
                     '{C:inactive}(Must have room){}',
                 },
             },
@@ -1854,7 +1854,7 @@ return {
                 name = "Exoplanet Switch",
                 text = {
                     'Gives {C:attention}#1#{} random',
-                    '{C:planet}planet{} card',
+                    '{C:planet}Planet{} card',
                     '{C:inactive}(Must have room){}',
                 },
             },
@@ -1862,7 +1862,7 @@ return {
                 name = "Summoning Switch",
                 text = {
                     'Gives {C:attention}#1#{} random',
-                    '{C:spectral}spectral{} card',
+                    '{C:spectral}Spectral{} card',
                     '{C:inactive}(Must have room){}',
                 },
             },
@@ -1870,7 +1870,7 @@ return {
                 name = "Parabola Switch",
                 text = {
                     'Gives {C:attention}#1#{} random',
-                    '{C:showdown_calculus}mathematic{} card',
+                    '{C:showdown_calculus}Mathematic{} card',
                     '{C:inactive}(Must have room)',
                 },
             },
@@ -1911,6 +1911,14 @@ return {
                 text = {
                     'Creates {C:attention}#1#{}',
                     '{C:attention}Mystery Switch',
+                },
+            },
+            tag_showdown_operation = {
+                name = "Operation Switch",
+                text = {
+                    'Gives {C:attention}#1#{} random',
+                    '{C:showdown_boolean}Logic{} card',
+                    '{C:inactive}(Must have room)',
                 },
             },
         },
@@ -2170,7 +2178,31 @@ return {
             c_showdown_nimply = {
                 name = 'NIMPLY',
                 text = {
-                    'idk',
+                    'Destroy the selected joker',
+                    'and creates {C:attention}playing cards',
+                    'Number of cards depends on',
+                    'the destroyed joker {C:attention}rarity',
+                    '{V:1}#1#{}: {C:attention}#2#',
+                }
+            },
+            c_showdown_nimply_no_joker = {
+                name = 'NIMPLY',
+                text = {
+                    'Destroy the selected joker',
+                    'and creates {C:attention}playing cards',
+                    'Number of cards depends on',
+                    'the destroyed joker {C:attention}rarity',
+                    '{C:red}No joker selected',
+                }
+            },
+            c_showdown_nimply_uncompatible = {
+                name = 'NIMPLY',
+                text = {
+                    'Destroy the selected joker',
+                    'and creates {C:attention}playing cards',
+                    'Number of cards depends on',
+                    'the destroyed joker {C:attention}rarity',
+                    '{C:red}Uncompatible rarity',
                 }
             },
         },

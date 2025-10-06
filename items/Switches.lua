@@ -707,12 +707,12 @@ local operation = {
 		if context.type == "immediate" then
 			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
 				tag:yep('+', G.C.BLUE,function()
-					local card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+					local card = create_card('Logic', G.consumeables, nil, nil, nil, nil, nil, 'operation')
 					card:add_to_deck()
 					G.consumeables:emplace(card)
 					for _=2, tag.config.cards_generated do
 						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
-							card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+							card = create_card('Logic', G.consumeables, nil, nil, nil, nil, nil, 'operation')
 							card:add_to_deck()
 							G.consumeables:emplace(card)
 						end

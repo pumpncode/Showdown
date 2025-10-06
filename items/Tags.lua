@@ -91,6 +91,42 @@ local theorem = {
 	end
 }
 
+local logical = {
+	type = 'Tag',
+	order = 4,
+	key = "logical",
+	atlas = "showdown_tags",
+	pos = coordinate(4),
+	min_ante = 2,
+	loc_vars = function(self, info_queue)
+		info_queue[#info_queue + 1] = { set = "Other", key = "p_showdown_boolean_mega", specific_vars = { 2, 5 } }
+		return { vars = {} }
+	end,
+	apply = function(self, tag, context)
+		if context.type == "new_blind_choice" then
+			tag:yep("+", G.C.SHOWDOWN_CALCULUS, function()
+				local key = "p_showdown_boolean_mega"
+				local card = Card(
+					G.play.T.x + G.play.T.w / 2 - G.CARD_W * 1.27 / 2,
+					G.play.T.y + G.play.T.h / 2 - G.CARD_H * 1.27 / 2,
+					G.CARD_W * 1.27,
+					G.CARD_H * 1.27,
+					G.P_CARDS.empty,
+					G.P_CENTERS[key],
+					{ bypass_discovery_center = true, bypass_discovery_ui = true }
+				)
+				card.cost = 0
+				card.from_tag = true
+				G.FUNCS.use_card({ config = { ref_table = card } })
+				card:start_materialize()
+				return true
+			end)
+			tag.triggered = true
+			return true
+		end
+	end
+}
+
 return {
 	enabled = Showdown.config["Tags"]["Classic"],
 	list = function ()
@@ -103,6 +139,9 @@ return {
 		end
 		if Showdown.config["Consumeables"]["Mathematics"] then
 			table.insert(list, theorem)
+		end
+		if Showdown.config["Consumeables"]["Logics"] then
+			table.insert(list, logical)
 		end
 		return list
 	end,
