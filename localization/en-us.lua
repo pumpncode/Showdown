@@ -1388,6 +1388,25 @@ return {
                     "when scored",
                 },
             },
+            j_showdown_atom = {
+                name = 'Atom',
+                text = {
+                    "If played hand is a {C:attention}High Card{}, upgrades",
+                    "the rank of the played cards",
+                },
+                unlock = {
+                    'Use a {C:tarot}Strengh{} on an {C:attention}Ace',
+                }
+            },
+            j_showdown_stencil = {
+                name = 'Stencil',
+                text = {
+                    "Puts a random seal on {C:attention}#1#{}",
+                    "cards in hand after scoring",
+                    "Bonus increases for each {C:attention}#2#{} {C:inactive}[#3#]",
+                    "cards destroyed",
+                },
+            },
         },
         Other={
             showdown_static = {

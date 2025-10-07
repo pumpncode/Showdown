@@ -751,6 +751,32 @@ table.insert(def_list, {
     end
 })
 
+table.insert(def_list, {
+    key = 'atom',
+    reminder_text = {
+        { text = "(" },
+        { ref_table = "card.joker_display_values", ref_value = "localized_text", colour = G.C.ORANGE },
+        { text = ")" },
+    },
+    calc_function = function(card)
+        card.joker_display_values.localized_text = localize('High Card', "poker_hands")
+    end
+})
+
+table.insert(def_list, {
+    key = 'stencil',
+    reminder_text = {
+        { text = "(" },
+        { ref_table = "card.joker_display_values", ref_value = "scaling" },
+        { text = "/" },
+        { ref_table = "card.ability.extra", ref_value = "scaling" },
+        { text = ")" },
+    },
+    calc_function = function(card)
+        card.joker_display_values.scaling = card.ability.extra.scaling - card.ability.extra.scaling_progress
+    end
+})
+
 -- Cryptid
 
 --table.insert(def_list, { key = 'infection' }) needs to be done

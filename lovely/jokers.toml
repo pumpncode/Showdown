@@ -627,3 +627,14 @@ position = 'after'
 payload = '''
 self.chess_boss = blindTable.chess_boss
 '''
+
+# Atom unlock
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/game_object.lua"]'
+match_indent = true
+pattern = "assert(SMODS.modify_rank(G.hand.highlighted[i], 1))"
+position = 'before'
+payload = '''
+check_for_unlock({type = 'using_strength', card = G.hand.highlighted[i]})
+'''

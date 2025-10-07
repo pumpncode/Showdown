@@ -2209,6 +2209,102 @@ local thorn_photograph = {
     end
 }
 
+local atom = {
+    type = 'Joker',
+    order = 67,
+    key = 'atom',
+    name = 'atom',
+    atlas = "showdown_jokers",
+    pos = coordinate(71),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'using_strength' and args.card and args.card.base.id == 14 then
+            unlock_card(self)
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after then
+            local eval = evaluate_poker_hand(context.scoring_hand)
+            if next(eval['High Card']) then
+                for i = 1, #context.scoring_hand do
+                    local _card = context.scoring_hand[i]
+                    flipCard(_card, i, #context.scoring_hand)
+                    delay(0.2)
+                    event({trigger = 'after', delay = 0.15, func = function()
+                        assert(SMODS.modify_rank(_card, 1))
+                    return true end})
+                    unflipCard(_card, i, #context.scoring_hand)
+                    delay(0.6)
+                end
+            end
+		end
+    end
+}
+
+local stencil = {
+    type = 'Joker',
+    order = 68,
+    key = 'stencil',
+    name = 'stencil',
+    atlas = "showdown_jokers",
+    pos = coordinate(72),
+    config = {extra = { seals_to_put = 0, scaling = 6, scaling_progress = 0 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.seals_to_put, card.ability.extra.scaling, card.ability.extra.scaling - card.ability.extra.scaling_progress } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    calculate = function(self, card, context)
+        if (context.cards_destroyed or context.remove_playing_cards) and not context.blueprint then
+            local destroyed_cards = card.ability.extra.scaling_progress + #(context.cards_destroyed and context.glass_shattered or context.removed)
+            local seals = 0
+            while destroyed_cards >= card.ability.extra.scaling do
+                destroyed_cards = destroyed_cards - card.ability.extra.scaling
+                seals = seals + 1
+            end
+            card.ability.extra.scaling_progress = destroyed_cards
+            if seals > 0 then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            card.ability.extra.seals_to_put = card.ability.extra.seals_to_put + seals
+                          return true
+                        end
+                        }))
+                        card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')})
+                        return true
+                    end
+                }))
+            end
+        elseif context.cardarea == G.jokers and context.after and card.ability.extra.seals_to_put > 0 then
+            local eligible_cards = {}
+            for _, _card in ipairs(G.hand.cards) do
+                if not _card.seal then table.insert(eligible_cards, _card) end
+            end
+            if #eligible_cards > 0 then
+                local stenciled_cards = {}
+                for _ = 1, math.min(card.ability.extra.seals_to_put, #eligible_cards) do
+                    local _card = pseudorandom_element(eligible_cards, pseudoseed('stencil'))
+                    table.insert(stenciled_cards, _card)
+                    table.remove(eligible_cards, findInTable(_card, eligible_cards))
+                end
+                for _, _card in ipairs(stenciled_cards) do
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            _card:set_seal(SMODS.poll_seal({type_key = 'stencil', guaranteed = true}), nil, true)
+                            if context.blueprint_card then context.blueprint_card:juice_up() else card:juice_up() end
+                            return true
+                        end
+                    }))
+                end
+            end
+        end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2318,6 +2414,8 @@ return {
             funnel,
             jimbocoin,
             thorn_photograph,
+            atom,
+            stencil,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
