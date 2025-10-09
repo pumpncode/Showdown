@@ -2025,7 +2025,7 @@ return {
                     'be used in boosters'
                 },
                 unlock = {
-                    'Open {C:attention}10{} {C:showdown_calculus}Calculus',
+                    'Open at least {C:attention}#1#{} {C:showdown_calculus}Calculus',
                     '{C:showdown_calculus}Packs{} in one run',
                 }
             },
@@ -2037,7 +2037,7 @@ return {
                     '{C:attention}not{} getting destroyed',
                 }
             },
-            v_showdown_lui = {
+            v_showdown_poker_night = {
                 name = 'Poker Night',
                 text = {
                     'Jokers and Playing Cards',
@@ -2045,7 +2045,7 @@ return {
                     'spawn with a {C:attention}Casino Sticker',
                 }
             },
-            v_showdown_gi = {
+            v_showdown_luigis_casino = {
                 name = 'Luigi\'s Casino',
                 text = {
                     'Jokers and Playing Cards',
