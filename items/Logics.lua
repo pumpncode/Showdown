@@ -32,14 +32,14 @@ local logic_buffer = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
         local joker = G.jokers.highlighted[1]
         local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
         joker.getting_sliced = true
         G.E_MANAGER:add_event(Event({func = function()
             joker:start_dissolve({G.C.SHOWDOWN_BOOLEAN}, nil, 1.6)
         return true end }))
-        local card = create_card('Joker', G.jokers, nil, rarity) -- add card modifiers
+        local card = create_card('Joker', G.jokers, nil, rarity)
         card:add_to_deck()
         G.jokers:emplace(card)
     end
@@ -69,7 +69,7 @@ local logic_and = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('timpani')
             local card = create_card('Joker', G.jokers, nil, nil, nil, nil, G.jokers.highlighted[1].config.center_key, 'logic_and')
@@ -107,7 +107,7 @@ local logic_or = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local joker = G.jokers.highlighted[1]
         G.E_MANAGER:add_event(Event({
             func = (function()
@@ -135,7 +135,7 @@ local logic_xor = {
 	can_use = function(self)
         return G.jokers and #G.jokers.highlighted == self.config.max_highlighted and not G.jokers.highlighted[1].ability.xor_retrigger
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
         local joker = G.jokers.highlighted[1]
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -159,7 +159,7 @@ local logic_imply = {
 	can_use = function(self)
         return G.jokers and #G.jokers.highlighted == self.config.max_highlighted
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local joker = G.jokers.highlighted[1]
         if joker then
             joker.ability.extra_value = joker.ability.extra_value + joker.sell_cost
@@ -187,7 +187,7 @@ local logic_not = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local joker = G.jokers.highlighted[1]
         if joker then
             if not (joker.edition and joker.edition.negative) then
@@ -213,7 +213,7 @@ local logic_nand = {
 	can_use = function(self)
         return G.jokers and #G.jokers.highlighted == self.config.max_highlighted and findInTable(G.jokers.highlighted[1], G.jokers.cards) < #G.jokers.cards
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
         local joker = G.jokers.highlighted[1]
         local joker_on_right = G.jokers.cards[findInTable(joker, G.jokers.cards) + 1]
         joker:set_edition(joker_on_right.edition or {})
@@ -246,7 +246,7 @@ local logic_nor = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
         local joker = G.jokers.highlighted[1]
         local stickers = {}
 		for _, v in ipairs(SMODS.Sticker.obj_buffer) do
@@ -271,15 +271,44 @@ local logic_xnor = {
 	set = 'Logic',
 	atlas = 'showdown_logic',
     pos = coordinate(9),
-	config = {max_highlighted = 1},
+	config = {max_highlighted = 1, cards_created = 2},
     loc_vars = function(self, info_queue, card)
-        return {vars = {self.config.max_highlighted}}
+        return {vars = {self.config.cards_created}}
     end,
-	can_use = function(self)
-        --
+	can_use = function(self, card)
+        return G.jokers and #G.jokers.highlighted == card.ability.max_highlighted
     end,
-    use = function(self)
-		--
+    use = function(self, card, area, copier)
+		local used_consumable = copier or card
+        local joker = G.jokers.highlighted[1]
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0.4,
+			func = function()
+                for _ = 1, used_consumable.ability.cards_created do
+                    if G.consumeables.config.card_limit > #G.consumeables.cards then
+                        local _card = create_card(
+                            "Consumeables",
+                            G.consumeables,
+                            nil,
+                            nil,
+                            nil,
+                            nil,
+                            nil,
+                            "logic_xnor"
+                        )
+                        _card:add_to_deck()
+                        G.consumeables:emplace(_card)
+                    end
+                end
+				return true
+			end,
+		}))
+		delay(0.6)
+        joker.getting_sliced = true
+        G.E_MANAGER:add_event(Event({func = function()
+            joker:start_dissolve({G.C.SHOWDOWN_BOOLEAN}, nil, 1.6)
+        return true end }))
     end
 }
 
@@ -319,7 +348,7 @@ local logic_nimply = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
         local joker = G.jokers.highlighted[1]
         local rarity = type(joker.config.center.rarity) == "number" and SMODS.Rarity.obj_buffer[joker.config.center.rarity] or joker.config.center.rarity
         local nbCards = Showdown.nimply_logic_rarity_cards[rarity].cards

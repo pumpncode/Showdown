@@ -2204,7 +2204,9 @@ return {
             c_showdown_xnor = {
                 name = 'XNOR',
                 text = {
-                    'idk',
+                    'Destroy the selected joker and',
+                    'creates {C:attention}#1#{} random consumeables',
+                    '{C:inactive}(Must have room)',
                 }
             },
             c_showdown_nimply = {
