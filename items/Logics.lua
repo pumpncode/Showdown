@@ -92,10 +92,32 @@ local logic_or = {
         return {vars = {self.config.max_highlighted}}
     end,
 	can_use = function(self)
-        --
+        if G.jokers and #G.jokers.highlighted == self.config.max_highlighted then
+            local joker = G.jokers.highlighted[1]
+            if joker.edition then
+                local tag = nil
+                for _, _tag in pairs(G.P_TAGS) do
+                    if _tag.config and _tag.config.type == 'store_joker_modify' and _tag.config.edition == joker.edition.type then
+                        tag = _tag
+                        break
+                    end
+                end
+                return not not tag and ((joker.edition.type == 'negative' and #G.jokers.cards + 1 <= G.jokers.config.card_limit) or joker.edition.type ~= 'negative')
+            end
+        end
+        return false
     end,
     use = function(self)
-		--
+		local joker = G.jokers.highlighted[1]
+        G.E_MANAGER:add_event(Event({
+            func = (function()
+                add_tag(Tag('tag_'..joker.edition.type))
+                return true
+            end)
+        }))
+        G.E_MANAGER:add_event(Event({func = function()
+            joker:set_edition({}, true)
+        return true end }))
     end
 }
 
@@ -111,10 +133,18 @@ local logic_xor = {
         return {vars = {self.config.max_highlighted}}
     end,
 	can_use = function(self)
-        return false
+        return G.jokers and #G.jokers.highlighted == self.config.max_highlighted and not G.jokers.highlighted[1].ability.xor_retrigger
     end,
     use = function(self)
-        --
+        local joker = G.jokers.highlighted[1]
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                SMODS.Stickers['showdown_xor_retrigger']:apply(joker, true)
+                play_sound("gold_seal", 1.2, 0.4)
+                joker:juice_up(0.3, 0.3)
+                return true
+            end
+        }))
     end
 }
 

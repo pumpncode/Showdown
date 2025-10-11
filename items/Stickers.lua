@@ -148,6 +148,31 @@ local star = {
 	end,
 }
 
+local xor_retrigger = {
+	type = 'Sticker',
+	order = 8,
+	key = 'xor_retrigger',
+	atlas = 'showdown_stickers',
+	pos = coordinate(999, 5),
+	badge_colour = G.C.SHOWDOWN_BOOLEAN,
+	sets = { Joker = true, Default = false, Enhanced = false },
+	should_apply = false,
+	apply = function(self, card, val)
+		card.ability[self.key] = val
+	end,
+	calculate = function(self, card, context)
+		if context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card then
+			return {
+				message = localize("k_again_ex"),
+				repetitions = 1,
+				card = card,
+			}
+		elseif context.end_of_round then
+			SMODS.Stickers['showdown_xor_retrigger']:apply(card, false)
+		end
+	end
+}
+
 return {
 	enabled = Showdown.config["Stickers"],
 	list = function ()
@@ -159,6 +184,7 @@ return {
 			luigi,
 			mario,
 			star,
+			xor_retrigger,
 		}
 		return list
 	end,

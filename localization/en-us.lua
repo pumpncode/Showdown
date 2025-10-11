@@ -1458,6 +1458,16 @@ return {
                     "debuffed",
                 },
             },
+            showdown_xor_retrigger = {
+                name = "XOR Retrigger",
+                text = {
+                    "Retrigger this",
+                    "card {C:attention}1{}",
+                    "additional time",
+                    "{C:attention}Removed{} when",
+                    "blind is defeated",
+                },
+            },
             showdown_ruby_sticker = {
                 name = "Ruby Stake",
                 text = {
@@ -2149,13 +2159,16 @@ return {
             c_showdown_or = {
                 name = 'OR',
                 text = {
-                    'idk',
+                    'Removes the {C:attention}edition{} of the',
+                    'selected joker and creates',
+                    'the corresponding {C:attention}edition tag',
                 }
             },
             c_showdown_xor = {
                 name = 'XOR',
                 text = {
-                    'idk',
+                    'Selected joker is retriggered {C:attention}1{} more',
+                    'time until {C:attention}next blind{} is defeated',
                 }
             },
             c_showdown_imply = {
@@ -2349,6 +2362,7 @@ return {
             showdown_luigi = "Luigi",
             showdown_mario = "Mario",
             showdown_star = "Star",
+            showdown_xor_retrigger = "XOR Retrigger",
         },
         poker_hand_descriptions={},
         poker_hands={},
