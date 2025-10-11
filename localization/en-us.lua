@@ -205,36 +205,6 @@ return {
             },
         },
         Blind={
-            bl_showdown_latch = {
-                name = 'The Latch',
-                text = {
-                    'Unlocks the',
-                    'Yellow Lock',
-                }
-            },
-            bl_showdown_patient = {
-                name = 'The Patient',
-                text = {
-                    'Blind requirement ',
-                    'increases if played',
-                    'hand isn\'t last',
-                }
-            },
-            bl_showdown_shameful = {
-                name = 'The Shameful',
-                text = {
-                    'Enhancements and',
-                    'seals are inactive',
-                }
-            },
-            bl_showdown_wasteful = {
-                name = 'The Wasteful',
-                text = {
-                    'You cannot play',
-                    'while having',
-                    'discards',
-                }
-            },
             bl_showdown_white_pawn = {
                 name = 'White Pawn',
                 text = {
@@ -364,6 +334,50 @@ return {
                 text = {
                     'Creates a random #1#',
                     'joker when defeated',
+                }
+            },
+            bl_showdown_latch = {
+                name = 'The Latch',
+                text = {
+                    'Unlocks the',
+                    'Yellow Lock',
+                }
+            },
+            bl_showdown_patient = {
+                name = 'The Patient',
+                text = {
+                    'Blind requirement ',
+                    'increases if played',
+                    'hand isn\'t last',
+                }
+            },
+            bl_showdown_wasteful = {
+                name = 'The Wasteful',
+                text = {
+                    'You cannot play',
+                    'while having',
+                    'discards',
+                }
+            },
+            bl_showdown_shameful = {
+                name = 'The Shameful',
+                text = {
+                    'Enhancements and',
+                    'seals are inactive',
+                }
+            },
+            bl_showdown_brick = {
+                name = 'The Brick',
+                text = {
+                    'All non-counterpart',
+                    'cards are debuffed',
+                }
+            },
+            bl_showdown_ceiling = {
+                name = 'The Ceiling',
+                text = {
+                    'The 3 highest ranks in',
+                    'your deck are debuffed',
                 }
             },
         },
@@ -1406,6 +1420,16 @@ return {
                     "Bonus increases for each {C:attention}#2#{} {C:inactive}[#3#]",
                     "cards destroyed",
                 },
+            },
+            j_showdown_o_fortuna = {
+                name = 'O Fortuna',
+                text = {
+                    "Using a {C:tarot}Tarot{} card has a",
+                    "{C:green}#1# in #2#{} chance to {C:attention}duplicate{} it",
+                },
+                unlock = {
+                    '???',
+                }
             },
         },
         Other={

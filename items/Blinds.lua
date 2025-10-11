@@ -1,71 +1,3 @@
--- Boss Blinds
-
-local latch = {
-	type = 'Blind',
-	order = 1,
-	key = "latch",
-	name = "The Latch",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 0 },
-	no_collection = true,
-	boss_colour = G.C.GREY,
-	boss = { min = 1 },
-	mult = 3,
-	defeat = function(self)
-		local lock = find_joker('4_locks')
-		if next(lock) then
-			local lockJ = lock[next(lock)]
-			if not lockJ.ability.extra.locks[4] then
-				lockJ.ability.extra.locks[4] = true
-				forced_message(localize('k_unlocked'), lockJ, G.C.YELLOW, true)
-			end
-		end
-	end,
-	in_pool = function(self, args)
-		local lock = find_joker('4_locks')
-		return next(lock) and not lock[next(lock)].ability.extra.locks[4]
-	end
-}
-
-local patient = {
-	type = 'Blind',
-	order = 2,
-	key = "patient",
-	name = "The Patient",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 1 },
-	boss_colour = G.C.BLUE,
-	boss = { min = 2 },
-	mult = 2,
-}
-
-local wasteful = {
-	type = 'Blind',
-	order = 3,
-	key = "wasteful",
-	name = "The Wasteful",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 3 },
-	boss_colour = G.C.RED,
-	boss = { min = 2 },
-	mult = 2,
-	debuff_hand = function(self, cards, hand, handname, check)
-		return G.GAME.current_round.discards_left > 0
-	end
-}
-
-local shameful = {
-	type = 'Blind',
-	order = 4,
-	key = "shameful",
-	name = "The Shameful",
-	atlas = "showdown_blinds",
-	pos = { x = 0, y = 2 },
-	boss_colour = G.C.YELLOW,
-	boss = { min = 1 },
-	mult = 2,
-}
-
 -- Chess Blinds
 
 function chess_blind(obj)
@@ -75,7 +7,7 @@ function chess_blind(obj)
 		key = 'white_'..obj.key,
 		name = 'White '..obj.name,
 		atlas = "showdown_blinds",
-		pos = { x = 0, y = obj.order + 1 },
+		pos = { x = 0, y = obj.order + 5 },
 		boss_colour = {0.8, 0.8, 0.8, 1},
 		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max, is_black = false },
 		dollars = 4,
@@ -87,7 +19,7 @@ function chess_blind(obj)
 		key = 'black_'..obj.key,
 		name = 'Black '..obj.name,
 		atlas = "showdown_blinds",
-		pos = { x = 0, y = obj.order + 2 },
+		pos = { x = 0, y = obj.order + 6 },
 		boss_colour = G.C.BLACK,
 		chess_boss = { min = obj.chess_boss.min, max = obj.chess_boss.max, is_black = true },
 		dollars = 4,
@@ -97,7 +29,7 @@ function chess_blind(obj)
 end
 
 local white_pawn, black_pawn = chess_blind{
-	order = 5,
+	order = 1,
 	key = "pawn",
 	name = "Pawn",
 	chess_boss = { min = 1 },
@@ -122,7 +54,7 @@ black_pawn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips)
 black_pawn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_hand or 'Flush'} } end
 
 local white_rook, black_rook = chess_blind{
-	order = 7,
+	order = 3,
 	key = "rook",
 	name = "Rook",
 	chess_boss = { min = 1 },
@@ -157,7 +89,7 @@ black_rook.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips)
 black_rook.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME.chess_blinds_suit or 'Spades'} } end
 
 local white_knight, black_knight = chess_blind{
-	order = 9,
+	order = 5,
 	key = "knight",
 	name = "Knight",
 	chess_boss = { min = 1 },
@@ -193,7 +125,7 @@ black_knight.loc_vars = function(self, cards, poker_hands, text, mult, hand_chip
 black_knight.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 4 or 2, G.GAME and G.GAME.chess_blinds_ranks and localize(get_chess_rank(1).key, 'ranks') or 'King', G.GAME and G.GAME.chess_blinds_ranks and localize(get_chess_rank(2).key, 'ranks') or '7', G.GAME and G.GAME.chess_blinds_ranks and localize(get_chess_rank(3).key, 'ranks') or 'Ace'} } end
 
 local white_bishop, black_bishop = chess_blind{
-	order = 11,
+	order = 7,
 	key = "bishop",
 	name = "Bishop",
 	chess_boss = { min = 1 },
@@ -222,7 +154,7 @@ black_bishop.loc_vars = function(self, cards, poker_hands, text, mult, hand_chip
 black_bishop.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 
 local white_queen, black_queen = chess_blind{
-	order = 13,
+	order = 9,
 	key = "queen",
 	name = "Queen",
 	chess_boss = { min = 4 },
@@ -260,7 +192,7 @@ black_queen.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips
 black_queen.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 2 or 1} } end
 
 local white_king, black_king = chess_blind{
-	order = 15,
+	order = 11,
 	key = "king",
 	name = "King",
 	chess_boss = { min = 4 },
@@ -289,7 +221,7 @@ black_king.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips)
 black_king.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 
 local white_unicorn, black_unicorn = chess_blind{
-	order = 17,
+	order = 13,
 	key = "unicorn",
 	name = "Unicorn",
 	chess_boss = { min = 2 },
@@ -316,7 +248,7 @@ black_unicorn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chi
 black_unicorn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {(G.GAME.showdown_chess_boosted and 2 or 1) * G.GAME.probabilities.normal} } end
 
 local white_dragon, black_dragon = chess_blind{
-	order = 19,
+	order = 15,
 	key = "dragon",
 	name = "Dragon",
 	chess_boss = { min = 2 },
@@ -337,7 +269,7 @@ black_dragon.collection_loc_vars = function(self, cards, poker_hands, text, mult
 Showdown.princess_blind_rarity_blacklist = { 'showdown_final', 'cry_exotic', 'cry_cursed' }
 
 local white_princess, black_princess = chess_blind{
-	order = 21,
+	order = 17,
 	key = "princess",
 	name = "Princess",
 	chess_boss = { min = 4 },
@@ -383,17 +315,117 @@ end
 black_princess.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or ('['..localize('k_rarity')..']')} } end
 black_princess.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME and G.GAME.princess_blind_rarity and localize('k_'..G.GAME.princess_blind_rarity:lower()) or localize('k_uncommon')} } end
 
+-- Boss Blinds
+
+local latch = {
+	type = 'Blind',
+	order = 19,
+	key = "latch",
+	name = "The Latch",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 0 },
+	no_collection = true,
+	boss_colour = G.C.GREY,
+	boss = { min = 1 },
+	mult = 3,
+	defeat = function(self)
+		local lock = find_joker('4_locks')
+		if next(lock) then
+			local lockJ = lock[next(lock)]
+			if not lockJ.ability.extra.locks[4] then
+				lockJ.ability.extra.locks[4] = true
+				forced_message(localize('k_unlocked'), lockJ, G.C.YELLOW, true)
+			end
+		end
+	end,
+	in_pool = function(self, args)
+		local lock = find_joker('4_locks')
+		return next(lock) and not lock[next(lock)].ability.extra.locks[4]
+	end
+}
+
+local patient = {
+	type = 'Blind',
+	order = 20,
+	key = "patient",
+	name = "The Patient",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 1 },
+	boss_colour = G.C.BLUE,
+	boss = { min = 2 },
+	mult = 2,
+}
+
+local wasteful = {
+	type = 'Blind',
+	order = 21,
+	key = "wasteful",
+	name = "The Wasteful",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 3 },
+	boss_colour = G.C.RED,
+	boss = { min = 2 },
+	mult = 2,
+	debuff_hand = function(self, cards, hand, handname, check)
+		return G.GAME.current_round.discards_left > 0
+	end
+}
+
+local shameful = {
+	type = 'Blind',
+	order = 22,
+	key = "shameful",
+	name = "The Shameful",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 2 },
+	boss_colour = G.C.YELLOW,
+	boss = { min = 1 },
+	mult = 2,
+}
+
+local brick = {
+	type = 'Blind',
+	order = 23,
+	key = "brick",
+	name = "The Brick",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 24 },
+	boss_colour = HEX('C6515B'),
+	boss = { min = 2 },
+	mult = 2,
+	recalc_debuff = function(self, card, from_blind)
+		return not SMODS.is_counterpart(card)
+	end,
+	in_pool = function(self, args)
+		local counterparts = 0
+		if G.deck then
+			for _, card in ipairs(G.deck.cards) do
+				if SMODS.is_counterpart(card) then counterparts = counterparts + 1 end
+			end
+		end
+		return counterparts >= 10
+	end
+}
+
+local ceiling = {
+	type = 'Blind',
+	order = 24,
+	key = "ceiling",
+	name = "The Ceiling",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 21 },
+	boss_colour = G.C.YELLOW,
+	boss = { min = 2 },
+	mult = 2,
+	recalc_debuff = function(self, card, from_blind)
+		--
+	end
+}
+
 return {
 	enabled = Showdown.config["Blinds"],
 	list = function()
-		local list = {
-			patient,
-			wasteful,
-			--shameful,
-		}
-		if Showdown.config["Jokers"]["Final"] then
-			table.insert(list, latch)
-		end
+		local list = {}
 		if Showdown.config["Decks"] or ((SMODS.Mods["CardSleeves"] or {}).can_load and Showdown.config["CrossMod"]["CardSleeves"]) then
 			table.insert(list, white_pawn)
 			table.insert(list, black_pawn)
@@ -414,6 +446,14 @@ return {
 			table.insert(list, white_princess)
 			table.insert(list, black_princess)
 		end
+		if Showdown.config["Jokers"]["Final"] then
+			table.insert(list, latch)
+		end
+		table.insert(list, patient)
+		table.insert(list, wasteful)
+		--table.insert(list, shameful)
+		table.insert(list, brick)
+		--table.insert(list, ceiling)
 		return list
 	end,
 	atlases = {
@@ -496,7 +536,11 @@ return {
 				end
 			end
 			local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('chess_boss'))
-			G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
+			if not boss then
+				if G.GAME.is_black_chess then boss = 'bl_showdown_black_pawn'
+				else boss = 'bl_showdown_white_pawn' end
+			end
+			G.GAME.bosses_used[boss] = (G.GAME.bosses_used[boss] or 0) + 1
 
 			local _poker_hands = {}
 			for k, v in pairs(G.GAME.hands) do

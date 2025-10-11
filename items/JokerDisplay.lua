@@ -526,7 +526,7 @@ table.insert(def_list, {
     },
     extra_config = { colour = G.C.GREEN, scale = 0.3 },
     calc_function = function(card)
-        local numerator, denominator = SMODS.get_probability_vars(card, 1, 2, 'gros_michel')
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, 2, 'banana')
         card.joker_display_values.odds = localize { type = 'variable', key = "jdis_odds", vars = { numerator, denominator } }
     end
 })
@@ -774,6 +774,22 @@ table.insert(def_list, {
     },
     calc_function = function(card)
         card.joker_display_values.scaling = card.ability.extra.scaling - card.ability.extra.scaling_progress
+    end
+})
+
+table.insert(def_list, {
+    key = 'o_fortuna',
+    extra = {
+        {
+            { text = "(" },
+            { ref_table = "card.joker_display_values", ref_value = "odds" },
+            { text = ")" },
+        }
+    },
+    extra_config = { colour = G.C.GREEN, scale = 0.3 },
+    calc_function = function(card)
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.duplication_chance, 'o_fortuna')
+        card.joker_display_values.odds = localize { type = 'variable', key = "jdis_odds", vars = { numerator, denominator } }
     end
 })
 

@@ -2305,6 +2305,38 @@ local stencil = {
     end
 }
 
+local o_fortuna = {
+    type = 'Joker',
+    order = 69, -- nice
+    key = 'o_fortuna',
+    name = 'o_fortuna',
+    atlas = "showdown_jokers",
+    pos = coordinate(73),
+    config = {extra = { duplication_chance = 3 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { SMODS.get_probability_vars(card, 1, card.ability.extra.duplication_chance, 'o_fortuna') } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    --[[unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,]]
+    calculate = function(self, card, context)
+        if context.using_consumeable and context.consumeable.ability.set == "Tarot" and SMODS.pseudorandom_probability(card, 'o_fortuna', 1, card.ability.extra.duplication_chance) then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    if G.consumeables.config.card_limit > #G.consumeables.cards then
+                        local _card = SMODS.create_card({set = 'Tarot', area = G.consumeables, key = context.consumeable.config.center.key})
+                        _card:add_to_deck()
+                        G.consumeables:emplace(_card)
+                    end
+                return true
+            end}))
+        end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2416,6 +2448,7 @@ return {
             thorn_photograph,
             atom,
             stencil,
+            o_fortuna,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
