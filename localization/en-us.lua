@@ -380,6 +380,13 @@ return {
                     'your deck are debuffed',
                 }
             },
+            bl_showdown_emerald_shard = {
+                name = 'Emerald Shard',
+                text = {
+                    'Half of your deck',
+                    'is debuffed',
+                }
+            },
         },
         Edition={},
         Enhanced={

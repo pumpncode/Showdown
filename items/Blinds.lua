@@ -132,23 +132,29 @@ local white_bishop, black_bishop = chess_blind{
 }
 white_bishop.set_blind = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) + (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 white_bishop.disable = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) - (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 white_bishop.defeat = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) - (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 white_bishop.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 white_bishop.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 black_bishop.set_blind = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) - (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 black_bishop.disable = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) + (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 black_bishop.defeat = function(self)
 	G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) + (G.GAME.showdown_chess_boosted and 3 or 2)
+	if G.GAME.modifiers.discard_cost == 0 then G.GAME.modifiers.discard_cost = nil end
 end
 black_bishop.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
 black_bishop.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {G.GAME.showdown_chess_boosted and 3 or 2} } end
@@ -413,13 +419,48 @@ local ceiling = {
 	key = "ceiling",
 	name = "The Ceiling",
 	atlas = "showdown_blinds",
-	pos = { x = 0, y = 21 },
+	pos = { x = 0, y = 25 },
 	boss_colour = G.C.YELLOW,
 	boss = { min = 2 },
 	mult = 2,
-	recalc_debuff = function(self, card, from_blind)
+	set_blind = function(self)
 		--
 	end
+}
+
+-- Showdown Boss Blinds
+
+local emerald_shard = {
+	type = 'Blind',
+	order = 25,
+	key = "emerald_shard",
+	name = "Emerald Shard",
+	atlas = "showdown_blinds",
+	pos = { x = 0, y = 26 },
+	boss_colour = G.C.GREEN,
+	boss = { showdown = true },
+	mult = 2,
+	set_blind = function(self)
+		G.GAME.emerald_shard_debuffed_cards = {}
+		local not_debuffed_cards = #G.deck.cards - math.floor((#G.deck.cards / 2) + 0.5)
+		print('There are '..#G.deck.cards..' cards in deck, '..not_debuffed_cards..' will not be debuffed and '..(#G.deck.cards - not_debuffed_cards)..' will be debuffed')
+		for _, card in ipairs(G.deck.cards) do
+			table.insert(G.GAME.emerald_shard_debuffed_cards, card)
+		end
+		for _ = 1, not_debuffed_cards do
+			if #G.GAME.emerald_shard_debuffed_cards > 0 then
+				local _card = pseudorandom_element(G.GAME.emerald_shard_debuffed_cards, pseudoseed('emerald_shard'))
+				table.remove(G.GAME.emerald_shard_debuffed_cards, findInTable(_card, G.GAME.emerald_shard_debuffed_cards))
+			end
+		end
+	end,
+	recalc_debuff = function(self, card, from_blind)
+		if findInTable(card, G.GAME.emerald_shard_debuffed_cards) ~= -1 then
+			table.remove(G.GAME.emerald_shard_debuffed_cards, findInTable(card, G.GAME.emerald_shard_debuffed_cards))
+			return true
+		end
+		return false
+	end,
 }
 
 return {
@@ -454,6 +495,7 @@ return {
 		--table.insert(list, shameful)
 		table.insert(list, brick)
 		--table.insert(list, ceiling)
+		table.insert(list, emerald_shard)
 		return list
 	end,
 	atlases = {
