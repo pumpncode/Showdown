@@ -385,8 +385,15 @@ local shameful = {
 	atlas = "showdown_blinds",
 	pos = { x = 0, y = 2 },
 	boss_colour = G.C.YELLOW,
-	boss = { min = 1 },
+	boss = { min = 4 },
 	mult = 2,
+	debuff_hand = function(self, cards, hand, handname, check)
+		local unenhanced = false
+		for _, card in ipairs(cards) do
+			unenhanced = unenhanced or card.config.center == G.P_CENTERS.c_base
+		end
+		return unenhanced
+	end
 }
 
 local brick = {
@@ -420,11 +427,26 @@ local ceiling = {
 	name = "The Ceiling",
 	atlas = "showdown_blinds",
 	pos = { x = 0, y = 25 },
-	boss_colour = G.C.YELLOW,
+	boss_colour = HEX('e22fc5'),
 	boss = { min = 2 },
 	mult = 2,
-	set_blind = function(self)
-		--
+	debuff_hand = function(self, cards, hand, handname, check)
+		local ranks = get_highest_ranks_from_deck(4)
+		local not_highest = true
+		for _, card in ipairs(cards) do
+			not_highest = not_highest and findInTable(card.base.value, ranks) ~= -1
+		end
+		return not_highest
+	end,
+	in_pool = function(self, args)
+		local ranks = 0
+		if G.deck then
+			for _, card in ipairs(G.deck.cards) do
+				local rank = card.base.value
+				if findInTable(rank, ranks) == -1 then table.insert(ranks, rank) end
+			end
+		end
+		return ranks >= 8
 	end
 }
 
@@ -443,7 +465,6 @@ local emerald_shard = {
 	set_blind = function(self)
 		G.GAME.emerald_shard_debuffed_cards = {}
 		local not_debuffed_cards = #G.deck.cards - math.floor((#G.deck.cards / 2) + 0.5)
-		print('There are '..#G.deck.cards..' cards in deck, '..not_debuffed_cards..' will not be debuffed and '..(#G.deck.cards - not_debuffed_cards)..' will be debuffed')
 		for _, card in ipairs(G.deck.cards) do
 			table.insert(G.GAME.emerald_shard_debuffed_cards, card)
 		end
@@ -492,9 +513,9 @@ return {
 		end
 		table.insert(list, patient)
 		table.insert(list, wasteful)
-		--table.insert(list, shameful)
+		table.insert(list, shameful)
 		table.insert(list, brick)
-		--table.insert(list, ceiling)
+		table.insert(list, ceiling)
 		table.insert(list, emerald_shard)
 		return list
 	end,

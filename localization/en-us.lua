@@ -362,8 +362,8 @@ return {
             bl_showdown_shameful = {
                 name = 'The Shameful',
                 text = {
-                    'Enhancements and',
-                    'seals are inactive',
+                    'You cannot play hands',
+                    'with unenhanced cards',
                 }
             },
             bl_showdown_brick = {
@@ -376,8 +376,9 @@ return {
             bl_showdown_ceiling = {
                 name = 'The Ceiling',
                 text = {
-                    'The 3 highest ranks in',
-                    'your deck are debuffed',
+                    'You cannot play hands',
+                    'with the 4 highest',
+                    'ranks in your deck',
                 }
             },
             bl_showdown_emerald_shard = {

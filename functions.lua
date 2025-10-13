@@ -342,3 +342,30 @@ function Showdown.versatility_description(ach)
 	}
 	]]--
 end
+
+function get_highest_ranks_from_deck(number)
+	if G.deck then
+		local ranks = {}
+		for _, card in ipairs(G.deck.cards) do
+			local rank = card.base.value
+			if findInTable(rank, ranks) == -1 then table.insert(ranks, rank) end
+		end
+		table.sort(ranks, function(a, b)
+			local rank_a, rank_b = SMODS.Ranks[a], SMODS.Ranks[b]
+			for _, next_rank in ipairs(rank_b.next) do
+				if next_rank == rank_a.key then
+					return true
+				end
+			end
+			return rank_a.sort_nominal > rank_b.sort_nominal
+		end)
+		if #ranks > number then
+			local total_ranks = {}
+			for i = 1, number do
+				table.insert(total_ranks, ranks[i])
+			end
+			return total_ranks
+		end
+		return ranks
+	end
+end
