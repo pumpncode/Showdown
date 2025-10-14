@@ -1439,6 +1439,15 @@ return {
                     '???',
                 }
             },
+            j_showdown_floating_point = {
+                name = 'Floating Point',
+                text = {
+                    "Played {C:counterpart_ranks}counterpart{} cards",
+                    "give {C:money}$#1#{} when scored",
+                    "Gives {C:money}$#2#{} if card is",
+                    "a {C:counterpart_ranks}counterpart {C:attention}face",
+                },
+            },
         },
         Other={
             showdown_static = {

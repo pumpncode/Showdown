@@ -793,6 +793,32 @@ table.insert(def_list, {
     end
 })
 
+table.insert(def_list, {
+    key = 'floating_point',
+    text = {
+        { text = "+$", colour = G.C.GOLD },
+        { ref_table = "card.joker_display_values", ref_value = "money" },
+    },
+    text_config = { colour = G.C.GOLD },
+    calc_function = function(card)
+        local count_non_face = 0
+        local count_face = 0
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+        if text ~= 'Unknown' then
+            for _, scoring_card in pairs(scoring_hand) do
+                if SMODS.is_counterpart(scoring_card) then
+                    if scoring_card:is_face() then
+                        count_face = count_face + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+                    else
+                        count_non_face = count_non_face + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+                    end
+                end
+            end
+        end
+        card.joker_display_values.money = count_non_face * card.ability.extra.money + count_face * card.ability.extra.money_face
+    end
+})
+
 -- Cryptid
 
 --table.insert(def_list, { key = 'infection' }) needs to be done

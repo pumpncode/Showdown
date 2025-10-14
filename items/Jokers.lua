@@ -2337,6 +2337,31 @@ local o_fortuna = {
     end
 }
 
+local floating_point = {
+    type = 'Joker',
+    order = 70,
+    activated = { Showdown.config["Ranks"] },
+    key = 'floating_point',
+    name = 'floating_point',
+    atlas = "showdown_jokers",
+    pos = coordinate(74),
+    config = {extra = { money = 1.5, money_face = 2.5 }},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+        return { vars = { card.ability.extra.money, card.ability.extra.money_face } }
+	end,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play and SMODS.is_counterpart(context.other_card) then
+            return {
+                dollars = context.other_card:is_face() and card.ability.extra.money_face or card.ability.extra.money,
+                card = context.other_card
+            }
+        end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2463,6 +2488,7 @@ return {
             hiding_details,
             world_map,
             cake,
+            floating_point,
             --- Final Jokers
             jimbo_makeup,
 			jimbo_hat,
