@@ -1040,7 +1040,7 @@ local what_a_steel = {
         end
     end,
     calculate = function(self, card, context)
-        if not context.blueprint then
+        if not context.blueprint then -- Should specify a context
             G.GAME.discount_percent = G.GAME.used_vouchers.v_liquidation and 50 or G.GAME.used_vouchers.v_clearance_sale and 25 or 0 -- There's no compatibility if mods change the discount
             card.ability.extra.steel_tally = 0
             for k, v in pairs(G.playing_cards) do
@@ -1422,7 +1422,7 @@ local money_cutter = {
         if args.type == 'interest' and (type(args.money) == 'number' and args.money or to_big(args.money)) >= 20 then unlock_card(self) end
     end,
     add_to_deck = function(self, card, from_debuff)
-        G.GAME.modifiers.no_interest = true
+        if not from_debuff then G.GAME.modifiers.no_interest = true end
         if next(find_joker('red_coins')) then check_for_unlock({type = 'green_deck_home'}) end
     end,
     remove_from_deck = function(self, card, from_debuff)
@@ -1638,7 +1638,8 @@ local label = {
     end,
     add_to_deck = function(self, card, from_debuff)
         card.ability.extra.can_reroll =
-            ((not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide'))
+            not from_debuff
+            and ((not (G.GAME.round_resets.blind_states.Small == 'Defeated' or G.GAME.round_resets.blind_states.Small == 'Skipped' or G.GAME.round_resets.blind_states.Small == 'Hide'))
             or not (G.GAME.round_resets.blind_states.Big == 'Defeated' or G.GAME.round_resets.blind_states.Big == 'Skipped' or G.GAME.round_resets.blind_states.Big == 'Hide'))
             and G.STATE == G.STATES.BLIND_SELECT
     end,
@@ -1835,8 +1836,10 @@ local whatever = {
         end
     end,
     add_to_deck = function(self, card, from_debuff)
-        card.base_cost = 4
-        card:set_cost()
+        if not from_debuff then
+            card.base_cost = 4
+            card:set_cost()
+        end
     end,
 }
 
@@ -2362,6 +2365,93 @@ local floating_point = {
     end
 }
 
+local ena = {
+    type = 'Joker',
+    order = 71,
+    key = 'ena',
+    name = 'ena',
+    atlas = "showdown_jokers",
+    pos = coordinate(75), soul_pos = coordinate(76),
+    config = {extra = { x_chips = 1, x_chips_scale = 0.25 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
+	end,
+    rarity = 4, cost = 10,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.card_added and context.card.ability.set == 'Joker' and not context.blueprint then
+            card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS,
+                card = card
+            }
+        elseif context.cardarea == G.jokers and context.joker_main and card.ability.extra.x_chips > 1 then
+            return {
+                x_chips = card.ability.extra.x_chips
+            }
+        end
+    end
+}
+
+Showdown.binary_10111_joker_consumeable_type_colours = {
+    ['Tarot'] = G.C.SECONDARY_SET.Tarot,
+    ['Planet'] = G.C.SECONDARY_SET.Planet,
+    ['Spectral'] = G.C.SECONDARY_SET.Spectral,
+    ['Mathematic'] = G.C.SHOWDOWN_CALCULUS,
+    ['Logic'] = G.C.SHOWDOWN_BOOLEAN,
+}
+
+local binary_10111 = {
+    type = 'Joker',
+    order = 72,
+    key = '10111',
+    name = '10111',
+    atlas = "showdown_jokers",
+    pos = coordinate(77),
+    config = {extra = { consumeable_type = 'Tarot' }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { G.GAME and card.ability.extra.consumeable_type and localize('k_'..card.ability.extra.consumeable_type:lower()) or ('['..localize('k_consumeable_type')..']'), colours = { Showdown.binary_10111_joker_consumeable_type_colours[card.ability.extra.consumeable_type] or G.C.ORANGE } } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.using_consumeable and context.consumeable.ability.set == "Logic" then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    if G.consumeables.config.card_limit > #G.consumeables.cards then
+                        local _card = SMODS.create_card({set = card.ability.extra.consumeable_type, area = G.consumeables})
+                        _card:add_to_deck()
+                        G.consumeables:emplace(_card)
+                    end
+                return true
+            end}))
+        elseif context.end_of_round and G.GAME.blind.boss and not context.blueprint then
+            local eligible_types = {}
+            for type, _ in pairs(SMODS.ConsumableTypes) do
+                if Showdown.binary_10111_joker_consumeable_type_colours[type] and type ~= card.ability.extra.consumeable_type then
+                    table.insert(eligible_types, type)
+                end
+            end
+            if #eligible_types == 0 then eligible_types = { 'Tarot' } end
+            card.ability.extra.consumeable_type = pseudorandom_element(eligible_types, pseudoseed('10111'))
+        end
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        if not from_debuff then
+            card.ability.extra.consumeable_type = ''
+            local eligible_types = {}
+            for type, _ in pairs(SMODS.ConsumableTypes) do
+                if Showdown.binary_10111_joker_consumeable_type_colours[type] and type ~= card.ability.extra.consumeable_type then
+                    table.insert(eligible_types, type)
+                end
+            end
+            if #eligible_types == 0 then eligible_types = { 'Tarot' } end
+            card.ability.extra.consumeable_type = pseudorandom_element(eligible_types, pseudoseed('10111'))
+        end
+    end,
+}
+
 -- Cryptid
 
 local infection = {
@@ -2474,6 +2564,7 @@ return {
             atom,
             stencil,
             o_fortuna,
+            ena,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
@@ -2500,6 +2591,8 @@ return {
 			unshackled_joker,
             --- Mathematic Jokers
             substitute_teacher,
+            --- Logic Jokers
+            binary_10111,
             --- Sticker Jokers
             dealer_luigi,
             --- Challenge Jokers
@@ -2691,10 +2784,12 @@ return {
             Showdown.tag_related_joker['j_cry_pity_prize'] = true
             Showdown.tag_related_joker['j_cry_smallestm'] = true
             Showdown.tag_related_joker['j_cry_energia'] = true
+            Showdown.binary_10111_joker_consumeable_type_colours['Code'] = HEX("14b341")
         end
         if (SMODS.Mods["Bunco"] or {}).can_load then
             Showdown.tag_related_joker['j_bunc_zero_shapiro'] = true
             Showdown.tag_related_joker['j_bunc_headache'] = true
+            Showdown.binary_10111_joker_consumeable_type_colours['Polymino'] = G.C.BUNCO_VIRTUAL_DARK
         end
         if (SMODS.Mods["UnStable"] or {}).can_load then
             Showdown.tag_related_joker['j_unstb_king_of_pop'] = true

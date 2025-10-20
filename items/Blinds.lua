@@ -439,14 +439,14 @@ local ceiling = {
 		return not_highest
 	end,
 	in_pool = function(self, args)
-		local ranks = 0
+		local ranks = {}
 		if G.deck then
 			for _, card in ipairs(G.deck.cards) do
 				local rank = card.base.value
 				if findInTable(rank, ranks) == -1 then table.insert(ranks, rank) end
 			end
 		end
-		return ranks >= 8
+		return #ranks >= 8
 	end
 }
 

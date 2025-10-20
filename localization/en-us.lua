@@ -1448,6 +1448,26 @@ return {
                     "a {C:counterpart_ranks}counterpart {C:attention}face",
                 },
             },
+            j_showdown_ena = {
+                name = 'ENA',
+                text = {
+                    'This joker gain {X:chips,C:white}X#1#{} Chips',
+                    'when a joker is {C:attention}acquired',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    '{E:1,s:1.3}?????'
+                }
+            },
+            j_showdown_10111 = {
+                name = '10111',
+                text = {
+                    "Using a {C:showdown_boolean}Logic{} card",
+                    "creates a {V:1}#1#{} card",
+                    "Consumeable type changes",
+                    "every {C:attention}ante",
+                },
+            },
         },
         Other={
             showdown_static = {
@@ -2386,6 +2406,7 @@ return {
             k_can_reroll="Can reroll",
             k_cannot_reroll="Cannot reroll",
             k_bye_bye = "Bye Bye!",
+            k_consumeable_type = "Consumeable Type",
             b_mathematic_cards = "Mathematic Cards",
             b_logic_cards = "Logic Cards",
             b_pull = "PULL",

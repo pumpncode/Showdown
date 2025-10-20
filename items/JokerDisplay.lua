@@ -819,6 +819,37 @@ table.insert(def_list, {
     end
 })
 
+table.insert(def_list, {
+    key = 'ena',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_chips", retrigger_type = "exp" }
+            },
+            border_colour = G.C.CHIPS,
+        }
+    }
+})
+
+table.insert(def_list, {
+    key = '10111',
+    reminder_text = {
+        { text = "(" },
+        { ref_table = "card.joker_display_values", ref_value = "localized_text", colour = G.C.ORANGE },
+        { text = ")" },
+    },
+    calc_function = function(card)
+        card.joker_display_values.localized_text = localize('k_'..card.ability.extra.consumeable_type:lower())
+    end,
+    style_function = function(card, text, reminder_text, extra)
+        if reminder_text and reminder_text.children[2] then
+            reminder_text.children[2].config.colour = Showdown.binary_10111_joker_consumeable_type_colours[card.ability.extra.consumeable_type] or G.C.ORANGE
+        end
+        return false
+    end
+})
+
 -- Cryptid
 
 --table.insert(def_list, { key = 'infection' }) needs to be done
