@@ -177,6 +177,7 @@ return {
 		local GameStart_runRef = Game.start_run
 		function Game:start_run(args)
 			GameStart_runRef(self, args)
+            self.GAME.counterpart_turbo_boost = 1
 			self.P_CENTERS.v_seed_money.config.extra = self.GAME.modifiers.less_interest and 30 or 50
 			self.P_CENTERS.v_money_tree.config.extra = self.GAME.modifiers.less_interest and 60 or 100
 			-- i should do a cryptid compat money bean with here

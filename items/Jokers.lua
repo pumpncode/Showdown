@@ -453,8 +453,8 @@ local empty_joker = {
         end
     end
 }
---[[
-local baby_jimbo = {
+
+local baby_jimbo = { -- Doesn't work properly for self-destroying cards like Gros Michel
     type = 'Joker',
     order = 14,
     key = 'baby_jimbo',
@@ -471,8 +471,7 @@ local baby_jimbo = {
             and context.removed_card
             and context.removed_card ~= card
             and context.removed_card.ability.set == 'Joker'
-            and G.GAME.latest_area_baby_jimbo
-            and G.GAME.latest_area_baby_jimbo == G.jokers
+            and context.removed_card.area == G.jokers
         then
             G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
             G.E_MANAGER:add_event(Event({
@@ -486,7 +485,6 @@ local baby_jimbo = {
                     return true
                 end
             }))
-            G.GAME.latest_area_baby_jimbo = nil
             return {
                 message = localize('k_plus_spectral'),
                 colour = G.C.SECONDARY_SET.Spectral,
@@ -498,8 +496,8 @@ local baby_jimbo = {
             card.ability.extra.sold = false
         end
     end
-})
-]]--
+}
+
 local parmesan = {
     type = 'Joker',
     order = 15,
@@ -1751,6 +1749,8 @@ local yipeee = {
     name = 'yipeee',
     atlas = "showdown_jokers",
     pos = coordinate(54),
+    display_size = { w = 71, h = 71 },
+    pixel_size = { w = 71, h = 71 },
     config = {extra = {sold = false}},
     rarity = 1, cost = 3,
     blueprint_compat = false, perishable_compat = false, eternal_compat = false,
@@ -2452,6 +2452,163 @@ local binary_10111 = {
     end,
 }
 
+local turbo = {
+    type = 'Joker',
+    order = 73,
+    activated = { Showdown.config["Ranks"] },
+    key = 'turbo',
+    name = 'turbo',
+    atlas = "showdown_jokers",
+    pos = coordinate(78),
+    config = {extra = { counterpart_value_boost = 3 }},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = {set = 'Other', key = 'counterpart_ranks'}
+        --return { vars = { card.ability.extra.counterpart_value_boost } }
+        return { vars = { 3 } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    add_to_deck = function(self, card, from_debuff)
+        --G.GAME.counterpart_turbo_boost = G.GAME.counterpart_turbo_boost * card.ability.extra.counterpart_value_boost
+        G.GAME.counterpart_turbo_boost = G.GAME.counterpart_turbo_boost * 3
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        --G.GAME.counterpart_turbo_boost = G.GAME.counterpart_turbo_boost / card.ability.extra.counterpart_value_boost
+        G.GAME.counterpart_turbo_boost = G.GAME.counterpart_turbo_boost / 3
+    end,
+}
+
+local mouthwash = {
+    type = 'Joker',
+    order = 74,
+    key = 'mouthwash',
+    name = 'mouthwash',
+    atlas = "showdown_jokers",
+    pos = coordinate(79),
+    rarity = 1, cost = 4,
+    blueprint_compat = false, perishable_compat = false, eternal_compat = false,
+    calculate = function(self, card, context)
+        if context.selling_self and not context.blueprint then -- doesn't really work
+            for _, _card in ipairs(G.jokers.cards) do
+                _card:set_debuff(false)
+            end
+            for _, _card in ipairs(G.consumeables.cards) do
+                _card:set_debuff(false)
+            end
+            for _, _card in ipairs(G.hand.cards) do
+                _card:set_debuff(false)
+            end
+        end
+    end,
+}
+
+local esotericism = {
+    type = 'Joker',
+    order = 75,
+    key = 'esotericism',
+    name = 'esotericism',
+    atlas = "showdown_jokers",
+    pos = coordinate(80),
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    --[[unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,]]
+    calculate = function(self, card, context)
+        if context.end_of_round and G.GAME.blind.boss then
+            G.E_MANAGER:add_event(Event({
+                func = function()
+                    if G.consumeables.config.card_limit > #G.consumeables.cards then
+                        local _card = SMODS.create_card({set = SMODS.pseudorandom_probability(card, 'esotericism', 1, 3) and 'Spectral' or 'Tarot', area = G.consumeables})
+                        _card:add_to_deck()
+                        G.consumeables:emplace(_card)
+                    end
+                return true
+            end}))
+        end
+    end
+}
+
+local pegman = {
+    type = 'Joker',
+    order = 76,
+    key = 'pegman',
+    name = 'pegman',
+    atlas = "showdown_jokers",
+    pos = coordinate(81),
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    --[[unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,]]
+    calculate = function(self, card, context)
+        if context.after then
+            local no_aces = true
+            for _, _card in pairs(G.play.cards) do
+                no_aces = no_aces and _card:get_id() ~= 14
+            end
+            if no_aces then
+                for _, _card in pairs(G.hand.cards) do
+                    no_aces = no_aces and _card:get_id() ~= 14
+                end
+                if no_aces then
+                    local suit = pseudorandom_element(get_all_suits(), pseudoseed('create_card'))
+                    local created_card, _card = get_card_from_rank_suit('Ace', suit), nil
+                    if created_card then
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                                _card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+                                _card:start_materialize({G.C.SECONDARY_SET.Enhanced})
+                                G.play:emplace(_card)
+                                table.insert(G.playing_cards, _card)
+                                return true
+                        end}))
+                    end
+                    delay(0.2)
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            G.deck.config.card_limit = G.deck.config.card_limit + 1
+                            playing_card_joker_effects({_card})
+                            draw_card(G.play, G.deck, 100, 'up', nil, _card)
+                            return true
+                    end}))
+                    delay(0.2)
+                end
+            end
+        end
+    end
+}
+
+local overjoy = {
+    type = 'Joker',
+    order = 77,
+    key = 'overjoy',
+    name = 'overjoy',
+    atlas = "showdown_jokers",
+    pos = coordinate(82),
+    config = {extra = { level_mult = 2 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.level_mult } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play then
+            local text = G.FUNCS.get_poker_hand_info(context.scoring_hand)
+            local hand_level = G.GAME.hands[text].level
+            context.other_card.ability.perma_bonus = (context.other_card.ability.perma_bonus or 0) + hand_level * card.ability.extra.level_mult
+            return {
+                extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
+                colour = G.C.CHIPS,
+                card = card
+            }
+        end
+    end
+}
+
 -- Cryptid
 
 local infection = {
@@ -2462,17 +2619,17 @@ local infection = {
     name = 'infection',
     atlas = "showdown_cryptidJokers",
     pos = coordinate(1),
-    config = {extra = {Xmult = 1}},
+    config = {extra = { x_mult = 1 }},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.Xmult } }
+        return { vars = { card.ability.extra.x_mult } }
 	end,
     rarity = 'cry_cursed', cost = 4,
     blueprint = true, perishable = false, eternal = false,
     calculate = function(self, card, context)
-        if context.joker_main and card.ability.extra.Xmult > 1 then
+        if context.joker_main and card.ability.extra.x_mult > 1 then
             return {
-                message = localize{type='variable',key='a_xmult',vars={card.ability.extra.Xmult}},
-                Xmult_mod = card.ability.extra.Xmult,
+                message = localize{type='variable',key='a_xmult',vars={card.ability.extra.x_mult}},
+                Xmult_mod = card.ability.extra.x_mult,
             }
         elseif context.end_of_round and not context.repetition and not context.individual then
             G.E_MANAGER:add_event(Event({
@@ -2528,7 +2685,7 @@ return {
             --baby_jimbo,
             parmesan,
             chaos_card,
-            wall,
+            --wall,
             one_doller,
             revolution,
             sinful_joker,
@@ -2565,6 +2722,10 @@ return {
             stencil,
             o_fortuna,
             ena,
+            mouthwash,
+            esotericism,
+            pegman,
+            overjoy,
             --infection, -- Cryptid
             --- Ranks Jokers
             pinpoint,
@@ -2580,6 +2741,7 @@ return {
             world_map,
             cake,
             floating_point,
+            turbo,
             --- Final Jokers
             jimbo_makeup,
 			jimbo_hat,

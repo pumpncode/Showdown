@@ -291,58 +291,6 @@ function prequire(m)
 	return err
 end
 
-function Showdown.versatility_description(ach)
-	ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}
-	ach.children.speech_bubble = UIBox{
-		definition = Showdown.speech_bubble('versatility_desc_bruh', 'quips', nil, true),
-		config = ach.config.speech_bubble_align
-	}
-	ach.children.speech_bubble:set_role{
-		role_type = 'Major',
-		xy_bond = 'Strong',
-		r_bond = 'Strong',
-		major = ach,
-	}
-	--[[
-	if not G.PROFILES[G.SETTINGS.profile].versatility then G.PROFILES[G.SETTINGS.profile].versatility = {} end
-	local no_versatile_deck = {}
-	local decks = {}
-	for k, v in pairs(G.P_CENTERS) do
-		if v.set == 'Back' and findInTable(v.name, G.PROFILES[G.SETTINGS.profile].versatility) == -1 then
-			decks[k] = v
-		end
-	end
-	table.sort(decks, function(a, b)
-		return a.order < b.order
-	end)
-	for k, v in pairs(decks) do
-		if v.unlocked then
-			table.insert(no_versatile_deck, { -- does not work
-				type = 'name_text',
-				set = 'Back',
-				key = k,
-			})
-		else
-			table.insert(no_versatile_deck, {
-				type = 'quips',
-				key = 'using_unknown_8', -- i reused a jean-paul quip lol
-			})
-		end
-	end
-	ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}
-	ach.children.speech_bubble = UIBox{
-		definition = Showdown.speech_bubble('versatility_desc', 'quips', nil, true, no_versatile_deck),
-		config = ach.config.speech_bubble_align
-	}
-	ach.children.speech_bubble:set_role{
-		role_type = 'Major',
-		xy_bond = 'Strong',
-		r_bond = 'Strong',
-		major = ach,
-	}
-	]]--
-end
-
 function get_highest_ranks_from_deck(number)
 	if G.deck then
 		local ranks = {}

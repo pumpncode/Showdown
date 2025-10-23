@@ -135,12 +135,16 @@ return {
             localize{type = text_type or 'tutorial', key = text_key or 'sb_1', vars = loc_vars or {}, nodes = text}
             if additional_text and type(additional_text) == 'table' then
                 for _, v in ipairs(additional_text) do
+                    --[[local loc_text = localize{type = v.type or 'tutorial', set = v.set, key = v.key or 'sb_1', vars = v.loc_vars or {}, nodes = text}
+                    if type(loc_text) == "nil" then
+                        text[#text+1] = { loc_text }
+                    end]]--
                     localize{type = v.type or 'tutorial', set = v.set, key = v.key or 'sb_1', vars = v.loc_vars or {}, nodes = text}
                 end
             end
             local row = {}
             for _, v in ipairs(text) do
-              row[#row+1] = {n=G.UIT.R, config={align = align_text and 'cm' or "cl"}, nodes = v}
+                row[#row+1] = {n=G.UIT.R, config={align = align_text and 'cm' or "cl"}, nodes = v}
             end
             local t = {n = G.UIT.ROOT, config = {align = "cm", minh = 0, r = 0.3, padding = 0.07, minw = 1, colour = G.C.JOKER_GREY, shadow = true}, nodes={
                           {n = G.UIT.C, config = {align = "cm", minh = 0, r = 0.2, padding = 0.1, minw = 1, colour = G.C.WHITE}, nodes = {

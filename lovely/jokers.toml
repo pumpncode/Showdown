@@ -33,17 +33,6 @@ if G.jokers and G.jokers.cards then
 end
 '''
 
-# Baby Jimbo
-[[patches]]
-[patches.pattern]
-target = 'cardarea.lua'
-pattern = 'if self.cards[i] == card then'
-position = 'after'
-match_indent = true
-payload = '''
-G.GAME.latest_area_baby_jimbo = self
-'''
-
 # Check unlock for free item (one doller)
 [[patches]]
 [patches.pattern]
@@ -637,4 +626,27 @@ pattern = "assert(SMODS.modify_rank(G.hand.highlighted[i], 1))"
 position = 'before'
 payload = '''
 check_for_unlock({type = 'using_strength', card = G.hand.highlighted[i]})
+'''
+
+# Turbo, part 1/2
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "nominal_chips = self.base.nominal > 0 and self.base.nominal or nil,"
+position = "at"
+match_indent = true
+payload = '''
+nominal_chips = self.base.nominal > 0 and self.base.nominal * (SMODS.Ranks[self.base.value].counterpart and G.GAME.counterpart_turbo_boost or 1) or nil,
+'''
+
+# Turbo, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "return self.base.nominal + self.ability.bonus + (self.ability.perma_bonus or 0)"
+position = 'at'
+payload = '''
+local base_nominal = self.base.nominal + self.ability.bonus + (self.ability.perma_bonus or 0)
+return base_nominal * (SMODS.Ranks[self.base.value].counterpart and G.GAME.counterpart_turbo_boost or 1)
 '''

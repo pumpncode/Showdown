@@ -560,8 +560,9 @@ return {
             j_showdown_baby_jimbo = {
                 name = 'Baby Jimbo',
                 text = {
-                    'Creates a {C:dark_edition}Negative{} {C:spectral}Spectral{} card',
-                    'when a joker is {C:attention}destroyed{}',
+                    'Creates a {C:dark_edition}Negative',
+                    '{C:spectral}Spectral{} card when',
+                    'a joker is {C:attention}destroyed',
                 }
             },
             j_showdown_parmesan = {
@@ -1466,6 +1467,56 @@ return {
                     "creates a {V:1}#1#{} card",
                     "Consumeable type changes",
                     "every {C:attention}ante",
+                },
+            },
+            j_showdown_turbo = {
+                name = 'Turbo',
+                text = {
+                    "Base chips of {C:counterpart_ranks}counterpart",
+                    "{C:attention}cards{} are multiplied by {C:attention}#1#",
+                },
+            },
+            j_showdown_mouthwash = {
+                name = 'Mouthwash',
+                text = {
+                    "{C:attention}Rebuff{} all cards on",
+                    "screen when {C:attention}sold",
+                    "until the end of round",
+                },
+                unlock = {
+                    '{E:1,s:1.3}?????'
+                }
+            },
+            j_showdown_esotericism = {
+                name = 'Esotericism',
+                text = {
+                    "Creates either a {C:tarot}Tarot",
+                    "or a {C:spectral}Spectral{} card",
+                    "at the end of {C:attention}Boss Blind",
+                },
+                unlock = {
+                    '{E:1,s:1.3}?????'
+                }
+            },
+            j_showdown_pegman = {
+                name = 'Pegman',
+                text = {
+                    "If hand and scored hand",
+                    "does not contain an {C:attention}Ace",
+                    "creates an {C:attention}Ace{} and puts",
+                    "it in the deck",
+                },
+                unlock = {
+                    '{E:1,s:1.3}?????'
+                }
+            },
+            j_showdown_overjoy = {
+                name = 'Overjoy',
+                text = {
+                    "Every played {C:attention}card{} permanently",
+                    "gains {C:attention}#1#{} times the level of",
+                    "played {C:attention}poker hand{} in chips",
+                    "when scored",
                 },
             },
         },

@@ -850,9 +850,54 @@ table.insert(def_list, {
     end
 })
 
+--table.insert(def_list, { key = 'turbo' })
+
+--table.insert(def_list, { key = 'mouthwash' })
+
+--table.insert(def_list, { key = 'esotericism' })
+
+table.insert(def_list, {
+    key = 'pegman',
+    text = {
+        { text = "+" },
+        { ref_table = "card.joker_display_values", ref_value = "count", retrigger_type = "mult" },
+    },
+    text_config = { colour = G.C.ORANGE },
+    reminder_text = {
+        { text = "(" },
+        { ref_table = "card.joker_display_values", ref_value = "localized_text", colour = G.C.ORANGE },
+        { text = ")" },
+    },
+    calc_function = function(card)
+        local no_aces = true
+        for _, _card in pairs(G.play.cards) do
+            no_aces = no_aces and _card:get_id() ~= 14
+        end
+        if no_aces then
+            for _, _card in pairs(G.hand.cards) do
+                no_aces = no_aces and _card:get_id() ~= 14
+            end
+        end
+        card.joker_display_values.count = no_aces and 1 or 0
+        card.joker_display_values.localized_text = localize("Ace", "ranks")
+    end,
+})
+
+--table.insert(def_list, { key = 'overjoy' })
+
 -- Cryptid
 
---table.insert(def_list, { key = 'infection' }) needs to be done
+table.insert(def_list, {
+    key = 'infection',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+        }
+    }
+})
 
 return {
     enabled = JokerDisplay,
