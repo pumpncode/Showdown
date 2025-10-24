@@ -360,7 +360,7 @@ local golden_roulette = {
     blueprint_compat = true, perishable_compat = true, eternal_compat = false,
     calculate = function(self, card, context)
         if context.end_of_round and not context.repetition and not context.individual then
-            if not context.blueprint and pseudorandom('golden_roulette') < G.GAME.probabilities.normal / 6 then
+            if not context.blueprint and SMODS.pseudorandom_probability(card, 'golden_roulette', 1, 6) then
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         play_sound('tarot1')
@@ -1561,7 +1561,7 @@ local banana = {
     end,
     calculate = function(self, card, context)
         if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
-            if pseudorandom('banana') < G.GAME.probabilities.normal/2 then
+            if SMODS.pseudorandom_probability(card, 'banana', 1, 2) then
                 card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
                 return {
                     message = localize('k_upgrade_ex')
@@ -1871,7 +1871,7 @@ local madotsuki = {
                     blocking = false,
                     blockable = false,
                     func = (function()
-                        if pseudorandom('madotsuki') < G.GAME.probabilities.normal/card.ability.extra.edition_chance then
+                        if SMODS.pseudorandom_probability(card, 'madotsuki', 1, card.ability.extra.edition_chance) then
                             local edition = poll_edition('madotsuki', nil, true, true)
                             if edition then _card:set_edition(edition)
                             else print('No edition was polled with Madotsuki') end

@@ -118,7 +118,7 @@ local cheater = {
 							_card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 							G.play:emplace(_card)
 							table.insert(G.playing_cards, _card)
-							if G.GAME.cheater_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+							if G.GAME.cheater_seal and SMODS.pseudorandom_probability(card, 'cheater_add_seal', 1, 6) then
 								_card:set_seal(SMODS.poll_seal({guaranteed = true}), nil, true)
 							end
 							cards[#cards+1] = _card
@@ -147,7 +147,7 @@ local cheater = {
 			and not context.destroy_card.debuff
 			and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
 			and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not context.destroy_card:get_seal())) -- This is for the Cheater Sleeve
-			and pseudorandom('cheater') < G.GAME.probabilities.normal/4
+			and SMODS.pseudorandom_probability(card, 'cheater', 1, 4)
 		then
             return { remove = true }
 		end

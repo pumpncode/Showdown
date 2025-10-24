@@ -250,7 +250,7 @@ return {
 		end
 
 		function SMODS.is_counterpart(card)
-			return next(find_joker("hiding_details")) or (SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is)
+			return next(find_joker("hiding_details")) or (SMODS.Ranks[card.base.value] and SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is)
 		end
 
 		function SMODS.is_zero(card)

@@ -23,7 +23,7 @@ local ghost = {
 			and context.cardarea == G.play
 			and context.destroy_card == card
 			and not card.debuff
-			and pseudorandom('ghost') < G.GAME.probabilities.normal/card.ability.extra.shatter_chance
+			and SMODS.pseudorandom_probability(card, 'ghost', 1, card.ability.extra.shatter_chance)
 		then
 			return { remove = true }
 		end

@@ -143,3 +143,14 @@ position = 'at'
 payload = '''
 if not v.chess_boss and v.boss.showdown then
 '''
+
+# Emerald Shard
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = "-- TARGET: main end_of_round evaluation"
+position = 'after'
+payload = '''
+if G.GAME.emerald_shard_debuffed_cards then G.GAME.emerald_shard_debuffed_cards = nil end
+'''

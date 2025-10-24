@@ -257,7 +257,7 @@ function create_cards_in_deck(rank_list, suit_list, nb, args)
 					card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 					G.play:emplace(card)
 					table.insert(G.playing_cards, card)
-					if args.cheater_add_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+					if args.cheater_add_seal and SMODS.pseudorandom_probability(card, 'cheater_add_seal', 1, 6) then
 						local seal = SMODS.poll_seal({guaranteed = true})
 						print(seal)
 						card:set_seal(seal, nil, true)

@@ -1,7 +1,9 @@
-local def_list = {}
+local def_list = { jokers = {}, blinds = {} }
+
+-- Jokers
 
 --[[
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'versatile_joker',
     text = {
         -- Red Deck
@@ -73,7 +75,7 @@ table.insert(def_list, {
 })
 ]]
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'crouton',
     text = {
         {
@@ -97,7 +99,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'pinpoint',
     text = {
         {
@@ -122,7 +124,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'math_teacher',
     text = {
         { text = "+" },
@@ -131,7 +133,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.CHIPS },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'gruyere',
     text = {
         { text = "+" },
@@ -140,7 +142,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.MULT },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'mirror',
     retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
         --if held_in_hand then return 0 end
@@ -149,7 +151,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'crime_scene',
     text = {
         {
@@ -161,11 +163,11 @@ table.insert(def_list, {
     }
 })
 
---table.insert(def_list, { key = 'ping_pong' })
+--table.insert(def_list.jokers, { key = 'ping_pong' })
 
---table.insert(def_list, { key = 'color_splash' })
+--table.insert(def_list.jokers, { key = 'color_splash' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'blue',
     text = {
         { text = "+1" },
@@ -173,7 +175,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.CHIPS }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'spotted_joker',
     text = {
         { text = "+" },
@@ -203,7 +205,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'golden_roulette',
     text = {
         { text = "+$" },
@@ -224,9 +226,9 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'bacteria' })
+--table.insert(def_list.jokers, { key = 'bacteria' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'empty_joker',
     text = {
         { text = "+" },
@@ -250,17 +252,17 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'baby_jimbo' })
+--table.insert(def_list.jokers, { key = 'baby_jimbo' })
 
---table.insert(def_list, { key = 'parmesan' })
+--table.insert(def_list.jokers, { key = 'parmesan' })
 
---table.insert(def_list, { key = 'chaos_card' })
+--table.insert(def_list.jokers, { key = 'chaos_card' })
 
---table.insert(def_list, { key = 'sim_card' })
+--table.insert(def_list.jokers, { key = 'sim_card' })
 
---table.insert(def_list, { key = 'wall' })
+--table.insert(def_list.jokers, { key = 'wall' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'one_doller',
     text = {
         { text = "$" },
@@ -269,9 +271,9 @@ table.insert(def_list, {
     text_config = { colour = G.C.GOLD },
 })
 
---table.insert(def_list, { key = 'revolution' })
+--table.insert(def_list.jokers, { key = 'revolution' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'fruit_sticker',
     text = {
         {
@@ -296,7 +298,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'sinful_joker',
     text = {
         { text = "+" },
@@ -317,19 +319,19 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'egg_drawing' })
+--table.insert(def_list.jokers, { key = 'egg_drawing' })
 
---table.insert(def_list, { key = 'jimbo_makeup' })
+--table.insert(def_list.jokers, { key = 'jimbo_makeup' })
 
---table.insert(def_list, { key = 'jimbo_hat' })
+--table.insert(def_list.jokers, { key = 'jimbo_hat' })
 
---table.insert(def_list, { key = 'jimbo_bells' })
+--table.insert(def_list.jokers, { key = 'jimbo_bells' })
 
---table.insert(def_list, { key = 'jimbo_collar' })
+--table.insert(def_list.jokers, { key = 'jimbo_collar' })
 
---table.insert(def_list, { key = 'gary_mccready' })
+--table.insert(def_list.jokers, { key = 'gary_mccready' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'ultimate_joker',
     text = {
         {
@@ -342,7 +344,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'strainer',
     text = {
         { text = "$" },
@@ -351,7 +353,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.GOLD },
 })
 
-table.insert(def_list, { -- might need a rework
+table.insert(def_list.jokers, { -- might need a rework
     key = 'billiard',
     retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
         local hand = #G.hand.highlighted > 0 and G.hand.highlighted or G.play.cards
@@ -371,9 +373,9 @@ table.insert(def_list, { -- might need a rework
     end
 })
 
---table.insert(def_list, { key = 'hiding_details' })
+--table.insert(def_list.jokers, { key = 'hiding_details' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'what_a_steel',
     text = {
         { ref_table = "card.ability.extra", ref_value = "steel_tally" },
@@ -382,11 +384,11 @@ table.insert(def_list, {
     text_config = { colour = G.C.GOLD },
 })
 
---table.insert(def_list, { key = 'diplomatic_immunity' })
+--table.insert(def_list.jokers, { key = 'diplomatic_immunity' })
 
---table.insert(def_list, { key = 'nitroglycerin' })
+--table.insert(def_list.jokers, { key = 'nitroglycerin' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'substitute_teacher',
     text = {
         { text = "+", colour = G.C.CHIPS },
@@ -400,7 +402,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'world_map',
     text = {
         { text = "+" },
@@ -409,11 +411,11 @@ table.insert(def_list, {
     text_config = { colour = G.C.CHIPS },
 })
 
---table.insert(def_list, { key = 'bugged_seed' })
+--table.insert(def_list.jokers, { key = 'bugged_seed' })
 
---table.insert(def_list, { key = 'sick_trick' })
+--table.insert(def_list.jokers, { key = 'sick_trick' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'jaws',
     text = {
         { text = "+" },
@@ -422,7 +424,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.CHIPS },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = '4_locks',
     text = {
         { ref_table = "card.joker_display_values", ref_value = "lock1", colour = G.C.RED },
@@ -440,7 +442,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'unshackled_joker',
     text = {
         {
@@ -461,7 +463,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'red_coins',
     text = {
         { text = "$" },
@@ -470,7 +472,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.GOLD },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'money_cutter',
     text = {
         { text = "$" },
@@ -482,7 +484,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'passage_of_time',
     text = {
         { text = "+", colour = G.C.CHIPS },
@@ -492,7 +494,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'colored_glasses',
     text = {
         { text = "+" },
@@ -501,7 +503,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.MULT },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'joker_variance_authorithy',
     text = {
         { text = "+" },
@@ -510,7 +512,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.MULT },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'banana',
     text = {
         { text = "+" },
@@ -531,7 +533,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'label',
     reminder_text = {
         { ref_table = "card.joker_display_values", ref_value = "active_text" },
@@ -551,9 +553,9 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'silver_stars' })
+--table.insert(def_list.jokers, { key = 'silver_stars' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'gold_star',
     text = {
         {
@@ -566,13 +568,13 @@ table.insert(def_list, {
     }
 })
 
---table.insert(def_list, { key = 'shady_dealer' })
+--table.insert(def_list.jokers, { key = 'shady_dealer' })
 
---table.insert(def_list, { key = 'yipeee' })
+--table.insert(def_list.jokers, { key = 'yipeee' })
 
---table.insert(def_list, { key = 'dealer_luigi' })
+--table.insert(def_list.jokers, { key = 'dealer_luigi' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'whatever',
     text = {
         { text = "+" },
@@ -589,7 +591,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'madotsuki',
     extra = {
         {
@@ -605,7 +607,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'urotsuki',
     text = {
         {
@@ -618,7 +620,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'minnatsuki',
     text = {
         { text = "+" },
@@ -640,9 +642,9 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'pop_up' })
+--table.insert(def_list.jokers, { key = 'pop_up' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'matplotlib',
     text = {
         { text = "+", colour = G.C.CHIPS },
@@ -670,7 +672,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'cake',
     text = {
         { text = "+" },
@@ -679,7 +681,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.MULT },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'window',
     text = {
         { text = "+" },
@@ -688,7 +690,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.MULT },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'break_the_ice',
     text = {
         { text = "+" },
@@ -697,7 +699,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.CHIPS },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'funnel',
     text = {
         {
@@ -710,7 +712,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'jimbocoin',
     text = {
         { text = "+$" },
@@ -719,7 +721,7 @@ table.insert(def_list, {
     text_config = { colour = G.C.GOLD },
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'thorn_photograph',
     text = {
         {
@@ -751,7 +753,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'atom',
     reminder_text = {
         { text = "(" },
@@ -763,7 +765,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'stencil',
     reminder_text = {
         { text = "(" },
@@ -777,7 +779,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'o_fortuna',
     extra = {
         {
@@ -793,7 +795,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'floating_point',
     text = {
         { text = "+$", colour = G.C.GOLD },
@@ -819,7 +821,7 @@ table.insert(def_list, {
     end
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'ena',
     text = {
         {
@@ -832,7 +834,7 @@ table.insert(def_list, {
     }
 })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = '10111',
     reminder_text = {
         { text = "(" },
@@ -850,13 +852,13 @@ table.insert(def_list, {
     end
 })
 
---table.insert(def_list, { key = 'turbo' })
+--table.insert(def_list.jokers, { key = 'turbo' })
 
---table.insert(def_list, { key = 'mouthwash' })
+--table.insert(def_list.jokers, { key = 'mouthwash' })
 
---table.insert(def_list, { key = 'esotericism' })
+--table.insert(def_list.jokers, { key = 'esotericism' })
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'pegman',
     text = {
         { text = "+" },
@@ -883,11 +885,11 @@ table.insert(def_list, {
     end,
 })
 
---table.insert(def_list, { key = 'overjoy' })
+--table.insert(def_list.jokers, { key = 'overjoy' })
 
--- Cryptid
+--- Cryptid
 
-table.insert(def_list, {
+table.insert(def_list.jokers, {
     key = 'infection',
     text = {
         {
@@ -899,11 +901,91 @@ table.insert(def_list, {
     }
 })
 
+-- Blinds
+-- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
+
+--table.insert(def_list.blinds, { key = 'latch' })
+
+table.insert(def_list.blinds, { -- TODO
+    key = 'patient',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        return false
+    end
+})
+
+table.insert(def_list.blinds, {
+    key = 'wasteful',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        return G.GAME.current_round.discards_left > 0
+    end
+})
+
+table.insert(def_list.blinds, {
+    key = 'shameful',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        local unenhanced = false
+		for _, card in ipairs(full_hand) do
+            if card then
+			    unenhanced = unenhanced or card.config.center == G.P_CENTERS.c_base
+            end
+		end
+		return unenhanced
+    end
+})
+
+table.insert(def_list.blinds, {
+    key = 'brick',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        if text ~= 'Unknown' then
+            for _, scoring_card in pairs(scoring_hand) do
+                if scoring_card and not SMODS.is_counterpart(scoring_card) then
+                    return true
+                end
+            end
+        end
+        return false
+    end
+})
+
+table.insert(def_list.blinds, {
+    key = 'ceiling',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        if text ~= 'Unknown' then
+            local ranks = get_highest_ranks_from_deck(4)
+            local highest = false
+            for _, scoring_card in ipairs(scoring_hand) do
+                if scoring_card and not highest then
+                    highest = highest or findInTable(scoring_card.base.value, ranks) ~= -1
+                end
+            end
+            return highest
+        end
+        return false
+    end
+})
+
+table.insert(def_list.blinds, {
+    key = 'emerald_shard',
+    trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
+        if text ~= 'Unknown' then
+            for _, scoring_card in pairs(scoring_hand) do
+                if scoring_card and findInTable(scoring_card, G.GAME.emerald_shard_debuffed_cards) ~= -1 then
+                    return true
+                end
+            end
+        end
+        return false
+    end
+})
+
 return {
     enabled = JokerDisplay,
     exec = function ()
-        for _, def in ipairs(def_list) do
+        for _, def in ipairs(def_list.jokers) do
             JokerDisplay.Definitions["j_showdown_"..def.key] = def
+        end
+        for _, def in ipairs(def_list.blinds) do
+            JokerDisplay.Blind_Definitions["bl_showdown_"..def.key] = def
         end
     end,
     order = 3,

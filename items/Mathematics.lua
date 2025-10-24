@@ -22,7 +22,7 @@ local constant = {
     pos = coordinate(1),
 	config = {max_highlighted = 1},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         return G.hand and #G.hand.highlighted == self.config.max_highlighted and #G.hand.cards >= 2
     end,
     use = function()
@@ -62,10 +62,10 @@ local variable = {
     pos = coordinate(2),
 	config = {max_highlighted = 3, minMoney = 0, maxMoney = 6},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.minMoney, self.config.maxMoney}} end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         return #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local money = 0
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
@@ -87,10 +87,10 @@ local func = {
     pos = coordinate(3),
 	config = {max_highlighted = 4, toDestroy = 1},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         return G.hand and #G.hand.highlighted == self.config.max_highlighted
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
 		local cen_pool = getEnhancements()
 		local cen_pool_zero = getEnhancements({"m_wild"})
@@ -124,13 +124,13 @@ local shape = {
     pos = coordinate(4),
 	config = {max_highlighted = 4, toDestroy = 2},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         if G.hand and #G.hand.highlighted == self.config.max_highlighted then
             return true
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		for i=1, #G.hand.highlighted do
             event({trigger = 'after', delay = 0.1, func = function()
 				local edition = poll_edition(nil, nil, nil, true); G.hand.highlighted[i]:set_edition(edition, true);
@@ -159,7 +159,7 @@ local vector = {
     pos = coordinate(5),
 	config = {max_highlighted = 2},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, (G.GAME and G.GAME.showdown_vector or 0)}} end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             return true
         end
@@ -189,7 +189,7 @@ local probability = {
     loc_vars = function(self, info_queue, card)
 		return { vars = {self.config.max_highlighted, self.config.mult_joker, G.GAME.probabilities.normal * self.config.extra.initial_odds, self.config.extra.odds} }
 	end,
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
         if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 and #G.jokers.cards >= 1 then
             return joker_probability_compat(G.jokers.cards[1])
         end
@@ -200,7 +200,7 @@ local probability = {
 		local joker = G.jokers.cards[1]
 		for i=#G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
-				if G.hand.highlighted ~= nil and (pseudorandom("showdown_probability") < (G.GAME.probabilities.normal * self.config.extra.initial_odds) / card.ability.extra.odds) then
+				if G.hand.highlighted ~= nil and SMODS.pseudorandom_probability(card, 'showdown_probability', self.config.extra.initial_odds, card.ability.extra.odds) then
                 	if mathDestroyCard(G.hand.highlighted[i], {nil, first_dissolved}) then first_dissolved = false end
 					for k, v in pairs(joker.ability) do
 						if
@@ -289,7 +289,7 @@ local operation = {
         end
         return false
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local card1 = G.hand.highlighted[1]
 		local card2 = G.hand.highlighted[2]
 		event({trigger = 'after', delay = 0.1, func = function()
@@ -301,7 +301,7 @@ local operation = {
 			local function randomValue(value1, value2)
 				if not value1 then return value2
 				elseif not value2 then return value1
-				elseif pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+				elseif SMODS.pseudorandom_probability(card, 'showdown_Probability', 1, 2) then
 					return value1
 				else
 					return value2
@@ -326,7 +326,7 @@ local operation = {
 			enhancements["Default Base"] = "c_base"
 			if enhancements[cardValues1.ability.name] == "Default Base" then center = G.P_CENTERS[enhancements[cardValues2.ability.name]]
 			elseif enhancements[cardValues2.ability.name] == "Default Base" then center = G.P_CENTERS[enhancements[cardValues1.ability.name]]
-			elseif pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then
+			elseif SMODS.pseudorandom_probability(card, 'showdown_Probability', 1, 2) then
 				center = G.P_CENTERS[enhancements[cardValues2.ability.name]]
 			else
 				center = G.P_CENTERS[enhancements[cardValues1.ability.name]]
@@ -370,7 +370,7 @@ return {
 			if not args then args = {} end
 			if
 				not G.GAME.mathematic_no_destroy_chance
-				or (G.GAME.mathematic_no_destroy_chance and pseudorandom('mathematic_no_destroy_chance') < G.GAME.probabilities.normal / 3)
+				or (G.GAME.mathematic_no_destroy_chance and SMODS.pseudorandom_probability(card, 'mathematic_no_destroy_chance', 1, 3))
 			then
 				card:start_dissolve(args.dissolve_colours, args.silent, args.dissolve_time_fac, args.no_juice)
 				return true

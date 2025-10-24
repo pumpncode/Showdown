@@ -310,7 +310,7 @@ return {
         end }
         Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_checkered', pos = coordinate(11), blueprint = true, calculate = function(self, card, context)
             if context.individual and context.cardarea == G.play then
-                if context.other_card:is_suit("Spades") and pseudorandom('versatile_checkered') < G.GAME.probabilities.normal/card.ability.extra.spades_odd then
+                if context.other_card:is_suit("Spades") and SMODS.pseudorandom_probability(card, 'versatile_checkered', 1, card.ability.extra.spades_odd) then
                     return {
                         x_chips = card.ability.extra.spades,
                         card = card
@@ -329,7 +329,7 @@ return {
                 context.using_consumeable
                 and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet")
                 and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit
-                and pseudorandom('versatile_zodiac') < G.GAME.probabilities.normal/card.ability.extra.generate_odd
+                and SMODS.pseudorandom_probability(card, 'versatile_zodiac', 1, card.ability.extra.generate_odd)
             then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 local loc = { card = card }

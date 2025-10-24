@@ -1,6 +1,6 @@
 -- Chess Blinds
 
-function chess_blind(obj)
+local function chess_blind(obj)
 	local white_piece = {
 		type = 'Blind',
 		order = obj.order,
@@ -235,7 +235,7 @@ local white_unicorn, black_unicorn = chess_blind{
 white_unicorn.calculate = function(self, blind, context)
 	if not G.GAME.blind.disabled and context.before then
 		for _, card in pairs(context.scoring_hand) do
-			if pseudorandom('black_unicorn') < ((G.GAME.showdown_chess_boosted and 2 or 1) * G.GAME.probabilities.normal) / 3 then
+			if SMODS.pseudorandom_probability(blind, 'black_unicorn', (G.GAME.showdown_chess_boosted and 2 or 1), 3) then
 				card:set_debuff(true)
 			end
 		end
@@ -244,7 +244,7 @@ end
 white_unicorn.loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {(G.GAME.showdown_chess_boosted and 2 or 1) * G.GAME.probabilities.normal} } end
 white_unicorn.collection_loc_vars = function(self, cards, poker_hands, text, mult, hand_chips) return { vars = {(G.GAME.showdown_chess_boosted and 2 or 1) * G.GAME.probabilities.normal} } end
 black_unicorn.calculate = function(self, blind, context)
-	if not G.GAME.blind.disabled and context.repetition and pseudorandom('black_unicorn') < ((G.GAME.showdown_chess_boosted and 2 or 1) * G.GAME.probabilities.normal) / 3 then
+	if not G.GAME.blind.disabled and context.repetition and SMODS.pseudorandom_probability(blind, 'black_unicorn', (G.GAME.showdown_chess_boosted and 2 or 1), 3) then
 		return {
 			repetitions = 1,
 		}
@@ -407,7 +407,7 @@ local brick = {
 	boss = { min = 2 },
 	mult = 2,
 	recalc_debuff = function(self, card, from_blind)
-		return not SMODS.is_counterpart(card)
+		return (card.ability.set == 'Default' or card.ability.set == 'Enhanced') and not SMODS.is_counterpart(card)
 	end,
 	in_pool = function(self, args)
 		local counterparts = 0
@@ -477,7 +477,6 @@ local emerald_shard = {
 	end,
 	recalc_debuff = function(self, card, from_blind)
 		if findInTable(card, G.GAME.emerald_shard_debuffed_cards) ~= -1 then
-			table.remove(G.GAME.emerald_shard_debuffed_cards, findInTable(card, G.GAME.emerald_shard_debuffed_cards))
 			return true
 		end
 		return false
