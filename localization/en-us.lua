@@ -1418,7 +1418,7 @@ return {
                     "the rank of the played cards",
                 },
                 unlock = {
-                    'Use a {C:tarot}Strengh{} on an {C:attention}Ace',
+                    'Use a {C:tarot}Strength{} on an {C:attention}Ace',
                 }
             },
             j_showdown_stencil = {
@@ -1437,7 +1437,8 @@ return {
                     "{C:green}#1# in #2#{} chance to {C:attention}duplicate{} it",
                 },
                 unlock = {
-                    '???',
+                    'Use a {C:dark_edition}Negative',
+                    '{C:tarot}Tarot{} card',
                 }
             },
             j_showdown_floating_point = {
@@ -1483,9 +1484,6 @@ return {
                     "screen when {C:attention}sold",
                     "until the end of round",
                 },
-                unlock = {
-                    '{E:1,s:1.3}?????'
-                }
             },
             j_showdown_esotericism = {
                 name = 'Esotericism',
@@ -1494,9 +1492,6 @@ return {
                     "or a {C:spectral}Spectral{} card",
                     "at the end of {C:attention}Boss Blind",
                 },
-                unlock = {
-                    '{E:1,s:1.3}?????'
-                }
             },
             j_showdown_pegman = {
                 name = 'Pegman',
@@ -1507,7 +1502,8 @@ return {
                     "it in the deck",
                 },
                 unlock = {
-                    '{E:1,s:1.3}?????'
+                    'Have at least {C:attention}10',
+                    '{C:attention}Aces{} in your deck',
                 }
             },
             j_showdown_overjoy = {

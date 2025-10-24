@@ -625,7 +625,7 @@ match_indent = true
 pattern = "assert(SMODS.modify_rank(G.hand.highlighted[i], 1))"
 position = 'before'
 payload = '''
-check_for_unlock({type = 'using_strength', card = G.hand.highlighted[i]})
+check_for_unlock({type = 'modify_rank', card = G.hand.highlighted[i]})
 '''
 
 # Turbo, part 1/2
@@ -649,4 +649,49 @@ position = 'at'
 payload = '''
 local base_nominal = self.base.nominal + self.ability.bonus + (self.ability.perma_bonus or 0)
 return base_nominal * (SMODS.Ranks[self.base.value].counterpart and G.GAME.counterpart_turbo_boost or 1)
+'''
+
+# Mouthwash, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "for k, v in pairs(self.ability.debuff_sources or {}) do"
+position = 'before'
+payload = '''
+if self.ability.mouthwash_no_debuff then
+    if self.debuff then
+        self.debuff = false
+        if self.area == G.jokers then self:add_to_deck(true) end
+    end
+    return
+end
+'''
+
+# Mouthwash, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = "-- TARGET: main end_of_round evaluation"
+position = 'after'
+payload = '''
+for _, area in ipairs({ G.jokers.cards, G.consumeables.cards, G.playing_cards }) do
+    for _, _card in ipairs(area) do
+        if _card.ability.mouthwash_no_debuff then
+            _card.ability.mouthwash_no_debuff = nil
+        end
+    end
+end
+'''
+
+# O Fortuna unlock
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = "e.config.ref_table:use_consumeable(area)"
+position = 'before'
+payload = '''
+check_for_unlock({type = 'using_consumeable', card = e.config.ref_table})
 '''

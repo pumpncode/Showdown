@@ -259,7 +259,7 @@ local color_splash = {
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'hand_contents' then
-            local text,disp_text,poker_hands,scoring_hand,non_loc_disp_text = G.FUNCS.get_poker_hand_info(args.cards)
+            local _, _, _, scoring_hand, _ = G.FUNCS.get_poker_hand_info(args.cards)
             local suits = {}
             for i = 1, #args.cards do
                 if findInTable(args.cards[i], scoring_hand) == -1 and findInTable(args.cards[i].base.suit, suits) == -1 then
@@ -2223,7 +2223,7 @@ local atom = {
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if args.type == 'using_strength' and args.card and args.card.base.id == 14 then
+        if args.type == 'modify_rank' and args.card and args.card.base.id == 14 then
             unlock_card(self)
         end
     end,
@@ -2321,10 +2321,12 @@ local o_fortuna = {
 	end,
     rarity = 3, cost = 8,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    --[[unlocked = false,
+    unlocked = false,
     check_for_unlock = function(self, args)
-        --
-    end,]]
+        if args.type == 'using_consumeable' and args.card.edition and args.card.edition.type == 'negative' then
+            unlock_card(self)
+        end
+    end,
     calculate = function(self, card, context)
         if context.using_consumeable and context.consumeable.ability.set == "Tarot" and SMODS.pseudorandom_probability(card, 'o_fortuna', 1, card.ability.extra.duplication_chance) then
             G.E_MANAGER:add_event(Event({
@@ -2488,15 +2490,12 @@ local mouthwash = {
     rarity = 1, cost = 4,
     blueprint_compat = false, perishable_compat = false, eternal_compat = false,
     calculate = function(self, card, context)
-        if context.selling_self and not context.blueprint then -- doesn't really work
-            for _, _card in ipairs(G.jokers.cards) do
-                _card:set_debuff(false)
-            end
-            for _, _card in ipairs(G.consumeables.cards) do
-                _card:set_debuff(false)
-            end
-            for _, _card in ipairs(G.hand.cards) do
-                _card:set_debuff(false)
+        if context.selling_self and not context.blueprint then
+            for _, area in ipairs({ G.jokers.cards, G.consumeables.cards, G.hand.cards }) do
+                for _, _card in ipairs(area) do
+                    _card.ability.mouthwash_no_debuff = true
+                    _card:set_debuff(false)
+                end
             end
         end
     end,
@@ -2511,10 +2510,6 @@ local esotericism = {
     pos = coordinate(80),
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
-    --[[unlocked = false,
-    check_for_unlock = function(self, args)
-        --
-    end,]]
     calculate = function(self, card, context)
         if context.end_of_round and G.GAME.blind.boss then
             G.E_MANAGER:add_event(Event({
@@ -2539,10 +2534,16 @@ local pegman = {
     pos = coordinate(81),
     rarity = 2, cost = 6,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
-    --[[unlocked = false,
+    unlocked = false,
     check_for_unlock = function(self, args)
-        --
-    end,]]
+        if args.type == 'modify_deck' then
+            local count = 0
+            for _, card in pairs(G.playing_cards) do
+                if card.base.id == 14 then count = count + 1 end
+            end
+            if count >= 10 then unlock_card(self) end
+        end
+    end,
     calculate = function(self, card, context)
         if context.after then
             local no_aces = true
