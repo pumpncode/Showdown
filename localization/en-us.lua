@@ -1422,7 +1422,7 @@ return {
                 }
             },
             j_showdown_stencil = {
-                name = 'Stencil',
+                name = 'Metal Stencil',
                 text = {
                     "Puts a random seal on {C:attention}#1#{}",
                     "cards in hand after scoring",
@@ -2789,13 +2789,14 @@ return {
                 'no way',
             },
             buying_other_self_8 = {
-                '',
+                'A new friend! :D',
             },
             buying_other_self_9 = {
-                '',
+                'Have I seen',
+                'him before?',
             },
             buying_other_self_10 = {
-                '',
+                'what',
             },
             selling_other_self_1 = {
                 'Did you just...',
@@ -2818,16 +2819,19 @@ return {
                 'why do u do dis',
             },
             selling_other_self_7 = {
-                'What have you done?!',
+                'What have',
+                'you done?!',
             },
             selling_other_self_8 = {
                 'And there I go...',
             },
             selling_other_self_9 = {
-                '',
+                'Not me! :(',
             },
             selling_other_self_10 = {
-                '',
+                'DON\'T SELL ME PLEASE',
+                'I\'M BEGGING YOU I\'M',
+                'ON MY KNEES!',
             },
             ending_shop_1 = {
                 'Did your build',
@@ -2868,7 +2872,8 @@ return {
                 ':)',
             },
             ending_shop_10 = {
-                '',
+                'Why did your',
+                'money leave? :(',
             },
             skip_blind_1 = {
                 'I FUCKING LOVE',
@@ -2899,13 +2904,15 @@ return {
                 'juicy tag!',
             },
             skip_blind_8 = {
-                '',
+                'tag',
             },
             skip_blind_9 = {
-                '',
+                'Are you',
+                'sure?',
             },
             skip_blind_10 = {
-                '',
+                'Wow, risky',
+                'move!',
             },
             skipping_booster_1 = {
                 'I hope you have',
@@ -2930,16 +2937,19 @@ return {
                 'took one at least.',
             },
             skipping_booster_7 = {
-                '',
+                'Why???',
             },
             skipping_booster_8 = {
-                '',
+                'Not taking',
+                'a card?',
             },
             skipping_booster_9 = {
-                '',
+                'You ripped off this',
+                'booster and for',
+                'what? Nothing?',
             },
             skipping_booster_10 = {
-                '',
+                'Oh...',
             },
             setting_blind_1 = {
                 'Good luck!',
@@ -2959,19 +2969,24 @@ return {
                 'This will be easy!',
             },
             setting_blind_6 = {
-                '',
+                'Is it a boss',
+                'blind?',
             },
             setting_blind_7 = {
-                '',
+                'You\'ll destroy',
+                'it.',
             },
             setting_blind_8 = {
-                '',
+                'I believe',
+                'in you!',
             },
             setting_blind_9 = {
-                '',
+                'Go beat',
+                'this blind!',
             },
             setting_blind_10 = {
-                '',
+                'Let\'s make',
+                'some chips!',
             },
             using_tarot_1 = {
                 'Ooooooh tarot',
@@ -3015,7 +3030,7 @@ return {
                 'my future please?',
             },
             using_tarot_11 = {
-                'ZA WARUDO',
+                'ZA WARUDO!',
             },
             using_planet_1 = {
                 'Hand upgrade!',
@@ -3052,10 +3067,12 @@ return {
                 'Kuiper Belt?',
             },
             using_planet_9 = {
-                '',
+                'Are we on',
+                'Earth?',
             },
             using_planet_10 = {
-                '',
+                'I love outer',
+                'space!',
             },
             using_spectral_1 = {
                 'Oh, those are',
@@ -3130,40 +3147,52 @@ return {
                 'mathemagic!',
             },
             using_mathematic_9 = {
-                'The numbers Mason!',
+                'The numbers',
+                'Mason!',
             },
             using_mathematic_10 = {
-                '',
+                'It\'s at',
+                'least 12.',
             },
             using_logic_1 = {
                 'It\'s logic.',
             },
             using_logic_2 = {
-                'It\'s that simple.',
+                'It\'s that.',
+                'simple.',
             },
             using_logic_3 = {
-                '',
+                'It\'s that',
+                'shrimple.',
             },
             using_logic_4 = {
-                '',
+                'What if I eat a',
+                'donut AND a bagel?',
             },
             using_logic_5 = {
-                '',
+                'Isn\'t this logic?',
+                'No? Too bad.',
             },
             using_logic_6 = {
-                '',
+                'NO XNOR IS',
+                'NOT A WORD!',
             },
             using_logic_7 = {
-                '',
+                '"IMPLY"? What are',
+                'you implying?',
             },
             using_logic_8 = {
-                '',
+                'I don\'t understand',
+                'what the BUFFER is',
+                'supposed to do...',
             },
             using_logic_9 = {
-                '',
+                'If NAND is NOT',
+                'and AND, is NOT',
+                'and NAND NNAND?',
             },
             using_logic_10 = {
-                '',
+                'logik kard',
             },
             using_code_1 = {
                 'Beep boop',
@@ -3269,19 +3298,24 @@ return {
                 'planning to do...',
             },
             in_blind_6 = {
-                '',
+                'Do you have',
+                'lucky cards?',
             },
             in_blind_7 = {
-                '',
+                'I sure hope these',
+                'cards of yours',
+                'have some seals.',
             },
             in_blind_8 = {
-                '',
+                'How much is',
+                'the blind?',
             },
             in_blind_9 = {
-                '',
+                'Go on, play.',
             },
             in_blind_10 = {
-                '',
+                'You should play',
+                'this card.',
             },
             in_booster_1 = {
                 'Are you looking',
@@ -3307,16 +3341,20 @@ return {
                 'with these!',
             },
             in_booster_7 = {
-                '',
+                'Pick the',
+                'first one!',
             },
             in_booster_8 = {
-                '',
+                'Pick the',
+                'second one!',
             },
             in_booster_9 = {
-                '',
+                'Take a card,',
+                'any card.',
             },
             in_booster_10 = {
-                '',
+                'PICK THIS',
+                'CARD QUICK!',
             },
             main_menu_1 = {
                 'Welcome to',
@@ -3347,13 +3385,15 @@ return {
                 'below!',
             },
             main_menu_8 = {
-                '',
+                'Hello! :P',
             },
             main_menu_9 = {
-                '',
+                'these buttons',
+                'do stuff',
             },
             main_menu_10 = {
-                '',
+                'Go play and draw',
+                'me in a game!',
             },
             random_1 = {
                 ':3',
