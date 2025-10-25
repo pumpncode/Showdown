@@ -373,7 +373,12 @@ local wasteful = {
 	boss = { min = 2 },
 	mult = 2,
 	debuff_hand = function(self, cards, hand, handname, check)
-		return G.GAME.current_round.discards_left > 0
+		self.triggered = false
+		if G.GAME.current_round.discards_left > 0 then
+			self.triggered = true
+			return true
+		end
+		return false
 	end
 }
 
@@ -392,6 +397,7 @@ local shameful = {
 		for _, card in ipairs(cards) do
 			unenhanced = unenhanced or card.config.center == G.P_CENTERS.c_base
 		end
+		self.triggered = unenhanced
 		return unenhanced
 	end
 }
@@ -407,7 +413,9 @@ local brick = {
 	boss = { min = 2 },
 	mult = 2,
 	recalc_debuff = function(self, card, from_blind)
-		return (card.ability.set == 'Default' or card.ability.set == 'Enhanced') and not SMODS.is_counterpart(card)
+		local triggered = (card.ability.set == 'Default' or card.ability.set == 'Enhanced') and not SMODS.is_counterpart(card)
+		self.triggered = triggered
+		return triggered
 	end,
 	in_pool = function(self, args)
 		local counterparts = 0
@@ -436,6 +444,7 @@ local ceiling = {
 		for _, card in ipairs(cards) do
 			not_highest = not_highest and findInTable(card.base.value, ranks) ~= -1
 		end
+		self.triggered = not not_highest
 		return not_highest
 	end,
 	in_pool = function(self, args)
@@ -476,7 +485,9 @@ local emerald_shard = {
 		end
 	end,
 	recalc_debuff = function(self, card, from_blind)
+		self.triggered = false
 		if findInTable(card, G.GAME.emerald_shard_debuffed_cards) ~= -1 then
+			self.triggered = true
 			return true
 		end
 		return false
@@ -510,10 +521,12 @@ return {
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, latch)
 		end
+		if Showdown.config["Ranks"] then
+			table.insert(list, brick)
+		end
 		table.insert(list, patient)
 		table.insert(list, wasteful)
 		table.insert(list, shameful)
-		table.insert(list, brick)
 		table.insert(list, ceiling)
 		table.insert(list, emerald_shard)
 		return list
@@ -526,11 +539,11 @@ return {
 			if not G.GAME.patient_scoring then G.GAME.patient_scoring = { score = blind.chips, triggers = 0 } end
 			G.GAME.patient_scoring.triggers = G.GAME.patient_scoring.triggers + 1
 			local final_chips = (G.GAME.patient_scoring.score / 100) * (100 + 50 * G.GAME.patient_scoring.triggers)
-			local chip_mod -- iterate over ~120 ticks
+			local chip_mod -- iterate over ~480 ticks
 			if type(blind.chips) ~= 'table' then
-				chip_mod = math.ceil((G.GAME.blind.chips + final_chips) / 120)
+				chip_mod = math.ceil((G.GAME.blind.chips + final_chips) / 480)
 			else
-				chip_mod = ((G.GAME.blind.chips + final_chips) / 120):ceil()
+				chip_mod = ((G.GAME.blind.chips + final_chips) / 480):ceil()
 			end
 			local step = 0
 			G.E_MANAGER:add_event(Event({trigger = 'after', blocking = true, func = function()
@@ -547,6 +560,12 @@ return {
 					return true
 				end
 			end}))
+		end
+
+		local G_FUNCS_evaluate_round_ref = G.FUNCS.evaluate_round
+		G.FUNCS.evaluate_round = function()
+			if G.GAME.patient_scoring then G.GAME.patient_scoring = nil end
+			G_FUNCS_evaluate_round_ref()
 		end
 
 		function Showdown.get_new_chess_blind()

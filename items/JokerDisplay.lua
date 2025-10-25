@@ -906,10 +906,11 @@ table.insert(def_list.jokers, {
 
 --table.insert(def_list.blinds, { key = 'latch' })
 
-table.insert(def_list.blinds, { -- TODO
+--[[
+table.insert(def_list.blinds, {
     key = 'patient',
     trigger_function = function(blind, text, poker_hands, scoring_hand, full_hand)
-        return false
+        return G.GAME.current_round.hands_left > 1
     end
 })
 
@@ -977,6 +978,7 @@ table.insert(def_list.blinds, {
         return false
     end
 })
+]]--
 
 return {
     enabled = JokerDisplay,

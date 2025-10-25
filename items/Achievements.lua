@@ -1,10 +1,19 @@
 local order_nb = 0
-local function make_achievement(key, hidden)
+local trophies = {
+	locked = { x = 0, y = 0 },
+	bronze = { x = 1, y = 0 },
+	silver = { x = 2, y = 0 },
+	gold = { x = 3, y = 0 },
+	green = { x = 0, y = 1 },
+}
+local function make_achievement(key, trophy, hidden)
 	order_nb = order_nb + 1
 	return {
 		type = 'Achievement',
 		order = order_nb,
 		key = key,
+		atlas = 'showdown_trophies',
+		pos = trophy or trophies.bronze,
 		hidden_text = hidden or false,
 		bypass_all_unlocked = true,
 		--reset_on_startup = true,
@@ -16,21 +25,21 @@ local function make_achievement(key, hidden)
 	}
 end
 
-local get_jean_paul = make_achievement('get_jean_paul') -- :3
-local sell_jean_paul = make_achievement('sell_jean_paul', true) -- :(
-local jean_paul_tag = make_achievement('jean_paul_tag', true) -- :D
-local jimbodia = make_achievement('jimbodia', true) -- Jimbodia
-local chains = make_achievement('chains', true) -- Free from the chains
-local versatility = make_achievement('versatility') -- Versatility
-local blued = make_achievement('blued', true) -- You've been Blue'd!
-local metal_cap = make_achievement('metal_cap') -- Metal Cap
-local cronch = make_achievement('cronch', true) -- cronch
-local green_deck_home = make_achievement('green_deck_home') -- We have Green Deck at home
-local rico_kaboom = make_achievement('rico_kaboom', true) -- Yes Rico, kaboom
-local whole_new_deck = make_achievement('whole_new_deck', true) -- A whole new deck
-local minecraft_reference = make_achievement('minecraft_reference', true) -- How did we get here?
-local completionist = make_achievement('completionist', true) -- Completionist+++
-local you_can_stop_now = make_achievement('you_can_stop_now', true) -- ok you can stop now
+local get_jean_paul = make_achievement('get_jean_paul', trophies.bronze) -- :3
+local sell_jean_paul = make_achievement('sell_jean_paul', trophies.bronze, true) -- :(
+local jean_paul_tag = make_achievement('jean_paul_tag', trophies.silver, true) -- :D
+local jimbodia = make_achievement('jimbodia', trophies.green, true) -- Jimbodia
+local chains = make_achievement('chains', trophies.green, true) -- Free from the chains
+local versatility = make_achievement('versatility', trophies.gold) -- Versatility
+local blued = make_achievement('blued', trophies.bronze, true) -- You've been Blue'd!
+local metal_cap = make_achievement('metal_cap', trophies.gold) -- Metal Cap
+local cronch = make_achievement('cronch', trophies.silver, true) -- cronch
+local green_deck_home = make_achievement('green_deck_home', trophies.silver) -- We have Green Deck at home
+local rico_kaboom = make_achievement('rico_kaboom', trophies.silver, true) -- Yes Rico, kaboom
+local whole_new_deck = make_achievement('whole_new_deck', trophies.gold, true) -- A whole new deck
+local minecraft_reference = make_achievement('minecraft_reference', trophies.gold, true) -- How did we get here?
+local completionist_plus_plus_plus = make_achievement('completionist_plus_plus_plus', trophies.green, true) -- Completionist+++
+local you_can_stop_now = make_achievement('you_can_stop_now', trophies.green, true) -- ok you can stop now
 
 return {
 	enabled = Showdown.config["Achievements"],
@@ -54,15 +63,18 @@ return {
 			--table.insert(list, rico_kaboom)
 			table.insert(list, whole_new_deck)
 		end
-		if Showdown.config["Vouchers"] then
+		if Showdown.config["Decks"] then
 			table.insert(list, minecraft_reference)
 		end
 		if Showdown.config["Stakes"] then
-			--table.insert(list, completionist)
+			--table.insert(list, completionist_plus_plus_plus)
 			--table.insert(list, you_can_stop_now)
 		end
 		return list
 	end,
+	atlases = {
+		{key = "showdown_trophies", path = "Trophies.png", px = 66, py = 66},
+	},
 	exec = function ()
 		function Showdown.versatility_description(ach)
 			ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}

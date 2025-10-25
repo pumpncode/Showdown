@@ -346,7 +346,7 @@ return {
             bl_showdown_patient = {
                 name = 'The Patient',
                 text = {
-                    'Blind requirement ',
+                    'Blind requirement',
                     'increases if played',
                     'hand isn\'t last',
                 }

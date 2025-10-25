@@ -3,41 +3,18 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
-# The Patient, part 1/2
+# The Patient
 [[patches]]
 [patches.pattern]
 target = 'functions/state_events.lua'
 match_indent = true
-pattern = '''
-for i=1, #cards_destroyed do
-    G.E_MANAGER:add_event(Event({
-        func = function()
-            if cards_destroyed[i].shattered then
-                cards_destroyed[i]:shatter()
-            else
-                cards_destroyed[i]:start_dissolve()
-            end
-            return true
-        end
-        }))
-end
-'''
+pattern = '''-- TARGET: effects after hand evaluation'''
 position = 'after'
 payload = '''
 if G.GAME.blind and G.GAME.blind.name == 'The Patient' and not G.GAME.blind.disabled and G.GAME.current_round.hands_left > 0 then --and hand_chips*mult + G.GAME.chips >= G.GAME.blind.chips then
     SMODS.patient_gain_score(G.GAME.blind)
+    G.GAME.blind.triggered = true
 end
-'''
-
-# The Patient, part 2/2
-[[patches]]
-[patches.pattern]
-target = 'functions/state_events.lua'
-match_indent = true
-pattern = "G.FUNCS.evaluate_round = function()"
-position = 'after'
-payload = '''
-if G.GAME.patient_scoring then G.GAME.patient_scoring = nil end
 '''
 
 # Alternate between black and white chess blinds, part 1/2
