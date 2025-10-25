@@ -1891,7 +1891,7 @@ local urotsuki = {
     name = 'urotsuki',
     atlas = "showdown_jokers",
     pos = coordinate(59), soul_pos = coordinate(60),
-    config = {extra = {x_chips_scale = 0.15, x_chips = 1}},
+    config = {extra = {x_chips_scale = 0.1, x_chips = 1}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
 	end,
@@ -2039,7 +2039,7 @@ local window = {
     name = 'window',
     atlas = "showdown_jokers",
     pos = coordinate(66),
-    config = {extra = {mult = 0, mult_scale = 8}},
+    config = {extra = {mult = 0, mult_scale = 4}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
