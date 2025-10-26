@@ -80,7 +80,7 @@ return {
                 name = 'Chess Deck',
                 text = {
                     'Big Blinds are replaced',
-                    'by {C:attention}Chess Binds',
+                    'with {C:attention}Chess Binds',
                     'Black Chess Blinds have',
                     '{C:attention}positive{} effects',
                     'White Chess Blinds have',
@@ -1407,7 +1407,7 @@ return {
                 name = 'Thorn Photograph',
                 text = {
                     "First played {C:attention}numbered",
-                    "card gives {X:mult,C:white} X#1# {} Mult",
+                    "card gives {X:mult,C:white}X#1#{} Mult",
                     "when scored",
                 },
             },
@@ -2974,7 +2974,7 @@ return {
             },
             setting_blind_7 = {
                 'You\'ll destroy',
-                'it.',
+                'it!',
             },
             setting_blind_8 = {
                 'I believe',

@@ -471,6 +471,7 @@ local emerald_shard = {
 	boss_colour = G.C.GREEN,
 	boss = { showdown = true },
 	mult = 2,
+	dollars = 8,
 	set_blind = function(self)
 		G.GAME.emerald_shard_debuffed_cards = {}
 		local not_debuffed_cards = #G.deck.cards - math.floor((#G.deck.cards / 2) + 0.5)

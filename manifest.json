@@ -1,0 +1,9 @@
+{
+    "name": "Showdown",
+    "version_number": "1.4.0",
+    "website_url": "https://github.com/Mistyk1/Showdown",
+    "description": "Showdown is an overall content mod for Balatro. It focuses mostly on new ranks, a new set of cards and fun jokers.",
+    "dependencies": [
+        "Steamodded-Steamodded-0.9.8"
+    ]
+}
