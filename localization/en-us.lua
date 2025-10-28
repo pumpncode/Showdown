@@ -1366,7 +1366,7 @@ return {
                 },
             },
             j_showdown_window = {
-                name = 'Window',
+                name = 'Windows',
                 text = {
                     'This joker gains {C:mult}+#1#{} Mult when played',
                     'hand contains a {C:attention}Four of a Kind',

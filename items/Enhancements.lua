@@ -68,14 +68,12 @@ return {
 	exec = function()
 		local Centergenerate_uiRef = SMODS.Center.generate_ui
 		function SMODS.Center.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
-			if specific_vars then
-				if not specific_vars.debuffed then
-					if specific_vars.act_as then
-						localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
-					end
-					if specific_vars.default_wild then
-						localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
-					end
+			if specific_vars and not specific_vars.debuffed then
+				if specific_vars.act_as then
+					localize{type = 'other', key = 'act_as', nodes = desc_nodes, vars = {specific_vars.act_as}}
+				end
+				if specific_vars.default_wild then
+					localize{type = 'other', key = 'default_wild', nodes = desc_nodes, vars = {}}
 				end
 			end
 			Centergenerate_uiRef(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
