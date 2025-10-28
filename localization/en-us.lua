@@ -2367,7 +2367,7 @@ return {
             ach_showdown_chains = 'Get Unshackled Joker',
             ach_showdown_versatility = 'Get Versatile Joker on every deck at least once (Challenge Deck excluded)',
             ach_showdown_blued = 'Get Blue',
-            ach_showdown_metal_cap = 'Get the maximum discount with What a Steel!',
+            ach_showdown_metal_cap = 'Get 100% discount with What a Steel!',
             ach_showdown_cronch = 'eat the banana',
             ach_showdown_green_deck_home = 'Have Red Coins and Money Cutter at the same time',
             ach_showdown_rico_kaboom = 'Lose by destroying your cards with Nitroglycerin',

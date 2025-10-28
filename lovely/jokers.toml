@@ -708,5 +708,6 @@ local discount = G.GAME.discount_percent
 for _, joker in pairs(find_joker('what_a_steel')) do
     discount = discount + joker.ability.extra.steel_tally
 end
+if discount >= 100 then check_for_unlock({type = 'metal_cap'}) end
 self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-discount)/100))
 '''

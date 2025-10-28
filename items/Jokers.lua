@@ -1056,7 +1056,6 @@ local what_a_steel = {
         for _, _card in pairs(G.playing_cards) do
             if SMODS.has_enhancement(_card, 'm_steel') and card.ability.extra.steel_tally < card.ability.extra.cap then card.ability.extra.steel_tally = card.ability.extra.steel_tally + 1 end
         end
-        if G.GAME.discount_percent >= card.ability.extra.cap then check_for_unlock({type = 'metal_cap'}) end
     end,
 }
 
