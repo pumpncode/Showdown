@@ -1022,10 +1022,10 @@ local what_a_steel = {
     name = 'what_a_steel',
     atlas = "showdown_jokers",
     pos = coordinate(35),
-    config = {extra = {steel_tally = 0}},
+    config = {extra = { steel_tally = 0, cap = 20 }},
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS['m_steel']
-        return { vars = { card.ability.extra.steel_tally, G.GAME.discount_percent } }
+        return { vars = { card.ability.extra.steel_tally, card.ability.extra.cap } }
 	end,
     rarity = 2, cost = 6,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
@@ -1037,28 +1037,26 @@ local what_a_steel = {
             end
         end
     end,
-    calculate = function(self, card, context)
-        if not context.blueprint then -- Should specify a context
-            G.GAME.discount_percent = G.GAME.used_vouchers.v_liquidation and 50 or G.GAME.used_vouchers.v_clearance_sale and 25 or 0 -- There's no compatibility if mods change the discount
-            card.ability.extra.steel_tally = 0
-            for k, v in pairs(G.playing_cards) do
-                if v.config.center == G.P_CENTERS.m_steel then
-                    card.ability.extra.steel_tally = card.ability.extra.steel_tally+1
-                    G.GAME.discount_percent = G.GAME.discount_percent + 1
-                end
-            end
-            card.ability.extra.steel_tally = math.min(card.ability.extra.steel_tally, 80)
-            G.GAME.discount_percent = math.min(G.GAME.discount_percent, 80)
-            if G.GAME.discount_percent >= 80 then check_for_unlock({type = 'metal_cap'}) end
-            G.E_MANAGER:add_event(Event({func = function()
-                for k, v in pairs(G.I.CARD) do
-                    if v.set_cost then v:set_cost() end
-                end
-            return true end }))
-        end
-    end,
     remove_from_deck = function(self, card, from_debuff)
-        G.GAME.discount_percent = G.GAME.used_vouchers.v_liquidation and 50 or G.GAME.used_vouchers.v_clearance_sale and 25 or 0
+        G.E_MANAGER:add_event(Event({func = function()
+            for _, v in pairs(G.I.CARD) do
+                if v.set_cost then v:set_cost() end
+            end
+        return true end }))
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        G.E_MANAGER:add_event(Event({func = function()
+            for _, v in pairs(G.I.CARD) do
+                if v.set_cost then v:set_cost() end
+            end
+        return true end }))
+    end,
+    update = function(self, card, dt)
+        card.ability.extra.steel_tally = 0
+        for _, _card in pairs(G.playing_cards) do
+            if SMODS.has_enhancement(_card, 'm_steel') and card.ability.extra.steel_tally < card.ability.extra.cap then card.ability.extra.steel_tally = card.ability.extra.steel_tally + 1 end
+        end
+        if G.GAME.discount_percent >= card.ability.extra.cap then check_for_unlock({type = 'metal_cap'}) end
     end,
 }
 

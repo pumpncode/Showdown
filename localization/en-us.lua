@@ -754,7 +754,7 @@ return {
                 text = {
                     'Each {C:attention}Steel Card{} in your {C:attention}full deck{}',
                     'add a {C:attention}1%{} reduction on shop items',
-                    '{C:inactive}(Currently {C:attention}#1#%{}{C:inactive}, {C:attention}#2#%{}{C:inactive} with vouchers)',
+                    '{C:inactive}(Currently {C:attention}#1#%{}{C:inactive}, capped at #2#%)',
                 },
                 unlock = {
                     'Buy a {C:attention}Steel Card{}',

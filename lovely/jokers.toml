@@ -695,3 +695,18 @@ position = 'before'
 payload = '''
 check_for_unlock({type = 'using_consumeable', card = e.config.ref_table})
 '''
+
+# What a Steel!
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-G.GAME.discount_percent)/100))"
+position = 'at'
+payload = '''
+local discount = G.GAME.discount_percent
+for _, joker in pairs(find_joker('what_a_steel')) do
+    discount = discount + joker.ability.extra.steel_tally
+end
+self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-discount)/100))
+'''
