@@ -1022,6 +1022,8 @@ local what_a_steel = {
     name = 'what_a_steel',
     atlas = "showdown_jokers",
     pos = coordinate(35),
+    display_size = { w = 61, h = 95 },
+    pixel_size = { w = 61, h = 95 },
     config = {extra = { steel_tally = 0, cap = 20 }},
     loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS['m_steel']
@@ -1053,8 +1055,10 @@ local what_a_steel = {
     end,
     update = function(self, card, dt)
         card.ability.extra.steel_tally = 0
-        for _, _card in pairs(G.playing_cards) do
-            if SMODS.has_enhancement(_card, 'm_steel') and card.ability.extra.steel_tally < card.ability.extra.cap then card.ability.extra.steel_tally = card.ability.extra.steel_tally + 1 end
+        if G.playing_cards then
+            for _, _card in pairs(G.playing_cards) do
+                if SMODS.has_enhancement(_card, 'm_steel') and card.ability.extra.steel_tally < card.ability.extra.cap then card.ability.extra.steel_tally = card.ability.extra.steel_tally + 1 end
+            end
         end
     end,
 }
