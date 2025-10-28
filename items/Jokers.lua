@@ -1954,6 +1954,8 @@ local pop_up = {
     name = 'pop_up',
     atlas = "showdown_jokers",
     pos = coordinate(63),
+    display_size = { w = 71, h = 71 },
+    pixel_size = { w = 71, h = 71 },
     rarity = 1, cost = 4,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
     --calculate = function(self, card, context) end,
