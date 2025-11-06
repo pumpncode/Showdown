@@ -183,7 +183,9 @@ table.insert(def_list.jokers, {
     },
     text_config = { colour = G.C.CHIPS },
     reminder_text = {
-        { text = "(0)" },
+        { text = "(" },
+        { text = "0", colour = G.C.ORANGE },
+        { text = ")" },
     },
     calc_function = function(card)
         if not next(G.play.cards) then
@@ -886,6 +888,8 @@ table.insert(def_list.jokers, {
 })
 
 --table.insert(def_list.jokers, { key = 'overjoy' })
+
+--table.insert(def_list.jokers, { key = 'nothing_matter' })
 
 --- Cryptid
 

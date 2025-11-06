@@ -1549,7 +1549,7 @@ local banana = {
     name = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
-    display_size = { w = 35, h = 43 },
+    display_size = { w = 71, h = 71 },
     config = {extra = {mult = 15, mult_scale = 5}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
@@ -2613,6 +2613,18 @@ local overjoy = {
     end
 }
 
+local nothing_matter = {
+    type = 'Joker',
+    order = 78,
+    activated = { Showdown.config["Ranks"] },
+    key = 'nothing_matter',
+    name = 'nothing_matter',
+    atlas = "showdown_jokers",
+    pos = coordinate(83),
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+}
+
 -- Cryptid
 
 local infection = {
@@ -2746,6 +2758,7 @@ return {
             cake,
             floating_point,
             turbo,
+            nothing_matter,
             --- Final Jokers
             jimbo_makeup,
 			jimbo_hat,
@@ -2795,18 +2808,14 @@ return {
         }, true)
 
         local updateRef = Game.update
-        banana_dt = 0
+        local banana_dt = 0
         function Game:update(dt)
             updateRef(self, dt)
             banana_dt = banana_dt + dt
-            if G.P_CENTERS and G.P_CENTERS.j_showdown_banana and banana_dt > 0.1 then
+            if G.P_CENTERS.j_showdown_banana and banana_dt > 0.1 then
                 banana_dt = 0
                 local obj = G.P_CENTERS.j_showdown_banana
-                if obj.pos.x == 7 then
-                    obj.pos.x = 0
-                elseif obj.pos.x < 7 then
-                    obj.pos.x = obj.pos.x + 1
-                end
+                obj.pos.x = obj.pos.x < 7 and obj.pos.x + 1 or 0
             end
         end
 
@@ -2939,6 +2948,42 @@ return {
                 }))
                 self.triggered = true
             end
+        end
+
+        function check_for_area_space(card, area)
+            local highlighted = {}
+            local has_nothing_matter = next(find_joker('nothing_matter'))
+            for _, _card in pairs(area.highlighted) do
+                if not (SMODS.is_zero(_card) and has_nothing_matter) then
+                    table.insert(highlighted, _card)
+                end
+            end
+            if not (SMODS.is_zero(card) and has_nothing_matter) then
+                table.insert(highlighted, card)
+            end
+            return #highlighted >= area.config.highlighted_limit + 1
+        end
+
+        function play_check()
+            local highlighted = {}
+            local has_nothing_matter = next(find_joker('nothing_matter'))
+            for _, card in pairs(G.hand.highlighted) do
+                if not (SMODS.is_zero(card) and has_nothing_matter) then
+                    table.insert(highlighted, card)
+                end
+            end
+            return #highlighted > math.max(G.GAME.starting_params.play_limit, 1)
+        end
+
+        function discard_check()
+            local highlighted = {}
+            local has_nothing_matter = next(find_joker('nothing_matter'))
+            for _, card in pairs(G.hand.highlighted) do
+                if not (SMODS.is_zero(card) and has_nothing_matter) then
+                    table.insert(highlighted, card)
+                end
+            end
+            return #highlighted > math.max(G.GAME.starting_params.discard_limit, 1)
         end
 
         Showdown.tag_related_joker['j_diet_cola'] = true

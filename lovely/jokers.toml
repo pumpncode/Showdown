@@ -711,3 +711,40 @@ end
 if discount >= 100 then check_for_unlock({type = 'metal_cap'}) end
 self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-discount)/100))
 '''
+
+# Nothing Matter, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'cardarea.lua'
+match_indent = true
+pattern = '''
+if #self.highlighted >= self.config.highlighted_limit then
+    card:highlight(false)
+'''
+position = 'at'
+payload = '''
+if check_for_area_space(card, self) then
+    card:highlight(false)
+'''
+
+# Nothing Matter, part 2/3
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''if #G.hand.highlighted <= 0 or G.GAME.blind.block_play or #G.hand.highlighted > math.max(G.GAME.starting_params.play_limit, 1) then'''
+position = 'at'
+payload = '''
+if #G.hand.highlighted <= 0 or G.GAME.blind.block_play or play_check() then
+'''
+
+# Nothing Matter, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''if G.GAME.current_round.discards_left <= 0 or #G.hand.highlighted <= 0 or #G.hand.highlighted > math.max(G.GAME.starting_params.discard_limit, 0) then'''
+position = 'at'
+payload = '''
+if G.GAME.current_round.discards_left <= 0 or #G.hand.highlighted <= 0 or discard_check() then
+'''

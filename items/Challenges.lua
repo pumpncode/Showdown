@@ -74,6 +74,30 @@ local all_in_one = {
     end,
 }
 
+local empty_deck = {
+    type = 'Challenge',
+    order = 3,
+    key = "empty_deck",
+    rules = {
+        custom = {
+            {id = 'showdown_all_zero'}, -- not doing anything
+        },
+    },
+    jokers = {
+        {id = 'j_showdown_nothing_matter', eternal = true, edition = 'negative'},
+        {id = 'j_showdown_pinpoint', eternal = true},
+    },
+    deck = {
+        type = 'Challenge Deck',
+        cards = {{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},{s='D',r='Z'},}, -- doesn't work
+    },
+    restrictions = {
+        banned_other = {
+            {id = 'bl_showdown_ceiling', type = 'blind'},
+        }
+    },
+}
+
 return {
 	enabled = Showdown.config["Challenges"],
 	list = function()
@@ -82,6 +106,9 @@ return {
 		}
 		if Showdown.config["Jokers"]["Versatile"] then
 			table.insert(list, all_in_one)
+		end
+		if Showdown.config["Ranks"] then
+			table.insert(list, empty_deck)
 		end
 		return list
 	end,

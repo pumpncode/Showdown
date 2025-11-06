@@ -1515,6 +1515,17 @@ return {
                     "when scored",
                 },
             },
+            j_showdown_nothing_matter = {
+                name = 'Nothing Matter',
+                text = {
+                    "{C:attention}0{} cards don't count",
+                    "towards the played",
+                    "hand {C:attention}size limit",
+                },
+                unlock = {
+                    '???',
+                }
+            },
         },
         Other={
             showdown_static = {
@@ -2397,6 +2408,7 @@ return {
         challenge_names={
             c_showdown_7LB2WVPK = '7LB2WVPK',
             c_showdown_all_in_one = 'All in One',
+            c_showdown_empty_deck = 'Empty Deck',
         },
         collabs={},
         dictionary={
@@ -3508,6 +3520,9 @@ return {
             },
             ch_c_showdown_exponential_blinds = {
                 'Blind requirement is {C:attention}multiplied{} by current {C:attention}Ante',
+            },
+            ch_c_showdown_empty_deck = {
+                'All playing cards are {C:attention}0{}s',
             },
         },
     },
