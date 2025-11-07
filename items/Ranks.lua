@@ -217,9 +217,9 @@ return {
 		-- Paperback
 		{key = "showdown_paperbackCards", path = "CrossMod/Paperback/Ranks/Cards.png", px = 71, py = 95, mod_compat = "paperback"},
 		{key = "showdown_paperbackCardsHC", path = "CrossMod/Paperback/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "paperback"},
-		-- Madcap (not done)
-		--{key = "showdown_madcapCards", path = "CrossMod/Madcap/Ranks/Cards.png", px = 71, py = 95, mod_compat = "rgmadcap"},
-		--{key = "showdown_madcapCardsHC", path = "CrossMod/Madcap/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "rgmadcap"},
+		-- Madcap
+		{key = "showdown_madcapCards", path = "CrossMod/Madcap/Ranks/Cards.png", px = 71, py = 95, mod_compat = "rgmadcap"},
+		{key = "showdown_madcapCardsHC", path = "CrossMod/Madcap/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "rgmadcap"},
 	},
 	exec = function()
 		-- These are for making straights with counterparts and normal cards
@@ -272,7 +272,6 @@ return {
 			Showdown.extraSuits['paperback_Stars'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
 			Showdown.extraSuits['paperback_Crowns'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
 		end
-		--[[
 		if (SMODS.Mods["rgmadcap"] or {}).can_load then
 			Showdown.extraSuits['rgmc_goblets'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
 			Showdown.extraSuits['rgmc_towers'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
@@ -281,6 +280,5 @@ return {
 			Showdown.extraSuits['rgmc_voids'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
 			Showdown.extraSuits['rgmc_lanterns'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
 		end
-		]]
 	end
 }
