@@ -61,3 +61,14 @@ payload = '''
 elseif v.id == 'showdown_all_zero' then
     self.GAME.modifiers.showdown_all_zero = true
 '''
+
+# Empty Deck, part 2/?
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''local front = ((_type=='Base' or _type == 'Enhanced') and pseudorandom_element(G.P_CARDS, pseudoseed('front'..(key_append or '')..G.GAME.round_resets.ante))) or nil'''
+position = 'at'
+payload = '''
+local front = ((_type=='Base' or _type == 'Enhanced') and (G.GAME.modifiers.showdown_all_zero and G.P_CARDS.D_showdown_Z or pseudorandom_element(G.P_CARDS, pseudoseed('front'..(key_append or '')..G.GAME.round_resets.ante)))) or nil
+'''

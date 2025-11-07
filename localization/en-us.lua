@@ -3521,7 +3521,7 @@ return {
             ch_c_showdown_exponential_blinds = {
                 'Blind requirement is {C:attention}multiplied{} by current {C:attention}Ante',
             },
-            ch_c_showdown_empty_deck = {
+            ch_c_showdown_all_zero = {
                 'All playing cards are {C:attention}0{}s',
             },
         },
