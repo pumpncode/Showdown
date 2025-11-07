@@ -891,8 +891,6 @@ table.insert(def_list.jokers, {
 
 --table.insert(def_list.jokers, { key = 'nothing_matter' })
 
---- Cryptid
-
 table.insert(def_list.jokers, {
     key = 'infection',
     text = {

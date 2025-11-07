@@ -50,7 +50,7 @@ payload = '''
 blind_amt = blind_amt*(G.GAME.modifiers.showdown_exponential_blinds and G.GAME.round_resets.ante or 1)
 '''
 
-# Empty Deck, part 1/?
+# Empty Deck, part 1/2
 [[patches]]
 [patches.pattern]
 target = 'game.lua'
@@ -62,7 +62,7 @@ elseif v.id == 'showdown_all_zero' then
     self.GAME.modifiers.showdown_all_zero = true
 '''
 
-# Empty Deck, part 2/?
+# Empty Deck, part 2/2
 [[patches]]
 [patches.pattern]
 target = 'functions/common_events.lua'

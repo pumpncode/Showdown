@@ -448,16 +448,6 @@ return {
                     '{E:1,s:1.3}?????'
                 }
             },
-            j_showdown_infection = {
-                name = 'Infection',
-                text = {
-                    '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{} at the end of round',
-                    'Cards in shop and boosters can',
-                    'be {C:attention}replaced{} by {C:attention}Strange Thing{}',
-                    'Future {C:attention}Strange Thing{} values',
-                    'are {C:attention}doubled{} when self-destroyed',
-                }
-            },
             j_showdown_math_teacher = {
                 name = 'Math Teacher',
                 text = {
@@ -1524,6 +1514,17 @@ return {
                 },
                 unlock = {
                     '???',
+                }
+            },
+            j_showdown_infection = {
+                name = 'Infection',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult, {C:red}self-destruct{} at the end of round',
+                    'Cards in shop and boosters can',
+                    'be {C:attention}replaced{} by {C:attention}Infection{}',
+                    'Future {C:attention}Infection{} values are multiplied',
+                    'by {X:attention,C:white}X1.1{} when self-destroyed',
+                    '{C:inactive}(Infection rate: #2#%)',
                 }
             },
         },

@@ -1549,7 +1549,7 @@ local banana = {
     name = 'banana',
     atlas = "showdown_banana",
     pos = { x = 0, y = 0 },
-    display_size = { w = 71, h = 71 },
+    display_size = { w = 35, h = 43 },
     config = {extra = {mult = 15, mult_scale = 5}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
@@ -2625,22 +2625,19 @@ local nothing_matter = {
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
 }
 
--- Cryptid
-
 local infection = {
 	type = 'Joker',
-    order = 1000,
-    activated = { (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] },
+    order = 79,
     key = 'infection',
     name = 'infection',
-    atlas = "showdown_cryptidJokers",
-    pos = coordinate(1),
-    config = {extra = { x_mult = 1 }},
+    atlas = "showdown_jokers",
+    pos = coordinate(84),
+    config = {extra = { x_mult = 1.5 }},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult } }
+        return { vars = { card.ability.extra.x_mult, G.GAME.showdown_infection and G.GAME.showdown_infection.rate or 0 } }
 	end,
-    rarity = 'cry_cursed', cost = 4,
-    blueprint = true, perishable = false, eternal = false,
+    rarity = 2, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = false,
     calculate = function(self, card, context)
         if context.joker_main and card.ability.extra.x_mult > 1 then
             return {
@@ -2663,17 +2660,17 @@ local infection = {
                     return true
                 end
             }))
-            if not G.GAME.infection then G.GAME.infection = {value = 1, triggered = 0, triggered_this_shop = false} end
-            G.GAME.infection.value = tonumber(('%%.%dg'):format(2.11):format((G.GAME.infection.value * 1.25)))
-            G.GAME.infection.triggered = G.GAME.infection.triggered + 1
+            if not G.GAME.showdown_infection then G.GAME.showdown_infection = {value = 1.5, rate = 0} end
+            G.GAME.showdown_infection.value = tonumber(('%%.%dg'):format(2.11):format((G.GAME.showdown_infection.value * 1.1)))
+            if G.GAME.showdown_infection.rate < 100 then G.GAME.showdown_infection.rate = G.GAME.showdown_infection.rate + 5 end
             return {
                 message = localize('k_bye_bye'),
                 destroyed = true
             }
         end
     end,
-    in_pool = function()
-        return false
+    set_ability = function (self, card, initial, delay_sprites)
+        card.ability.extra.x_mult = G.GAME.showdown_infection and G.GAME.showdown_infection.value or 1.5
     end,
 }
 
@@ -2742,7 +2739,7 @@ return {
             esotericism,
             pegman,
             overjoy,
-            --infection, -- Cryptid
+            infection,
             --- Ranks Jokers
             pinpoint,
             math_teacher,
