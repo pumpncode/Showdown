@@ -1,3 +1,86 @@
+local vanilla_challenges_restrictions = {
+    ['c_omelette_1'] = {
+        banned_cards = {
+            {id = 'j_showdown_golden_roulette'},
+            {id = 'j_showdown_red_coins'},
+            {id = 'j_showdown_money_cutter'},
+            {id = 'j_showdown_jimbocoin'},
+        },
+        banned_tags = {},
+        banned_other = {}
+    },
+    ['c_non_perishable_1'] = {
+        banned_cards = {
+            {id = 'j_showdown_golden_roulette'},
+            {id = 'j_showdown_nitroglycerin'},
+            {id = 'j_showdown_banana'},
+            {id = 'j_showdown_label'},
+            {id = 'j_showdown_yipeee'},
+            {id = 'j_showdown_whatever'},
+            {id = 'j_showdown_mouthwash'},
+            {id = 'j_showdown_infection'},
+        },
+        banned_tags = {},
+        banned_other = {}
+    },
+    ['c_fragile_1'] = {
+        banned_cards = {
+            {id = 'c_showdown_vessel'},
+            {id = 'c_showdown_lost'},
+            {id = 'c_showdown_angel'},
+            {id = 'c_showdown_vision'},
+            {id = 'c_showdown_constant'},
+            {id = 'c_showdown_function'},
+            {id = 'c_showdown_nimply'},
+            {id = 'j_showdown_strainer'},
+        },
+        banned_tags = {
+            {id = 'tag_showdown_playing'},
+            {id = 'tag_showdown_numbered'},
+            {id = 'tag_showdown_royal'},
+            {id = 'tag_showdown_decimal'},
+            {id = 'tag_showdown_top'},
+            {id = 'tag_showdown_mystery'},
+            {id = 'tag_showdown_mega_mystery'},
+        },
+        banned_other = {
+            {id = 'bl_showdown_shameful', type = 'blind'},
+        }
+    },
+    ['c_blast_off_1'] = {
+        banned_cards = {
+            {id = 'j_showdown_shady_dealer'},
+            {id = 'j_showdown_versatile_joker_challenge_restriction', ids = {'j_showdown_versatile_joker'}},
+        },
+        banned_tags = {},
+        banned_other = {}
+    },
+    ['c_golden_needle_1'] = {
+        banned_cards = {
+            {id = 'j_showdown_shady_dealer'},
+            {id = 'j_showdown_versatile_joker_challenge_restriction', ids = {'j_showdown_versatile_joker'}},
+        },
+        banned_tags = {},
+        banned_other = {}
+    },
+    ['c_jokerless_1'] = {
+        banned_cards = {
+            {id = 'p_showdown_boolean_1', ids = {
+                'p_showdown_boolean_1', 'p_showdown_boolean_2', 'p_showdown_boolean_jumbo', 'p_showdown_boolean_mega',
+            }},
+        },
+        banned_tags = {
+            {id = 'tag_showdown_logical'},
+            {id = 'tag_showdown_gift'},
+            {id = 'tag_showdown_buffoon'},
+            {id = 'tag_showdown_execute'},
+            {id = 'tag_showdown_mystery'},
+            {id = 'tag_showdown_mega_mystery'},
+        },
+        banned_other = {}
+    },
+}
+
 local bugged = {
     type = 'Challenge',
     order = 1,
@@ -63,6 +146,11 @@ local all_in_one = {
             {id = 'tag_foil'},
             {id = 'tag_buffoon'},
             {id = 'tag_top_up'},
+            {id = 'tag_showdown_gift'},
+            {id = 'tag_showdown_buffoon'},
+            {id = 'tag_showdown_execute'},
+            {id = 'tag_showdown_mystery'},
+            {id = 'tag_showdown_mega_mystery'},
         },
         banned_other = {
             {id = 'bl_final_acorn', type = 'blind'},
@@ -109,6 +197,12 @@ local empty_deck = {
         banned_tags = {
             {id = 'tag_standard'},
             {id = 'tag_showdown_playing'},
+            {id = 'tag_showdown_numbered'},
+            {id = 'tag_showdown_royal'},
+            {id = 'tag_showdown_decimal'},
+            {id = 'tag_showdown_top'},
+            {id = 'tag_showdown_mystery'},
+            {id = 'tag_showdown_mega_mystery'},
         },
         banned_other = {
             {id = 'bl_showdown_ceiling', type = 'blind'},
@@ -131,6 +225,21 @@ return {
 		return list
 	end,
 	exec = function()
+        for id, restrictions in pairs(vanilla_challenges_restrictions) do
+            for _, challenge in ipairs(G.CHALLENGES) do
+                if challenge.id == id then
+                    if not challenge.restrictions then challenge.restrictions = {} end
+                    for ban, cards in pairs(restrictions) do
+                        if not challenge.restrictions[ban] and #cards > 0 then challenge.restrictions[ban] = {} end
+                        for _, card in ipairs(cards) do
+                            table.insert(challenge.restrictions[ban], card)
+                        end
+                    end
+                    break
+                end
+            end
+        end
+
 		if (SMODS.Mods["UnStable"] or {}).can_load then
 			table.insert(empty_deck.restrictions.banned_cards, {id = 'p_unstb_prem_1', ids = {
                 'p_unstb_prem_1','p_unstb_prem_2','p_unstb_prem_jumbo','p_unstb_prem_mega',

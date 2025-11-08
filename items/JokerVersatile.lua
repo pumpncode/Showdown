@@ -133,7 +133,7 @@ local versatile_joker_all_in_one = {
     rarity = 4, cost = 20,
     in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
-	no_collection = true,
+	no_collection = true, discovered = true,
     calculate = function(self, card, context)
         local final = nil
         for _, deck in pairs(Showdown.versatile) do
@@ -200,12 +200,28 @@ local versatile_joker_all_in_one = {
     end,
 }
 
+local versatile_joker_challenge_restriction = {
+    type = 'Joker',
+    key = 'versatile_joker_challenge_restriction',
+    name = 'versatile_joker_challenge_restriction',
+    atlas = "showdown_versatile_joker",
+    pos = coordinate(17),
+    loc_vars = function(self, info_queue, card)
+        return { key = 'j_showdown_versatile_joker_challenge' }
+    end,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+	no_collection = true, discovered = true,
+    in_pool = function(self, args) return false end,
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Versatile"],
 	list = function ()
 		local list = {
 			versatile_joker,
             versatile_joker_all_in_one,
+            versatile_joker_challenge_restriction,
 		}
 		return list
 	end,
