@@ -1469,7 +1469,7 @@ local colored_glasses = {
     name = 'colored_glasses',
     atlas = "showdown_jokers",
     pos = coordinate(48),
-    config = {extra = {mult_scale = 4, mult = 0}},
+    config = {extra = {mult_scale = 2, mult = 0}},
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
