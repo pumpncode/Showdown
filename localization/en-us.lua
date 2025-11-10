@@ -1765,8 +1765,8 @@ return {
                 text = {
                     'All cards held in hand {C:attention}converts{} into',
                     'their higher or equal {C:counterpart_ranks}counterpart{}',
-                    'but loses their {C:attention}enhancement{}, {C:attention}edition{}',
-                    'or {C:attention}seal{}',
+                    'but loses their {C:attention}Enhancement{}, {C:dark_edition}Edition{}',
+                    'or {C:attention}Seal{}',
                 }
             },
             c_showdown_blue_key = {
@@ -1936,7 +1936,7 @@ return {
             tag_showdown_splendid = {
                 name = "Splendid Switch",
                 text = {
-                    'Gives a {C:attention}random{} edition',
+                    'Gives a {C:attention}random{} {C:dark_edition}Edition',
                     'to a {C:attention}random{} joker',
                     '{C:inactive}({C:dark_edition}Negative{C:inactive} excluded)',
                 },
@@ -2194,14 +2194,22 @@ return {
                 name = 'Constant',
                 text = {
                     'Destroy {C:attention}#1#{} selected card',
-                    'All cards with {C:attention}equal{} rank will get',
+                    'All cards with {C:attention}equal{} rank will',
+                    'get random {C:attention}enhancements{}',
+                }
+            },
+            c_showdown_constant_multiple = {
+                name = 'Constant',
+                text = {
+                    'Destroy up to {C:attention}#1#{} selected cards',
+                    'All cards with {C:attention}equal{} ranks will get',
                     'random {C:attention}enhancements{}',
                 }
             },
             c_showdown_variable = {
                 name = 'Variable',
                 text = {
-                    'Destroy {C:attention}#1#{} selected cards',
+                    'Destroy up to {C:attention}#1#{} selected cards',
                     'Each card gives between',
                     '{C:money}$#2#{} and {C:money}$#3#',
                 }
@@ -2209,23 +2217,25 @@ return {
             c_showdown_function = {
                 name = 'Function',
                 text = {
-                    'Select {C:attention}#1#{} card that will get',
-                    'random {C:attention}enhancements{}, then {C:attention}#2#{} random',
-                    'cards will be {C:attention}destroyed{}',
+                    'Select up to {C:attention}#1#{} cards',
+                    'The selected cards will gain',
+                    'a random {C:attention}Enhancement',
+                    '{C:attention}#2#{} random card will be destroyed',
                 }
             },
             c_showdown_shape = {
                 name = 'Shape',
                 text = {
-                    'Select {C:attention}#1#{} cards that will get',
-                    'random {C:attention}editions{}, then {C:attention}#2#{} random',
-                    'cards will be {C:attention}destroyed{}',
+                    'Select up to {C:attention}#1#{} cards',
+                    'Half of the selected cards will',
+                    'gain a random {C:dark_edition}Edition',
+                    'The {C:attention}others{} will be destroyed',
                 }
             },
             c_showdown_vector = {
                 name = 'Vector',
                 text = {
-                    'Destroy {C:attention}#1#{} selected cards',
+                    'Destroy up to {C:attention}#1#{} selected cards',
                     'For each destroyed card, {C:attention}one{} future',
                     'booster will have an {C:attention}additional choice{}',
                     '{C:inactive}(Currently {C:attention}#2#{C:inactive} Boosters){}',
@@ -2234,18 +2244,18 @@ return {
             c_showdown_probability = {
                 name = 'Probability',
                 text = {
-                    'Select up to {C:attention}#1#{} cards, each card has',
-                    'a {C:green}#3# in #4#{} chance to be {C:attention}destroyed{}',
-                    'Each destroyed card {C:attention}multiply{} the values of',
+                    'Select up to {C:attention}#1#{} cards',
+                    'Each selected card has a {C:green}#3# in #4#{} chance',
+                    'to be destroyed',
+                    'Destroyed card {C:attention}multiply{} the values of',
                     'the leftest joker by {X:attention,C:white}X#2#{}',
                 }
             },
             c_showdown_sequence = {
                 name = 'Sequence',
                 text = {
-                    '{C:attention}Destroy{} selected cards and',
-                    'upgrade poker hand by {C:attention}#1#{}',
-                    'levels',
+                    'Destroy selected {C:attention}hand{} and',
+                    'upgrade its level by {C:attention}#1#{}',
                 }
             },
             c_showdown_operation = {
@@ -2279,9 +2289,9 @@ return {
             c_showdown_or = {
                 name = 'OR',
                 text = {
-                    'Removes the {C:attention}edition{} of the',
+                    'Removes the {C:dark_edition}Edition{} of the',
                     'selected joker and creates',
-                    'the corresponding {C:attention}edition tag',
+                    'the corresponding {C:dark_edition}Edition {C:attention}Tag',
                 }
             },
             c_showdown_xor = {
@@ -2311,7 +2321,7 @@ return {
                 name = 'NAND',
                 text = {
                     'Gives the selected joker the',
-                    'edition of the joker on his {C:attention}right',
+                    '{C:dark_edition}Edition{} of the joker on his {C:attention}right',
                 }
             },
             c_showdown_nor = {

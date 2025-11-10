@@ -36,7 +36,7 @@ end
 function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
-	for k, v in pairs(G.P_CENTER_POOLS.Enhanced) do
+	for _, v in pairs(G.P_CENTER_POOLS.Enhanced) do
 		if findInTable(v.key, blacklist) == -1 then
 			cen_pool[#cen_pool+1] = v
 		end

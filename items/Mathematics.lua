@@ -21,32 +21,46 @@ local constant = {
 	atlas = 'showdown_mathematic',
     pos = coordinate(1),
 	config = {max_highlighted = 1},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted}} end,
+    loc_vars = function(self, info_queue, card)
+		return { key = self.config.max_highlighted > 1 and 'c_showdown_constant_multiple' or 'c_showdown_constant', vars = {self.config.max_highlighted} }
+	end,
 	can_use = function(self, card, area, copier)
-        return G.hand and #G.hand.highlighted == self.config.max_highlighted and #G.hand.cards >= 2
+        return G.hand and (#G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted > 0) and #G.hand.cards >= 2
     end,
-    use = function()
-		local card = G.hand.highlighted[1]
-		local rank = card:get_id()
+    use = function(self, card, area, copier)
+		local ranks = {}
+		local cards = {}
+		for _, _card in pairs(G.hand.highlighted) do
+			table.insert(cards, _card)
+		end
+		for _, _card in pairs(cards) do
+			local rank = _card:get_id()
+			if findInTable(rank, ranks) == -1 then
+				table.insert(ranks, rank)
+			end
+		end
 		local toEnhance = {}
 		for i=1, #G.hand.cards do
 			local _card = G.hand.cards[i]
 			if
-				_card ~= card
-				and _card:get_id() == rank
+				findInTable(_card, cards) == -1
+				and findInTable(_card:get_id(), ranks)
 				--and _card.ability.effect == "Base"
 			then
 				toEnhance[#toEnhance+1] = _card
 			end
 		end
-		event({trigger = 'after', delay = 0.1, func = function() mathDestroyCard(card) return true end })
+		for _, _card in pairs(cards) do
+			event({trigger = 'after', delay = 0.1, func = function() mathDestroyCard(_card) return true end })
+		end
         delay(0.2)
 		for i=1, #toEnhance do flipCard(toEnhance[i], i, #toEnhance) end
         delay(0.2)
-		local cen_pool = getEnhancements(rank == 1 and {"m_wild"} or {})
+		local cen_pool = getEnhancements()
+		local cen_pool_zero = getEnhancements({"m_wild"})
 		for i=1, #toEnhance do
             event({trigger = 'after', delay = 0.1, func = function()
-				toEnhance[i]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true)
+				toEnhance[i]:set_ability(pseudorandom_element(SMODS.is_zero(toEnhance[i]) and cen_pool_zero or cen_pool, pseudoseed('spe_card')), true)
             return true end })
         end
 		for i=1, #toEnhance do unflipCard(toEnhance[i], i, #toEnhance) end
@@ -60,14 +74,14 @@ local variable = {
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(2),
-	config = {max_highlighted = 3, minMoney = 0, maxMoney = 6},
+	config = {max_highlighted = 3, minMoney = 0, maxMoney = 5},
     loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.minMoney, self.config.maxMoney}} end,
 	can_use = function(self, card, area, copier)
-        return #G.hand.highlighted >= 1 and #G.hand.highlighted <= self.config.max_highlighted
+        return #G.hand.highlighted >= 1 and (#G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted > 0)
     end,
     use = function(self, card, area, copier)
 		local money = 0
-		for i=#G.hand.highlighted, 1, -1 do
+		for i = #G.hand.highlighted, 1, -1 do
             event({trigger = 'after', delay = 0.1, func = function()
 				mathDestroyCard(G.hand.highlighted[i], {nil, i == #G.hand.highlighted})
 			return true end })
@@ -85,29 +99,35 @@ local func = {
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(3),
-	config = {max_highlighted = 4, toDestroy = 1},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
+	config = { max_highlighted = 4, toDestroy = 1 },
+    loc_vars = function(self, info_queue, card) return { vars = {self.config.max_highlighted, self.config.toDestroy} } end,
 	can_use = function(self, card, area, copier)
-        return G.hand and #G.hand.highlighted == self.config.max_highlighted
+        return G.hand and (#G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted > 0)
     end,
     use = function(self, card, area, copier)
-		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
-		local cen_pool = getEnhancements()
-		local cen_pool_zero = getEnhancements({"m_wild"})
-		for i=1, #G.hand.highlighted do
-			local _card = G.hand.highlighted[i]
+		local cards = {}
+		for i, _card in ipairs(G.hand.highlighted) do
+			table.insert(cards, _card)
+			flipCard(_card, i, #G.hand.highlighted)
+		end
+		for _ = 1, self.config.toDestroy do
             event({trigger = 'after', delay = 0.1, func = function()
-				_card:set_ability(pseudorandom_element(SMODS.is_zero(_card) and cen_pool_zero or cen_pool, pseudoseed('spe_card')), true);
+				local _card = pseudorandom_element(cards, pseudoseed('showdown_mathematic'))
+				if mathDestroyCard(_card) then
+					table.remove(G.hand.highlighted, findInTable(_card, G.hand.highlighted))
+					table.remove(cards, findInTable(_card, cards))
+				end
             return true end })
         end
         delay(0.2)
-		for i=self.config.toDestroy, 1, -1 do
+		local cen_pool = getEnhancements()
+		local cen_pool_zero = getEnhancements({"m_wild"})
+		for _, _card in pairs(cards) do
             event({trigger = 'after', delay = 0.1, func = function()
-				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed'))
-				if mathDestroyCard(card) then table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted)) end
+				_card:set_ability(pseudorandom_element(SMODS.is_zero(_card) and cen_pool_zero or cen_pool, pseudoseed('showdown_mathematic')), true);
             return true end })
         end
-		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
+		for i, _card in ipairs(cards) do unflipCard(_card, i, #cards) end
 		event({trigger = 'after', delay = 0.2, func = function()
             G.hand:unhighlight_all();
         return true end })
@@ -122,25 +142,30 @@ local shape = {
 	set = 'Mathematic',
 	atlas = 'showdown_mathematic',
     pos = coordinate(4),
-	config = {max_highlighted = 4, toDestroy = 2},
-    loc_vars = function(self, info_queue, card) return {vars = {self.config.max_highlighted, self.config.toDestroy}} end,
+	config = {max_highlighted = 4},
+    loc_vars = function(self, info_queue, card) return { vars = {self.config.max_highlighted} } end,
 	can_use = function(self, card, area, copier)
-        if G.hand and #G.hand.highlighted == self.config.max_highlighted then
-            return true
-        end
-        return false
+        return G.hand and (#G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted > 0)
     end,
     use = function(self, card, area, copier)
-		for i=1, #G.hand.highlighted do
+		local cards = {}
+		for _, _card in ipairs(G.hand.highlighted) do
+			table.insert(cards, _card)
+		end
+		for i = 1, #cards / 2 do
             event({trigger = 'after', delay = 0.1, func = function()
-				local edition = poll_edition(nil, nil, nil, true); G.hand.highlighted[i]:set_edition(edition, true);
+				local _card = pseudorandom_element(cards, pseudoseed('seed'))
+				if mathDestroyCard(_card, {silent = i == 1}) then
+					table.remove(cards, findInTable(_card, cards))
+					table.remove(G.hand.highlighted, findInTable(_card, G.hand.highlighted))
+				end
             return true end })
         end
         delay(0.2)
-		for i=self.config.toDestroy, 1, -1 do
+		for _, _card in ipairs(cards) do
             event({trigger = 'after', delay = 0.1, func = function()
-				local card = pseudorandom_element(G.hand.highlighted, pseudoseed('seed'))
-				if mathDestroyCard(card, {nil, i == 1}) then table.remove(G.hand.highlighted, findInTable(card, G.hand.highlighted)) end
+				local edition = poll_edition(nil, nil, nil, true)
+				_card:set_edition(edition, true)
             return true end })
         end
 		event({trigger = 'after', delay = 0.2, func = function()
