@@ -84,6 +84,28 @@ for _, item in ipairs(sortedItems) do
 	execute_item(item)
 end
 
+SMODS.Shader {
+    key = 'hue_shift',
+    path = 'shift.fs',
+    -- card can be nil if sprite.role.major is not Card
+    send_vars = function (sprite, card)
+        return {
+            hue_shift_factor = card and card.edition.hue_shift_factor or 1
+        }
+    end,
+}
+-- i want this to be a shader that can stacked on top of other shaders
+-- maybe use it for an easter egg with a color themed joker
+--[[SMODS.Edition({
+	key = 'hue_shift',
+	shader = 'hue_shift',
+	loc_txt = { name = 'Hue Shift', text = { 'No effect because i don't want it to be an edition' } },
+	on_apply = function (card)
+        card.edition.hue_shift_factor = math.random(1, 3)
+		print(inspect(card))
+    end,
+})]]
+
 function shdwn.save_config(self)
     SMODS.save_mod_config(self)
 end
@@ -142,6 +164,7 @@ local showdown_config_tab = function()
 	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
 	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
 	local cardsleeves = (SMODS.Mods["CardSleeves"] or {}).can_load
+	local morefluff = (SMODS.Mods["MoreFluff"] or {}).can_load
 	return {
 		{
 		label = localize("showdown_content_config"),
@@ -298,6 +321,7 @@ local showdown_config_tab = function()
 									--create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
+									create_toggle({label = localize("showdown_config_morefluff"), label_color = morefluff and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'MoreFluff', callback = function() shdwn:save_config() end}),
 	
 								}},
 							}},

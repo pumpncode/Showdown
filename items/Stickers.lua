@@ -154,17 +154,24 @@ local xor_retrigger = {
 	key = 'xor_retrigger',
 	atlas = 'showdown_stickers',
 	pos = coordinate(999, 5),
+    loc_vars = function(self, info_queue, card)
+        return {vars = {card.ability[self.key]}}
+    end,
 	badge_colour = G.C.SHOWDOWN_BOOLEAN,
 	sets = { Joker = true, Default = false, Enhanced = false },
 	should_apply = false,
 	apply = function(self, card, val)
-		card.ability[self.key] = val
+		if val then
+			card.ability[self.key] = (card.ability[self.key] or 0) + 1
+		else
+			card.ability[self.key] = nil
+		end
 	end,
 	calculate = function(self, card, context)
 		if context.retrigger_joker_check and not context.retrigger_joker and context.other_card == card then
 			return {
 				message = localize("k_again_ex"),
-				repetitions = 1,
+				repetitions = card.ability['showdown_xor_retrigger'],
 				card = card,
 			}
 		elseif context.end_of_round then

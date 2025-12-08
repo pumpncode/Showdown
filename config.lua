@@ -27,6 +27,7 @@ return {
         ["Cryptid"] = false,
         ["Bunco"] = true,
         ["CardSleeves"] = true,
+        ["MoreFluff"] = true,
     },
     ["Stakes"] = true,
     ["Challenges"] = true,

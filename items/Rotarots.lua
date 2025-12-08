@@ -1,0 +1,231 @@
+local rot_reflection = {
+	type = 'Consumable',
+	order = 1,
+	key = 'rot_reflection',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = {max_highlighted = 2},
+	loc_vars = function(self, info_queue, card)
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(1),
+	can_use = function(self)
+        return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end,
+    use = function(self, card, area, copier)
+		for i=1, #G.hand.highlighted do flipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
+        delay(0.2)
+		for i=1, #G.hand.highlighted do
+            event({trigger = 'after', delay = 0.1, func = function()
+				assert(SMODS.change_base(G.hand.highlighted[i], nil, 'showdown_Zero'))
+            return true end })
+        end
+		for i=1, #G.hand.highlighted do unflipCard(G.hand.highlighted[i], i, #G.hand.highlighted) end
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
+    end
+}
+
+local rot_vessel = {
+	type = 'Consumable',
+	order = 2,
+	key = 'rot_vessel',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = {max_highlighted = 1},
+    loc_vars = function(self, info_queue, card)
+        return {vars = {self.config.max_highlighted}}
+    end,
+    pos = coordinate(2),
+	can_use = function(self)
+        return false
+    end,
+    use = function(self, card, area, copier)
+		--
+    end
+}
+
+local rot_genie = {
+	type = 'Consumable',
+	order = 3,
+	key = 'rot_genie',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = { create = 1 },
+    loc_vars = function(self, info_queue, card)
+        if not (not fool_c or fool_c.name == 'The Fool') then
+            info_queue[#info_queue+1] = fool_c
+        end
+        return {vars = {self.config.create}}
+    end,
+    generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        SMODS.Consumable.super.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        local genie_c = G.GAME.last_math and G.P_CENTERS[G.GAME.last_math] or nil
+        local last_math = genie_c and localize{type = 'name_text', key = genie_c.key, set = genie_c.set} or localize('k_none')
+        local colour = (not genie_c) and G.C.RED or G.C.GREEN
+        desc_nodes[#desc_nodes+1] = {
+            {n=G.UIT.C, config={align = "bm", padding = 0.02}, nodes={
+                {n=G.UIT.C, config={align = "m", colour = colour, r = 0.05, padding = 0.05}, nodes={
+                    {n=G.UIT.T, config={text = ' '..last_math..' ', colour = G.C.UI.TEXT_LIGHT, scale = 0.3, shadow = true}},
+                }}
+            }}
+        }
+        if not not genie_c then
+            info_queue[#info_queue+1] = genie_c
+        end
+    end,
+    pos = coordinate(3),
+	can_use = function(self)
+        return (#G.consumeables.cards < G.consumeables.config.card_limit or self.area == G.consumeables) and G.GAME.last_math
+    end,
+    use = function(self, card, area, copier)
+        local used_rot_tarot = copier or card
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                play_sound('timpani')
+                local _card = create_card('Mathematic', G.consumeables, nil, nil, nil, nil, G.GAME.last_math, 'rot_genie')
+                _card:add_to_deck()
+                G.consumeables:emplace(_card)
+                used_rot_tarot:juice_up(0.3, 0.5)
+            end
+            return true end }))
+        delay(0.6)
+    end
+}
+
+local rot_lost = {
+	type = 'Consumable',
+	order = 4,
+	key = 'rot_lost',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_ghost" },
+    loc_vars = function(self, info_queue)
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(4),
+	can_use = function(self)
+		return false
+    end
+}
+
+local rot_angel = {
+	type = 'Consumable',
+	order = 5,
+	key = 'rot_angel',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_holy" },
+    loc_vars = function(self, info_queue)
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(5),
+	can_use = function(self)
+		return false
+    end
+}
+
+local rot_inventor = {
+	type = 'Consumable',
+	order = 6,
+	key = 'rot_inventor',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = { create = 1 },
+    loc_vars = function(self, info_queue, card)
+        return {vars = {self.config.create}}
+    end,
+    generate_ui = function(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        SMODS.Consumable.super.generate_ui(self, info_queue, card, desc_nodes, specific_vars, full_UI_table)
+        local logic_c = G.GAME.last_logic and G.P_CENTERS[G.GAME.last_logic] or nil
+        local last_logic = logic_c and localize{type = 'name_text', key = logic_c.key, set = logic_c.set} or localize('k_none')
+        local colour = (not logic_c) and G.C.RED or G.C.GREEN
+        desc_nodes[#desc_nodes+1] = {
+            {n=G.UIT.C, config={align = "bm", padding = 0.02}, nodes={
+                {n=G.UIT.C, config={align = "m", colour = colour, r = 0.05, padding = 0.05}, nodes={
+                    {n=G.UIT.T, config={text = ' '..last_logic..' ', colour = G.C.UI.TEXT_LIGHT, scale = 0.3, shadow = true}},
+                }}
+            }}
+        }
+        if not not logic_c then
+            info_queue[#info_queue+1] = logic_c
+        end
+    end,
+    pos = coordinate(7),
+	can_use = function(self)
+        return (#G.consumeables.cards < G.consumeables.config.card_limit or self.area == G.consumeables) and G.GAME.last_logic
+    end,
+    use = function(self, card, area, copier)
+        local used_rot_tarot = copier or card
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                play_sound('timpani')
+                local _card = create_card('Logic', G.consumeables, nil, nil, nil, nil, G.GAME.last_logic, 'rot_inventor')
+                _card:add_to_deck()
+                G.consumeables:emplace(_card)
+                used_rot_tarot:juice_up(0.3, 0.5)
+            end
+            return true end }))
+        delay(0.6)
+    end
+}
+
+-- Bunco
+
+local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
+
+local rot_beast = {
+	type = 'Consumable',
+	order = 1000,
+	key = 'rot_beast',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = {max_highlighted = 2},
+    loc_vars = function(self, info_queue)
+        return {vars = {self.config.max_highlighted}}
+    end,
+    pos = coordinate(8),
+	can_use = function(self)
+        return false
+    end,
+    use = function(self, card, area, copier)
+		--
+    end
+}
+
+return {
+	enabled = (SMODS.Mods["MoreFluff"] or {}).can_load and Showdown.config["CrossMod"]["MoreFluff"],
+	list = function ()
+		local list = {}
+		if Showdown.config["Ranks"] then
+			table.insert(list, rot_reflection)
+			table.insert(list, rot_vessel)
+			if (SMODS.Mods["Bunco"] or {}).can_load and Showdown.config["CrossMod"]["Bunco"] then
+				table.insert(list, rot_beast)
+			end
+		end
+		if Showdown.config["Consumeables"]["Mathematics"] then
+			table.insert(list, rot_genie)
+		end
+		if Showdown.config["Enhancements"] then
+			table.insert(list, rot_lost)
+			table.insert(list, rot_angel)
+		end
+		if Showdown.config["Consumeables"]["Logics"] then
+			table.insert(list, rot_inventor)
+		end
+		return list
+	end,
+	atlases = {
+        {key = "showdown_rotarots", path = "CrossMod/MoreFluff/Consumeables/Rotarots.png", px = 107, py = 107, atlas_table = "ASSET_ATLAS",}
+	},
+}

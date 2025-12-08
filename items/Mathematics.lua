@@ -295,7 +295,6 @@ local sequence = {
                 if G.hand.highlighted ~= nil then mathDestroyCard(G.hand.highlighted[i], {nil, i == 1}); end
             return true end })
         end
-		
     end
 }
 
@@ -359,11 +358,11 @@ local operation = {
 			----
 			local edition = randomValue(cardValues1.edition, cardValues2.edition)
 			local seal = randomValue(cardValues1.seal, cardValues2.seal)
-			local card = create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = center}, G.hand, true)
-			if edition then card:set_edition(edition) end
-			if seal then card:set_seal(seal) end
-			card:start_materialize()
-			playing_card_joker_effects(card)
+			local _card = create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = center}, G.hand, true)
+			if edition then _card:set_edition(edition) end
+			if seal then _card:set_seal(seal) end
+			_card:start_materialize()
+			playing_card_joker_effects(_card)
 		return true end })
     end
 }

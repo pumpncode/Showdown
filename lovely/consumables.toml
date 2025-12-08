@@ -59,5 +59,44 @@ if G.GAME.infection and G.GAME.infection.triggered > 0 and _type ~= 'Tag' then
         cpt = cpt + 1
     end
 end
+'''
 
+# Keep track of last mathematic and logic card used
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+match_indent = true
+pattern = "if card.config.center.set == 'Tarot' or card.config.center.set == 'Planet' then"
+position = "before"
+payload = '''
+if card.config.center.set == 'Mathematic' then 
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        func = function()
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate',
+                func = function()
+                    G.GAME.last_math = card.config.center_key
+                    return true
+                end
+            }))
+            return true
+        end
+    }))
+end
+if card.config.center.set == 'Logic' then 
+    G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        func = function()
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate',
+                func = function()
+                    G.GAME.last_logic = card.config.center_key
+                    return true
+                end
+            }))
+            return true
+        end
+    }))
+end
 '''

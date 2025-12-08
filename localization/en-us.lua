@@ -1118,7 +1118,7 @@ return {
                 text = {
                     'Effect depends of {C:attention}played deck',
                     'Scored non-enhanced {C:counterpart_ranks}counterparts',
-                    'gains a {C:attention}random{} enhancement from',
+                    'gains a {C:attention}random{} Enhancement from',
                     'your {C:attention}hand{} before scoring',
                 },
                 unlock = {
@@ -1218,7 +1218,7 @@ return {
                     '{s:0.8}At the end of each round, {C:attention,s:0.8}creates{s:0.8} a card with rank and suit {C:attention,s:0.8}equals{s:0.8} to {C:attention,s:0.8}highest count{s:0.8} of rank and suit in deck',
                     '{C:blue,s:0.8}+1{s:0.8} hand and {C:red,s:0.8}+1{s:0.8} discard each round',
                     '{C:attention,s:0.8}This bonus can\'t be modified',
-                    '{s:0.8,C:inactive}#17#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
+                    '{s:0.8,C:inactive}#17#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} Enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
                     '{s:0.8,C:inactive}#18#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
                     '{s:0.8,C:inactive}#20#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
                     '{s:0.8,C:inactive}#17#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
@@ -1414,7 +1414,7 @@ return {
             j_showdown_stencil = {
                 name = 'Metal Stencil',
                 text = {
-                    "Puts a random seal on {C:attention}#1#{}",
+                    "Puts a random {C:attention}Seal{} on {C:attention}#1#{}",
                     "cards in hand after scoring",
                     "Bonus increases for each {C:attention}#2#{} {C:inactive}[#3#]",
                     "cards destroyed",
@@ -1582,7 +1582,7 @@ return {
                 name = "XOR Retrigger",
                 text = {
                     "Retrigger this",
-                    "card {C:attention}1{}",
+                    "card {C:attention}#1#{}",
                     "additional time",
                     "{C:attention}Removed{} when",
                     "blind is defeated",
@@ -2084,8 +2084,8 @@ return {
                 name = 'The Vessel',
                 text = {
                     'Converts {C:attention}#1#{} selected card',
-                    'to a {C:attention}0{} with a random',
-                    '{C:attention}enhancement{} or {C:attention}seal{}',
+                    'to a {C:attention}0{} card with a random',
+                    '{C:attention}Enhancement{} or {C:attention}Seal{}',
                 }
             },
             c_showdown_genie = {
@@ -2195,7 +2195,7 @@ return {
                 text = {
                     'Destroy {C:attention}#1#{} selected card',
                     'All cards with {C:attention}equal{} rank will',
-                    'get random {C:attention}enhancements{}',
+                    'get random {C:attention}Enhancements{}',
                 }
             },
             c_showdown_constant_multiple = {
@@ -2203,7 +2203,7 @@ return {
                 text = {
                     'Destroy up to {C:attention}#1#{} selected cards',
                     'All cards with {C:attention}equal{} ranks will get',
-                    'random {C:attention}enhancements{}',
+                    'random {C:attention}Enhancements{}',
                 }
             },
             c_showdown_variable = {
@@ -2370,14 +2370,57 @@ return {
                 }
             },
         },
-        Unique = {
-            c_showdown_strange_thing = {
-                name = 'Strange Thing',
+        Rotarot = {
+            c_showdown_rot_reflection = {
+                name = 'The Reflection!',
                 text = {
-                    'Creates a {C:dark_edition,E:1}Special Joker{} with',
-                    'a random value from {C:attention}#1#{} to {C:attention}#2#{}',
+                    'Converts up to',
+                    '{C:attention}#1#{} selected cards',
+                    'to {C:attention}0{} cards',
                 }
-            }
+            },
+            c_showdown_rot_vessel = {
+                name = 'The Vessel!',
+                text = {
+                    'Converts {C:attention}#1#{} selected card',
+                    'to a {C:attention}0{} card with a random',
+                    '{C:dark_edition}Edition{}',
+                }
+            },
+            c_showdown_rot_genie = {
+                name = 'The Genie!',
+                text = {
+                    "Creates the last",
+                    "{C:showdown_calculus}Mathematic{} card",
+                    "used during this run",
+                }
+            },
+            c_showdown_rot_inventor = {
+                name = 'The Inventor!',
+                text = {
+                    "Creates the last",
+                    "{C:showdown_boolean}Logic{} card",
+                    "used during this run",
+                }
+            },
+            c_showdown_rot_lost = {
+                name = 'The Lost!',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_rot_angel = {
+                name = 'The Angel!',
+                text = {
+                    'idk',
+                }
+            },
+            c_showdown_rot_beast = {
+                name = 'The Beast!',
+                text = {
+                    'idk',
+                }
+            },
         }
     },
     misc = {
@@ -2459,6 +2502,7 @@ return {
             showdown_config_cryptid = "Cryptid",
             showdown_config_bunco = "Bunco",
             showdown_config_cardsleeves = "Card Sleeves",
+            showdown_config_morefluff = "More Fluff",
             
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_boolean_pack = 'Boolean Pack',
