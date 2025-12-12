@@ -46,10 +46,7 @@ local vessel = {
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
     pos = coordinate(2),
 	can_use = function()
-		if G.hand and #G.hand.highlighted == 1 then
-            return true
-        end
-        return false
+		return G.hand and #G.hand.highlighted == 1
     end,
     use = function()
 		flipCard(G.hand.highlighted[1], nil, #G.hand.highlighted)

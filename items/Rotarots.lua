@@ -42,10 +42,19 @@ local rot_vessel = {
     end,
     pos = coordinate(2),
 	can_use = function(self)
-        return false
+        return G.hand and #G.hand.highlighted == 1
     end,
     use = function(self, card, area, copier)
-		--
+        delay(0.2)
+		event({trigger = 'after', delay = 0.1, func = function()
+			assert(SMODS.change_base(G.hand.highlighted[1], nil, "showdown_Zero"))
+		return true end })
+		local edition = poll_edition('rot_vessel', nil, true, true)
+        if edition then G.hand.highlighted[1]:set_edition(edition) end
+		event({trigger = 'after', delay = 0.2, func = function()
+            G.hand:unhighlight_all();
+        return true end })
+        delay(0.5)
     end
 }
 
