@@ -171,7 +171,7 @@ function get_all_ranks(args)
 			if not args.noModded then -- Modded
 				if
 					findInTable(rank.key, baseRanks) == -1
-					and ((findInTable(rank.key, counterparts) == -1 and not args.noCounterpart) or (findInTable(rank.key, counterparts) > -1 and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
+					and ((findInTable(rank.key, counterparts) == -1 and args.noCounterpart) or (findInTable(rank.key, counterparts) > -1 and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
 					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
 				then
 					table.insert(ranks, rank.key)

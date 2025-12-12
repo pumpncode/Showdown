@@ -53,6 +53,62 @@ local holy = {
 	end
 }
 
+-- More Fluff
+
+local frozen = {
+	type = 'Enhancement',
+	order = 1000,
+	key = 'frozen',
+	atlas = 'showdown_enhancementsMoreFluff',
+	pos = coordinate(1, 7),
+	config = {extra = {x_mult = 2, x_chips = 2}},
+	loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips}}
+		end
+		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips}}
+	end,
+	calculate = function(self, card, context)
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
+			return {
+				x_mult = card.ability.extra.x_mult,
+				x_chips = card.ability.extra.x_chips,
+				card = card
+			}
+		elseif
+			context.destroy_card
+			and context.cardarea == G.play
+			and context.destroy_card == card
+			and not card.debuff
+		then
+			return { remove = true }
+		end
+	end
+}
+
+local cursed = {
+	type = 'Enhancement',
+	order = 1001,
+	key = 'cursed',
+	atlas = 'showdown_enhancementsMoreFluff',
+	pos = coordinate(2, 7),
+	config = {extra = {x_chips = 1, x_chips_gain = 0.05}},
+	loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_chips, card.ability.extra.x_chips_gain}}
+		end
+		return {vars = {self.config.extra.x_chips, self.config.extra.x_chips_gain}}
+	end,
+	calculate = function(self, card, context)
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
+			card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_gain
+			return {
+				x_chips = card.ability.extra.x_chips
+			}
+		end
+	end
+}
+
 return {
 	enabled = Showdown.config["Enhancements"],
 	list = function ()
@@ -60,10 +116,15 @@ return {
 			ghost,
 			holy,
 		}
+		if (SMODS.Mods["MoreFluff"] or {}).can_load and Showdown.config["CrossMod"]["MoreFluff"] then
+			table.insert(list, frozen)
+			table.insert(list, cursed)
+		end
 		return list
 	end,
 	atlases = {
 		{key = 'showdown_enhancements', path = 'Enhancements.png', px = 71, py = 95},
+		{key = 'showdown_enhancementsMoreFluff', path = 'CrossMod/MoreFluff/Enhancements.png', px = 71, py = 95},
 	},
 	exec = function()
 		local Centergenerate_uiRef = SMODS.Center.generate_ui

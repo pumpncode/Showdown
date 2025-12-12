@@ -105,13 +105,14 @@ local rot_lost = {
 	set = 'Rotarot',
 	atlas = 'showdown_rotarots',
     display_size = { w = 107, h = 107 },
-	config = { max_highlighted = 1, mod_conv = "m_showdown_ghost" },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_frozen" },
     loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_frozen
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(4),
 	can_use = function(self)
-		return false
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
     end
 }
 
@@ -122,13 +123,14 @@ local rot_angel = {
 	set = 'Rotarot',
 	atlas = 'showdown_rotarots',
     display_size = { w = 107, h = 107 },
-	config = { max_highlighted = 1, mod_conv = "m_showdown_holy" },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_cursed" },
     loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_cursed
 		return {vars = {self.config.max_highlighted}}
 	end,
     pos = coordinate(5),
 	can_use = function(self)
-		return false
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
     end
 }
 
@@ -180,8 +182,6 @@ local rot_inventor = {
 
 -- Bunco
 
-local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
-
 local rot_beast = {
 	type = 'Consumable',
 	order = 1000,
@@ -189,16 +189,38 @@ local rot_beast = {
 	set = 'Rotarot',
 	atlas = 'showdown_rotarots',
     display_size = { w = 107, h = 107 },
-	config = {max_highlighted = 2},
+	config = {copies = 1},
     loc_vars = function(self, info_queue)
-        return {vars = {self.config.max_highlighted}}
+        return {vars = {self.config.copies}}
     end,
-    pos = coordinate(8),
+    pos = coordinate(6),
 	can_use = function(self)
+        if G.hand and #G.hand.highlighted == 1 then
+            local highlighted_card = G.hand.highlighted[1]
+            return (highlighted_card:is_suit('bunc_Fleurons') or highlighted_card:is_suit('bunc_Halberds')) and SMODS.is_counterpart(highlighted_card)
+        end
         return false
     end,
     use = function(self, card, area, copier)
-		--
+		G.E_MANAGER:add_event(Event({
+            func = function()
+                local _first_dissolve = nil
+                local new_cards = {}
+                for _ = 1, self.config.copies do
+                    G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                    local _card = copy_card(G.hand.highlighted[1], nil, nil, G.playing_card)
+                    _card:add_to_deck()
+                    G.deck.config.card_limit = G.deck.config.card_limit + 1
+                    table.insert(G.playing_cards, _card)
+                    G.hand:emplace(_card)
+                    _card:start_materialize(nil, _first_dissolve)
+                    _first_dissolve = true
+                    new_cards[#new_cards+1] = _card
+                end
+                playing_card_joker_effects(new_cards)
+                return true
+            end
+        }))
     end
 }
 

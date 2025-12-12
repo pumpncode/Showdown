@@ -396,7 +396,7 @@ return {
                 text = {
                     '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
                     '{C:green}#4# in #3#{} chance to disappear',
-                    'after all scoring is finished',
+                    'after being scored',
                 }
             },
             m_showdown_holy = {
@@ -404,6 +404,22 @@ return {
                 text = {
                     '{X:mult,C:white}X#1#{} Mult',
                     'Gains {X:mult,C:white}X#2#{} Mult',
+                    'when scored',
+                }
+            },
+            m_showdown_frozen = {
+                name = 'Frozen Card',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
+                    'Will be {C:red}destroyed{} after',
+                    'being scored',
+                }
+            },
+            m_showdown_cursed = {
+                name = 'Cursed Card',
+                text = {
+                    '{X:chips,C:white}X#1#{} Chips',
+                    'Gains {X:chips,C:white}X#2#{} Chips',
                     'when scored',
                 }
             },
@@ -1583,7 +1599,7 @@ return {
                 text = {
                     "Retrigger this",
                     "card {C:attention}#1#{}",
-                    "additional time",
+                    "additional times",
                     "{C:attention}Removed{} when",
                     "blind is defeated",
                 },
@@ -1645,11 +1661,11 @@ return {
                 },
             },
             counterpart_ranks = {
-                name = 'Counterparts',
+                name = 'Counterpart Cards',
                 text = {
-                    'Cards with rank 2.5,',
-                    '5.5, 8.5, Butler,',
-                    'Princess and Lord',
+                    'Cards with rank {C:attention}2.5{},',
+                    '{C:attention}5.5{}, {C:attention}8.5{}, {C:attention}Butler{},',
+                    '{C:attention}Princess{} or {C:attention}Lord',
                 }
             },
             undiscovered_mathematic = {
@@ -2123,7 +2139,7 @@ return {
                 text = {
                     'Converts up to {C:attention}#1#{}',
                     'selected cards to a',
-                    'random {C:bunc_fleurons}exotic{}',
+                    'random {C:bunco_exotic}exotic{}',
                     '{C:counterpart_ranks}counterpart{}',
                 }
             },
@@ -2406,19 +2422,23 @@ return {
             c_showdown_rot_lost = {
                 name = 'The Lost!',
                 text = {
-                    'idk',
+                    "Enhances {C:attention}#1#{} selected card",
+                    "into a {C:attention}Frozen Card{}"
                 }
             },
             c_showdown_rot_angel = {
                 name = 'The Angel!',
                 text = {
-                    'idk',
+                    "Enhances {C:attention}#1#{} selected card",
+                    "into a {C:attention}Cursed Card{}"
                 }
             },
             c_showdown_rot_beast = {
                 name = 'The Beast!',
                 text = {
-                    'idk',
+                    'Creates {C:attention}#1#{} copy of a',
+                    'selected {C:bunco_exotic}exotic{}',
+                    '{C:counterpart_ranks}counterpart{} card',
                 }
             },
         }

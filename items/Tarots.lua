@@ -233,16 +233,13 @@ local beast = {
     end,
 	config = {max_highlighted = 2},
     loc_vars = function(self, info_queue)
-		info_queue[#info_queue+1] = { key = 'exotic_cards', set = 'Other' }
+		info_queue[#info_queue+1] = { key = 'bunc_exotic_cards', set = 'Other' }
 		info_queue[#info_queue+1] = { key = 'counterpart_ranks', set = 'Other' }
         return {vars = {self.config.max_highlighted}}
     end,
     pos = coordinate(1),
 	can_use = function(self)
-		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
-            return true
-        end
-        return false
+        return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
     end,
     use = function()
 		enable_exotics()
