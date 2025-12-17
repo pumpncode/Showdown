@@ -597,37 +597,6 @@ return {
                     'as {C:attention}every{} suit',
                 }
             },
-            j_showdown_wall = {
-                name = 'Wall',
-                text = {
-                    'Hello young man or woman. It seems that i was included into this wonderful and everlasting game called "Balatro" and made by indie',
-                    'developper Localthunk. text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                    'text text text text text text text text text text text text text text text text text text text text text text text text text text text',
-                },
-                unlock = {
-                    'Beat {C:attention}The Wall{} in {C:attention}one{} hand',
-                }
-            },
             j_showdown_one_doller = {
                 name = 'one doller',
                 text = {

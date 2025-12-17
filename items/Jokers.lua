@@ -586,17 +586,6 @@ local sim_card = {
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
 }
 
-local wall = {
-    type = 'Joker',
-    order = 18,
-    key = 'wall',
-    name = 'wall',
-    atlas = "showdown_jokers",
-    pos = coordinate(20),
-    rarity = 3, cost = 1,
-    blueprint_compat = false, perishable_compat = false, eternal_compat = true,
-}
-
 local one_doller = {
     type = 'Joker',
     order = 19,
@@ -2698,7 +2687,6 @@ return {
             --baby_jimbo,
             parmesan,
             chaos_card,
-            --wall,
             one_doller,
             revolution,
             sinful_joker,

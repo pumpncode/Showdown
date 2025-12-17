@@ -262,8 +262,6 @@ table.insert(def_list.jokers, {
 
 --table.insert(def_list.jokers, { key = 'sim_card' })
 
---table.insert(def_list.jokers, { key = 'wall' })
-
 table.insert(def_list.jokers, {
     key = 'one_doller',
     text = {
