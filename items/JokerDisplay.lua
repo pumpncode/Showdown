@@ -901,6 +901,71 @@ table.insert(def_list.jokers, {
     }
 })
 
+table.insert(def_list.jokers, {
+    key = 'love_letter',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+        }
+    },
+    reminder_text = {
+        { text = "(King, Queen)" },
+    },
+    calc_function = function(card)
+        local x_mult = 1
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+        local king = false
+        local queen = false
+        if text ~= 'Unknown' then
+            for _, scoring_card in pairs(scoring_hand) do
+                if not king and scoring_card:get_id() == 13 then king = true end
+                if not queen and scoring_card:get_id() == 12 then queen = true end
+                if king and queen and x_mult == 1 then
+                    x_mult = card.ability.extra.x_mult
+                end
+            end
+        end
+        card.joker_display_values.x_mult = x_mult
+    end
+})
+
+table.insert(def_list.jokers, {
+    key = 'brain_battery',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_chips", retrigger_type = "exp" }
+            },
+            border_colour = G.C.CHIPS,
+        }
+    }
+})
+
+table.insert(def_list.jokers, {
+    key = 'warped_joker',
+    text = {
+        { text = "+" },
+        { ref_table = "card.ability.extra", ref_value = "chips", retrigger_type = "mult" }
+    },
+    text_config = { colour = G.C.CHIPS },
+})
+
+table.insert(def_list.jokers, {
+    key = 'rules_card',
+    reminder_text = {},
+    calc_function = function(card)
+        local copied_joker, copied_debuff = JokerDisplay.calculate_blueprint_copy(card)
+        JokerDisplay.copy_display(card, copied_joker, copied_debuff)
+    end,
+    get_blueprint_joker = function(card)
+        return card.ability.extra.reference_to_copied_card and card.ability.extra.reference_to_copied_card.calculate_joker and card.ability.extra.reference_to_copied_card
+    end
+})
+
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
 
@@ -988,6 +1053,13 @@ return {
         end
         for _, def in ipairs(def_list.blinds) do
             JokerDisplay.Blind_Definitions["bl_showdown_"..def.key] = def
+        end
+
+        local JokerDisplayGet_display_areas = JokerDisplay.get_display_areas
+        function JokerDisplay.get_display_areas()
+            local areas = JokerDisplayGet_display_areas()
+            table.insert(areas, G.rules_card_jokers)
+            return areas
         end
     end,
     order = 3,

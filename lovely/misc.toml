@@ -58,6 +58,7 @@ Showdown.extraSuits = {}
 Showdown.versatile = {}
 Showdown.casino = {}
 Showdown.tag_related_joker = {}
+Showdown.rules_card_blacklist = {}
 '''
 
 # Text color on toggle buttons
@@ -145,4 +146,59 @@ payload = '''
 if G.GAME.round_resets.ante <= -1 then
     check_for_unlock({type = 'minecraft_reference'})
 end
+'''
+
+# Hue Shift easter egg
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+match_indent = true
+pattern = '''new_card.pinned = other.pinned'''
+position = "after"
+payload = '''
+--new_card.hue_shift_factor = math.random(1, 3)
+'''
+
+# Hue Shift easter egg
+[[patches]]
+[patches.pattern]
+target = '''card.lua'''
+match_indent = true
+pattern = '''ignore_shadow = self.ignore_shadow,'''
+position = "before"
+payload = '''
+--hue_shift_factor = self.hue_shift_factor,
+'''
+
+# Hue Shift easter egg
+[[patches]]
+[patches.pattern]
+target = '''card.lua'''
+match_indent = true
+pattern = '''self:set_sprites(self.config.center, self.config.card)'''
+position = "before"
+payload = '''
+--self.hue_shift_factor = cardTable.hue_shift_factor
+'''
+
+# Rules Card debug, part 1/2
+[[patches]]
+[patches.pattern]
+target = '''controller.lua'''
+match_indent = true
+pattern = '''G.debug_tools.alignment.offset.x = -4'''
+position = "after"
+payload = '''
+if G.rules_card_jokers then G.rules_card_jokers.T.y = -3 end
+'''
+
+# Rules Card debug, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''controller.lua'''
+match_indent = true
+pattern = '''G.debug_tools = nil'''
+position = "after"
+payload = '''
+if G.rules_card_jokers then G.rules_card_jokers.T.y = -5 end
 '''

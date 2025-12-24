@@ -1512,6 +1512,42 @@ return {
                     '{C:inactive}(Infection rate: #2#%)',
                 }
             },
+            j_showdown_love_letter = {
+                name = 'Love Letter',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult if played hand contains',
+                    'a {C:attention}King{} and a {C:attention}Queen',
+                }
+            },
+            j_showdown_brain_battery = {
+                name = 'Brain Battery',
+                text = {
+                    'This joker gain {X:chips,C:white}X#1#{} Chips when',
+                    'a joker {C:attention}triggers{}, resets at',
+                    'the {C:attention}end of the round{}',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'Get a {C:attention}Campfire',
+                    'at {X:mult,C:white}X5{} Mult',
+                }
+            },
+            j_showdown_warped_joker = {
+                name = 'Warped Joker',
+                text = {
+                    'Gains {C:chips}+#1#{} Chips if all cards in hand',
+                    'are {C:counterpart_ranks}counterpart{} cards when scoring',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
+                }
+            },
+            j_showdown_rules_card = {
+                name = 'Rules Card',
+                text = {
+                    'Copies the ability of a {C:attention}random',
+                    'previously sold {C:attention}Joker{} each round',
+                    '{C:inactive}(Current joker: {C:attention}#1#{C:inactive})',
+                }
+            },
         },
         Other={
             showdown_static = {
@@ -2279,6 +2315,16 @@ return {
                     'the corresponding {C:dark_edition}Edition {C:attention}Tag',
                 }
             },
+            c_showdown_or_challenge = {
+                name = 'OR',
+                text = {
+                    'Removes the {C:dark_edition}Edition{} of the',
+                    'selected joker and creates',
+                    'the corresponding {C:dark_edition}Edition {C:attention}Tag',
+                    '{C:inactive}(Cannot remove edition',
+                    '{C:inactive}from challenge jokers)',
+                }
+            },
             c_showdown_xor = {
                 name = 'XOR',
                 text = {
@@ -2314,6 +2360,15 @@ return {
                 text = {
                     'Remove {C:attention}#1#{} random sticker',
                     'to a selected joker',
+                }
+            },
+            c_showdown_nor_challenge = {
+                name = 'NOR',
+                text = {
+                    'Remove {C:attention}#1#{} random sticker',
+                    'to a selected joker',
+                    '{C:inactive}(Cannot remove stickers',
+                    '{C:inactive}from challenge jokers)',
                 }
             },
             c_showdown_xnor = {
@@ -2452,6 +2507,7 @@ return {
             c_showdown_7LB2WVPK = '7LB2WVPK',
             c_showdown_all_in_one = 'All in One',
             c_showdown_empty_deck = 'Empty Deck',
+            c_showdown_shifting_strategy = 'Shifting Strategy',
         },
         collabs={},
         dictionary={
@@ -3567,6 +3623,9 @@ return {
             },
             ch_c_showdown_all_zero = {
                 'All playing cards are {C:attention}0{}s',
+            },
+            ch_c_showdown_rules_card_all = {
+                'Rules Card starts with every Joker in memory',
             },
         },
     },

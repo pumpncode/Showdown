@@ -8,8 +8,8 @@ SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
 SMODS.current_mod.optional_features = {
     retrigger_joker = true, -- For Mario Sticker
-    --[[post_trigger = true,
-    quantum_enhancements = true,
+    post_trigger = true, -- For Brain Battery
+    --[[quantum_enhancements = true,
     cardareas = {
         discard = true,
         deck = true
@@ -84,27 +84,25 @@ for _, item in ipairs(sortedItems) do
 	execute_item(item)
 end
 
-SMODS.Shader {
+SMODS.Shader{
     key = 'hue_shift',
-    path = 'shift.fs',
+    path = 'hue_shift.fs',
     -- card can be nil if sprite.role.major is not Card
     send_vars = function (sprite, card)
         return {
-            hue_shift_factor = card and card.edition.hue_shift_factor or 1
+            hue_shift_factor = card and card.hue_shift_factor or 1
         }
     end,
 }
--- i want this to be a shader that can stacked on top of other shaders
--- maybe use it for an easter egg with a color themed joker
---[[SMODS.Edition({
+SMODS.DrawStep{ -- It doesn't apply with certain editions and it breaks playing cards
 	key = 'hue_shift',
-	shader = 'hue_shift',
-	loc_txt = { name = 'Hue Shift', text = { 'No effect because i don't want it to be an edition' } },
-	on_apply = function (card)
-        card.edition.hue_shift_factor = math.random(1, 3)
-		print(inspect(card))
-    end,
-})]]
+	order = 15,
+	func = function(card, layer)
+		if (card.config.center.discovered or card.bypass_discovery_center) and card.hue_shift_factor ~= nil then
+			card.children.center:draw_shader('showdown_hue_shift')
+		end
+	end
+}
 
 function shdwn.save_config(self)
     SMODS.save_mod_config(self)

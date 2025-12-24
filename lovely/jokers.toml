@@ -761,3 +761,65 @@ if G.GAME.showdown_infection and pseudorandom('showdown_infection') < G.GAME.sho
     forced_key = 'j_showdown_infection'
 end
 '''
+
+# Rules Card, part 1/?
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+pattern = '''
+G.playing_cards = {}
+'''
+position = 'before'
+payload = '''
+self.rules_card_jokers = CardArea(
+    0, 5,
+    CAI.joker_W,
+    CAI.joker_H, 
+    {card_limit = 1e308, type = 'joker'})
+'''
+
+# Rules Card, part 2/?
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''
+G.discard.T.y = 4.2
+'''
+position = 'before'
+payload = '''
+G.rules_card_jokers.T.x = G.hand.T.x - 0.1
+G.rules_card_jokers.T.y = -5
+G.rules_card_jokers:hard_set_VT()
+'''
+
+# Rules Card, part 3/?
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''
+for k, v in pairs(G.consumeables.cards) do
+'''
+position = 'before'
+payload = '''
+for k, v in pairs(G.rules_card_jokers.cards) do
+    if v and type(v) == 'table' and v.ability.name == name and (non_debuff or not v.debuff) then
+        table.insert(jokers, v)
+    end
+end
+'''
+
+# Rules Card, part 4/?
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''
+if (type(v) == "table") and v.is and v:is(CardArea) then
+'''
+position = 'at'
+payload = '''
+if (type(v) == "table") and v.is and v:is(CardArea) and v ~= G.rules_card_jokers then
+'''

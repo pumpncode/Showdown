@@ -72,3 +72,20 @@ position = 'at'
 payload = '''
 local front = ((_type=='Base' or _type == 'Enhanced') and (G.GAME.modifiers.showdown_all_zero and G.P_CARDS.D_showdown_Z or pseudorandom_element(G.P_CARDS, pseudoseed('front'..(key_append or '')..G.GAME.round_resets.ante)))) or nil
 '''
+
+# Shifting Strategy
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+pattern = '''elseif v.id == 'no_shop_jokers' then'''
+position = 'before'
+payload = '''
+elseif v.id == 'showdown_rules_card_all' then
+    self.GAME.sold_jokers = {}
+    for k, v in pairs(self.P_CENTERS) do
+        if v.set == 'Joker' and findInTable(k, Showdown.rules_card_blacklist) == -1 then
+            table.insert(self.GAME.sold_jokers, k)
+        end
+    end
+'''

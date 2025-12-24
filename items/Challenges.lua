@@ -190,6 +190,12 @@ local empty_deck = {
     },
     restrictions = {
         banned_cards = {
+            {id = 'c_strength'},
+            {id = 'c_familiar'},
+            {id = 'c_grim'},
+            {id = 'c_incantation'},
+            {id = 'c_sigil'},
+            {id = 'c_showdown_operation'},
             {id = 'p_standard_normal_1', ids = {
                 'p_standard_normal_1','p_standard_normal_2','p_standard_normal_3','p_standard_normal_4','p_standard_jumbo_1','p_standard_jumbo_2','p_standard_mega_1','p_standard_mega_2',
             }},
@@ -210,11 +216,33 @@ local empty_deck = {
     },
 }
 
+local shifting_strategy = {
+    type = 'Challenge',
+    order = 4,
+    key = "shifting_strategy",
+    rules = {
+        custom = {
+            {id = 'showdown_rules_card_all'},
+        },
+        modifiers = {
+            {id = 'joker_slots', value = 2},
+        }
+    },
+    jokers = {
+        {id = 'j_showdown_rules_card', eternal = true, edition = 'negative'},
+        {id = 'j_showdown_rules_card', eternal = true, edition = 'negative'},
+        {id = 'j_showdown_rules_card', eternal = true, edition = 'negative'},
+        {id = 'j_showdown_rules_card', eternal = true, edition = 'negative'},
+        {id = 'j_showdown_rules_card', eternal = true, edition = 'negative'},
+    },
+}
+
 return {
 	enabled = Showdown.config["Challenges"],
 	list = function()
 		local list = {
             bugged,
+            shifting_strategy,
 		}
 		if Showdown.config["Jokers"]["Versatile"] then
 			table.insert(list, all_in_one)
@@ -240,6 +268,14 @@ return {
             end
         end
 
+		if (SMODS.Mods["Bunco"] or {}).can_load then
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_showdown_beast'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_bunc_universe'})
+			table.insert(empty_deck.restrictions.banned_tags, {id = 'tag_bunc_filigree'})
+			table.insert(empty_deck.restrictions.banned_other, {id = 'bl_bunc_tine', type = 'blind'})
+			table.insert(empty_deck.restrictions.banned_other, {id = 'bl_bunc_cadaver', type = 'blind'})
+			table.insert(empty_deck.restrictions.banned_other, {id = 'bl_bunc_final_crown', type = 'blind'})
+		end
 		if (SMODS.Mods["UnStable"] or {}).can_load then
 			table.insert(empty_deck.restrictions.banned_cards, {id = 'p_unstb_prem_1', ids = {
                 'p_unstb_prem_1','p_unstb_prem_2','p_unstb_prem_jumbo','p_unstb_prem_mega',
@@ -255,6 +291,21 @@ return {
                     print('abcd')
                     table.insert(ban.ids, 'p_payasaka_standard_ultra')
                 end
+            end
+		end
+		if (SMODS.Mods["MoreFluff"] or {}).can_load then
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_deepblue'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_seaweed'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_red'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_orange'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_rot_strength'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_rot_star'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_rot_moon'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_rot_sun'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_mf_rot_world'})
+			table.insert(empty_deck.restrictions.banned_cards, {id = 'c_showdown_rot_reflection'})
+            if (SMODS.Mods["Bunco"] or {}).can_load then
+                table.insert(empty_deck.restrictions.banned_cards, {id = 'c_showdown_rot_beast'})
             end
 		end
 	end

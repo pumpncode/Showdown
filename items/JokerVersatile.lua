@@ -229,6 +229,8 @@ return {
 		{key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95},
 	},
 	exec = function()
+        table.insert(Showdown.rules_card_blacklist, 'j_showdown_versatile_joker_all_in_one')
+
 		Showdown.versatile['Unknown'] = { desc = 'j_showdown_versatile_joker_unknown', pos = coordinate(1), blueprint = true }
         Showdown.versatile['Red Deck'] = { desc = 'j_showdown_versatile_joker_red', pos = coordinate(2), blueprint = false, calculate = function(self, card, context)
             if context.discard and context.other_card == context.full_hand[1] then

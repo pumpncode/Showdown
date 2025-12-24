@@ -89,6 +89,7 @@ local logic_or = {
     pos = coordinate(3),
 	config = {max_highlighted = 1},
     loc_vars = function(self, info_queue, card)
+        --return {key = G.GAME.challenge and 'c_showdown_or_challenge' or 'c_showdown_or', vars = {self.config.max_highlighted}}
         return {vars = {self.config.max_highlighted}}
     end,
 	can_use = function(self)
@@ -183,7 +184,7 @@ local logic_not = {
         local one_selected = G.jokers and #G.jokers.highlighted == self.config.max_highlighted
         if one_selected then
             local joker = G.jokers.highlighted[1]
-            return not (joker.edition and joker.edition.negative and joker.ability.perishable) and joker.config.center.perishable_compat
+            return not (joker.edition and joker.edition.negative and joker.ability.perishable and SMODS.is_eternal(joker, self)) and joker.config.center.perishable_compat
         end
         return false
     end,
@@ -229,6 +230,7 @@ local logic_nor = {
     pos = coordinate(8),
 	config = {max_highlighted = 1, sticker_removed = 1},
     loc_vars = function(self, info_queue, card)
+        --return {key = G.GAME.challenge and 'c_showdown_nor_challenge' or 'c_showdown_nor', vars = {self.config.sticker_removed}}
         return {vars = {self.config.sticker_removed}}
     end,
 	can_use = function(self)
@@ -237,7 +239,7 @@ local logic_nor = {
             local joker = G.jokers.highlighted[1]
             local has_sticker = false
             for _, v in ipairs(SMODS.Sticker.obj_buffer) do
-                if joker.ability[v] then
+                if joker.ability[v] then -- Check if sticker is eternal from challenge joker
                     has_sticker = true
                     break
                 end
@@ -276,7 +278,7 @@ local logic_xnor = {
         return {vars = {self.config.cards_created}}
     end,
 	can_use = function(self, card)
-        return G.jokers and #G.jokers.highlighted == card.ability.max_highlighted
+        return G.jokers and #G.jokers.highlighted == card.ability.max_highlighted and not SMODS.is_eternal(G.jokers.highlighted[1], self)
     end,
     use = function(self, card, area, copier)
 		local used_consumable = copier or card
