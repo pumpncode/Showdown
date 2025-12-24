@@ -8,7 +8,7 @@ local jean_paul = {
     rarity = 1, cost = 2,
     blueprint_compat = false, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
-        if card.hasSpeech and not context.blueprint and not context.repetition then
+        if card.hasSpeech and not context.blueprint and not context.repetition and card.area ~= G.rules_card_jokers then
             if context.end_of_round and not context.individual then
                 card.ability.extra.inBlind = false
                 say(card, {blabla = ('end_of_round'), prob = 2})
@@ -66,20 +66,22 @@ local jean_paul = {
         check_for_unlock({type = 'get_jean_paul'})
     end,
     update = function(self, card, dt)
-        if card.hasSpeech and card.ability.extra.talk <= 0 then
-            if G.STAGE == G.STAGES.MAIN_MENU then
-                say(card, {blabla = ("main_menu"), prob = 750})
-            elseif card.area == G.shop_jokers then
-                say(card, {blabla = ('shop_jokers'), prob = 250})
-            elseif card.area == G.jokers and card.ability.extra.inBlind then
-                say(card, {blabla = ('in_blind'), prob = 250})
-            elseif card.area == G.pack_cards then
-                say(card, {blabla = ('in_booster'), prob = 250})
+        if card.area ~= G.rules_card_jokers then
+            if card.hasSpeech and card.ability.extra.talk <= 0 then
+                if G.STAGE == G.STAGES.MAIN_MENU then
+                    say(card, {blabla = ("main_menu"), prob = 750})
+                elseif card.area == G.shop_jokers then
+                    say(card, {blabla = ('shop_jokers'), prob = 250})
+                elseif card.area == G.jokers and card.ability.extra.inBlind then
+                    say(card, {blabla = ('in_blind'), prob = 250})
+                elseif card.area == G.pack_cards then
+                    say(card, {blabla = ('in_booster'), prob = 250})
+                else
+                    say(card, {blabla = ('random'), prob = 1000, quotesNb = 20})
+                end
             else
-                say(card, {blabla = ('random'), prob = 1000, quotesNb = 20})
+                card.ability.extra.talk = card.ability.extra.talk - 1
             end
-        else
-            card.ability.extra.talk = card.ability.extra.talk - 1
         end
     end
 }
