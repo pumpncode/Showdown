@@ -141,10 +141,10 @@ return {
 		if Showdown.config["Jokers"]["Jean-Paul"] then
 			table.insert(list, jean_paul)
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, theorem)
 		end
-		if Showdown.config["Consumeables"]["Logics"] then
+		if Showdown.config["Consumables"]["Logics"] then
 			table.insert(list, logical)
 		end
 		return list

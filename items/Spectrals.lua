@@ -115,7 +115,7 @@ local transformation = {
 }
 
 return {
-	enabled = Showdown.config["Consumeables"]["Spectrals"],
+	enabled = Showdown.config["Consumables"]["Spectrals"],
 	list = function ()
 		local list = {
 			transformation,

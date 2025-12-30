@@ -112,7 +112,7 @@ local versatile_joker_all_in_one = {
         local decks, ranks, maths, switches =
             Showdown.config["Decks"] and '(Active) ' or '(Inactive) ',
             (Showdown.config["Decks"] and Showdown.config["Ranks"]) and '(Active) ' or '(Inactive) ',
-            (Showdown.config["Decks"] and Showdown.config["Consumeables"]["Mathematics"]) and '(Active) ' or '(Inactive) ',
+            (Showdown.config["Decks"] and Showdown.config["Consumables"]["Mathematics"]) and '(Active) ' or '(Inactive) ',
             (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) '
         return { key = 'j_showdown_versatile_joker_all_in_one', vars = {
             card.ability.extra.money,

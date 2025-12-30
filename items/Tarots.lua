@@ -257,7 +257,7 @@ local beast = {
 }
 
 return {
-	enabled = Showdown.config["Consumeables"]["Tarots"],
+	enabled = Showdown.config["Consumables"]["Tarots"],
 	list = function ()
 		local list = {}
 		if Showdown.config["Ranks"] then
@@ -267,7 +267,7 @@ return {
 				table.insert(list, beast)
 			end
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, genie)
 		end
 		if Showdown.config["Enhancements"] then
@@ -278,7 +278,7 @@ return {
 			table.insert(list, red_key_piece_1)
 			table.insert(list, red_key_piece_2)
 		end
-		if Showdown.config["Consumeables"]["Logics"] then
+		if Showdown.config["Consumables"]["Logics"] then
 			table.insert(list, inventor)
 		end
 		return list

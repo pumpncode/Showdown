@@ -171,7 +171,7 @@ return {
 	enabled = Showdown.config["Vouchers"],
 	list = function()
 		local list = {}
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, number_theory)
 			table.insert(list, axiom_infinity)
 		end

@@ -236,11 +236,11 @@ local showdown_config_tab = function()
 								}},
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-									create_config_header('showdown_config_consumeables_header'),
-									create_config_toggle('showdown_config_consumeables_tarots', 'Tarots', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_spectrals', 'Spectrals', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_mathematics', 'Mathematics', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
+									create_config_header('showdown_config_consumables_header'),
+									create_config_toggle('showdown_config_consumables_tarots', 'Tarots', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_spectrals', 'Spectrals', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_mathematics', 'Mathematics', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_logics', 'Logics', 'Consumables'),
 								
 								}}
 							

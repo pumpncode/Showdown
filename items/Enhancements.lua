@@ -25,7 +25,7 @@ local ghost = {
 			and not card.debuff
 			and SMODS.pseudorandom_probability(card, 'ghost', 1, card.ability.extra.shatter_chance)
 		then
-			return { remove = true }
+			return { remove = not SMODS.is_eternal(card) }
 		end
 	end
 }
@@ -59,18 +59,18 @@ local cut = {
 	key = 'cut',
 	atlas = 'showdown_enhancements',
 	pos = coordinate(3, 7),
-	config = {extra = {x_mult = 2.5, x_chips = 0.5}},
+	config = {extra = {x_mult = 2.5, chips = 100}},
 	loc_vars = function(self, info_queue, card)
 		if card then
-			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips}}
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.chips}}
 		end
-		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips}}
+		return {vars = {self.config.extra.x_mult, self.config.extra.chips}}
 	end,
 	calculate = function(self, card, context)
 		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
 			return {
 				x_mult = card.ability.extra.x_mult,
-				x_chips = card.ability.extra.x_chips
+				chips = -card.ability.extra.chips
 			}
 		end
 	end
@@ -83,7 +83,25 @@ local chipped = {
 	atlas = 'showdown_enhancements',
 	pos = coordinate(4, 7),
 	calculate = function(self, card, context)
-		--
+		if context.main_scoring and context.cardarea == "unscored" then
+			G.E_MANAGER:add_event(Event({
+			trigger = "before",
+			delay = 0.0,
+			func = function()
+				local _card = SMODS.create_card({set = 'Consumables', area = G.consumeables, edition = {negative = true}})
+				_card:add_to_deck()
+				G.consumeables:emplace(_card)
+				return true
+			end,
+			}))
+		elseif
+			context.destroy_card
+			and context.cardarea == G.play
+			and context.destroy_card == card
+			and not card.debuff
+		then
+			return { remove = not SMODS.is_eternal(card) }
+		end
 	end
 }
 
@@ -149,18 +167,17 @@ local taped = {
 	key = 'taped',
 	atlas = 'showdown_enhancementsMoreFluff',
 	pos = coordinate(3, 7),
-	config = {extra = {x_chips = 2.5, x_mult = 0.5}},
+	config = {extra = {chips_gain_percent = 5}},
 	loc_vars = function(self, info_queue, card)
 		if card then
-			return {vars = {card.ability.extra.x_chips, card.ability.extra.x_mult}}
+			return {vars = {card.ability.extra.chips_gain_percent}}
 		end
-		return {vars = {self.config.extra.x_chips, self.config.extra.x_mult}}
+		return {vars = {self.config.extra.chips_gain_percent}}
 	end,
 	calculate = function(self, card, context)
 		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
 			return {
-				x_mult = card.ability.extra.x_mult,
-				x_chips = card.ability.extra.x_chips
+				chips = (mult or 0) * 0.01 * card.ability.extra.chips_gain_percent
 			}
 		end
 	end

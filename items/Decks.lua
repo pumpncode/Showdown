@@ -241,7 +241,7 @@ return {
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, calculus)
 		end
 		if Showdown.config["Tags"]["Switches"] then
@@ -337,7 +337,7 @@ return {
 			end }
 			Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_cheater', pos = coordinate(21), blueprint = false }
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = true, calculate = function(self, card, context)
 				if context.using_consumeable and context.consumeable.ability.set == 'Mathematic' then
 					G.playing_card = (G.playing_card and G.playing_card + 1) or 1

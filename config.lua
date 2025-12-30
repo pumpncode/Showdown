@@ -15,7 +15,7 @@ return {
         ["Classic"] = true,
         ["Switches"] = true,
     },
-    ["Consumeables"] = {
+    ["Consumables"] = {
         ["Tarots"] = true,
         ["Spectrals"] = true,
         ["Mathematics"] = true,

@@ -1,4 +1,4 @@
-local consumeable_type = {
+local consumable_type = {
 	type = 'ConsumableType',
     key = 'Mathematic',
     primary_colour = G.C.SHOWDOWN_CALCULUS,
@@ -368,10 +368,10 @@ local operation = {
 }
 
 return {
-	enabled = Showdown.config["Consumeables"]["Mathematics"],
+	enabled = Showdown.config["Consumables"]["Mathematics"],
 	list = function ()
 		local list = {
-			consumeable_type,
+			consumable_type,
 			undiscovered_sprite,
 			constant,
 			variable,
@@ -471,7 +471,7 @@ return {
 										colour = G.C.UI.BACKGROUND_INACTIVE,
 										one_press = true,
 										button = "Do you know that this parameter does nothing?",
-										func = "can_use_consumeable",
+										func = "can_use_consumable",
 									},
 									nodes = {
 										{
@@ -563,7 +563,7 @@ return {
 						G.consumeables:emplace(c1)
 						G.GAME.pack_choices = G.GAME.pack_choices - 1
 						if G.GAME.pack_choices <= 0 then
-							G.FUNCS.end_consumeable(nil, delay_fac)
+							G.FUNCS.end_consumable(nil, delay_fac)
 						end
 						return true
 					end,

@@ -244,19 +244,19 @@ return {
 				table.insert(list, rot_beast)
 			end
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, rot_genie)
 		end
 		if Showdown.config["Enhancements"] then
 			table.insert(list, rot_lost)
 			table.insert(list, rot_angel)
 		end
-		if Showdown.config["Consumeables"]["Logics"] then
+		if Showdown.config["Consumables"]["Logics"] then
 			table.insert(list, rot_inventor)
 		end
 		return list
 	end,
 	atlases = {
-        {key = "showdown_rotarots", path = "CrossMod/MoreFluff/Consumeables/Rotarots.png", px = 107, py = 107, atlas_table = "ASSET_ATLAS",}
+        {key = "showdown_rotarots", path = "CrossMod/MoreFluff/Consumables/Rotarots.png", px = 107, py = 107, atlas_table = "ASSET_ATLAS",}
 	},
 }

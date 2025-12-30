@@ -1,4 +1,4 @@
-local consumeable_type = {
+local consumable_type = {
 	type = 'ConsumableType',
     key = 'Logic',
     primary_colour = G.C.SHOWDOWN_BOOLEAN,
@@ -399,10 +399,10 @@ local logic_nimply = {
 }
 
 return {
-	enabled = Showdown.config["Consumeables"]["Logics"],
+	enabled = Showdown.config["Consumables"]["Logics"],
 	list = function ()
 		local list = {
-			consumeable_type,
+			consumable_type,
 			undiscovered_sprite,
 			logic_buffer,
 			logic_and,

@@ -660,7 +660,7 @@ local summoning = {
 local parabola = {
 	type = 'Switch',
 	order = 21,
-    activated = { Showdown.config["Consumeables"]["Mathematics"] },
+    activated = { Showdown.config["Consumables"]["Mathematics"] },
 	key = "parabola",
 	pos = coordinate(21, 8),
 	config = { type = "immediate", cards_generated = 2 },
@@ -695,7 +695,7 @@ local parabola = {
 local operation = {
 	type = 'Switch',
 	order = 22,
-    activated = { Showdown.config["Consumeables"]["Logics"] },
+    activated = { Showdown.config["Consumables"]["Logics"] },
 	key = "operation",
 	pos = coordinate(22, 8),
 	config = { type = "immediate", cards_generated = 2 },

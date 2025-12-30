@@ -411,7 +411,7 @@ return {
                 name = 'Cut Card',
                 text = {
                     '{X:mult,C:white}X#1#{} Mult',
-                    '{X:chips,C:white}X#2#{} Chips',
+                    '{C:chips}-#2#{} Chips',
                 }
             },
             m_showdown_chipped = {
@@ -420,6 +420,14 @@ return {
                     'Creates a {C:dark_edition}Negative{} {C:attention}Consumable',
                     'when played and {C:attention}not scored',
                     '{C:red}Destroyed{} when scored',
+                }
+            },
+            m_showdown_frozen = {
+                name = 'Frozen Card',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
+                    'Will be {C:red}destroyed{} after',
+                    'being scored',
                 }
             },
             m_showdown_cursed = {
@@ -433,8 +441,8 @@ return {
             m_showdown_taped = {
                 name = 'Taped Card',
                 text = {
-                    '{X:chips,C:white}X#1#{} Chips',
-                    '{X:mult,C:white}X#2#{} Mult',
+                    '{C:chips}Chips{} gains {X:attention,C:white}#1#%',
+                    'of {C:mult}Mult',
                 }
             },
         },
@@ -1455,7 +1463,7 @@ return {
                 text = {
                     "Using a {C:showdown_boolean}Logic{} card",
                     "creates a {V:1}#1#{} card",
-                    "Consumeable type changes",
+                    "Consumable type changes",
                     "every {C:attention}ante",
                 },
             },
@@ -2290,7 +2298,7 @@ return {
                     'Each selected card has a {C:green}#3# in #4#{} chance',
                     'to be destroyed',
                     'Destroyed card {C:attention}multiply{} the values of',
-                    'the leftest joker by {X:attention,C:white}X#2#{}',
+                    'the leftest joker by {X:attention,C:white}X#2#',
                 }
             },
             c_showdown_sequence = {
@@ -2396,7 +2404,7 @@ return {
                 name = 'XNOR',
                 text = {
                     'Destroy the selected joker and',
-                    'creates {C:attention}#1#{} random consumeables',
+                    'creates {C:attention}#1#{} random consumables',
                     '{C:inactive}(Must have room)',
                 }
             },
@@ -2553,18 +2561,18 @@ return {
             showdown_config_stickers = "Stickers",
             showdown_config_challenges = "Challenges",
             showdown_config_stakes = "Stakes",
-            showdown_config_consumeables_header = "Consumeables",
-            showdown_config_consumeables_tarots = "Tarots",
-            showdown_config_consumeables_spectrals = "Spectrals",
-            showdown_config_consumeables_mathematics = "Mathematics",
-            showdown_config_consumeables_logics = "Logics",
+            showdown_config_consumables_header = "Consumables",
+            showdown_config_consumables_tarots = "Tarots",
+            showdown_config_consumables_spectrals = "Spectrals",
+            showdown_config_consumables_mathematics = "Mathematics",
+            showdown_config_consumables_logics = "Logics",
             -- Technical Config
             showdown_technical_config = "Technical Config",
             showdown_config_easter_eggs = "Easter Eggs",
             showdown_config_engineer_versatile_weight_limit = "Versatile Joker (Engineer) Weight Limit",
             -- Crossmod Config
             showdown_crossmod_config = "Crossmod Config",
-            showdown_config_unloaded = "Mods in gray are not present/unloaded",
+            showdown_config_unloaded = "Mods in gray are not present or unloaded",
             showdown_config_cryptid = "Cryptid",
             showdown_config_bunco = "Bunco",
             showdown_config_cardsleeves = "Card Sleeves",
@@ -2586,7 +2594,7 @@ return {
             k_can_reroll="Can reroll",
             k_cannot_reroll="Cannot reroll",
             k_bye_bye = "Bye Bye!",
-            k_consumeable_type = "Consumeable Type",
+            k_consumeable_type = "Consumable Type",
             b_mathematic_cards = "Mathematic Cards",
             b_logic_cards = "Logic Cards",
             b_pull = "PULL",

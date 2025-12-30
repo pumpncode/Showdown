@@ -91,12 +91,12 @@ return {
 	enabled = true,
 	list = function ()
         local list = {}
-        if Showdown.config["Consumeables"]["Mathematics"] then
+        if Showdown.config["Consumables"]["Mathematics"] then
             for _, v in ipairs(boosters.mathematic) do
                 table.insert(list, v)
             end
         end
-        if Showdown.config["Consumeables"]["Logics"] then
+        if Showdown.config["Consumables"]["Logics"] then
             for _, v in ipairs(boosters.logic) do
                 table.insert(list, v)
             end

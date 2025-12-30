@@ -166,7 +166,7 @@ return {
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, calculus)
 		end
 		if Showdown.config["Tags"]["Switches"] then
