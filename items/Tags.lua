@@ -3,6 +3,7 @@ local green_key = {
 	order = 1,
 	key = "green_key",
 	atlas = "showdown_tags",
+	shiny_atlas = "showdown_tags_shiny",
 	pos = coordinate(1),
 	no_collection = true,
 	apply = function(self, tag, context)
@@ -31,6 +32,7 @@ local jean_paul = {
 	order = 2,
 	key = "jean_paul",
 	atlas = "showdown_tags",
+	shiny_atlas = "showdown_tags_shiny",
 	pos = coordinate(2),
 	min_ante = 8,
 	apply = function(self, tag, context)
@@ -60,6 +62,7 @@ local theorem = {
 	order = 3,
 	key = "theorem",
 	atlas = "showdown_tags",
+	shiny_atlas = "showdown_tags_shiny",
 	pos = coordinate(3),
 	min_ante = 2,
 	loc_vars = function(self, info_queue)
@@ -96,6 +99,7 @@ local logical = {
 	order = 4,
 	key = "logical",
 	atlas = "showdown_tags",
+	shiny_atlas = "showdown_tags_shiny",
 	pos = coordinate(4),
 	min_ante = 2,
 	loc_vars = function(self, info_queue)
@@ -147,5 +151,6 @@ return {
 	end,
 	atlases = {
 		{key = 'showdown_tags', path = 'Tags.png', px = 34, py = 34},
+		{key = "showdown_tags_shiny", path = "CrossMod/Cryptid/TagsShiny.png", px = 34, py = 34, mod_compat = "Cryptid"},
 	},
 }

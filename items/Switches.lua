@@ -888,11 +888,13 @@ return {
 	},
 	atlases = {
 		{key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34},
+		{key = 'showdown_switches_shiny', path = "CrossMod/Cryptid/SwitchesShiny.png", px = 34, py = 34, mod_compat = "Cryptid"},
 	},
 	exec = function()
 		G.P_CENTER_POOLS['Switch'] = {}
 		Showdown.Switch = SMODS.Tag:extend{
 			atlas = 'showdown_switches',
+			shiny_atlas = 'showdown_switches_shiny',
 			set = 'Switch',
 			inject = function(self)
 				if not G.P_CENTER_POOLS[self.set] then G.P_CENTER_POOLS[self.set] = {} end

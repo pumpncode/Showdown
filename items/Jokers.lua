@@ -1543,7 +1543,7 @@ local banana = {
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult, G.GAME.probabilities.normal } }
 	end,
     rarity = 2, cost = 6,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'extinct' and args.name == 'Cavendish' then unlock_card(self) end

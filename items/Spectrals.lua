@@ -100,10 +100,26 @@ local blue_key = {
 	end
 }
 
+local transformation = {
+	type = 'Consumable',
+	order = 4,
+	key = 'transformation',
+	set = 'Spectral',
+	atlas = 'showdown_spectrals',
+    pos = coordinate(4),
+	config = { max_highlighted = 2, mod_conv = "m_showdown_chipped" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_chipped
+		return {vars = {self.config.max_highlighted}}
+	end,
+}
+
 return {
 	enabled = Showdown.config["Consumeables"]["Spectrals"],
 	list = function ()
-		local list = {}
+		local list = {
+			transformation,
+		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mist)
 			table.insert(list, vision)

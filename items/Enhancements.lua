@@ -53,6 +53,40 @@ local holy = {
 	end
 }
 
+local cut = {
+	type = 'Enhancement',
+	order = 3,
+	key = 'cut',
+	atlas = 'showdown_enhancements',
+	pos = coordinate(3, 7),
+	config = {extra = {x_mult = 2.5, x_chips = 0.5}},
+	loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_mult, card.ability.extra.x_chips}}
+		end
+		return {vars = {self.config.extra.x_mult, self.config.extra.x_chips}}
+	end,
+	calculate = function(self, card, context)
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
+			return {
+				x_mult = card.ability.extra.x_mult,
+				x_chips = card.ability.extra.x_chips
+			}
+		end
+	end
+}
+
+local chipped = {
+	type = 'Enhancement',
+	order = 4,
+	key = 'chipped',
+	atlas = 'showdown_enhancements',
+	pos = coordinate(4, 7),
+	calculate = function(self, card, context)
+		--
+	end
+}
+
 -- More Fluff
 
 local frozen = {
@@ -109,16 +143,42 @@ local cursed = {
 	end
 }
 
+local taped = {
+	type = 'Enhancement',
+	order = 1002,
+	key = 'taped',
+	atlas = 'showdown_enhancementsMoreFluff',
+	pos = coordinate(3, 7),
+	config = {extra = {x_chips = 2.5, x_mult = 0.5}},
+	loc_vars = function(self, info_queue, card)
+		if card then
+			return {vars = {card.ability.extra.x_chips, card.ability.extra.x_mult}}
+		end
+		return {vars = {self.config.extra.x_chips, self.config.extra.x_mult}}
+	end,
+	calculate = function(self, card, context)
+		if context.post_joker or (context.main_scoring and context.cardarea == G.play) then
+			return {
+				x_mult = card.ability.extra.x_mult,
+				x_chips = card.ability.extra.x_chips
+			}
+		end
+	end
+}
+
 return {
 	enabled = Showdown.config["Enhancements"],
 	list = function ()
 		local list = {
 			ghost,
 			holy,
+			cut,
+			chipped,
 		}
 		if (SMODS.Mods["MoreFluff"] or {}).can_load and Showdown.config["CrossMod"]["MoreFluff"] then
 			table.insert(list, frozen)
 			table.insert(list, cursed)
+			table.insert(list, taped)
 		end
 		return list
 	end,

@@ -285,6 +285,6 @@ return {
 	end,
 	atlases = {
 		{key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95},
-		{key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95},
+		{key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95, mod_compat = "Bunco"},
 	},
 }

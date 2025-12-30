@@ -407,12 +407,19 @@ return {
                     'when scored',
                 }
             },
-            m_showdown_frozen = {
-                name = 'Frozen Card',
+            m_showdown_cut = {
+                name = 'Cut Card',
                 text = {
-                    '{X:mult,C:white}X#1#{} Mult and {X:chips,C:white}X#2#{} Chips',
-                    'Will be {C:red}destroyed{} after',
-                    'being scored',
+                    '{X:mult,C:white}X#1#{} Mult',
+                    '{X:chips,C:white}X#2#{} Chips',
+                }
+            },
+            m_showdown_chipped = {
+                name = 'Chipped Card',
+                text = {
+                    'Creates a {C:dark_edition}Negative{} {C:attention}Consumable',
+                    'when played and {C:attention}not scored',
+                    '{C:red}Destroyed{} when scored',
                 }
             },
             m_showdown_cursed = {
@@ -421,6 +428,13 @@ return {
                     '{X:chips,C:white}X#1#{} Chips',
                     'Gains {X:chips,C:white}X#2#{} Chips',
                     'when scored',
+                }
+            },
+            m_showdown_taped = {
+                name = 'Taped Card',
+                text = {
+                    '{X:chips,C:white}X#1#{} Chips',
+                    '{X:mult,C:white}X#2#{} Mult',
                 }
             },
         },
@@ -1222,7 +1236,7 @@ return {
                 },
             },
             j_showdown_banana = {
-                name = 'banana',
+                name = 'Banana',
                 text = {
                     '{C:green}#3# in 2{} chance to gain {C:mult}+#1#{} Mult at {C:attention}end of round',
                     'Otherwise, loses {C:mult}-#1#{} Mult',
@@ -1794,6 +1808,13 @@ return {
                 name = 'Blue Key',
                 text = {
                     '{C:attention}Unlocks{} the {C:blue,E:1}Blue{E:1} Lock',
+                }
+            },
+            c_showdown_transformation = {
+                name = 'Transformation',
+                text = {
+                    "Enhances up to {C:attention}#1#{} selected card",
+                    "into {C:attention}Chipped Cards{}"
                 }
             },
         },
