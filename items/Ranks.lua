@@ -221,8 +221,11 @@ return {
 		{key = "showdown_madcapCards", path = "CrossMod/Madcap/Ranks/Cards.png", px = 71, py = 95, mod_compat = "rgmadcap"},
 		{key = "showdown_madcapCardsHC", path = "CrossMod/Madcap/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "rgmadcap"},
 		-- Entropy
-		--{key = "showdown_entropyCards", path = "CrossMod/Entropy/Ranks/Cards.png", px = 71, py = 95, mod_compat = "entr"},
-		--{key = "showdown_entropyCardsHC", path = "CrossMod/Entropy/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "entr"},
+		{key = "showdown_entropyCards", path = "CrossMod/Entropy/Ranks/Cards.png", px = 71, py = 95, mod_compat = "entr"},
+		{key = "showdown_entropyCardsHC", path = "CrossMod/Entropy/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "entr"},
+		-- Minty's Silly Little Mod
+		{key = "showdown_mintyCards", path = "CrossMod/MintysSillyMod/Ranks/Cards.png", px = 71, py = 95, mod_compat = "MintysSillyMod"},
+		{key = "showdown_mintyCardsHC", path = "CrossMod/MintysSillyMod/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "MintysSillyMod"},
 	},
 	exec = function()
 		-- These are for making straights with counterparts and normal cards
@@ -283,8 +286,11 @@ return {
 			Showdown.extraSuits['rgmc_voids'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
 			Showdown.extraSuits['rgmc_lanterns'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
 		end
-		--[[if (SMODS.Mods["entr"] or {}).can_load then
-			Showdown.extraSuits['nilsuit'] = {lc_atlas = 'showdown_entropyCards', hc_atlas = 'showdown_entropyCardsHC'}
-		end]]--
+		if (SMODS.Mods["entr"] or {}).can_load then
+			Showdown.extraSuits['entr_nilsuit'] = {lc_atlas = 'showdown_entropyCards', hc_atlas = 'showdown_entropyCardsHC'}
+		end
+		if (SMODS.Mods["MintysSillyMod"] or {}).can_load then
+			Showdown.extraSuits['minty_3s'] = {lc_atlas = 'showdown_mintyCards', hc_atlas = 'showdown_mintyCardsHC'}
+		end
 	end
 }
