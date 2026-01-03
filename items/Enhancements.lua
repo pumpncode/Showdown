@@ -88,7 +88,7 @@ local chipped = {
 			trigger = "before",
 			delay = 0.0,
 			func = function()
-				local _card = SMODS.create_card({set = 'Consumables', area = G.consumeables, edition = {negative = true}})
+				local _card = SMODS.create_card({set = 'Consumeables', area = G.consumeables, edition = {negative = true}})
 				_card:add_to_deck()
 				G.consumeables:emplace(_card)
 				return true

@@ -230,12 +230,40 @@ local chess = {
 	end
 }
 
+local slotted = {
+	type = 'Back',
+	order = 7,
+	name = "Slotted Deck",
+	key = "Slotted",
+	atlas = "showdown_decks",
+	pos = coordinate(7),
+	config = { unlock_stake = "stake_showdown_sapphire" },
+	locked_loc_vars = function(self, info_queue, card)
+		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if not Showdown.config["Stakes"] then return end
+		local win_stake = get_deck_win_stake()
+		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
+			unlock_card(self)
+		end
+	end,
+	apply = function(self, back)
+		SMODS.change_voucher_limit(1)
+		SMODS.change_booster_limit(1)
+		change_shop_size(-1)
+	end
+}
+
 return {
 	enabled = Showdown.config["Decks"],
 	list = function()
 		local list = {
 			starter,
-			chess,
+			slotted,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
@@ -246,6 +274,9 @@ return {
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			table.insert(list, engineer)
+		end
+		if Showdown.config["Blinds"] then
+			table.insert(list, chess)
 		end
 		return list
 	end,
@@ -312,6 +343,19 @@ return {
 		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
+		Showdown.versatile['Slotted Deck'] = { desc = 'j_showdown_versatile_joker_slotted', pos = coordinate(26), blueprint = false, add_to_deck = function(self, card, from_debuff)
+			G.E_MANAGER:add_event(Event({func = function()
+                for k, v in pairs(G.I.CARD) do
+                    if v.set_cost then v:set_cost() end
+                end
+            return true end }))
+        end, remove_from_deck = function(self, card, from_debuff)
+            G.E_MANAGER:add_event(Event({func = function()
+                for k, v in pairs(G.I.CARD) do
+                    if v.set_cost then v:set_cost() end
+                end
+            return true end }))
+        end }
 		if Showdown.config["Ranks"] then
 			Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, calculate = function(self, card, context)
 				if context.before and not context.blueprint then

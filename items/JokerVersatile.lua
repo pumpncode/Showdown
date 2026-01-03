@@ -16,6 +16,7 @@ local versatile_joker = {
         double_tag = 1,                              -- Anaglyph Deck
         extra_card = 1,                             -- Cheater Deck
         tag_switch_mult = 1.5,                        -- Engineer Deck
+        vouchers_booster_sale = 25,                  -- Slotted Deck
     }},
     loc_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
@@ -42,6 +43,8 @@ local versatile_joker = {
                 loc.vars = { card.ability.extra.extra_card }
             elseif G.GAME.selected_back.name == 'Engineer Deck' then
                 loc.vars = { card.ability.extra.tag_switch_mult }
+            elseif G.GAME.selected_back.name == 'Slotted Deck' then
+                loc.vars = { card.ability.extra.vouchers_booster_sale }
             end
             return loc
         end
@@ -107,13 +110,15 @@ local versatile_joker_all_in_one = {
         double_tag = 1,                              -- Anaglyph Deck
         extra_card = 1,                              -- Cheater Deck
         tag_switch_mult = 4,                         -- Engineer Deck
+        vouchers_booster_sale = 25,                  -- Slotted Deck
     }},
     loc_vars = function(self, info_queue, card)
-        local decks, ranks, maths, switches =
+        local decks, ranks, maths, switches, blinds =
             Showdown.config["Decks"] and '(Active) ' or '(Inactive) ',
             (Showdown.config["Decks"] and Showdown.config["Ranks"]) and '(Active) ' or '(Inactive) ',
             (Showdown.config["Decks"] and Showdown.config["Consumables"]["Mathematics"]) and '(Active) ' or '(Inactive) ',
-            (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) '
+            (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) ',
+            (Showdown.config["Decks"] and Showdown.config["Blinds"]) and '(Active) ' or '(Inactive) '
         return { key = 'j_showdown_versatile_joker_all_in_one', vars = {
             card.ability.extra.money,
             card.ability.extra.xmult_mod, card.ability.extra.x_mult,
@@ -126,8 +131,9 @@ local versatile_joker_all_in_one = {
             card.ability.extra.double_tag,
             card.ability.extra.extra_card,
             card.ability.extra.tag_switch_mult,
+            card.ability.extra.vouchers_booster_sale,
             -- Config values for indicating if an effect is active or not
-            ranks, maths, switches, decks
+            ranks, maths, switches, decks, blinds
         }}
     end,
     rarity = 4, cost = 20,

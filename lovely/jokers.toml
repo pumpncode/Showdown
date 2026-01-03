@@ -112,7 +112,7 @@ position = "before"
 match_indent = true
 payload = '''
 elseif self.config.center.name == "jean_paul" then
-    giveSpeech(self)
+    SMODS.giveSpeech(self)
 '''
 
 # Substitute Teacher, part 1/2
@@ -444,7 +444,7 @@ match_indent = true
 pattern = "if (self.ability.set == 'Planet' or (self.ability.set == 'Booster' and self.ability.name:find('Celestial'))) and #find_joker('Astronomer') > 0 then self.cost = 0 end"
 position = "after"
 payload = '''
-if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and (#find_joker('versatile_joker') > 0 or #find_joker('versatile_joker_all_in_one') > 0) and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
+if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and ((#find_joker('versatile_joker') > 0 and G.GAME.selected_back.name == 'Ghost Deck') or #find_joker('versatile_joker_all_in_one') > 0) then self.cost = 0 end
 '''
 
 # Joker on Joker stickers effects
@@ -822,4 +822,24 @@ if (type(v) == "table") and v.is and v:is(CardArea) then
 position = 'at'
 payload = '''
 if (type(v) == "table") and v.is and v:is(CardArea) and v ~= G.rules_card_jokers then
+'''
+
+# Versatile Joker (Slotted Deck)
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "self.sell_cost = math.max(1, math.floor(self.cost/2)) + (self.ability.extra_value or 0)"
+position = "before"
+payload = '''
+local voucher_booster_sale = 100
+if G and G.GAME and G.GAME.selected_back and G.GAME.selected_back.name == 'Slotted Deck' then
+    for _, joker in pairs(find_joker('versatile_joker')) do
+        voucher_booster_sale = math.max(0, voucher_booster_sale - joker.ability.extra.vouchers_booster_sale)
+    end
+end
+for _, joker in pairs(find_joker('versatile_joker_all_in_one')) do
+    voucher_booster_sale = math.max(0, voucher_booster_sale - joker.ability.extra.vouchers_booster_sale)
+end
+if (self.ability.set == 'Booster' or self.ability.set == 'Voucher') then self.cost = math.max(1, math.floor(self.cost * (voucher_booster_sale / 100))) end
 '''

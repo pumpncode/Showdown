@@ -92,6 +92,19 @@ return {
                     "{V:1}#1#{} difficulty",
                 }
             },
+            b_showdown_Slotted = {
+                name = 'Slotted Deck',
+                text = {
+                    '{C:attention}+1{} Voucher slot',
+                    '{C:attention}+1{} Booster Pack slot',
+                    '{C:red}-1{} Shop Card slot',
+                },
+                unlock = {
+                    "Win a run with any",
+                    "deck on at least",
+                    "{V:1}#1#{} difficulty",
+                }
+            },
         },
         Sleeve = {
             sleeve_showdown_deactivated = {
@@ -201,6 +214,22 @@ return {
                 text = {
                     'Chess Blinds effects',
                     'are {C:attention}boosted',
+                }
+            },
+            sleeve_showdown_Slotted = {
+                name = "Slotted Sleeve",
+                text = {
+                    '{C:attention}+1{} Voucher slot',
+                    '{C:attention}+1{} Booster Pack slot',
+                    '{C:red}-1{} Shop Card slot',
+                }
+            },
+            sleeve_showdown_Slotted_alt = {
+                name = "Slotted Sleeve",
+                text = {
+                    '{C:attention}+1{} Joker slot',
+                    '{C:attention}+1{} Consumeable slot',
+                    '{C:red}-1{} Shop Card slot',
                 }
             },
         },
@@ -1201,6 +1230,18 @@ return {
                     '{C:attention}Black Stake{} difficulty',
                 }
             },
+            j_showdown_versatile_joker_slotted = {
+                name = 'Versatile Joker',
+                text = {
+                    'Vouchers and Booster Packs',
+                    'prices are reduced by {C:attention}#1#%',
+                },
+                unlock = {
+                    'Win a run with any',
+                    'deck on at least',
+                    '{C:attention}Black Stake{} difficulty',
+                }
+            },
             j_showdown_versatile_joker_all_in_one = {
                 name = 'Versatile Joker',
                 text = {
@@ -1225,13 +1266,14 @@ return {
                     '{s:0.8}At the end of each round, {C:attention,s:0.8}creates{s:0.8} a card with rank and suit {C:attention,s:0.8}equals{s:0.8} to {C:attention,s:0.8}highest count{s:0.8} of rank and suit in deck',
                     '{C:blue,s:0.8}+1{s:0.8} hand and {C:red,s:0.8}+1{s:0.8} discard each round',
                     '{C:attention,s:0.8}This bonus can\'t be modified',
-                    '{s:0.8,C:inactive}#17#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} Enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
-                    '{s:0.8,C:inactive}#18#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
-                    '{s:0.8,C:inactive}#20#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
-                    '{s:0.8,C:inactive}#17#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
-                    '{s:0.8,C:inactive}#17#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
-                    '{s:0.8,C:inactive}#19#{s:0.8}Tag and Switch related cards are {s:0.8,X:attention,C:white}X#16#{s:0.8} more common and may appear multiple times',
-                    '{s:0.8,C:inactive}#19#{s:0.8}Disables the effect of every {s:0.8,C:attention}White Chess{s:0.8} Blinds',
+                    '{s:0.8,C:inactive}#18#{s:0.8}Scored non-enhanced {C:counterpart_ranks,s:0.8}counterparts{s:0.8} gains a {C:attention,s:0.8}random{s:0.8} Enhancement from your {C:attention,s:0.8}hand{s:0.8} before scoring',
+                    '{s:0.8,C:inactive}#19#{s:0.8}When a {C:showdown_calculus,s:0.8}Mathematic{s:0.8} card is used, {C:attention,s:0.8}duplicate{s:0.8} a random card in hand',
+                    '{s:0.8,C:inactive}#21#{s:0.8}You start your {C:attention,s:0.8}next run{s:0.8} with a {C:attention,s:0.8}random{s:0.8} joker, consumable and voucher after {C:attention,s:0.8}winning{s:0.8} this run',
+                    '{s:0.8,C:inactive}#18#{s:0.8}Deck no longer {C:attention,s:0.8}destroy{s:0.8} cards',
+                    '{s:0.8,C:inactive}#18#{s:0.8}Deck generate {C:attention,s:0.8}#15#{s:0.8} additional card',
+                    '{s:0.8,C:inactive}#20#{s:0.8}Tag and Switch related cards are {s:0.8,X:attention,C:white}X#16#{s:0.8} more common and may appear multiple times',
+                    '{s:0.8,C:inactive}#22#{s:0.8}Disables the effect of every {s:0.8,C:attention}White Chess{s:0.8} Blinds',
+                    '{s:0.8,C:inactive}#21#{s:0.8}Vouchers and Booster Packs prices are reduced by {s:0.8,C:attention}#17#%',
                     '{C:inactive,s:0.8}(Currently {X:red,C:white,s:0.8}X#3#{C:inactive,s:0.8} Mult, must have room)',
                 },
             },
