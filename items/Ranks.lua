@@ -29,6 +29,7 @@ local count2 = { -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
+	prev = { '2' },
 	counterpart = { is = true, value = '2' },
 	secret = true,
 	max_id = {
@@ -51,6 +52,7 @@ local count5 = { -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
+	prev = { '5' },
 	counterpart = { is = true, value = '5' },
 	secret = true,
 	max_id = {
@@ -73,6 +75,7 @@ local count8 = { -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
+	prev = { '8' },
 	counterpart = { is = true, value = '8' },
 	secret = true,
 	max_id = {
@@ -96,6 +99,7 @@ local countButler = { -- Butler Card
 	nominal = 10.5,
 	face_nominal = -0.35,
 	next = { 'showdown_Princess', 'Queen' },
+	prev = { '10' },
 	face = true,
 	counterpart = { is = true, value = 'Jack' },
 	secret = true,
@@ -120,6 +124,7 @@ local countPrincess = { -- Princess Card
 	nominal = 10.5,
 	face_nominal = -0.25,
 	next = { 'showdown_Lord', 'King' },
+	prev = { 'showdown_Butler', 'Jack' },
 	face = true,
 	counterpart = { is = true, value = 'Queen' },
 	secret = true,
@@ -144,6 +149,7 @@ local countLord = { -- Lord Card
 	nominal = 10.5,
 	face_nominal = -0.15,
 	next = { 'Ace' },
+	prev = { 'showdown_Princess', 'Queen' },
 	face = true,
 	counterpart = { is = true, value = 'King' },
 	secret = true,
@@ -167,6 +173,7 @@ local zero = { -- 0 Card (counts as any suit and can't be converted to a wild ca
 	pos = { x = 6 },
 	nominal = 0,
 	next = { 'Ace' },
+	prev = { 'Ace' },
 	secret = true,
 	suit_map = {
 		Hearts = 0,

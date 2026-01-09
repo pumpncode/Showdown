@@ -55,6 +55,10 @@ local jean_paul = {
                     say(card, {blabla = ('using_logic'), prob = 2})
                 elseif context.consumeable.ability.set == 'Code' then
                     say(card, {blabla = ('using_code'), prob = 2})
+                elseif context.consumeable.ability.set == 'Rotarot' then
+                    say(card, {blabla = ('using_rotarot'), prob = 2})
+                elseif context.consumeable.ability.set == 'Colour' then
+                    say(card, {blabla = ('using_colour'), prob = 2})
                 else
                     say(card, {blabla = ('using_unknown'), prob = 2})
                 end

@@ -966,6 +966,23 @@ table.insert(def_list.jokers, {
     end
 })
 
+table.insert(def_list.jokers, {
+    key = 'terms_of_service',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+        }
+    },
+    calc_function = function(card)
+        card.joker_display_values.x_mult = 1 + (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale)
+    end
+})
+
+--table.insert(def_list.jokers, { key = 'point_of_no_return' })
+
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
 

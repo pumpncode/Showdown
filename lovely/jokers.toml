@@ -843,3 +843,25 @@ for _, joker in pairs(find_joker('versatile_joker_all_in_one')) do
 end
 if (self.ability.set == 'Booster' or self.ability.set == 'Voucher') then self.cost = math.max(1, math.floor(self.cost * (voucher_booster_sale / 100))) end
 '''
+
+# 
+[[patches]]
+[patches.pattern]
+target = '''game.lua'''
+pattern = "c_face_cards_played = 0,"
+position = "after"
+match_indent = true
+payload = '''
+c_cards_retriggered = 0,
+'''
+
+# 
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+pattern = "eval = eval.extra"
+position = "after"
+match_indent = true
+payload = '''
+inc_career_stat('c_cards_retriggered', 1)
+'''

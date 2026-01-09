@@ -107,4 +107,158 @@ return {
 	atlases = {
 		{key = 'showdown_booster_packs', path = 'Boosters.png', px = 71, py = 95},
 	},
+    exec = function()
+        local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
+		function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
+			if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
+				if card.ability.set == "Mathematic" then
+					if G.GAME.draw_hand_math then
+						return {
+							n = G.UIT.ROOT,
+							config = { padding = -0.1, colour = G.C.CLEAR },
+							nodes = {
+								{
+									n = G.UIT.R,
+									config = {
+										ref_table = card,
+										r = 0.08,
+										padding = 0.1,
+										align = "bm",
+										minw = 0.5 * card.T.w - 0.15,
+										minh = 0.7 * card.T.h,
+										maxw = 0.7 * card.T.w - 0.15,
+										hover = true,
+										shadow = true,
+										colour = G.C.UI.BACKGROUND_INACTIVE,
+										one_press = true,
+										button = "use_card",
+										func = "can_reserve_card",
+									},
+									nodes = {
+										{
+											n = G.UIT.T,
+											config = {
+												text = localize("b_pull"),
+												colour = G.C.UI.TEXT_LIGHT,
+												scale = 0.55,
+												shadow = true,
+											},
+										},
+									},
+								},
+								{
+									n = G.UIT.R,
+									config = {
+										ref_table = card,
+										r = 0.08,
+										padding = 0.1,
+										align = "bm",
+										minw = 0.5 * card.T.w - 0.15,
+										maxw = 0.9 * card.T.w - 0.15,
+										minh = 0.1 * card.T.h,
+										hover = true,
+										shadow = true,
+										colour = G.C.UI.BACKGROUND_INACTIVE,
+										one_press = true,
+										button = "Do you know that this parameter does nothing?",
+										func = "can_use_consumable",
+									},
+									nodes = {
+										{
+											n = G.UIT.T,
+											config = {
+												text = localize("b_use"),
+												colour = G.C.UI.TEXT_LIGHT,
+												scale = 0.45,
+												shadow = true,
+											},
+										},
+									},
+								},
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								{ n = G.UIT.R, config = { align = "bm", w = 7.7 * card.T.w } },
+								-- Betmma can't explain it, neither can I
+							},
+						}
+					end
+					return {
+						n = G.UIT.ROOT,
+						config = { padding = -0.1, colour = G.C.CLEAR },
+						nodes = {
+							{
+								n = G.UIT.R,
+								config = {
+									ref_table = card,
+									r = 0.08,
+									padding = 0.1,
+									align = "bm",
+									minw = 0.5 * card.T.w - 0.15,
+									minh = 0.7 * card.T.h,
+									maxw = 0.7 * card.T.w - 0.15,
+									hover = true,
+									shadow = true,
+									colour = G.C.UI.BACKGROUND_INACTIVE,
+									one_press = true,
+									button = "use_card",
+									func = "can_reserve_card",
+								},
+								nodes = {
+									{
+										n = G.UIT.T,
+										config = {
+											text = localize("b_pull"),
+											colour = G.C.UI.TEXT_LIGHT,
+											scale = 0.55,
+											shadow = true,
+										},
+									},
+								},
+							},
+						},
+					}
+				end
+			end
+			return G_UIDEF_use_and_sell_buttons_ref(card)
+		end
+		if not (SMODS.Mods["Cryptid"] or {}).can_load then
+			--Code from Betmma's Vouchers
+			G.FUNCS.can_reserve_card = function(e)
+				if #G.consumeables.cards < G.consumeables.config.card_limit then
+					e.config.colour = G.C.GREEN
+					e.config.button = "reserve_card"
+				else
+					e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+					e.config.button = nil
+				end
+			end
+			G.FUNCS.reserve_card = function(e)
+				local c1 = e.config.ref_table
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.1,
+					func = function()
+						c1.area:remove_card(c1)
+						c1:add_to_deck()
+						if c1.children.price then
+							c1.children.price:remove()
+						end
+						c1.children.price = nil
+						if c1.children.buy_button then
+							c1.children.buy_button:remove()
+						end
+						c1.children.buy_button = nil
+						remove_nils(c1.children)
+						G.consumeables:emplace(c1)
+						G.GAME.pack_choices = G.GAME.pack_choices - 1
+						if G.GAME.pack_choices <= 0 then
+							G.FUNCS.end_consumable(nil, delay_fac)
+						end
+						return true
+					end,
+				}))
+			end
+		end
+    end,
 }

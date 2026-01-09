@@ -1429,7 +1429,7 @@ local passage_of_time = {
 		return { vars = { card.ability.extra.scale, card.ability.extra.chips_mult } }
 	end,
     rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
             card.ability.extra.chips_mult = card.ability.extra.chips_mult + card.ability.extra.scale
@@ -1885,7 +1885,7 @@ local urotsuki = {
         return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
 	end,
     rarity = 3, cost = 8,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.buying_card and not context.blueprint then
             card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
@@ -1914,7 +1914,7 @@ local minnatsuki = {
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
     rarity = 3, cost = 8,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.before and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
@@ -2003,7 +2003,7 @@ local cake = {
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
     rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if not context.blueprint and context.individual and context.cardarea == G.hand and context.full_hand then
             if SMODS.is_counterpart(context.other_card) then
@@ -2035,7 +2035,7 @@ local window = {
         return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
 	end,
     rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.before and not context.blueprint then
             local eval = evaluate_poker_hand(context.scoring_hand)
@@ -2069,7 +2069,7 @@ local break_the_ice = {
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
 	end,
     rarity = 2, cost = 6,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if
             not context.blueprint
@@ -2124,8 +2124,8 @@ local funnel = {
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
 	end,
-    rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.using_tag and not context.blueprint then
             card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
@@ -2855,6 +2855,93 @@ local rules_card = {
     end,
 }
 
+local terms_of_service = {
+    type = 'Joker',
+    order = 84,
+    key = 'terms_of_service',
+    name = 'terms_of_service',
+    atlas = "showdown_jokers",
+    pos = coordinate(89),
+    config = {extra = { x_mult_scale = 0.5 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_mult_scale, 1 + (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale) } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.joker_main and context.scoring_hand and (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale) > 0 then
+            return {
+                x_mult = 1 + (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale)
+            }
+        end
+    end
+}
+
+local point_of_no_return = {
+    type = 'Joker',
+    order = 85,
+    key = 'point_of_no_return',
+    name = 'point_of_no_return',
+    atlas = "showdown_jokers",
+    pos = coordinate(90),
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'hand_contents' then
+            local eval = evaluate_poker_hand(args.cards)
+            if next(eval['Straight']) then
+                local hasZero = false
+                for j = 1, #args.cards do
+                    hasZero = hasZero or SMODS.is_zero(args.cards[j])
+                end
+                if hasZero then
+                    unlock_card(self)
+                end
+            end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+            for i=1, #context.scoring_hand do
+                local _card = context.scoring_hand[i]
+                if _card:get_id() ~= 1 then
+                    flipCard(_card, i, #context.scoring_hand)
+                    delay(0.2)
+                    local rank = SMODS.Rank.obj_table[_card.base.value]
+                    event({trigger = 'after', delay = 0.15, func = function()
+                        assert(SMODS.change_base(_card, nil, rank.prev[1]))
+                    return true end})
+                    unflipCard(_card, i, #context.scoring_hand)
+                    delay(0.6)
+                end
+            end
+        end
+    end
+}
+
+local encore = {
+    type = 'Joker',
+    order = 86,
+    activated = { Showdown.config["Ranks"] },
+    key = 'encore',
+    name = 'encore',
+    atlas = "showdown_jokers",
+    pos = coordinate(91),
+    locked_loc_vars = function(self, info_queue, card)
+        return { vars = { G.PROFILES[G.SETTINGS.profile].career_stats.c_cards_retriggered } }
+	end,
+    rarity = 1, cost = 4,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        --
+    end
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = {
@@ -2923,6 +3010,8 @@ return {
             love_letter,
             brain_battery,
             rules_card,
+            terms_of_service,
+            encore,
             --- Ranks Jokers
             pinpoint,
             math_teacher,
@@ -2940,6 +3029,7 @@ return {
             turbo,
             nothing_matter,
             warped_joker,
+            point_of_no_return,
             --- Final Jokers
             jimbo_makeup,
 			jimbo_hat,

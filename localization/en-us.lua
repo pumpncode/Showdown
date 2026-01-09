@@ -1612,6 +1612,38 @@ return {
                     '{C:inactive}(Current joker: {C:attention}#1#{C:inactive})',
                 }
             },
+            j_showdown_terms_of_service = {
+                name = 'Terms of Service',
+                text = {
+                    'This joker gains {X:mult,C:white}X#1#{} Mult',
+                    'for each {C:attention}voucher{} purchased',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)',
+                }
+            },
+            j_showdown_point_of_no_return = {
+                name = 'Point of No Return',
+                text = {
+                    'Decrease {C:attention}rank{} of scored',
+                    'cards down to {C:attention}0',
+                },
+                unlock = {
+                    'Play a {C:attention}Straight{}',
+                    'containing a {C:attention}0{} card',
+                }
+            },
+            j_showdown_encore = {
+                name = 'Encore',
+                text = {
+                    'This joker gains {C:chips}+#1#{} chips',
+                    'when a card is {C:attention}retriggered',
+                    '{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'Retrigger a total',
+                    'of {C:attention,E:1}100{} cards',
+                    '{C:inactive}(#1#)',
+                }
+            },
         },
         Other={
             showdown_static = {
@@ -3421,6 +3453,86 @@ return {
             },
             using_code_10 = {
                 'I love Lua!',
+            },
+            using_rotarot_1 = {
+                'These taste',
+                'different...',
+            },
+            using_rotarot_2 = {
+                'PURPLE CARD?!!??!?!!!??',
+            },
+            using_rotarot_3 = {
+                'Oh no! Who',
+                'rotated my',
+                'tarot card?',
+            },
+            using_rotarot_4 = {
+                'What if there',
+                'was a 45 degree',
+                'rotated Jean-Paul...',
+            },
+            using_rotarot_5 = {
+                'Oh so there is',
+                'reverse tarot',
+                'cards',
+            },
+            using_rotarot_6 = {
+                'Can\' you just',
+                'rotate these to',
+                'get tarot cards?',
+            },
+            using_rotarot_7 = {
+                'Is there 90',
+                'degree rotated',
+                'tarot cards?',
+            },
+            using_rotarot_8 = {
+                'Hey, at least',
+                'it\'s original!',
+            },
+            using_rotarot_9 = {
+                'What happens if',
+                'I rotate a',
+                'spectral card?',
+            },
+            using_rotarot_10 = {
+                'They still are',
+                'so pretty!',
+            },
+            using_color_1 = {
+                'My favorite color',
+                'is green!',
+            },
+            using_color_2 = {
+                'All the color of',
+                'the rainbow!',
+            },
+            using_color_3 = {
+                'why are',
+                'you blue',
+            },
+            using_color_4 = {
+                'Tastes like',
+                'rainbow candy...',
+            },
+            using_color_5 = {
+                'Do you',
+                'like red?',
+            },
+            using_color_6 = {
+                '',
+            },
+            using_color_7 = {
+                '',
+            },
+            using_color_8 = {
+                '',
+            },
+            using_color_9 = {
+                '',
+            },
+            using_color_10 = {
+                '',
             },
             using_unknown_1 = {
                 'What is this?',
