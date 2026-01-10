@@ -105,6 +105,27 @@ return {
                     "{V:1}#1#{} difficulty",
                 }
             },
+            b_showdown_one_of_a_kind = {
+                name = 'One of a Kind Deck',
+                text = {
+                    '{C:attention}Unique booster packs{} are',
+                    'available in the shop',
+                },
+                unlock = {
+                    "Win a run with any",
+                    "deck on at least",
+                    "{V:1}#1#{} difficulty",
+                }
+            },
+            b_showdown_Radar = {
+                name = 'Radar Deck',
+                text = {
+                    'idk',
+                },
+                unlock = {
+                    "idk",
+                }
+            },
         },
         Sleeve = {
             sleeve_showdown_deactivated = {
@@ -1851,6 +1872,63 @@ return {
                     'be used immediatly'
                 }
             },
+            p_showdown_peasant = {
+                name = 'Peasant Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:blue}Common{} Jokers',
+                }
+            },
+            p_showdown_peasant_generous = {
+                name = 'Generous Peasant Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:blue}Common{} Jokers',
+                }
+            },
+            p_showdown_jester = {
+                name = 'Jester Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:green}Uncommon{} Jokers',
+                }
+            },
+            p_showdown_jester_generous = {
+                name = 'Generous Jester Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:green}Uncommon{} Jokers',
+                }
+            },
+            p_showdown_knight = {
+                name = 'Knight Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:red}Rare{} Jokers',
+                }
+            },
+            p_showdown_knight_generous = {
+                name = 'Generous Knight Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:red}Rare{} Jokers',
+                }
+            },
+            p_showdown_royal_1 = {
+                name = 'Royal Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:legendary,E:1}Legendary{} Jokers',
+                }
+            },
+            p_showdown_royal_2 = {
+                name = 'Royal Pack',
+                text = {
+                    'Choose {C:attention}#1#{} of up to',
+                    '{C:attention}#2#{} to {C:attention}#3#{} {C:legendary,E:1}Legendary{} Jokers',
+                }
+            },
+
             playing_card_zero={
                 text = {
                     " {C:light_black}#1# of {C:black}Nothing ",

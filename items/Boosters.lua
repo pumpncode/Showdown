@@ -1,9 +1,11 @@
 local boosters = {
     mathematic = {},
     logic = {},
+	one_of_a_kind = {},
 }
 
 -- Mathematic
+-- Order 1 to 4
 
 for i = 1, 4 do
     table.insert(boosters.mathematic, {
@@ -19,7 +21,7 @@ for i = 1, 4 do
             ease_background_colour{new_colour = G.C.SHOWDOWN_CALCULUS, special_colour = G.C.BLACK, contrast = 2}
         end,
         cost = (i <= 2 and 4 or i == 3 and 6 or 8),
-        pos = coordinate(i),
+        pos = coordinate(i, 4),
         atlas = 'showdown_booster_packs',
 		kind = 'booster_calculus',
 		group_key = "k_showdown_calculus_pack",
@@ -64,6 +66,7 @@ for i = 1, 4 do
 end
 
 -- Logic
+-- Order 5 to 8
 
 for i = 1, 4 do
     table.insert(boosters.logic, {
@@ -87,6 +90,134 @@ for i = 1, 4 do
     })
 end
 
+-- One of a Kind
+-- Order 9 to ?
+
+for i = 1, 2 do
+    table.insert(boosters.one_of_a_kind, {
+		type = 'Booster',
+		order = 8 + i,
+        key = 'peasant'..(i == 2 and '_generous' or ''),
+        config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
+        loc_vars = function(self, info_queue, card)
+            return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
+        end,
+        create_card = function(self, card)
+            return create_card('Joker', G.pack_cards, nil, 'Common', nil, nil, nil, 'showdown_peasant')
+        end,
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
+            ease_background_colour{new_colour = G.C.SHOWDOWN_BOOLEAN, special_colour = G.C.BLACK, contrast = 2}
+        end,
+        cost = (i == 2 and 7 or 5),
+        pos = coordinate(8+i, 4),
+        atlas = 'showdown_booster_packs',
+		kind = 'booster_peasant',
+		group_key = "k_showdown_peasant_pack",
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('peasant'..G.SEED) < (i == 2 and 0.5 or 0.7)) end,
+    })
+end
+
+for i = 1, 2 do
+    table.insert(boosters.one_of_a_kind, {
+		type = 'Booster',
+		order = 10 + i,
+        key = 'jester'..(i == 2 and '_generous' or ''),
+        config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
+        loc_vars = function(self, info_queue, card)
+            return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
+        end,
+        create_card = function(self, card)
+            return create_card('Joker', G.pack_cards, nil, 'Uncommon', nil, nil, nil, 'showdown_jester')
+        end,
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
+            ease_background_colour{new_colour = G.C.SHOWDOWN_BOOLEAN, special_colour = G.C.BLACK, contrast = 2}
+        end,
+        cost = (i == 2 and 7 or 5),
+        pos = coordinate(10+i, 4),
+        atlas = 'showdown_booster_packs',
+		kind = 'booster_jester',
+		group_key = "k_showdown_jester_pack",
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('jester'..G.SEED) < (i == 2 and 0.4 or 0.6)) end,
+    })
+end
+
+for i = 1, 2 do
+    table.insert(boosters.one_of_a_kind, {
+		type = 'Booster',
+		order = 12 + i,
+        key = 'knight'..(i == 2 and '_generous' or ''),
+        config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
+        loc_vars = function(self, info_queue, card)
+            return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
+        end,
+        create_card = function(self, card)
+            return create_card('Joker', G.pack_cards, nil, 'Rare', nil, nil, nil, 'showdown_knight')
+        end,
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
+            ease_background_colour{new_colour = G.C.SHOWDOWN_BOOLEAN, special_colour = G.C.BLACK, contrast = 2}
+        end,
+        cost = (i == 2 and 7 or 5),
+        pos = coordinate(12+i, 4),
+        atlas = 'showdown_booster_packs',
+		kind = 'booster_knight',
+		group_key = "k_showdown_knight_pack",
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('knight'..G.SEED) < (i == 2 and 0.3 or 0.5)) end,
+    })
+end
+
+for i = 1, 2 do
+    table.insert(boosters.one_of_a_kind, {
+		type = 'Booster',
+		order = 14 + i,
+        key = 'royal_'..i,
+        config = {extra = 2, choose = 1, min_cards = 1},
+        loc_vars = function(self, info_queue, card)
+            return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
+        end,
+        create_card = function(self, card)
+            return create_card('Joker', G.pack_cards, true, nil, nil, nil, nil, 'showdown_royal')
+        end,
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
+            ease_background_colour{new_colour = G.C.SHOWDOWN_BOOLEAN, special_colour = G.C.BLACK, contrast = 2}
+        end,
+        cost = 14,
+        pos = coordinate(14+i, 4),
+        atlas = 'showdown_booster_packs',
+		kind = 'booster_royal',
+		group_key = "k_showdown_royal_pack",
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('royal'..G.SEED) < 0.1) end,
+    })
+end
+
+for i = 1, 2 do
+    table.insert(boosters.one_of_a_kind, {
+		type = 'Booster',
+		order = 16 + i,
+        key = 'tag'..(i == 2 and '_generous' or ''),
+        config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
+        loc_vars = function(self, info_queue, card)
+            return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
+        end,
+        create_card = function(self, card)
+            return
+        end,
+        ease_background_colour = function(self)
+            ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
+            ease_background_colour{new_colour = G.C.SHOWDOWN_BOOLEAN, special_colour = G.C.BLACK, contrast = 2}
+        end,
+        cost = (i == 2 and 6 or 4),
+        pos = coordinate(16+i, 4),
+        atlas = 'showdown_booster_packs',
+		kind = 'booster_tag',
+		group_key = "k_showdown_tag_pack",
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('tag'..G.SEED) < (i == 2 and 0.35 or 0.6)) end,
+    })
+end
+
 return {
 	enabled = true,
 	list = function ()
@@ -98,6 +229,11 @@ return {
         end
         if Showdown.config["Consumables"]["Logics"] then
             for _, v in ipairs(boosters.logic) do
+                table.insert(list, v)
+            end
+        end
+        if Showdown.config["Decks"] then
+            for _, v in ipairs(boosters.one_of_a_kind) do
                 table.insert(list, v)
             end
         end

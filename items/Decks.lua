@@ -258,12 +258,56 @@ local slotted = {
 	end
 }
 
+local one_of_a_kind = {
+	type = 'Back',
+	order = 8,
+	name = "One of a Kind Deck",
+	key = "one_of_a_kind",
+	atlas = "showdown_decks",
+	pos = coordinate(8),
+	config = { unlock_stake = "stake_showdown_emerald" },
+	locked_loc_vars = function(self, info_queue, card)
+		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if not Showdown.config["Stakes"] then return end
+		local win_stake = get_deck_win_stake()
+		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
+			unlock_card(self)
+		end
+	end,
+	apply = function(self, back)
+		G.GAME.showdown_one_of_a_kind = true
+	end
+}
+
+local radar = {
+	type = 'Back',
+	order = 9,
+	name = "Radar Deck",
+	key = "Radar",
+	atlas = "showdown_deck_radar",
+	pos = { x = 0, y = 0 },
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		--unlock_card(self)
+	end,
+	apply = function(self, back)
+		--
+	end
+}
+
 return {
 	enabled = Showdown.config["Decks"],
 	list = function()
 		local list = {
 			starter,
 			slotted,
+			one_of_a_kind,
+			--radar,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
@@ -282,6 +326,7 @@ return {
 	end,
 	atlases = {
 		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
+		{key = "showdown_deck_radar", path = "DeckRadar.png", px = 71, py = 95},
 	},
 	order = 2,
 	exec = function()
@@ -341,17 +386,41 @@ return {
 			end
 			Showdown.tag_related_joker['j_showdown_versatile'] = G.GAME.selected_back.name == 'Anaglyph Deck' and G.GAME.showdown_engineer
 		end
+
+        local updateRef = Game.update
+        local radar_dt = 0
+        function Game:update(dt)
+            updateRef(self, dt)
+            radar_dt = radar_dt + dt
+            if G.P_CENTERS and G.P_CENTERS.b_showdown_Radar and radar_dt > 0.04 then
+                radar_dt = 0
+                local obj = G.P_CENTERS.b_showdown_Radar
+				obj.pos.x = obj.pos.x + 1
+				if obj.pos.y <= 4 and obj.pos.x == 10 then
+					obj.pos.x = 0
+					obj.pos.y = obj.pos.y + 1
+				elseif obj.pos.y == 5 and obj.pos.x == 6 then
+					obj.pos.x = 0
+					obj.pos.y = 0
+				end
+            end
+			for _, v in pairs(G.I.CARD) do
+				if v.children.back and v.children.back.atlas.name == "showdown_deck_radar" then
+					v.children.back:set_sprite_pos(G.P_CENTERS.b_showdown_Radar.pos or G.P_CENTERS["b_red"].pos)
+				end
+			end
+        end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
 		Showdown.versatile['Slotted Deck'] = { desc = 'j_showdown_versatile_joker_slotted', pos = coordinate(26), blueprint = false, add_to_deck = function(self, card, from_debuff)
 			G.E_MANAGER:add_event(Event({func = function()
-                for k, v in pairs(G.I.CARD) do
+                for _, v in pairs(G.I.CARD) do
                     if v.set_cost then v:set_cost() end
                 end
             return true end }))
         end, remove_from_deck = function(self, card, from_debuff)
             G.E_MANAGER:add_event(Event({func = function()
-                for k, v in pairs(G.I.CARD) do
+                for _, v in pairs(G.I.CARD) do
                     if v.set_cost then v:set_cost() end
                 end
             return true end }))

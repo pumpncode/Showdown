@@ -3268,6 +3268,7 @@ return {
         Showdown.tag_related_joker['j_showdown_label'] = true
         Showdown.tag_related_joker['j_showdown_pop_up'] = true
         Showdown.tag_related_joker['j_showdown_funnel'] = true
+        -- SMODS.Mods check with mod id
         if (SMODS.Mods["Cryptid"] or {}).can_load then
             Showdown.tag_related_joker['j_cry_pickle'] = true
             Showdown.tag_related_joker['j_cry_pity_prize'] = true
@@ -3285,12 +3286,41 @@ return {
             Showdown.tag_related_joker['j_unstb_king_of_pop'] = true
             Showdown.tag_related_joker['j_unstb_quintuplets'] = true
             Showdown.tag_related_joker['j_unstb_graphic_card'] = true
+            Showdown.binary_10111_joker_consumeable_type_colours['Auxiliary'] = G.C.UNSTB_AUX
         end
         if (SMODS.Mods["Ortalab"] or {}).can_load then
             Showdown.tag_related_joker['j_ortalab_mystery_soda'] = true
+            Showdown.binary_10111_joker_consumeable_type_colours['Loteria'] = G.ARGS.LOC_COLOURS['ortalab_loteria']
+            Showdown.binary_10111_joker_consumeable_type_colours['Zodiac'] = G.ARGS.LOC_COLOURS['ortalab_zodiac']
+            Showdown.binary_10111_joker_consumeable_type_colours['Mythos'] = G.ARGS.LOC_COLOURS['ortalab_mythos']
         end
         if (SMODS.Mods["MoreFluff"] or {}).can_load then
             Showdown.tag_related_joker['j_mf_rosetinted'] = true
+            Showdown.binary_10111_joker_consumeable_type_colours['Rotarot'] = G.C.SECONDARY_SET.Rotarot
+            Showdown.binary_10111_joker_consumeable_type_colours['Colour'] = HEX("4f6367")
+            Showdown.binary_10111_joker_consumeable_type_colours['Shape'] = HEX("316ea0")
+        end
+        if (SMODS.Mods["bb"] or {}).can_load then
+            Showdown.tag_related_joker['j_bb_gifts'] = true
+        end
+        if (SMODS.Mods["aikoyorisshenanigans"] or {}).can_load then
+            Showdown.tag_related_joker['j_aikoyorisshenanigans_pandora_paradoxxx'] = true
+        end
+        if (SMODS.Mods["allinjest"] or {}).can_load then
+            Showdown.tag_related_joker['j_allinjest_little_devil'] = true
+            Showdown.tag_related_joker['j_allinjest_fulehung'] = true
+            Showdown.tag_related_joker['j_allinjest_ijoker_co'] = true
+            Showdown.tag_related_joker['j_allinjest_sot'] = true
+            Showdown.tag_related_joker['j_allinjest_entropy'] = true
+            Showdown.tag_related_joker['j_allinjest_tagart'] = true
+            Showdown.tag_related_joker['j_allinjest_downing_street'] = true
+            Showdown.tag_related_joker['j_allinjest_mahoney'] = true
+            Showdown.tag_related_joker['j_allinjest_illuminated_joker'] = true
+            Showdown.tag_related_joker['j_allinjest_elf'] = true
+            Showdown.tag_related_joker['j_allinjest_sanguine_joker'] = true
+            Showdown.tag_related_joker['j_allinjest_death_of_a_salesman'] = true
+            Showdown.tag_related_joker['j_allinjest_graffiti'] = true
+            Showdown.tag_related_joker['j_allinjest_toto'] = true
         end
 
         if Cryptid and Cryptid.food then
