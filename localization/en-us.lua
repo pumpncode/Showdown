@@ -2361,14 +2361,6 @@ return {
                     '{C:showdown_calculus}Packs{} in one run',
                 }
             },
-            v_showdown_collatz = {
-                name = 'Collatz Conjecture',
-                text = {
-                    'Cards destroyed by {C:showdown_calculus}mathematic{}',
-                    'cards have a {C:green}1 in 3{} chance of',
-                    '{C:attention}not{} getting destroyed',
-                }
-            },
             v_showdown_poker_night = {
                 name = 'Poker Night',
                 text = {
@@ -2388,6 +2380,32 @@ return {
                     'Win a run with a',
                     'card having a',
                     '{C:attention}Casino sticker',
+                }
+            },
+            v_showdown_sequential_logic = {
+                name = 'Sequential Logic',
+                text = {
+                    '{C:showdown_boolean}Boolean Packs{} are',
+                    '{C:attention}twice{} as common',
+                }
+            },
+            v_showdown_truth_table = {
+                name = 'Truth Table',
+                text = {
+                    '{C:showdown_boolean}Logic{} cards can be {C:attention}pulled',
+                    'from {C:showdown_boolean}Boolean Packs',
+                },
+                unlock = {
+                    'Discover all',
+                    '{C:showdown_boolean}Logic{} cards',
+                }
+            },
+            v_showdown_collatz = {
+                name = 'Collatz Conjecture',
+                text = {
+                    'Cards destroyed by {C:showdown_calculus}mathematic{}',
+                    'cards have a {C:green}1 in 3{} chance of',
+                    '{C:attention}not{} getting destroyed',
                 }
             },
         },

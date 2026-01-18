@@ -865,3 +865,15 @@ match_indent = true
 payload = '''
 inc_career_stat('c_cards_retriggered', 1)
 '''
+
+# Fixes the position of the speech bubble when Partners is installed
+# Thanks to xianyutucizaituci on discord for finding this patch!
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS partner "partner.lua"]'''
+pattern = "if self.children.speech_bubble then"
+position = "at"
+match_indent = true
+payload = '''
+if self.children.speech_bubble and self.config.speech_bubble_align and not self.hasSpeech then
+'''

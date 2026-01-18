@@ -4,7 +4,7 @@ local number_theory = {
 	key = 'number',
 	atlas = 'showdown_vouchers',
     unlocked = true,
-	pos = coordinate(2),
+	pos = coordinate(1),
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -30,7 +30,7 @@ local axiom_infinity = {
 	atlas = 'showdown_vouchers',
     unlocked = false,
     requires = {'v_showdown_number'},
-	pos = coordinate(4, 2),
+	pos = coordinate(2),
 	config = { calculus_packs = 6 },
 	locked_loc_vars = function(self, info_queue, card)
         return { vars = { self.config.calculus_packs } }
@@ -68,7 +68,7 @@ local poker_night = {
 	key = 'poker_night',
 	atlas = 'showdown_vouchers',
     unlocked = true,
-	pos = coordinate(1),
+	pos = coordinate(3, 2),
 	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
@@ -102,7 +102,7 @@ local luigis_casino = {
 	atlas = 'showdown_vouchers',
     unlocked = false,
     requires = {'v_showdown_poker_night'},
-	pos = coordinate(3, 2),
+	pos = coordinate(4, 2),
 	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
@@ -139,10 +139,64 @@ local luigis_casino = {
 	end,
 }
 
+local sequential_logic = {
+	type = 'Voucher',
+	experimental = true,
+	order = 5,
+	key = 'sequential_logic',
+	atlas = 'showdown_vouchers',
+    unlocked = true,
+	pos = coordinate(5, 2),
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_twice_boolean = true
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_twice_boolean = false
+				return true
+			end,
+		}))
+	end,
+}
+
+local truth_table = {
+	type = 'Voucher',
+	experimental = true,
+	order = 6,
+	key = 'truth_table',
+	atlas = 'showdown_vouchers',
+    unlocked = false,
+    requires = {'v_showdown_sequential_logic'},
+	pos = coordinate(6, 2),
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_pull_logics = true
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_pull_logics = false
+				return true
+			end,
+		}))
+	end,
+}
+
 -- Cryptid
 
 local collatz = {
 	type = 'Voucher',
+	experimental = true,
 	order = 1000,
 	key = 'collatz',
 	atlas = 'showdown_cryptidVouchers',
@@ -179,8 +233,12 @@ return {
 			table.insert(list, poker_night)
 			table.insert(list, luigis_casino)
 		end
+		if Showdown.config["Consumables"]["Logics"] then
+			table.insert(list, sequential_logic)
+			table.insert(list, truth_table)
+		end
         if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
-			--table.insert(list, collatz)
+			table.insert(list, collatz)
         end
 		return list
 	end,

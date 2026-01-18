@@ -1555,7 +1555,9 @@ local banana = {
                 else
                     G.E_MANAGER:add_event(Event({
                         func = function()
-                            play_sound('showdown_cronch')
+                            if Showdown.config["Technical"]["Easter Eggs"] then
+                                play_sound('showdown_cronch')
+                            end
                             card.T.r = -0.2
                             card:juice_up(0.3, 0.4)
                             card.states.drag.is = true
@@ -2922,6 +2924,10 @@ local encore = {
     name = 'encore',
     atlas = "showdown_jokers",
     pos = coordinate(91),
+    config = {extra = { chips_scale = 3, chips = 0 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips_scale, card.ability.extra.chips } }
+	end,
     locked_loc_vars = function(self, info_queue, card)
         return { vars = { G.PROFILES[G.SETTINGS.profile].career_stats.c_cards_retriggered } }
 	end,

@@ -86,7 +86,7 @@ for i = 1, 4 do
         atlas = 'showdown_booster_packs',
 		kind = 'booster_boolean',
 		group_key = "k_showdown_boolean_pack",
-        in_pool = function() return (pseudorandom('boolean'..G.SEED) < 0.4) end,
+        in_pool = function() return (pseudorandom('boolean'..G.SEED) < 0.4 * (G.GAME.showdown_twice_boolean and 2 or 1)) end,
     })
 end
 
@@ -253,8 +253,8 @@ return {
         local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
 		function G.UIDEF.use_and_sell_buttons(card) -- Thanks Cryptid
 			if (card.area == G.pack_cards and G.pack_cards) and card.ability.consumeable then
-				if card.ability.set == "Mathematic" then
-					if G.GAME.draw_hand_math then
+				if card.ability.set == "Mathematic" or card.ability.set == "Logic" then
+					if (card.ability.set == "Mathematic" and G.GAME.draw_hand_math) or (card.ability.set == "Logic" and G.GAME.showdown_pull_logics) then
 						return {
 							n = G.UIT.ROOT,
 							config = { padding = -0.1, colour = G.C.CLEAR },
@@ -325,41 +325,43 @@ return {
 							},
 						}
 					end
-					return {
-						n = G.UIT.ROOT,
-						config = { padding = -0.1, colour = G.C.CLEAR },
-						nodes = {
-							{
-								n = G.UIT.R,
-								config = {
-									ref_table = card,
-									r = 0.08,
-									padding = 0.1,
-									align = "bm",
-									minw = 0.5 * card.T.w - 0.15,
-									minh = 0.7 * card.T.h,
-									maxw = 0.7 * card.T.w - 0.15,
-									hover = true,
-									shadow = true,
-									colour = G.C.UI.BACKGROUND_INACTIVE,
-									one_press = true,
-									button = "use_card",
-									func = "can_reserve_card",
-								},
-								nodes = {
-									{
-										n = G.UIT.T,
-										config = {
-											text = localize("b_pull"),
-											colour = G.C.UI.TEXT_LIGHT,
-											scale = 0.55,
-											shadow = true,
+					if card.ability.set == "Mathematic" then
+						return {
+							n = G.UIT.ROOT,
+							config = { padding = -0.1, colour = G.C.CLEAR },
+							nodes = {
+								{
+									n = G.UIT.R,
+									config = {
+										ref_table = card,
+										r = 0.08,
+										padding = 0.1,
+										align = "bm",
+										minw = 0.5 * card.T.w - 0.15,
+										minh = 0.7 * card.T.h,
+										maxw = 0.7 * card.T.w - 0.15,
+										hover = true,
+										shadow = true,
+										colour = G.C.UI.BACKGROUND_INACTIVE,
+										one_press = true,
+										button = "use_card",
+										func = "can_reserve_card",
+									},
+									nodes = {
+										{
+											n = G.UIT.T,
+											config = {
+												text = localize("b_pull"),
+												colour = G.C.UI.TEXT_LIGHT,
+												scale = 0.55,
+												shadow = true,
+											},
 										},
 									},
 								},
 							},
-						},
-					}
+						}
+					end
 				end
 			end
 			return G_UIDEF_use_and_sell_buttons_ref(card)
