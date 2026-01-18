@@ -2694,7 +2694,7 @@ return {
         dictionary={
             -- Content Config
             showdown_content_config = "Content Config",
-            showdown_config_restart = "Restart is Required to Fully Apply Effects",
+            showdown_config_restart = "Restart is required to fully apply effects",
             showdown_config_ranks = "Ranks",
             showdown_config_achievements = "Achievements",
             showdown_config_blinds = "Blinds",
@@ -2720,6 +2720,8 @@ return {
             showdown_config_consumables_logics = "Logics",
             -- Technical Config
             showdown_technical_config = "Technical Config",
+            showdown_config_restart_experimental = "Restart is required to fully apply effects of experimental features",
+            showdown_config_experimental = "Experimental Features",
             showdown_config_easter_eggs = "Easter Eggs",
             showdown_config_engineer_versatile_weight_limit = "Versatile Joker (Engineer) Weight Limit",
             -- Crossmod Config

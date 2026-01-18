@@ -38,7 +38,7 @@ local function execute_item(item)
 		if item.list and (type(item.list) == 'function' or type(item.list) == 'table') then
 			local load_list = {}
 			for _, obj in ipairs(type(item.list) == 'function' and item.list() or item.list) do
-				if not obj.activated or obj.activated[1] then
+				if (not obj.activated or obj.activated[1]) and (not obj.experimental or (obj.experimental and Showdown.config["Technical"]["Experimental"])) then
 					if not obj.order then obj.order = 0 end
 					if obj.type then
 						if item.class[obj.type] then
@@ -271,10 +271,13 @@ local showdown_config_tab = function()
 					nodes = {
 					
 						{n=G.UIT.R, config={align = "cm"}, nodes={ -- Base Box containing everything
-			
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
-								{n=G.UIT.R, config={align = "cl"}, nodes={
 
+								{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_restart_experimental"), colour = G.C.RED, scale = 0.4}}}},
+
+								{n=G.UIT.R, config={align = "cm"}, nodes={
+
+									create_config_toggle('showdown_config_experimental', 'Experimental', 'Technical'),
 									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 4, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
 									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
 	

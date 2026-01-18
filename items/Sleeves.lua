@@ -157,6 +157,7 @@ local chess = {
 
 local slotted = {
 	type = 'Sleeve',
+	experimental = true,
 	order = 7,
 	key = "Slotted",
 	atlas = "showdown_sleeves",

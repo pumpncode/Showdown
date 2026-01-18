@@ -96,6 +96,7 @@ end
 for i = 1, 2 do
     table.insert(boosters.one_of_a_kind, {
 		type = 'Booster',
+		experimental = true,
 		order = 8 + i,
         key = 'peasant'..(i == 2 and '_generous' or ''),
         config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
@@ -121,6 +122,7 @@ end
 for i = 1, 2 do
     table.insert(boosters.one_of_a_kind, {
 		type = 'Booster',
+		experimental = true,
 		order = 10 + i,
         key = 'jester'..(i == 2 and '_generous' or ''),
         config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
@@ -146,6 +148,7 @@ end
 for i = 1, 2 do
     table.insert(boosters.one_of_a_kind, {
 		type = 'Booster',
+		experimental = true,
 		order = 12 + i,
         key = 'knight'..(i == 2 and '_generous' or ''),
         config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
@@ -171,6 +174,7 @@ end
 for i = 1, 2 do
     table.insert(boosters.one_of_a_kind, {
 		type = 'Booster',
+		experimental = true,
 		order = 14 + i,
         key = 'royal_'..i,
         config = {extra = 2, choose = 1, min_cards = 1},
@@ -196,6 +200,7 @@ end
 for i = 1, 2 do
     table.insert(boosters.one_of_a_kind, {
 		type = 'Booster',
+		experimental = true,
 		order = 16 + i,
         key = 'tag'..(i == 2 and '_generous' or ''),
         config = {extra = i == 2 and 5 or 3, choose = i, min_cards = i},
@@ -203,7 +208,7 @@ for i = 1, 2 do
             return { vars = {math.min(card.ability.choose + (G.GAME.modifiers.booster_choice_mod or 0), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))), math.max(1, card.ability.min_cards + (G.GAME.modifiers.booster_size_mod or 0)), math.max(1, card.ability.extra + (G.GAME.modifiers.booster_size_mod or 0))} }
         end,
         create_card = function(self, card)
-            return
+            return card:create_tag_card()
         end,
         ease_background_colour = function(self)
             ease_colour(G.C.DYN_UI.MAIN, G.C.SHOWDOWN_BOOLEAN)
@@ -214,7 +219,8 @@ for i = 1, 2 do
         atlas = 'showdown_booster_packs',
 		kind = 'booster_tag',
 		group_key = "k_showdown_tag_pack",
-        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('tag'..G.SEED) < (i == 2 and 0.35 or 0.6)) end,
+        --in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('tag'..G.SEED) < (i == 2 and 0.35 or 0.6)) end,
+        in_pool = function() return (G.GAME.showdown_one_of_a_kind and pseudorandom('tag'..G.SEED) < 1) end,
     })
 end
 

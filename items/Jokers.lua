@@ -1505,9 +1505,6 @@ local joker_variance_authorithy = {
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        if pseudorandom('joker_variant') < 1 / 50 then
-            G.GAME.showdown_JVA = coordinate(math.random(1, 20))
-        end
         if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
             return {
                 message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
@@ -1522,12 +1519,6 @@ local joker_variance_authorithy = {
             }
         end
     end,
-    add_to_deck = function(self, card, from_debuff)
-        G.GAME.showdown_JVA = coordinate(math.random(1, 20))
-    end,
-    remove_from_deck = function(self, card, from_debuff)
-        G.GAME.showdown_JVA = nil
-    end
 }
 
 local banana = {
@@ -2857,6 +2848,7 @@ local rules_card = {
 
 local terms_of_service = {
     type = 'Joker',
+	experimental = true,
     order = 84,
     key = 'terms_of_service',
     name = 'terms_of_service',
@@ -2879,6 +2871,7 @@ local terms_of_service = {
 
 local point_of_no_return = {
     type = 'Joker',
+	experimental = true,
     order = 85,
     key = 'point_of_no_return',
     name = 'point_of_no_return',
@@ -2922,6 +2915,7 @@ local point_of_no_return = {
 
 local encore = {
     type = 'Joker',
+	experimental = true,
     order = 86,
     activated = { Showdown.config["Ranks"] },
     key = 'encore',
@@ -3050,34 +3044,10 @@ return {
     },
 	atlases = {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
-        {key = "showdown_joker_variants", path = "Jokers/JokersVariants.png", px = 71, py = 95},
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
         {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95, mod_compat = "Cryptid"},
 	},
 	exec = function()
-        SMODS.Joker:take_ownership('joker', {
-            update = function(self, card, front)
-                if G.STAGE == G.STAGES.RUN and G.GAME.showdown_JVA then
-                    if card.config.center.pos ~= G.GAME.showdown_JVA then
-                        card.config.center.atlas = 'showdown_joker_variants'
-                        card.config.center.pos = G.GAME.showdown_JVA
-                        card:set_sprites(card.config.center)
-                    end
-                elseif card.config.center.atlas ~= 'Joker' then
-                    card.config.center.atlas = 'Joker'
-                    card.config.center.pos = { x = 0, y = 0 }
-                    card:set_sprites(card.config.center)
-                end
-            end,
-            load = function(self, card, card_table, other_card)
-                if G.GAME.showdown_JVA then
-                    card.config.center.atlas = 'showdown_joker_variants'
-                    card.config.center.pos = G.GAME.showdown_JVA
-                    card:set_sprites(card.config.center)
-                end
-            end
-        }, true)
-
         local updateRef = Game.update
         local banana_dt = 0
         function Game:update(dt)

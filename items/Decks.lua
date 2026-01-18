@@ -232,6 +232,7 @@ local chess = {
 
 local slotted = {
 	type = 'Back',
+	experimental = true,
 	order = 7,
 	name = "Slotted Deck",
 	key = "Slotted",
@@ -260,6 +261,7 @@ local slotted = {
 
 local one_of_a_kind = {
 	type = 'Back',
+	experimental = true,
 	order = 8,
 	name = "One of a Kind Deck",
 	key = "one_of_a_kind",
@@ -280,12 +282,14 @@ local one_of_a_kind = {
 		end
 	end,
 	apply = function(self, back)
+		SMODS.change_booster_limit(5)
 		G.GAME.showdown_one_of_a_kind = true
 	end
 }
 
 local radar = {
 	type = 'Back',
+	experimental = true,
 	order = 9,
 	name = "Radar Deck",
 	key = "Radar",
@@ -307,7 +311,7 @@ return {
 			starter,
 			slotted,
 			one_of_a_kind,
-			--radar,
+			radar,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
@@ -410,6 +414,77 @@ return {
 				end
 			end
         end
+
+		function Card:create_tag_card() -- Thanks Bunco
+			self = Card(self.T.x, self.T.y, 0.8*G.CARD_W, 0.8*G.CARD_W, nil, G.P_CENTERS.c_base)
+
+			local tag = G.P_TAGS[get_next_tag_key()]
+
+			-- Tag appearance
+
+    		local tag_sprite = Sprite(0, 0, 0.8, 0.8, G.ASSET_ATLAS[tag.atlas or "tags"], tag.pos)
+			self.children.center = tag_sprite
+			self.children.center.states.hover = self.states.hover
+			self.children.center.states.click = self.states.click
+			self.children.center.states.drag = self.states.drag
+			self.children.center.states.collide.can = false
+			self.children.center:set_role({role_type = 'Glued', major = self, draw_major = self,
+			xy_bond = 'Strong',
+			wh_bond = 'Strong',
+			r_bond = 'Strong',
+			scale_bond = 'Strong'})
+
+			self.children.back = self.children.center
+
+			self.ability.tag_card = {tag = tag}
+
+			tag_sprite.hover = function(_self)
+				if not G.CONTROLLER.dragging.target or G.CONTROLLER.using_touch then
+					if not _self.hovering and _self.states.visible then
+						_self.hovering = true
+						if _self == tag_sprite then
+							_self.hover_tilt = 3
+							_self:juice_up(0.05, 0.02)
+							play_sound('paper1', math.random()*0.1 + 0.55, 0.42)
+							play_sound('tarot2', math.random()*0.1 + 0.55, 0.09)
+						end
+
+						self.ability.tag_card.tag:get_uibox_table(tag_sprite)
+						_self.config.h_popup = G.UIDEF.card_h_popup(_self)
+						_self.config.h_popup_config = (_self.T.x > G.ROOM.T.w*0.4) and
+							{align =  'cl', offset = {x=-0.1,y=0},parent = _self} or
+							{align =  'cr', offset = {x=0.1,y=0},parent = _self}
+						Node.hover(_self)
+						if _self.children.alert then
+							_self.children.alert:remove()
+							_self.children.alert = nil
+							if self.ability.tag_card.tag.key and tag then tag.alerted = true end
+							G:save_progress()
+						end
+					end
+				end
+			end
+			tag_sprite.stop_hover = function(_self) _self.hovering = false; Node.stop_hover(_self); _self.hover_tilt = 0 end
+
+			return self
+		end
+
+		G.FUNCS.can_use_tag_card = function(e)
+			e.config.colour = G.C.GREEN
+			e.config.button = 'use_tag_card'
+		end
+
+		G.FUNCS.use_tag_card = function(e)
+			local card = e.config.ref_table
+
+			add_tag(card.ability.tag_card.tag.key)
+
+			play_sound('other1')
+
+			e.config.button = nil
+
+			G.FUNCS.end_consumeable(nil, 0.2)
+		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
 		Showdown.versatile['Slotted Deck'] = { desc = 'j_showdown_versatile_joker_slotted', pos = coordinate(26), blueprint = false, add_to_deck = function(self, card, from_debuff)
