@@ -11,6 +11,7 @@ local mirror = {
 	end,
 	locked_loc_vars = function(self)
 		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -109,6 +110,7 @@ local engineer = {
 	end,
 	locked_loc_vars = function(self)
 		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -144,6 +146,7 @@ local chess = {
 	end,
 	locked_loc_vars = function(self)
 		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -169,6 +172,7 @@ local slotted = {
 	end,
 	locked_loc_vars = function(self)
 		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)

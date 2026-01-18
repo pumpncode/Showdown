@@ -129,14 +129,16 @@ return {
         },
         Sleeve = {
             sleeve_showdown_deactivated = {
-                name = "",
+                name = "Locked",
                 text = {
-                    '',
+                    "Cannot unlock Sleeve",
+                    "due to deactivated",
+                    "content (Stakes)",
                 },
                 unlock = {
                     "Cannot unlock Sleeve",
                     "due to deactivated",
-                    "content",
+                    "content (Stakes)",
                 }
             },
             sleeve_showdown_Mirror = {
