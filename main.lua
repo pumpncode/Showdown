@@ -16,6 +16,8 @@ SMODS.current_mod.optional_features = {
     }]]
 }
 
+Showdown.has_stakes = Showdown.config["Stakes"]
+
 ---Execute a given item. Items can have these params (all parameters are optional):
 ---- enabled: file will be executed or not
 ---- exec: code that will be executed **before** loading the list of content

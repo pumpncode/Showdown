@@ -100,7 +100,7 @@ local diamond = {
 }
 
 return {
-	enabled = Showdown.config["Stakes"],
+	enabled = Showdown.has_stakes,
 	list = {
 		ruby,
 		emerald,

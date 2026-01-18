@@ -66,7 +66,7 @@ return {
 		if Showdown.config["Decks"] then
 			table.insert(list, minecraft_reference)
 		end
-		if Showdown.config["Stakes"] then
+		if Showdown.has_stakes then
 			--table.insert(list, completionist_plus_plus_plus)
 			--table.insert(list, you_can_stop_now)
 		end

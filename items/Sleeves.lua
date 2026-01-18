@@ -10,7 +10,7 @@ local mirror = {
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Mirror" and "_alt" or "") }
 	end,
 	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
 		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
@@ -109,7 +109,7 @@ local engineer = {
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
 	end,
 	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
 		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
@@ -145,7 +145,7 @@ local chess = {
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or "") }
 	end,
 	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
 		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
@@ -171,7 +171,7 @@ local slotted = {
 		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Slotted" and "_alt" or "") }
 	end,
 	locked_loc_vars = function(self)
-		if not Showdown.config["Stakes"] then return { key = 'sleeve_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
 		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)

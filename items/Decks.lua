@@ -7,13 +7,13 @@ local mirror = {
 	pos = coordinate(1),
 	config = { unlock_stake = "stake_showdown_ruby" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -187,13 +187,13 @@ local engineer = {
 	pos = coordinate(5),
 	config = { unlock_stake = "stake_showdown_onyx" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -213,13 +213,13 @@ local chess = {
 	pos = coordinate(6),
 	config = { unlock_stake = "stake_showdown_topaz" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -240,13 +240,13 @@ local slotted = {
 	pos = coordinate(7),
 	config = { unlock_stake = "stake_showdown_sapphire" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -269,13 +269,13 @@ local one_of_a_kind = {
 	pos = coordinate(8),
 	config = { unlock_stake = "stake_showdown_emerald" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)

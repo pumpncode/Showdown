@@ -2,14 +2,16 @@ return {
     descriptions = {
         Back={
             b_showdown_deactivated = {
-                name = '',
+                name = 'Locked',
                 text = {
-                    '',
+                    "Cannot unlock Deck",
+                    "due to deactivated",
+                    "content (Stakes)",
                 },
                 unlock = {
                     "Cannot unlock Deck",
                     "due to deactivated",
-                    "content",
+                    "content (Stakes)",
                 }
             },
             b_showdown_Mirror = {
