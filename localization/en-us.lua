@@ -1669,6 +1669,28 @@ return {
                     '{C:inactive}(#1#)',
                 }
             },
+            j_showdown_soul_avarice = {
+                name = 'Soul of Avarice',
+                text = {
+                    'This joker gains {X:mult,C:white}X#1#{} Mult',
+                    'for each {C:attention}dollar{} gained',
+                    '{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)',
+                },
+                unlock = {
+                    '???',
+                }
+            },
+            j_showdown_soul_malice = {
+                name = 'Soul of Malice',
+                text = {
+                    'Retrigger all scored cards {C:attention}#1#{} time',
+                    'Scored cards have a {C:green}#2# in #3#{} chance',
+                    'to be {C:red}destroyed',
+                },
+                unlock = {
+                    '???',
+                }
+            },
         },
         Other={
             showdown_static = {

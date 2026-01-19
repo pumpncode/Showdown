@@ -397,7 +397,7 @@ return {
 						G.consumeables:emplace(c1)
 						G.GAME.pack_choices = G.GAME.pack_choices - 1
 						if G.GAME.pack_choices <= 0 then
-							G.FUNCS.end_consumable(nil, delay_fac)
+							G.FUNCS.end_consumeable(nil, delay_fac)
 						end
 						return true
 					end,

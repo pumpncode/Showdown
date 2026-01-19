@@ -14,7 +14,7 @@ local reflection = {
 		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             for i=1, #G.hand.highlighted do
 				local card = G.hand.highlighted[i]
-				if not SMODS.Ranks[card.base.value].counterpart then return false end
+				if card.base.value ~= nil and not SMODS.Ranks[card.base.value].counterpart then return false end
 			end
 			return true
         end

@@ -983,6 +983,29 @@ table.insert(def_list.jokers, {
 
 --table.insert(def_list.jokers, { key = 'point_of_no_return' })
 
+table.insert(def_list.jokers, {
+    key = 'encore',
+    text = {
+        { text = "+" },
+        { ref_table = "card.ability.extra", ref_value = "chips", retrigger_type = "mult" }
+    },
+    text_config = { colour = G.C.CHIPS },
+})
+
+table.insert(def_list.jokers, {
+    key = 'soul_avarice',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+        }
+    }
+})
+
+--table.insert(def_list.jokers, { key = 'soul_malice' })
+
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
 

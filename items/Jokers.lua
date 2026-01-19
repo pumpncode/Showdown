@@ -2861,7 +2861,7 @@ local terms_of_service = {
         return { vars = { card.ability.extra.x_mult_scale, 1 + (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale) } }
 	end,
     rarity = 3, cost = 8,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     calculate = function(self, card, context)
         if context.cardarea == G.jokers and context.joker_main and context.scoring_hand and (table_length(G.GAME.used_vouchers) * card.ability.extra.x_mult_scale) + ((G.GAME.starting_voucher_count or 0) * card.ability.extra.x_mult_scale) > 0 then
             return {
@@ -2932,13 +2932,74 @@ local encore = {
         return { vars = { G.PROFILES[G.SETTINGS.profile].career_stats.c_cards_retriggered } }
 	end,
     rarity = 1, cost = 4,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         --
     end,
     calculate = function(self, card, context)
         --
+    end
+}
+
+local soul_avarice = {
+    type = 'Joker',
+	experimental = true,
+    order = 87,
+    key = 'soul_avarice',
+    name = 'soul_avarice',
+    atlas = "showdown_jokers",
+    pos = coordinate(92),
+    config = {extra = { x_mult_mod = 0.02, x_mult = 1 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_mult_mod, card.ability.extra.x_mult } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        if context.ease_money then
+            card.ability.extra.x_mult = card.ability.extra.x_mult + (card.ability.extra.x_mult_mod * context.amount)
+            forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
+        end
+        if context.joker_main and card.ability.extra.x_mult ~= 1 then
+            return {
+                x_mult = card.ability.extra.x_mult,
+            }
+        end
+    end
+}
+
+local soul_malice = {
+    type = 'Joker',
+	experimental = true,
+    order = 88,
+    key = 'soul_malice',
+    name = 'soul_malice',
+    atlas = "showdown_jokers",
+    pos = coordinate(93),
+    config = {extra = { retrigger = 1, destruction_chance = 5 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.retrigger, SMODS.get_probability_vars(card, 1, card.ability.extra.destruction_chance, 'soul_malice') } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        --
+    end,
+    calculate = function(self, card, context)
+        if context.repetition and context.cardarea == G.play then
+            return {
+                repetitions = card.ability.extra.retrigger,
+                card = card
+            }
+        elseif context.destroying_card and context.cardarea == G.play and not context.destroy_card.debuff and SMODS.pseudorandom_probability(card, 'soul_malice', 1, card.ability.extra.destruction_chance) then
+            return { remove = true }
+        end
     end
 }
 
@@ -3012,6 +3073,8 @@ return {
             rules_card,
             terms_of_service,
             encore,
+            soul_avarice,
+            soul_malice,
             --- Ranks Jokers
             pinpoint,
             math_teacher,

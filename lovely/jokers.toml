@@ -877,3 +877,16 @@ match_indent = true
 payload = '''
 if self.children.speech_bubble and self.config.speech_bubble_align and not self.hasSpeech then
 '''
+
+# money context for Soul of Avarice
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+pattern = "inc_career_stat('c_dollars_earned', mod)"
+position = "after"
+match_indent = true
+payload = '''
+for i = 1, #G.jokers.cards do
+    G.jokers.cards[i]:calculate_joker({ ease_money = true, amount = mod })
+end
+'''
