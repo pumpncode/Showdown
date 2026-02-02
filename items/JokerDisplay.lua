@@ -661,9 +661,9 @@ table.insert(def_list.jokers, {
                 if card == joker_card then
                     other_way = true
                 elseif other_way then
-                    chips_count = chips_count + 1
-                else
                     mult_count = mult_count + 1
+                else
+                    chips_count = chips_count + 1
                 end
             end
         end
