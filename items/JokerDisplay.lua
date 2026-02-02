@@ -1004,6 +1004,35 @@ table.insert(def_list.jokers, {
     }
 })
 
+table.insert(def_list.jokers, {
+    key = 'soul_malice',
+    extra = {
+        {
+            { text = "(" },
+            { ref_table = "card.joker_display_values", ref_value = "odds" },
+            { text = ")" },
+        }
+    },
+    extra_config = { colour = G.C.GREEN, scale = 0.3 },
+    calc_function = function(card)
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.destruction_chance, 'soul_malice')
+        card.joker_display_values.odds = localize { type = 'variable', key = "jdis_odds", vars = { numerator, denominator } }
+    end
+})
+
+table.insert(def_list.jokers, {
+    key = 'soul_fortune',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_chips", retrigger_type = "exp" }
+            },
+            border_colour = G.C.CHIPS,
+        }
+    }
+})
+
 --table.insert(def_list.jokers, { key = 'soul_malice' })
 
 -- Blinds

@@ -207,12 +207,6 @@ return {
 				or card.ability.showdown_mario
 				or card.ability.showdown_star
 		end
-		
-		local cardSetDebuffRef = Card.set_debuff
-		function Card:set_debuff(should_debuff)
-			if self.ability.showdown_star then self.debuff = false
-			else cardSetDebuffRef(self, should_debuff) end
-		end
 
 		local cardCalculate_jokerRef = Card.calculate_joker
 		function Card:calculate_joker(context)
@@ -268,6 +262,13 @@ return {
 			if sticker.casino then
 				table.insert(Showdown.casino, sticker)
 			end
+		end
+		
+		-- Done in post_exec to give the Star sticker priority over other debuffs added by Showdown
+		local cardSetDebuffRef = Card.set_debuff
+		function Card:set_debuff(should_debuff)
+			if self.ability.showdown_star then self.debuff = false
+			else cardSetDebuffRef(self, should_debuff) end
 		end
 	end
 }

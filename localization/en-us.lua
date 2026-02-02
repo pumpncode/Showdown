@@ -1677,7 +1677,8 @@ return {
                     '{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)',
                 },
                 unlock = {
-                    '???',
+                    'Lose a run while having',
+                    'more than {C:money}$100',
                 }
             },
             j_showdown_soul_malice = {
@@ -1688,7 +1689,23 @@ return {
                     'to be {C:red}destroyed',
                 },
                 unlock = {
-                    '???',
+                    'Lose a run while',
+                    'having {C:attention}Blueprint{} and',
+                    '{C:attention}Sock and Buskin',
+                }
+            },
+            j_showdown_soul_fortune = {
+                name = 'Soul of Fortune',
+                text = {
+                    'Scored cards are {C:attention}debuffed{} after',
+                    'scoring until this joker is sold',
+                    'This joker gains {X:chips,C:white}X#1#{} Chips',
+                    'when a {C:attention}debuffed{} card is scored',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'Lose a run by playing',
+                    'a fully {C:attention}debuffed{} hand',
                 }
             },
         },

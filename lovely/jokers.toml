@@ -890,3 +890,85 @@ for i = 1, #G.jokers.cards do
     G.jokers.cards[i]:calculate_joker({ ease_money = true, amount = mod })
 end
 '''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 1/3
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "if not G.GAME.won and not G.GAME.seeded and not G.GAME.challenge then"
+position = "before"
+match_indent = true
+payload = '''
+local jokers = {}
+if G.jokers then
+    for _, _card in ipairs(G.jokers.cards) do
+        table.insert(jokers, _card.ability.name)
+    end
+end
+check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+'''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 2/3
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false"
+position = "after"
+match_indent = true
+payload = '''
+local jokers = {}
+if G.jokers then
+    for _, _card in ipairs(G.jokers.cards) do
+        table.insert(jokers, _card.ability.name)
+    end
+end
+check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+'''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 3/3
+[[patches]]
+[patches.pattern]
+target = '''functions/UI_definitions.lua'''
+pattern = "G.FUNCS.DT_lose_game = function() if G.STAGE == G.STAGES.RUN then G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false end end"
+position = "at"
+match_indent = true
+payload = '''
+G.FUNCS.DT_lose_game = function()
+    if G.STAGE == G.STAGES.RUN then
+        G.STATE = G.STATES.GAME_OVER
+        G.STATE_COMPLETE = false
+        local jokers = {}
+        if G.jokers then
+            for _, _card in ipairs(G.jokers.cards) do
+                table.insert(jokers, _card.ability.name)
+            end
+        end
+        check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+    end
+end
+'''
+
+# Unlock check for Soul of Fortune, part 1/2
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "-- TARGET: effects after hand evaluation"
+position = "after"
+match_indent = true
+payload = '''
+G.GAME.last_hand_debuffed = true
+for _, _card in pairs(G.play.cards) do
+    G.GAME.last_hand_debuffed = G.GAME.last_hand_debuffed and _card.debuff
+end
+'''
+
+# Unlock check for Soul of Fortune, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "for i=1, hand_count do --draw cards from deck"
+position = "after"
+match_indent = true
+payload = '''
+G.GAME.last_hand_debuffed = false
+'''

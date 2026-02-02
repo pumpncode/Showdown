@@ -206,7 +206,7 @@ local crime_scene = {
         end
     end,
     calculate = function(self, card, context)
-        if context.debuffed_card then
+        if context.debuffed_card and not context.blueprint then
             card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_mod
             forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
         end
@@ -1689,7 +1689,7 @@ local gold_star = {
     in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     calculate = function(self, card, context)
-        if context.joker_main then
+        if context.joker_main and card.ability.extra.xchips ~= 1 then
             return {
                 x_chips = card.ability.extra.xchips,
             }
@@ -2958,10 +2958,12 @@ local soul_avarice = {
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        --
+        if args.type == 'lose_game' and args.dollars > 100 then
+            unlock_card(self)
+        end
     end,
     calculate = function(self, card, context)
-        if context.ease_money then
+        if context.ease_money and not context.blueprint then
             card.ability.extra.x_mult = card.ability.extra.x_mult + (card.ability.extra.x_mult_mod * context.amount)
             forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
         end
@@ -2989,7 +2991,18 @@ local soul_malice = {
     blueprint_compat = true, perishable_compat = true, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        --
+        if args.type == 'lose_game' and #args.jokers > 0 then
+            local has_blueprint = false
+            local has_sock_and_buskin = false
+            for _, joker_name in ipairs(args.jokers) do
+                print(joker_name)
+                has_blueprint = has_blueprint or joker_name == 'Blueprint'
+                has_sock_and_buskin = has_sock_and_buskin or joker_name == 'Sock and Buskin'
+            end
+            if has_blueprint and has_sock_and_buskin then
+                unlock_card(self)
+            end
+        end
     end,
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play then
@@ -3001,6 +3014,66 @@ local soul_malice = {
             return { remove = true }
         end
     end
+}
+
+local soul_fortune = {
+    type = 'Joker',
+	experimental = true,
+    order = 89,
+    key = 'soul_fortune',
+    name = 'soul_fortune',
+    atlas = "showdown_jokers",
+    pos = coordinate(94),
+    config = {extra = {x_chips_scale = 0.05, x_chips = 1}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'lose_game' and args.last_hand_debuffed then
+            unlock_card(self)
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main and card.ability.extra.x_chips ~= 1 then
+            return {
+                x_chips = card.ability.extra.x_chips
+            }
+        end
+        if not context.blueprint then
+            if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
+                for _, _card in ipairs(context.scoring_hand) do
+                    if not _card.ability.showdown_soul_fortune then
+                        event({trigger = 'after', delay = 0.15, func = function()
+                            _card.ability.showdown_soul_fortune = true
+                            _card:set_debuff(true)
+                        return true end})
+                    end
+                end
+            end
+            if context.debuffed_card then
+                card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
+                forced_message(localize('k_upgrade_ex'), card, G.C.CHIPS, true)
+            end
+            if context.selling_self then
+                for _, _card in ipairs(G.playing_cards) do
+                    _card.ability.showdown_soul_fortune = false
+                    _card:set_debuff(false)
+                end
+            end
+        end
+    end,
+	update = function(self, card, dt)
+        if G.deck then
+            for _, _card in pairs(G.deck.cards) do
+                if _card.ability.showdown_soul_fortune then
+                    _card:set_debuff(true)
+                end
+            end
+        end
+	end
 }
 
 return {
@@ -3075,6 +3148,7 @@ return {
             encore,
             soul_avarice,
             soul_malice,
+            soul_fortune,
             --- Ranks Jokers
             pinpoint,
             math_teacher,
@@ -3302,6 +3376,12 @@ return {
             if findInTable(self.config.center.key, G.GAME.sold_jokers) == -1 then table.insert(G.GAME.sold_jokers, self.config.center.key) end
             CardSellCard(self)
         end
+
+		local cardSetDebuffRef = Card.set_debuff
+		function Card:set_debuff(should_debuff)
+			if self.ability.showdown_soul_fortune then self.debuff = true
+			else cardSetDebuffRef(self, should_debuff) end
+		end
 
         Showdown.tag_related_joker['j_diet_cola'] = true
         Showdown.tag_related_joker['j_showdown_label'] = true
