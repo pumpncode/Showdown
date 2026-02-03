@@ -3076,6 +3076,8 @@ local soul_fortune = {
 	end
 }
 
+-- check Monster from cryptid when making Blinking Blocks for the sprite change
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = {

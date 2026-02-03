@@ -215,6 +215,23 @@ local inventor = {
     end
 }
 
+local guard = {
+	type = 'Consumable',
+	order = 9,
+	key = 'guard',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	config = { max_highlighted = 1, mod_conv = "m_showdown_cut" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_cut
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(10),
+	can_use = function(self)
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end
+}
+
 -- Bunco
 
 local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
@@ -273,6 +290,7 @@ return {
 		if Showdown.config["Enhancements"] then
 			table.insert(list, lost)
 			table.insert(list, angel)
+			table.insert(list, guard)
 		end
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, red_key_piece_1)

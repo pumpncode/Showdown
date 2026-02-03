@@ -189,6 +189,24 @@ local rot_inventor = {
     end
 }
 
+local rot_guard = {
+	type = 'Consumable',
+	order = 9,
+	key = 'rot_guard',
+	set = 'Rotarot',
+	atlas = 'showdown_rotarots',
+    display_size = { w = 107, h = 107 },
+	config = { max_highlighted = 1, mod_conv = "m_showdown_taped" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_taped
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(8),
+	can_use = function(self)
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end
+}
+
 -- Bunco
 
 local rot_beast = {
@@ -250,6 +268,7 @@ return {
 		if Showdown.config["Enhancements"] then
 			table.insert(list, rot_lost)
 			table.insert(list, rot_angel)
+			table.insert(list, rot_guard)
 		end
 		if Showdown.config["Consumables"]["Logics"] then
 			table.insert(list, rot_inventor)

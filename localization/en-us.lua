@@ -2384,6 +2384,13 @@ return {
                     '...{C:red,E:1}Red{E:1} Lock',
                 }
             },
+            c_showdown_guard = {
+                name = 'The Guard',
+                text = {
+                    "Enhances {C:attention}#1#{} selected card",
+                    "into a {C:attention}Cut Card{}"
+                }
+            },
         },
         Voucher={
             v_showdown_number = {
