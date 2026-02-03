@@ -3029,7 +3029,7 @@ local soul_fortune = {
         return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
 	end,
     rarity = 2, cost = 6,
-    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
         if args.type == 'lose_game' and args.last_hand_debuffed then
@@ -3041,6 +3041,62 @@ local soul_fortune = {
             return {
                 x_chips = card.ability.extra.x_chips
             }
+        end
+        if not context.blueprint then
+            if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
+                for _, _card in ipairs(context.scoring_hand) do
+                    if not _card.ability.showdown_soul_fortune then
+                        event({trigger = 'after', delay = 0.15, func = function()
+                            _card.ability.showdown_soul_fortune = true
+                            _card:set_debuff(true)
+                        return true end})
+                    end
+                end
+            end
+            if context.debuffed_card then
+                card.ability.extra.x_chips = card.ability.extra.x_chips + card.ability.extra.x_chips_scale
+                forced_message(localize('k_upgrade_ex'), card, G.C.CHIPS, true)
+            end
+            if context.selling_self then
+                for _, _card in ipairs(G.playing_cards) do
+                    _card.ability.showdown_soul_fortune = false
+                    _card:set_debuff(false)
+                end
+            end
+        end
+    end,
+	update = function(self, card, dt)
+        if G.deck then
+            for _, _card in pairs(G.deck.cards) do
+                if _card.ability.showdown_soul_fortune then
+                    _card:set_debuff(true)
+                end
+            end
+        end
+	end
+}
+
+local soul_gambling = {
+    type = 'Joker',
+	experimental = true,
+    order = 90,
+    activated = { (SMODS.Mods["FusionJokers"] or {}).can_load and Showdown.config["CrossMod"]["FusionJokers"] },
+    key = 'soul_gambling',
+    name = 'soul_gambling',
+    atlas = "showdown_jokers_fusion",
+    pos = coordinate(1),
+    config = {extra = {dollar = 1, x_mult_mod = 0.02, x_chips_scale = 0.05, retrigger = 1, x_mult = 1, x_chips = 1}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.dollar, card.ability.extra.x_mult_mod, card.ability.extra.x_chips_scale, card.ability.extra.retrigger, card.ability.extra.x_mult, card.ability.extra.x_chips } }
+	end,
+    rarity = "fuse_fusion", cost = 12,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            local ret = {}
+            if card.ability.extra.x_chips ~= 1 then ret.x_chips = card.ability.extra.x_chips end
+            if card.ability.extra.x_mult ~= 1 then ret.x_mult = card.ability.extra.x_mult end
+            return ret
         end
         if not context.blueprint then
             if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
@@ -3151,6 +3207,7 @@ return {
             soul_avarice,
             soul_malice,
             soul_fortune,
+            soul_gambling,
             --- Ranks Jokers
             pinpoint,
             math_teacher,
@@ -3190,7 +3247,7 @@ return {
 	atlases = {
 		{key = "showdown_jokers", path = "Jokers/Jokers.png", px = 71, py = 95},
         {key = "showdown_banana", path = "Jokers/banana.png", px = 35, py = 43},
-        {key = "showdown_cryptidJokers", path = "CrossMod/Cryptid/Jokers.png", px = 71, py = 95, mod_compat = "Cryptid"},
+        {key = "showdown_jokers_fusion", path = "CrossMod/FusionJokers/Jokers.png", px = 71, py = 95, mod_compat = "FusionJokers"},
 	},
 	exec = function()
         local updateRef = Game.update

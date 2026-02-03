@@ -28,6 +28,7 @@ return {
         ["Bunco"] = true,
         ["CardSleeves"] = true,
         ["MoreFluff"] = true,
+        ["FusionJokers"] = true,
     },
     ["Stakes"] = true,
     ["Challenges"] = true,

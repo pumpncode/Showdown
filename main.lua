@@ -325,6 +325,7 @@ local showdown_config_tab = function()
 									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
 									create_toggle({label = localize("showdown_config_morefluff"), label_color = morefluff and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'MoreFluff', callback = function() shdwn:save_config() end}),
+									create_toggle({label = localize("showdown_config_fusionjokers"), label_color = morefluff and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'FusionJokers', callback = function() shdwn:save_config() end}),
 	
 								}},
 							}},

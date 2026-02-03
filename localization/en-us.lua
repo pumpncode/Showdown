@@ -1708,6 +1708,16 @@ return {
                     'a fully {C:attention}debuffed{} hand',
                 }
             },
+            j_showdown_soul_gambling = {
+                name = 'Soul of Gambling',
+                text = {
+                    'Playing a card either gives {C:money}$#1#{} or {C:attention}debuffs{} it',
+                    'This joker gains {X:mult,C:white}X#2#{} Mult for each {C:attention}dollar{} gained',
+                    'or {X:chips,C:white}X#3#{} Chips when scoring a {C:attention}debuffed{} card',
+                    'Scored cards are retriggered {C:attention}#4#{} more time',
+                    '{C:inactive}(Currently {X:chips,C:white}X#5#{C:inactive} Mult and {X:chips,C:white}X#6#{C:inactive} Chips)',
+                }
+            },
         },
         Other={
             showdown_static = {
@@ -2799,6 +2809,7 @@ return {
             showdown_config_bunco = "Bunco",
             showdown_config_cardsleeves = "Card Sleeves",
             showdown_config_morefluff = "More Fluff",
+            showdown_config_fusionjokers = "Fusion Jokers",
             
             k_showdown_calculus_pack = 'Calculus Pack',
             k_showdown_boolean_pack = 'Boolean Pack',
