@@ -8,7 +8,7 @@ table.insert(fusions, {
         { name = "j_showdown_soul_malice", carry_stat = "retrigger" },
         { name = "j_showdown_soul_fortune", carry_stat = "x_chips" },
     },
-    cost = 15,
+    cost = 30,
 })
 
 return {

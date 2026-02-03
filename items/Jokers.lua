@@ -606,7 +606,7 @@ local one_doller = {
     end,
     calculate = function(self, card, context)
         if context.buying_card or context.open_booster and not context.blueprint then
-            ease_dollars(1)
+            ease_dollars(card.ability.extra.money)
             return {
                 message = localize('$')..card.ability.extra.money,
                 colour = G.C.MONEY,
@@ -3085,9 +3085,9 @@ local soul_gambling = {
     name = 'soul_gambling',
     atlas = "showdown_jokers_fusion",
     pos = coordinate(1),
-    config = {extra = {dollar = 1, x_mult_mod = 0.02, x_chips_scale = 0.05, retrigger = 1, x_mult = 1, x_chips = 1}},
+    config = {extra = {money = 1, x_mult_mod = 0.02, x_chips_scale = 0.05, retrigger = 1, x_mult = 1, x_chips = 1}},
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.dollar, card.ability.extra.x_mult_mod, card.ability.extra.x_chips_scale, card.ability.extra.retrigger, card.ability.extra.x_mult, card.ability.extra.x_chips } }
+        return { vars = { card.ability.extra.money, card.ability.extra.x_mult_mod, card.ability.extra.x_chips_scale, card.ability.extra.retrigger, card.ability.extra.x_mult, card.ability.extra.x_chips } }
 	end,
     rarity = "fuse_fusion", cost = 12,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
@@ -3098,15 +3098,37 @@ local soul_gambling = {
             if card.ability.extra.x_mult ~= 1 then ret.x_mult = card.ability.extra.x_mult end
             return ret
         end
+        if context.repetition and context.cardarea == G.play then
+            return {
+                repetitions = card.ability.extra.retrigger,
+                card = card
+            }
+        end
         if not context.blueprint then
-            if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
+            if context.ease_money then
+                card.ability.extra.x_mult = card.ability.extra.x_mult + (card.ability.extra.x_mult_mod * context.amount)
+                forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
+            end
+            if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.retrigger_joker then
+                local dollars = 0
                 for _, _card in ipairs(context.scoring_hand) do
                     if not _card.ability.showdown_soul_fortune then
                         event({trigger = 'after', delay = 0.15, func = function()
                             _card.ability.showdown_soul_fortune = true
                             _card:set_debuff(true)
                         return true end})
+                    else
+                        event({trigger = 'after', delay = 0.15, func = function()
+                            _card.ability.showdown_soul_fortune = false
+                            _card:set_debuff(false)
+                        return true end})
+                        dollars = dollars + card.ability.extra.money
                     end
+                end
+                if dollars > 0 then
+                    event({trigger = 'after', delay = 0.15, func = function()
+                        ease_dollars(dollars)
+                    return true end})
                 end
             end
             if context.debuffed_card then

@@ -1711,11 +1711,12 @@ return {
             j_showdown_soul_gambling = {
                 name = 'Soul of Gambling',
                 text = {
-                    'Playing a card either gives {C:money}$#1#{} or {C:attention}debuffs{} it',
+                    'Playing a card {C:attention}debuffs{} it',
+                    'Playing a debuffed card gives {C:money}$#1#{} and rebuffs it',
                     'This joker gains {X:mult,C:white}X#2#{} Mult for each {C:attention}dollar{} gained',
                     'or {X:chips,C:white}X#3#{} Chips when scoring a {C:attention}debuffed{} card',
                     'Scored cards are retriggered {C:attention}#4#{} more time',
-                    '{C:inactive}(Currently {X:chips,C:white}X#5#{C:inactive} Mult and {X:chips,C:white}X#6#{C:inactive} Chips)',
+                    '{C:inactive}(Currently {X:mult,C:white}X#5#{C:inactive} Mult and {X:chips,C:white}X#6#{C:inactive} Chips)',
                 }
             },
         },

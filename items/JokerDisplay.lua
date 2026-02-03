@@ -1033,6 +1033,25 @@ table.insert(def_list.jokers, {
     }
 })
 
+table.insert(def_list.jokers, {
+    key = 'soul_gambling',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_mult", retrigger_type = "exp" }
+            },
+        },
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "x_chips", retrigger_type = "exp" }
+            },
+            border_colour = G.C.CHIPS,
+        }
+    }
+})
+
 --table.insert(def_list.jokers, { key = 'soul_malice' })
 
 -- Blinds
