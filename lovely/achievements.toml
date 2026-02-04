@@ -1,0 +1,62 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Show required decks for the Versatility achievement, part 1/2
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/ui.lua"]'''
+match_indent = true
+pattern = '''temp_achievement.hovering = true'''
+position = "after"
+payload = '''
+if v.key == 'ach_showdown_versatility' then
+    Showdown.versatility_description(temp_achievement)
+end
+'''
+
+# Show required decks for the Versatility achievement, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/ui.lua"]'''
+match_indent = true
+pattern = '''temp_achievement.stop_hover = function() temp_achievement.hovering = false; Node.stop_hover(temp_achievement); temp_achievement.hover_tilt = 0 end'''
+position = "at"
+payload = '''
+temp_achievement.stop_hover = function()
+    temp_achievement.hovering = false
+    if temp_achievement.children.speech_bubble then
+        temp_achievement.children.speech_bubble:remove()
+        temp_achievement.children.speech_bubble = nil
+    end
+    Node.stop_hover(temp_achievement)
+    temp_achievement.hover_tilt = 0
+end
+'''
+
+# How did we get here? achievement
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+match_indent = true
+pattern = '''G.GAME.round_resets.ante = G.GAME.round_resets.ante + mod'''
+position = "after"
+payload = '''
+if G.GAME.round_resets.ante <= -1 then
+    check_for_unlock({type = 'minecraft_reference'})
+end
+'''
+
+# Double hand achievement
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+match_indent = true
+pattern = '''check_for_unlock({type = 'hand_contents', cards = G.play.cards})'''
+position = "after"
+payload = '''
+if #G.play.cards >= 10 then
+    check_for_unlock({type = 'double_hand'})
+end
+'''

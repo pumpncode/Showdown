@@ -25,6 +25,8 @@ local function make_achievement(key, trophy, hidden)
 	}
 end
 
+local completionist_plus_plus_plus = make_achievement('completionist_plus_plus_plus', trophies.green, true) -- Completionist+++
+local you_can_stop_now = make_achievement('you_can_stop_now', trophies.green, true) -- ok you can stop now
 local get_jean_paul = make_achievement('get_jean_paul', trophies.bronze) -- :3
 local sell_jean_paul = make_achievement('sell_jean_paul', trophies.bronze, true) -- :(
 local jean_paul_tag = make_achievement('jean_paul_tag', trophies.silver, true) -- :D
@@ -38,8 +40,12 @@ local green_deck_home = make_achievement('green_deck_home', trophies.silver) -- 
 local rico_kaboom = make_achievement('rico_kaboom', trophies.silver, true) -- Yes Rico, kaboom
 local whole_new_deck = make_achievement('whole_new_deck', trophies.gold, true) -- A whole new deck
 local minecraft_reference = make_achievement('minecraft_reference', trophies.gold, true) -- How did we get here?
-local completionist_plus_plus_plus = make_achievement('completionist_plus_plus_plus', trophies.green, true) -- Completionist+++
-local you_can_stop_now = make_achievement('you_can_stop_now', trophies.green, true) -- ok you can stop now
+local never_tell_odds = make_achievement('never_tell_odds', trophies.gold) -- Never tell me the odds
+local should_check = make_achievement('should_check', trophies.silver, true) -- You should get that checked
+local self_reference = make_achievement('self_reference', trophies.silver, true) -- Self-referential rule
+local fargo_proud = make_achievement('fargo_proud', trophies.gold) -- Fargo would be proud
+local everything_flush = make_achievement('everything_flush', trophies.silver, true) -- Everything is a Flush
+local double_hand = make_achievement('double_hand', trophies.gold) -- Double hand
 
 return {
 	enabled = Showdown.config["Achievements"],
@@ -62,6 +68,14 @@ return {
 			table.insert(list, green_deck_home)
 			--table.insert(list, rico_kaboom)
 			table.insert(list, whole_new_deck)
+			table.insert(list, never_tell_odds)
+			table.insert(list, should_check)
+			table.insert(list, self_reference)
+			--table.insert(list, fargo_proud)
+			if Showdown.config["Ranks"] then
+				table.insert(list, everything_flush)
+				table.insert(list, double_hand)
+			end
 		end
 		if Showdown.config["Decks"] then
 			table.insert(list, minecraft_reference)

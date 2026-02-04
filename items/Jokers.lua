@@ -556,16 +556,25 @@ local chaos_card = {
         if context.cardarea == G.jokers and context.after and not context.blueprint_card and not context.blueprint and not context.retrigger_joker then
             local suits = get_all_suits()
             local ranks = get_all_ranks()
+            local total_ranks = {}
             for i=1, #context.scoring_hand do
                 local _card = context.scoring_hand[i]
                 flipCard(_card, i, #context.scoring_hand)
                 delay(0.2)
                 event({trigger = 'after', delay = 0.15, func = function()
                     assert(SMODS.change_base(_card, suits[math.random(#suits)], ranks[math.random(#ranks)]))
+                    total_ranks[_card.base.name] = (total_ranks[_card.base.name] or 0) + 1
                 return true end})
                 unflipCard(_card, i, #context.scoring_hand)
                 delay(0.6)
             end
+            event({trigger = 'after', delay = 0.15, func = function()
+                for _, i in pairs(total_ranks) do
+                    if i >= 3 then
+                        check_for_unlock({type = 'never_tell_odds'})
+                    end
+                end
+            return true end})
         end
     end
 }
@@ -583,6 +592,9 @@ local sim_card = {
 	end,
     rarity = 3, cost = 8,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    add_to_deck = function(self, card, from_debuff)
+        if next(find_joker('hiding_details')) then check_for_unlock({type = 'everything_flush'}) end
+    end,
 }
 
 local one_doller = {
@@ -1001,6 +1013,9 @@ local hiding_details = {
 	end,
     rarity = 2, cost = 6,
     blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    add_to_deck = function(self, card, from_debuff)
+        if next(find_joker('sim_card')) then check_for_unlock({type = 'everything_flush'}) end
+    end,
 }
 
 local what_a_steel = {
@@ -2643,7 +2658,10 @@ local infection = {
             }))
             if not G.GAME.showdown_infection then G.GAME.showdown_infection = {value = 1.5, rate = 0} end
             G.GAME.showdown_infection.value = tonumber(('%%.%dg'):format(2.11):format((G.GAME.showdown_infection.value * 1.1)))
-            if G.GAME.showdown_infection.rate < 100 then G.GAME.showdown_infection.rate = G.GAME.showdown_infection.rate + 5 end
+            if G.GAME.showdown_infection.rate < 100 then
+                G.GAME.showdown_infection.rate = G.GAME.showdown_infection.rate + 5
+                if G.GAME.showdown_infection.rate >= 100 then check_for_unlock({type = 'should_check'}) end
+            end
             return {
                 message = localize('k_bye_bye'),
                 destroyed = true
@@ -2815,6 +2833,9 @@ local rules_card = {
                 if context.end_of_round and G.GAME.sold_jokers and not card.ability.extra.created_this_round then
                     local old_joker = card.ability.extra.copied_joker
                     card.ability.extra.copied_joker = pseudorandom_element(G.GAME.sold_jokers, pseudoseed('rules_card'))
+                    if card.ability.extra.copied_joker == 'j_showdown_rules_card' then
+                        check_for_unlock({type = 'self_reference'})
+                    end
                     if card.ability.extra.copied_joker ~= old_joker then
                         create_card_for_rules_card(card, card.ability.extra.copied_joker)
                     end
