@@ -1052,7 +1052,27 @@ table.insert(def_list.jokers, {
     }
 })
 
---table.insert(def_list.jokers, { key = 'soul_malice' })
+table.insert(def_list.jokers, {
+    key = 'blinking_block',
+    text = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "value", retrigger_type = "exp" }
+            },
+            border_colour = G.C.XMULT,
+        }
+    },
+    calc_function = function(card)
+        card.joker_display_values.value = card.ability.extra.is_mult and card.ability.extra.x_mult or card.ability.extra.x_chips
+    end,
+    style_function = function(card, text, reminder_text, extra)
+        if text and text.children[1] then
+            text.children[1].config.colour = card.ability.extra.is_mult and G.C.XMULT or G.C.CHIPS
+        end
+        return false
+    end
+})
 
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)

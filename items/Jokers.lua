@@ -5,6 +5,7 @@ local uro_no1 = {type = 'Sound', key = "uro_no1", path = "urotsuki/no1.ogg"}
 local uro_no2 = {type = 'Sound', key = "uro_no2", path = "urotsuki/no2.ogg"}
 local uro_no3 = {type = 'Sound', key = "uro_no3", path = "urotsuki/no3.ogg"}
 local minna_no = {type = 'Sound', key = "minna_no", path = "minnatsuki/no.ogg"}
+local blinking = {type = 'Sound', key = "blinking", path = "beep.ogg"}
 
 ---- Final Rarity
 
@@ -3175,7 +3176,45 @@ local soul_gambling = {
 	end
 }
 
--- check Monster from cryptid when making Blinking Blocks for the sprite change
+local blinking_block = {
+    type = 'Joker',
+	experimental = true,
+    order = 91,
+    key = 'blinking_block',
+    name = 'blinking_block',
+    atlas = "showdown_jokers",
+    pos = coordinate(95),
+    config = {extra = { is_mult = true, x_mult = 2, x_chips = 2 }},
+    loc_vars = function(self, info_queue, card)
+        return { key = 'j_showdown_blinking_block_'..(card.ability.extra.is_mult and 'mult' or 'chips'), vars = { card.ability.extra.is_mult and card.ability.extra.x_mult or card.ability.extra.x_chips } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.joker_main then
+            if card.ability.extra.is_mult and card.ability.extra.x_mult ~= 1 then
+                return {
+                    x_mult = card.ability.extra.x_mult,
+                }
+            elseif not card.ability.extra.is_mult and card.ability.extra.x_chips ~= 1 then
+                return {
+                    x_chips = card.ability.extra.x_chips,
+                }
+            end
+        end
+        -- See change_blinking_block_states() for state change
+    end,
+    add_to_deck = function(self, card, from_debuff)
+        if not card.ability.extra.is_mult then
+            card.children.center:set_sprite_pos(coordinate(96))
+        end
+    end,
+	set_sprites = function(self, card, front)
+		if card.ability.extra and not card.ability.extra.is_mult then
+            card.children.center:set_sprite_pos(coordinate(96))
+        end
+	end,
+}
 
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
@@ -3188,6 +3227,7 @@ return {
             uro_no2,
             uro_no3,
             minna_no,
+            blinking,
             --- Rarities
             final,
             --- Jokers
@@ -3251,6 +3291,7 @@ return {
             soul_malice,
             soul_fortune,
             soul_gambling,
+            blinking_block,
             --- Ranks Jokers
             pinpoint,
             math_teacher,
@@ -3484,6 +3525,30 @@ return {
 			if self.ability.showdown_soul_fortune then self.debuff = true
 			else cardSetDebuffRef(self, should_debuff) end
 		end
+
+        function change_blinking_block_states()
+            if G.jokers then
+                local bip = 0
+                local function juice(cards)
+                    G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.5, blocking = false, blockable = false, timer = 'REAL', func = (function()
+                        if bip < 3 then
+                            if bip == 0 then play_sound('showdown_blinking') end
+                            for _, _card in pairs(cards) do _card:juice_up(0.2, 0.2) end
+                            bip = bip + 1
+                            juice(cards)
+                        else
+                            for _, _card in pairs(cards) do
+                                _card:juice_up(0.3, 0.3)
+                                _card.ability.extra.is_mult = not _card.ability.extra.is_mult
+                                _card.children.center:set_sprite_pos(coordinate(_card.ability.extra.is_mult and 95 or 96))
+                            end
+                        end
+                    return true end)}))
+                end
+                local blinking_blocks = find_joker('blinking_block')
+                if #blinking_blocks > 0 then juice(blinking_blocks) end
+            end
+        end
 
         Showdown.tag_related_joker['j_diet_cola'] = true
         Showdown.tag_related_joker['j_showdown_label'] = true

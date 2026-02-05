@@ -1719,6 +1719,22 @@ return {
                     '{C:inactive}(Currently {X:mult,C:white}X#5#{C:inactive} Mult and {X:chips,C:white}X#6#{C:inactive} Chips)',
                 }
             },
+            j_showdown_blinking_block_mult = {
+                name = 'Blinking Block',
+                text = {
+                    '{X:mult,C:white}X#1#{} Mult',
+                    '{C:attention}Switches{} to {C:chips}Chips',
+                    'at end of round',
+                }
+            },
+            j_showdown_blinking_block_chips = {
+                name = 'Blinking Block',
+                text = {
+                    '{X:chips,C:white}X#1#{} Chips',
+                    '{C:attention}Switches{} to {C:mult}Mult',
+                    'at end of round',
+                }
+            },
         },
         Other={
             showdown_static = {

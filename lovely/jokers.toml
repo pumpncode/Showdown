@@ -972,3 +972,14 @@ match_indent = true
 payload = '''
 G.GAME.last_hand_debuffed = false
 '''
+
+# Blinking Block changing colour
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "-- TARGET: main end_of_round evaluation"
+position = "after"
+match_indent = true
+payload = '''
+change_blinking_block_states()
+'''
