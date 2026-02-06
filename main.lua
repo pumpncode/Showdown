@@ -118,6 +118,10 @@ local function create_config_header(loc)
 	return {n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize(loc), colour = G.C.ORANGE, scale = 0.5}}}}
 end
 
+local function create_crossmod_toggle(modName)
+	return create_toggle({label = localize("showdown_config_"..(string.lower(modName))), label_color = (SMODS.Mods[modName] or {}).can_load and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = modName, callback = function() shdwn:save_config() end})
+end
+
 local Gamemain_menu = Game.main_menu
 local function main_menu(change_context)
 	local ret = Gamemain_menu(change_context)
@@ -161,10 +165,6 @@ end
 Game.main_menu = main_menu
 
 local showdown_config_tab = function()
-	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
-	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
-	local cardsleeves = (SMODS.Mods["CardSleeves"] or {}).can_load
-	local morefluff = (SMODS.Mods["MoreFluff"] or {}).can_load
 	return {
 		{
 		label = localize("showdown_content_config"),
@@ -321,11 +321,11 @@ local showdown_config_tab = function()
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={ -- Don't be fooled, label_color is implemented with a lovely patch (see misc.toml)
 	
-									--create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_morefluff"), label_color = morefluff and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'MoreFluff', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_fusionjokers"), label_color = morefluff and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'FusionJokers', callback = function() shdwn:save_config() end}),
+									--create_crossmod_toggle("Cryptid"),
+									create_crossmod_toggle("Bunco"),
+									create_crossmod_toggle("CardSleeves"),
+									create_crossmod_toggle("MoreFluff"),
+									create_crossmod_toggle("FusionJokers"),
 	
 								}},
 							}},

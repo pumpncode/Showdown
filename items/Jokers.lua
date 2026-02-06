@@ -3239,6 +3239,37 @@ local blinking_block = {
 	end,
 }
 
+local tooth_decay = {
+    type = 'Joker',
+	experimental = true,
+    order = 92,
+    key = 'tooth_decay',
+    name = 'tooth_decay',
+    atlas = "showdown_jokers",
+    pos = coordinate(97),
+    config = {extra = { mult_scale = 5, mult = 0 }},
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_stone
+        return { vars = { card.ability.extra.mult_scale, card.ability.extra.mult } }
+	end,
+    rarity = 2, cost = 6,
+    blueprint_compat = true, perishable_compat = false, eternal_compat = true,
+    calculate = function(self, card, context)
+        if context.destroying_card and context.cardarea == G.play and SMODS.has_enhancement(context.destroy_card, 'm_stone') and not context.destroy_card.debuff then
+			card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_scale
+            forced_message(localize('k_upgrade_ex'), card, G.C.XMULT, true)
+            return { remove = true }
+        end
+        if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+            return {
+                message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+                mult_mod = card.ability.extra.mult,
+                colour = G.C.MULT
+            }
+        end
+    end
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = {
@@ -3315,6 +3346,7 @@ return {
             soul_fortune,
             soul_gambling,
             blinking_block,
+            tooth_decay,
             --- Ranks Jokers
             pinpoint,
             math_teacher,

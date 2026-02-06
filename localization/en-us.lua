@@ -1738,6 +1738,15 @@ return {
                     'at end of round',
                 }
             },
+            j_showdown_tooth_decay = {
+                name = 'Tooth Decay',
+                text = {
+                    'This joker gains {C:mult}+#1#{} Mult when a',
+                    '{C:attention}Stone card{} is scored',
+                    'Scored {C:attention}Stone cards{} are {C:red}destroyed',
+                    '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
+                }
+            },
         },
         Other={
             showdown_static = {

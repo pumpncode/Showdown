@@ -1074,6 +1074,15 @@ table.insert(def_list.jokers, {
     end
 })
 
+table.insert(def_list.jokers, {
+    key = 'tooth_decay',
+    text = {
+        { text = "+" },
+        { ref_table = "card.ability.extra", ref_value = "mult", retrigger_type = "mult" }
+    },
+    text_config = { colour = G.C.MULT },
+})
+
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
 
