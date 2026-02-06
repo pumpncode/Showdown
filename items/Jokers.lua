@@ -1112,14 +1112,14 @@ local substitute_teacher = {
         local mathUsed = G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.mathematic or 0
         return { vars = { card.ability.extra.chips_scale, card.ability.extra.mult_scale, mathUsed * card.ability.extra.chips_scale, mathUsed * card.ability.extra.mult_scale } }
 	end,
-    locked_vars = function(self, info_queue, card)
-        return { vars = { 20, math.max(G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used or 0, 20) } }
+    locked_loc_vars = function(self, info_queue, card)
+        return { vars = { G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used or 0 } }
 	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
     unlocked = false,
     check_for_unlock = function(self, args)
-        if G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used >= 20 then
+        if (G.PROFILES[G.SETTINGS.profile].career_stats.c_maths_used or 0) >= 20 then
             unlock_card(self)
         end
     end,
@@ -2955,12 +2955,35 @@ local encore = {
 	end,
     rarity = 1, cost = 4,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
-    unlocked = false,
-    check_for_unlock = function(self, args)
-        --
-    end,
     calculate = function(self, card, context)
-        --
+        if context.individual and context.cardarea == G.play then -- Thanks Cryptid
+			if not context.other_card.encore_check then
+				context.other_card.encore_check = true
+				local _card = context.other_card
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						if _card then
+							_card.encore_check = nil
+						end
+						return true
+					end,
+				}))
+			else
+				card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_scale
+                return {
+                    message = localize('k_upgrade_ex'),
+                    colour = G.C.CHIPS,
+                    card = card
+                }
+			end
+		end
+        if context.cardarea == G.jokers and context.joker_main and card.ability.extra.chips > 0 then
+            return {
+                message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+                chip_mod = card.ability.extra.chips,
+                colour = G.C.CHIPS
+            }
+        end
     end
 }
 
@@ -3210,7 +3233,7 @@ local blinking_block = {
         end
     end,
 	set_sprites = function(self, card, front)
-		if card.ability.extra and not card.ability.extra.is_mult then
+		if card.ability and card.ability.extra and not card.ability.extra.is_mult then
             card.children.center:set_sprite_pos(coordinate(96))
         end
 	end,

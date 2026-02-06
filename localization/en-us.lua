@@ -836,8 +836,8 @@ return {
                     '{C:inactive}(Currently {C:chips}+#3#{C:inactive} Chips and {C:mult}+#4#{C:inactive} Mult)',
                 },
                 unlock = {
-                    'Use #1# {C:showdown_calculus}Mathematic{} cards',
-                    '{C:inactive}(#2#/#1#)',
+                    'Use {C:attention}20{} {C:showdown_calculus}Mathematic{} cards',
+                    '{C:inactive}(#1#)',
                 }
             },
             j_showdown_world_map = {
@@ -1319,7 +1319,8 @@ return {
                     '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 },
                 unlock = {
-                    'Make Cavendish {C:attention}expire',
+                    'Make Cavendish',
+                    '{C:attention}expire',
                 }
             },
             j_showdown_label = {
@@ -1328,7 +1329,8 @@ return {
                     'Reroll tags when {C:attention}sold',
                 },
                 unlock = {
-                    'Use {C:attention}12{} tags in one run',
+                    'Use {C:attention}12{} tags',
+                    'in one run',
                 }
             },
             j_showdown_silver_stars = {
@@ -1482,7 +1484,8 @@ return {
                     "the rank of the played cards",
                 },
                 unlock = {
-                    'Use a {C:tarot}Strength{} on an {C:attention}Ace',
+                    'Use a {C:tarot}Strength{}',
+                    'on an {C:attention}Ace',
                 }
             },
             j_showdown_stencil = {
