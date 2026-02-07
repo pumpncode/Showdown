@@ -1083,6 +1083,8 @@ table.insert(def_list.jokers, {
     text_config = { colour = G.C.MULT },
 })
 
+--table.insert(def_list.jokers, { key = 'gamma_pulse' })
+
 -- Blinds
 -- (Chess blinds are excluded because Blind display is used only for Matador and Matador only works for Boss Blinds)
 

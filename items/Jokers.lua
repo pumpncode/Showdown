@@ -3270,6 +3270,37 @@ local tooth_decay = {
     end
 }
 
+local gamma_pulse = {
+    type = 'Joker',
+	experimental = true,
+    order = 93,
+    key = 'gamma_pulse',
+    name = 'gamma_pulse',
+    atlas = "showdown_jokers",
+    pos = coordinate(98),
+    config = {extra = { level_upgrade = 1 }},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.level_upgrade } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = true, perishable_compat = true, eternal_compat = true,
+    calculate = function(self, card, context)
+        if (context.setting_blind and not (context.blueprint_card or card).getting_sliced) then
+            local handname, _tally = nil, -1
+            for k, v in ipairs(G.handlist) do
+                if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
+                    handname = v
+                    _tally = G.GAME.hands[v].played
+                end
+            end
+            card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_level_up_ex')})
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(handname, 'poker_hands'),chips = G.GAME.hands[handname].chips, mult = G.GAME.hands[handname].mult, level=G.GAME.hands[handname].level})
+            level_up_hand(card, handname, nil, card.ability.extra.level_upgrade)
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+		end
+    end
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = {
@@ -3347,6 +3378,7 @@ return {
             soul_gambling,
             blinking_block,
             tooth_decay,
+            gamma_pulse,
             --- Ranks Jokers
             pinpoint,
             math_teacher,

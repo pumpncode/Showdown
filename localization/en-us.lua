@@ -1747,6 +1747,14 @@ return {
                     '{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)',
                 }
             },
+            j_showdown_gamma_pulse = {
+                name = 'Gamma Pulse',
+                text = {
+                    '{C:attention}Upgrade{} most played',
+                    'hand by {C:attention}#1#{} level when',
+                    'blind is selected',
+                }
+            },
         },
         Other={
             showdown_static = {
