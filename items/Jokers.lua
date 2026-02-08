@@ -3301,6 +3301,50 @@ local gamma_pulse = {
     end
 }
 
+local patchwork_joker = {
+    type = 'Joker',
+    order = 94,
+    key = 'patchwork_joker',
+    name = 'patchwork_joker',
+    atlas = "showdown_jokers",
+    pos = coordinate(99),
+    config = {extra = {x_chips_scale = 0.15, x_chips = 1}},
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.x_chips_scale, card.ability.extra.x_chips } }
+	end,
+    rarity = 3, cost = 8,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+    unlocked = false,
+    check_for_unlock = function(self, args)
+        if args.type == 'hand_contents' then
+            local enhancements = {}
+            for _, card in ipairs(args.cards) do
+                local enh = next(SMODS.get_enhancements(card))
+                if enh and findInTable(enh, enhancements) == -1 then
+                    table.insert(enhancements, enh)
+                end
+            end
+            if #enhancements >= 5 then unlock_card(self) end
+        end
+    end,
+    calculate = function(self, card, context)
+        if context.joker_main and card.ability.extra.x_chips ~= 1 then
+            return {
+                x_chips = card.ability.extra.x_chips
+            }
+        end
+    end,
+    update = function(self, card, dt)
+        local enhanced_cards = 0
+        if G.playing_cards then
+            for _, _card in pairs(G.playing_cards) do
+                if next(SMODS.get_enhancements(_card)) then enhanced_cards = enhanced_cards + 1 end
+            end
+        end
+        card.ability.extra.x_chips = 1 + card.ability.extra.x_chips_scale * enhanced_cards
+    end,
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Normal"],
 	list = {
@@ -3379,6 +3423,7 @@ return {
             blinking_block,
             tooth_decay,
             gamma_pulse,
+            patchwork_joker,
             --- Ranks Jokers
             pinpoint,
             math_teacher,

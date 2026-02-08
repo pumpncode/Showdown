@@ -1755,6 +1755,18 @@ return {
                     'blind is selected',
                 }
             },
+            j_showdown_patchwork_joker = {
+                name = 'Patchwork Joker',
+                text = {
+                    'This joker gains {X:chips,C:white}X#1#{} Chips for',
+                    'each {C:attention}enhanced{} card in your deck',
+                    '{C:inactive}(Currently {X:chips,C:white}X#2#{C:inactive} Chips)',
+                },
+                unlock = {
+                    'Play a hand with at least',
+                    '{C:attention}5{} different {C:attention}enhancements',
+                }
+            },
         },
         Other={
             showdown_static = {
