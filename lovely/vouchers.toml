@@ -1,0 +1,15 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Axiom of Infinity unlock
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''SMODS.calculate_context({open_booster = true, card = self})'''
+position = 'after'
+payload = '''
+check_for_unlock({type = 'open_booster', card = self})
+'''

@@ -100,7 +100,7 @@ local diamond = {
 }
 
 return {
-	enabled = Showdown.config["Stakes"],
+	enabled = Showdown.has_stakes,
 	list = {
 		ruby,
 		emerald,
@@ -119,8 +119,6 @@ return {
         Showdown.StakeAlt = SMODS.Stake:extend{
 			atlas = "showdown_stakes", sticker_atlas = "showdown_stake_stickers",
         }
-
-		-- Well i don't really know what's the issue here, i'm trying to render 2 stake stickers at the same time but it won't (in the collection only at least)
 
 		function Showdown.get_joker_win_sticker_alt(_center, index)
 			local joker_usage = G.PROFILES[G.SETTINGS.profile].joker_usage[_center.key] or {}
@@ -179,6 +177,7 @@ return {
 		local GameStart_runRef = Game.start_run
 		function Game:start_run(args)
 			GameStart_runRef(self, args)
+            self.GAME.counterpart_turbo_boost = 1
 			self.P_CENTERS.v_seed_money.config.extra = self.GAME.modifiers.less_interest and 30 or 50
 			self.P_CENTERS.v_money_tree.config.extra = self.GAME.modifiers.less_interest and 60 or 100
 			-- i should do a cryptid compat money bean with here

@@ -374,7 +374,7 @@ local playing = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks()
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -406,7 +406,7 @@ local numbered = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({noFace = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -438,7 +438,7 @@ local royal = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({onlyFace = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -472,7 +472,7 @@ local decimal = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({onlyCounterpart = true})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -504,7 +504,7 @@ local top = {
 			G.CONTROLLER.locks[lock] = true
 			tag:yep('+', G.C.BLUE,function()
 				local ranks = get_all_ranks({noVanilla = true, noModded = true, whitelist = {'Ace'}})
-				local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+				local suits = get_all_suits()
 				for _=1, tag.config.cards_generated do
 					create_card_in_deck(
 						pseudorandom_element(ranks, pseudoseed('playing')),
@@ -660,7 +660,7 @@ local summoning = {
 local parabola = {
 	type = 'Switch',
 	order = 21,
-    activated = { Showdown.config["Consumeables"]["Mathematics"] },
+    activated = { Showdown.config["Consumables"]["Mathematics"] },
 	key = "parabola",
 	pos = coordinate(21, 8),
 	config = { type = "immediate", cards_generated = 2 },
@@ -695,7 +695,7 @@ local parabola = {
 local operation = {
 	type = 'Switch',
 	order = 22,
-    activated = { Showdown.config["Consumeables"]["Logics"] },
+    activated = { Showdown.config["Consumables"]["Logics"] },
 	key = "operation",
 	pos = coordinate(22, 8),
 	config = { type = "immediate", cards_generated = 2 },
@@ -707,12 +707,12 @@ local operation = {
 		if context.type == "immediate" then
 			if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
 				tag:yep('+', G.C.BLUE,function()
-					local card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+					local card = create_card('Logic', G.consumeables, nil, nil, nil, nil, nil, 'operation')
 					card:add_to_deck()
 					G.consumeables:emplace(card)
 					for _=2, tag.config.cards_generated do
 						if G.consumeables and #G.consumeables.cards < G.consumeables.config.card_limit then
-							card = create_card('Label', G.consumeables, nil, nil, nil, nil, nil, 'operation')
+							card = create_card('Logic', G.consumeables, nil, nil, nil, nil, nil, 'operation')
 							card:add_to_deck()
 							G.consumeables:emplace(card)
 						end
@@ -888,11 +888,13 @@ return {
 	},
 	atlases = {
 		{key = 'showdown_switches', path = 'Switches.png', px = 34, py = 34},
+		{key = 'showdown_switches_shiny', path = "CrossMod/Cryptid/SwitchesShiny.png", px = 34, py = 34, mod_compat = "Cryptid"},
 	},
 	exec = function()
 		G.P_CENTER_POOLS['Switch'] = {}
 		Showdown.Switch = SMODS.Tag:extend{
 			atlas = 'showdown_switches',
+			shiny_atlas = 'showdown_switches_shiny',
 			set = 'Switch',
 			inject = function(self)
 				if not G.P_CENTER_POOLS[self.set] then G.P_CENTER_POOLS[self.set] = {} end

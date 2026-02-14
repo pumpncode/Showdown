@@ -16,6 +16,7 @@ local versatile_joker = {
         double_tag = 1,                              -- Anaglyph Deck
         extra_card = 1,                             -- Cheater Deck
         tag_switch_mult = 1.5,                        -- Engineer Deck
+        vouchers_booster_sale = 25,                  -- Slotted Deck
     }},
     loc_vars = function(self, info_queue, card)
         if G.STAGE == G.STAGES.RUN then
@@ -42,6 +43,8 @@ local versatile_joker = {
                 loc.vars = { card.ability.extra.extra_card }
             elseif G.GAME.selected_back.name == 'Engineer Deck' then
                 loc.vars = { card.ability.extra.tag_switch_mult }
+            elseif G.GAME.selected_back.name == 'Slotted Deck' then
+                loc.vars = { card.ability.extra.vouchers_booster_sale }
             end
             return loc
         end
@@ -107,13 +110,15 @@ local versatile_joker_all_in_one = {
         double_tag = 1,                              -- Anaglyph Deck
         extra_card = 1,                              -- Cheater Deck
         tag_switch_mult = 4,                         -- Engineer Deck
+        vouchers_booster_sale = 25,                  -- Slotted Deck
     }},
     loc_vars = function(self, info_queue, card)
-        local decks, ranks, maths, switches =
+        local decks, ranks, maths, switches, blinds =
             Showdown.config["Decks"] and '(Active) ' or '(Inactive) ',
             (Showdown.config["Decks"] and Showdown.config["Ranks"]) and '(Active) ' or '(Inactive) ',
-            (Showdown.config["Decks"] and Showdown.config["Consumeables"]["Mathematics"]) and '(Active) ' or '(Inactive) ',
-            (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) '
+            (Showdown.config["Decks"] and Showdown.config["Consumables"]["Mathematics"]) and '(Active) ' or '(Inactive) ',
+            (Showdown.config["Decks"] and Showdown.config["Tags"]["Switches"]) and '(Active) ' or '(Inactive) ',
+            (Showdown.config["Decks"] and Showdown.config["Blinds"]) and '(Active) ' or '(Inactive) '
         return { key = 'j_showdown_versatile_joker_all_in_one', vars = {
             card.ability.extra.money,
             card.ability.extra.xmult_mod, card.ability.extra.x_mult,
@@ -126,20 +131,22 @@ local versatile_joker_all_in_one = {
             card.ability.extra.double_tag,
             card.ability.extra.extra_card,
             card.ability.extra.tag_switch_mult,
+            card.ability.extra.vouchers_booster_sale,
             -- Config values for indicating if an effect is active or not
-            ranks, maths, switches, decks
+            ranks, maths, switches, decks, blinds
         }}
     end,
     rarity = 4, cost = 20,
     in_pool = function(self, args) return false end,
     blueprint_compat = true, perishable_compat = false, eternal_compat = true,
-	no_collection = true,
+	no_collection = true, discovered = true,
     calculate = function(self, card, context)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.calculate then
                 local effect = deck.calculate(self, card, context)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then
@@ -152,14 +159,16 @@ local versatile_joker_all_in_one = {
                 end
             end
         end
+        if final and context.repetition and not final.repetitions then final.repetitions = 0 end
         return final
     end,
     add_to_deck = function(self, card, from_debuff)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.add_to_deck then
-                local effect = deck.add_to_deck(self, card, context)
+                local effect = deck.add_to_deck(self, card, from_debuff)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then
@@ -175,11 +184,12 @@ local versatile_joker_all_in_one = {
         return final
     end,
     remove_from_deck = function(self, card, from_debuff)
-        local final = {}
+        local final = nil
         for _, deck in pairs(Showdown.versatile) do
             if deck.remove_from_deck then
-                local effect = deck.remove_from_deck(self, card, context)
+                local effect = deck.remove_from_deck(self, card, from_debuff)
                 if effect then
+                    final = {}
                     for k, v in pairs(effect) do
                         if final[k] then
                             if type(final[k]) == 'number' then
@@ -196,12 +206,28 @@ local versatile_joker_all_in_one = {
     end,
 }
 
+local versatile_joker_challenge_restriction = {
+    type = 'Joker',
+    key = 'versatile_joker_challenge_restriction',
+    name = 'versatile_joker_challenge_restriction',
+    atlas = "showdown_versatile_joker",
+    pos = coordinate(17),
+    loc_vars = function(self, info_queue, card)
+        return { key = 'j_showdown_versatile_joker_challenge' }
+    end,
+    rarity = 2, cost = 6,
+    blueprint_compat = false, perishable_compat = true, eternal_compat = true,
+	no_collection = true, discovered = true,
+    in_pool = function(self, args) return false end,
+}
+
 return {
 	enabled = Showdown.config["Jokers"]["Versatile"],
 	list = function ()
 		local list = {
 			versatile_joker,
             versatile_joker_all_in_one,
+            versatile_joker_challenge_restriction,
 		}
 		return list
 	end,
@@ -209,6 +235,8 @@ return {
 		{key = "showdown_versatile_joker", path = "Jokers/VersatileJoker.png", px = 71, py = 95},
 	},
 	exec = function()
+        table.insert(Showdown.rules_card_blacklist, 'j_showdown_versatile_joker_all_in_one')
+
 		Showdown.versatile['Unknown'] = { desc = 'j_showdown_versatile_joker_unknown', pos = coordinate(1), blueprint = true }
         Showdown.versatile['Red Deck'] = { desc = 'j_showdown_versatile_joker_red', pos = coordinate(2), blueprint = false, calculate = function(self, card, context)
             if context.discard and context.other_card == context.full_hand[1] then
@@ -306,7 +334,7 @@ return {
         end }
         Showdown.versatile['Checkered Deck'] = { desc = 'j_showdown_versatile_joker_checkered', pos = coordinate(11), blueprint = true, calculate = function(self, card, context)
             if context.individual and context.cardarea == G.play then
-                if context.other_card:is_suit("Spades") and pseudorandom('versatile_checkered') < G.GAME.probabilities.normal/card.ability.extra.spades_odd then
+                if context.other_card:is_suit("Spades") and SMODS.pseudorandom_probability(card, 'versatile_checkered', 1, card.ability.extra.spades_odd) then
                     return {
                         x_chips = card.ability.extra.spades,
                         card = card
@@ -325,7 +353,7 @@ return {
                 context.using_consumeable
                 and (context.consumeable.ability.set == "Tarot" or context.consumeable.ability.set == "Planet")
                 and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit
-                and pseudorandom('versatile_zodiac') < G.GAME.probabilities.normal/card.ability.extra.generate_odd
+                and SMODS.pseudorandom_probability(card, 'versatile_zodiac', 1, card.ability.extra.generate_odd)
             then
                 G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                 local loc = { card = card }

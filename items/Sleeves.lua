@@ -7,10 +7,11 @@ local mirror = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Mirror", stake = "stake_showdown_emerald"},
 	loc_vars = function(self)
-		return {
-			key = self.key..(self.get_current_deck_key() == "b_showdown_Mirror" and "_alt" or ""),
-			vars = {colours={}}
-		}
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Mirror" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -111,10 +112,11 @@ local engineer = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Engineer", stake = "stake_showdown_amethyst"},
 	loc_vars = function(self)
-		return {
-			key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or ""),
-			vars = {colours={}}
-		}
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Engineer" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -152,10 +154,11 @@ local chess = {
 	unlocked = false,
 	unlock_condition = {deck = "b_showdown_Chess", stake = "stake_showdown_amethyst"},
 	loc_vars = function(self)
-		return {
-			key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or ""),
-			vars = {colours={}}
-		}
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Chess" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
 	end,
 	apply = function(self, sleeve)
         CardSleeves.Sleeve.apply(self)
@@ -167,28 +170,53 @@ local chess = {
 	end
 }
 
-if not Showdown.config["Stakes"] then
-	chess.locked_loc_vars = function(self)
-		return { key = 'sleeve_showdown_deactivated', vars = {colours={}} }
+local slotted = {
+	type = 'Sleeve',
+	experimental = true,
+	order = 7,
+	key = "Slotted",
+	atlas = "showdown_sleeves",
+	pos = coordinate(6),
+	unlocked = false,
+	unlock_condition = {deck = "b_showdown_Slotted", stake = "stake_showdown_amethyst"},
+	loc_vars = function(self)
+		return { key = self.key..(self.get_current_deck_key() == "b_showdown_Slotted" and "_alt" or "") }
+	end,
+	locked_loc_vars = function(self)
+		if not Showdown.has_stakes then return { key = 'sleeve_showdown_deactivated' } end
+		return CardSleeves.Sleeve.locked_loc_vars(self)
+	end,
+	apply = function(self, sleeve)
+        CardSleeves.Sleeve.apply(self)
+		if self.get_current_deck_key() ~= "b_showdown_Slotted" then
+            SMODS.Back.obj_table["b_showdown_Slotted"].apply(self, sleeve)
+        else
+			G.GAME.starting_params.joker_slots = G.GAME.starting_params.joker_slots + 1
+        	G.GAME.starting_params.consumable_slots = G.GAME.starting_params.consumable_slots + 1
+			change_shop_size(-1)
+        end
 	end
-end
+}
 
 return {
 	enabled = (SMODS.Mods["CardSleeves"] or {}).can_load and Showdown.config["CrossMod"]["CardSleeves"],
 	list = function()
 		local list = {
 			starter,
-			chess,
+			slotted,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, calculus)
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			table.insert(list, engineer)
+		end
+		if Showdown.config["Blinds"] then
+			table.insert(list, chess)
 		end
 		return list
 	end,

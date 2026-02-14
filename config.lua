@@ -15,22 +15,25 @@ return {
         ["Classic"] = true,
         ["Switches"] = true,
     },
-    ["Consumeables"] = {
+    ["Consumables"] = {
         ["Tarots"] = true,
         ["Spectrals"] = true,
         ["Mathematics"] = true,
-        ["Logics"] = false,
+        ["Logics"] = true,
     },
     ["Vouchers"] = true,
     ["Stickers"] = true,
     ["CrossMod"] = {
-        ["Cryptid"] = true,
+        ["Cryptid"] = false,
         ["Bunco"] = true,
         ["CardSleeves"] = true,
+        ["MoreFluff"] = true,
+        ["FusionJokers"] = true,
     },
     ["Stakes"] = true,
     ["Challenges"] = true,
     ["Technical"] = {
+        ["Experimental"] = false,
         ["Easter Eggs"] = true,
         ["Engineer Versatile Weight Limit"] = 100,
     },

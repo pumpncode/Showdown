@@ -4,7 +4,7 @@ local number_theory = {
 	key = 'number',
 	atlas = 'showdown_vouchers',
     unlocked = true,
-	pos = coordinate(2),
+	pos = coordinate(1),
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -28,10 +28,22 @@ local axiom_infinity = {
 	order = 2,
 	key = 'axiom',
 	atlas = 'showdown_vouchers',
-    --unlocked = false,
-    unlocked = true,
+    unlocked = false,
     requires = {'v_showdown_number'},
-	pos = coordinate(4, 2),
+	pos = coordinate(2),
+	config = { calculus_packs = 6 },
+	locked_loc_vars = function(self, info_queue, card)
+        return { vars = { self.config.calculus_packs } }
+	end,
+	check_for_unlock = function(self, args)
+        if args.type == 'open_booster' and args.card and args.card.ability.name:find('showdown_calculus') and (G.GAME.calculus_booster_opened or 0) < 10 then
+			G.GAME.calculus_booster_opened = (G.GAME.calculus_booster_opened or 0) + 1
+			print(G.GAME.calculus_booster_opened)
+			if G.GAME.calculus_booster_opened == 10 then
+				unlock_card(self)
+			end
+		end
+    end,
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
@@ -50,13 +62,13 @@ local axiom_infinity = {
 	end,
 }
 
-local LUI = {
+local poker_night = {
 	type = 'Voucher',
 	order = 3,
-	key = 'lui',
+	key = 'poker_night',
 	atlas = 'showdown_vouchers',
     unlocked = true,
-	pos = coordinate(1),
+	pos = coordinate(3, 2),
 	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
@@ -83,15 +95,14 @@ local LUI = {
 	end,
 }
 
-local GI = {
+local luigis_casino = {
 	type = 'Voucher',
 	order = 4,
-	key = 'gi',
+	key = 'luigis_casino',
 	atlas = 'showdown_vouchers',
-    --unlocked = false,
-    unlocked = true,
-    requires = {'v_showdown_lui'},
-	pos = coordinate(3, 2),
+    unlocked = false,
+    requires = {'v_showdown_poker_night'},
+	pos = coordinate(4, 2),
 	loc_vars = function(self, info_queue, card)
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_cloud'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mushroom'}
@@ -100,8 +111,15 @@ local GI = {
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_mario'}
         info_queue[#info_queue+1] = {set = 'Other', key = 'showdown_star'}
 	end,
-	check_for_unlock = function()
-        --
+	check_for_unlock = function(self, args)
+        if args.type == 'win_custom' and G.jokers then
+			for _, joker in ipairs(G.jokers.cards) do
+				if have_casino_sticker(joker) then
+					unlock_card(self)
+					break
+				end
+			end
+		end
     end,
 	redeem = function(self)
 		G.E_MANAGER:add_event(Event({
@@ -121,10 +139,64 @@ local GI = {
 	end,
 }
 
+local sequential_logic = {
+	type = 'Voucher',
+	experimental = true,
+	order = 5,
+	key = 'sequential_logic',
+	atlas = 'showdown_vouchers',
+    unlocked = true,
+	pos = coordinate(5, 2),
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_twice_boolean = true
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_twice_boolean = false
+				return true
+			end,
+		}))
+	end,
+}
+
+local truth_table = {
+	type = 'Voucher',
+	experimental = true,
+	order = 6,
+	key = 'truth_table',
+	atlas = 'showdown_vouchers',
+    unlocked = false,
+    requires = {'v_showdown_sequential_logic'},
+	pos = coordinate(6, 2),
+	redeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_pull_logics = true
+				return true
+			end,
+		}))
+	end,
+	unredeem = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				G.GAME.showdown_pull_logics = false
+				return true
+			end,
+		}))
+	end,
+}
+
 -- Cryptid
 
 local collatz = {
 	type = 'Voucher',
+	experimental = true,
 	order = 1000,
 	key = 'collatz',
 	atlas = 'showdown_cryptidVouchers',
@@ -153,13 +225,17 @@ return {
 	enabled = Showdown.config["Vouchers"],
 	list = function()
 		local list = {}
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, number_theory)
 			table.insert(list, axiom_infinity)
 		end
 		if Showdown.config["Stickers"] then
-			table.insert(list, LUI)
-			table.insert(list, GI)
+			table.insert(list, poker_night)
+			table.insert(list, luigis_casino)
+		end
+		if Showdown.config["Consumables"]["Logics"] then
+			table.insert(list, sequential_logic)
+			table.insert(list, truth_table)
 		end
         if (SMODS.Mods["Cryptid"] or {}).can_load and Showdown.config["CrossMod"]["Cryptid"] then
 			table.insert(list, collatz)

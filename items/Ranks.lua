@@ -29,6 +29,7 @@ local count2 = { -- 2.5 Card
 	pos = { x = 0 },
 	nominal = 2.5,
 	next = { '3' },
+	prev = { '2' },
 	counterpart = { is = true, value = '2' },
 	secret = true,
 	max_id = {
@@ -51,6 +52,7 @@ local count5 = { -- 5.5 Card
 	pos = { x = 1 },
 	nominal = 5.5,
 	next = { '6' },
+	prev = { '5' },
 	counterpart = { is = true, value = '5' },
 	secret = true,
 	max_id = {
@@ -73,6 +75,7 @@ local count8 = { -- 8.5 Card
 	pos = { x = 2 },
 	nominal = 8.5,
 	next = { '9' },
+	prev = { '8' },
 	counterpart = { is = true, value = '8' },
 	secret = true,
 	max_id = {
@@ -94,8 +97,9 @@ local countButler = { -- Butler Card
 	shorthand = 'B',
 	pos = { x = 3 },
 	nominal = 10.5,
-	face_nominal = 0.1,
+	face_nominal = -0.35,
 	next = { 'showdown_Princess', 'Queen' },
+	prev = { '10' },
 	face = true,
 	counterpart = { is = true, value = 'Jack' },
 	secret = true,
@@ -118,8 +122,9 @@ local countPrincess = { -- Princess Card
 	shorthand = 'P',
 	pos = { x = 4 },
 	nominal = 10.5,
-	face_nominal = 0.2,
+	face_nominal = -0.25,
 	next = { 'showdown_Lord', 'King' },
+	prev = { 'showdown_Butler', 'Jack' },
 	face = true,
 	counterpart = { is = true, value = 'Queen' },
 	secret = true,
@@ -142,8 +147,9 @@ local countLord = { -- Lord Card
 	shorthand = 'L',
 	pos = { x = 5 },
 	nominal = 10.5,
-	face_nominal = 0.3,
+	face_nominal = -0.15,
 	next = { 'Ace' },
+	prev = { 'showdown_Princess', 'Queen' },
 	face = true,
 	counterpart = { is = true, value = 'King' },
 	secret = true,
@@ -167,6 +173,7 @@ local zero = { -- 0 Card (counts as any suit and can't be converted to a wild ca
 	pos = { x = 6 },
 	nominal = 0,
 	next = { 'Ace' },
+	prev = { 'Ace' },
 	secret = true,
 	suit_map = {
 		Hearts = 0,
@@ -201,11 +208,31 @@ return {
 		return list
 	end,
 	atlases = {
+		-- Vanilla
 		{key = "showdown_cards", path = "Ranks/Cards.png", px = 71, py = 95},
 		{key = "showdown_cardsHC", path = "Ranks/CardsHC.png", px = 71, py = 95},
 		{key = "showdown_unknownSuit", path = "Ranks/Unknown.png", px = 71, py = 95},
-		{key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95},
-		{key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95},
+		-- Bunco
+		{key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95, mod_compat = "Bunco"},
+		{key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "Bunco"},
+		-- Musical Suits
+		{key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95, mod_compat = "MusicalSuit"},
+		{key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "MusicalSuit"},
+		-- Ink and Color
+		{key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95, mod_compat = "InkAndColor"},
+		{key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "InkAndColor"},
+		-- Paperback
+		{key = "showdown_paperbackCards", path = "CrossMod/Paperback/Ranks/Cards.png", px = 71, py = 95, mod_compat = "paperback"},
+		{key = "showdown_paperbackCardsHC", path = "CrossMod/Paperback/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "paperback"},
+		-- Madcap
+		{key = "showdown_madcapCards", path = "CrossMod/Madcap/Ranks/Cards.png", px = 71, py = 95, mod_compat = "rgmadcap"},
+		{key = "showdown_madcapCardsHC", path = "CrossMod/Madcap/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "rgmadcap"},
+		-- Entropy
+		{key = "showdown_entropyCards", path = "CrossMod/Entropy/Ranks/Cards.png", px = 71, py = 95, mod_compat = "entr"},
+		{key = "showdown_entropyCardsHC", path = "CrossMod/Entropy/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "entr"},
+		-- Minty's Silly Little Mod
+		{key = "showdown_mintyCards", path = "CrossMod/MintysSillyMod/Ranks/Cards.png", px = 71, py = 95, mod_compat = "MintysSillyMod"},
+		{key = "showdown_mintyCardsHC", path = "CrossMod/MintysSillyMod/Ranks/CardsHC.png", px = 71, py = 95, mod_compat = "MintysSillyMod"},
 	},
 	exec = function()
 		-- These are for making straights with counterparts and normal cards
@@ -236,7 +263,7 @@ return {
 		end
 
 		function SMODS.is_counterpart(card)
-			return next(find_joker("hiding_details")) or (SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is)
+			return next(find_joker("hiding_details")) or (SMODS.Ranks[card.base.value] and SMODS.Ranks[card.base.value].counterpart and SMODS.Ranks[card.base.value].counterpart.is)
 		end
 
 		function SMODS.is_zero(card)
@@ -244,24 +271,33 @@ return {
 		end
 
 		if (SMODS.Mods["Bunco"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_exoticCards", path = "CrossMod/Bunco/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_exoticCardsHC", path = "CrossMod/Bunco/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['bunc_Fleurons'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 			Showdown.extraSuits['bunc_Halberds'] = {lc_atlas = 'showdown_exoticCards', hc_atlas = 'showdown_exoticCardsHC'}
 		end
 		if (SMODS.Mods["MusicalSuit"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_musicalCards", path = "CrossMod/MusicalSuit/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_musicalCardsHC", path = "CrossMod/MusicalSuit/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['Notes'] = {lc_atlas = 'showdown_musicalCards', hc_atlas = 'showdown_musicalCardsHC'}
 		end
 		if (SMODS.Mods["InkAndColor"] or {}).can_load then
-			SMODS.Atlas({key = "showdown_inkColorCards", path = "CrossMod/InkAndColor/Ranks/Cards.png", px = 71, py = 95})
-			SMODS.Atlas({key = "showdown_inkColorCardsHC", path = "CrossMod/InkAndColor/Ranks/CardsHC.png", px = 71, py = 95})
-
 			Showdown.extraSuits['ink_Inks'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
 			Showdown.extraSuits['ink_Colors'] = {lc_atlas = 'showdown_inkColorCards', hc_atlas = 'showdown_inkColorCardsHC'}
+		end
+		if (SMODS.Mods["paperback"] or {}).can_load then
+			Showdown.extraSuits['paperback_Stars'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
+			Showdown.extraSuits['paperback_Crowns'] = {lc_atlas = 'showdown_paperbackCards', hc_atlas = 'showdown_paperbackCardsHC'}
+		end
+		if (SMODS.Mods["rgmadcap"] or {}).can_load then
+			Showdown.extraSuits['rgmc_goblets'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_towers'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_blooms'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_daggers'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_voids'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+			Showdown.extraSuits['rgmc_lanterns'] = {lc_atlas = 'showdown_madcapCards', hc_atlas = 'showdown_madcapCardsHC'}
+		end
+		if (SMODS.Mods["entr"] or {}).can_load then
+			Showdown.extraSuits['entr_nilsuit'] = {lc_atlas = 'showdown_entropyCards', hc_atlas = 'showdown_entropyCardsHC'}
+		end
+		if (SMODS.Mods["MintysSillyMod"] or {}).can_load then
+			Showdown.extraSuits['minty_3s'] = {lc_atlas = 'showdown_mintyCards', hc_atlas = 'showdown_mintyCardsHC'}
 		end
 	end
 }

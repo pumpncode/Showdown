@@ -6,7 +6,19 @@ Showdown.config = shdwn.config
 filesystem.load(mod_path.."functions.lua")()
 SMODS.Atlas({key = "showdown_modicon", path = "ModIcon.png", px = 36, py = 36})
 
----Execute a given item. Items can have these params (all paramters are optional):
+SMODS.current_mod.optional_features = {
+    retrigger_joker = true, -- For Mario Sticker
+    post_trigger = true, -- For Brain Battery
+    --[[quantum_enhancements = true,
+    cardareas = {
+        discard = true,
+        deck = true
+    }]]
+}
+
+Showdown.has_stakes = Showdown.config["Stakes"]
+
+---Execute a given item. Items can have these params (all parameters are optional):
 ---- enabled: file will be executed or not
 ---- exec: code that will be executed **before** loading the list of content
 ---- post_exec: code that will be executed **after** loading the list of content
@@ -20,13 +32,15 @@ local function execute_item(item)
 		if item.exec then item.exec() end
 		if item.atlases then
 			for _, atlas in ipairs(item.atlases) do
-				SMODS.Atlas(atlas)
+				if (not atlas.mod_compat) or (SMODS.Mods[atlas.mod_compat] or {}).can_load then
+					SMODS.Atlas(atlas)
+				end
 			end
 		end
 		if item.list and (type(item.list) == 'function' or type(item.list) == 'table') then
 			local load_list = {}
 			for _, obj in ipairs(type(item.list) == 'function' and item.list() or item.list) do
-				if not obj.activated or obj.activated[1] then
+				if (not obj.activated or obj.activated[1]) and (not obj.experimental or (obj.experimental and Showdown.config["Technical"]["Experimental"])) then
 					if not obj.order then obj.order = 0 end
 					if obj.type then
 						if item.class[obj.type] then
@@ -72,6 +86,26 @@ for _, item in ipairs(sortedItems) do
 	execute_item(item)
 end
 
+SMODS.Shader{
+    key = 'hue_shift',
+    path = 'hue_shift.fs',
+    -- card can be nil if sprite.role.major is not Card
+    send_vars = function (sprite, card)
+        return {
+            hue_shift_factor = card and card.hue_shift_factor or 1
+        }
+    end,
+}
+SMODS.DrawStep{ -- It doesn't apply with certain editions and it breaks playing cards
+	key = 'hue_shift',
+	order = 15,
+	func = function(card, layer)
+		if (card.config.center.discovered or card.bypass_discovery_center) and card.hue_shift_factor ~= nil then
+			card.children.center:draw_shader('showdown_hue_shift')
+		end
+	end
+}
+
 function shdwn.save_config(self)
     SMODS.save_mod_config(self)
 end
@@ -84,10 +118,53 @@ local function create_config_header(loc)
 	return {n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize(loc), colour = G.C.ORANGE, scale = 0.5}}}}
 end
 
+local function create_crossmod_toggle(modName)
+	return create_toggle({label = localize("showdown_config_"..(string.lower(modName))), label_color = (SMODS.Mods[modName] or {}).can_load and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = modName, callback = function() shdwn:save_config() end})
+end
+
+local Gamemain_menu = Game.main_menu
+local function main_menu(change_context)
+	local ret = Gamemain_menu(change_context)
+		local newcard = Card(
+			G.title_top.T.x,
+			G.title_top.T.y,
+			G.CARD_W,
+			G.CARD_H,
+			G.P_CARDS.empty,
+			G.P_CENTERS.j_showdown_jean_paul,
+			{ bypass_discovery_center = true }
+		)
+		G.title_top.T.w = G.title_top.T.w * 1.7675
+		G.title_top.T.x = G.title_top.T.x - 0.8
+		G.title_top:emplace(newcard)
+		newcard.T.w = newcard.T.w * 1.1 * 1.2
+		newcard.T.h = newcard.T.h * 1.1 * 1.2
+		newcard.no_ui = true
+		newcard.states.visible = false
+		SMODS.giveSpeech(newcard) -- Crashes if speech bubble disappear while dragging jean-paul (only in main menu)
+
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0,
+			blockable = false,
+			blocking = false,
+			func = function()
+				if change_context == "splash" then
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, true, 2.5)
+				else
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, nil, 1.2)
+				end
+				return true
+			end,
+		}))
+
+		return ret
+end
+Game.main_menu = main_menu
+
 local showdown_config_tab = function()
-	local cryptid = (SMODS.Mods["Cryptid"] or {}).can_load
-	local bunco = (SMODS.Mods["Bunco"] or {}).can_load
-	local cardsleeves = (SMODS.Mods["CardSleeves"] or {}).can_load
 	return {
 		{
 		label = localize("showdown_content_config"),
@@ -161,11 +238,11 @@ local showdown_config_tab = function()
 								}},
 								{n=G.UIT.R, config={align = "cl"}, nodes={
 								
-									create_config_header('showdown_config_consumeables_header'),
-									create_config_toggle('showdown_config_consumeables_tarots', 'Tarots', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_spectrals', 'Spectrals', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_mathematics', 'Mathematics', 'Consumeables'),
-									create_config_toggle('showdown_config_consumeables_logics', 'Logics', 'Consumeables'),
+									create_config_header('showdown_config_consumables_header'),
+									create_config_toggle('showdown_config_consumables_tarots', 'Tarots', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_spectrals', 'Spectrals', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_mathematics', 'Mathematics', 'Consumables'),
+									create_config_toggle('showdown_config_consumables_logics', 'Logics', 'Consumables'),
 								
 								}}
 							
@@ -196,12 +273,15 @@ local showdown_config_tab = function()
 					nodes = {
 					
 						{n=G.UIT.R, config={align = "cm"}, nodes={ -- Base Box containing everything
-			
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
-								{n=G.UIT.R, config={align = "cl"}, nodes={
 
-									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
+								{n=G.UIT.R, config={align = "cm"}, nodes={{n = G.UIT.T, config = {text = localize("showdown_config_restart_experimental"), colour = G.C.RED, scale = 0.4}}}},
+
+								{n=G.UIT.R, config={align = "cm"}, nodes={
+
+									create_config_toggle('showdown_config_experimental', 'Experimental', 'Technical'),
 									create_slider({label = localize("showdown_config_engineer_versatile_weight_limit"), w = 4, h = 0.4, ref_table = Showdown.config["Technical"], ref_value = 'Engineer Versatile Weight Limit', min = 50, max = 200}),
+									create_config_toggle('showdown_config_easter_eggs', 'Easter Eggs', 'Technical'),
 	
 								}},
 							}},
@@ -241,9 +321,11 @@ local showdown_config_tab = function()
 							{n=G.UIT.C, config={align = "cl", padding = 0.2}, nodes={
 								{n=G.UIT.R, config={align = "cl"}, nodes={ -- Don't be fooled, label_color is implemented with a lovely patch (see misc.toml)
 	
-									create_toggle({label = localize("showdown_config_cryptid"), label_color = cryptid and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Cryptid', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_bunco"), label_color = bunco and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'Bunco', callback = function() shdwn:save_config() end}),
-									create_toggle({label = localize("showdown_config_cardsleeves"), label_color = cardsleeves and G.C.UI.TEXT_LIGHT or G.C.UI.TEXT_INACTIVE, ref_table = Showdown.config["CrossMod"], ref_value = 'CardSleeves', callback = function() shdwn:save_config() end}),
+									--create_crossmod_toggle("Cryptid"),
+									create_crossmod_toggle("Bunco"),
+									create_crossmod_toggle("CardSleeves"),
+									create_crossmod_toggle("MoreFluff"),
+									create_crossmod_toggle("FusionJokers"),
 	
 								}},
 							}},

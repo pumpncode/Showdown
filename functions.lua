@@ -36,7 +36,7 @@ end
 function getEnhancements(blacklist)
 	if not blacklist then blacklist = {} end
 	local cen_pool = {}
-	for k, v in pairs(G.P_CENTER_POOLS.Enhanced) do
+	for _, v in pairs(G.P_CENTER_POOLS.Enhanced) do
 		if findInTable(v.key, blacklist) == -1 then
 			cen_pool[#cen_pool+1] = v
 		end
@@ -108,21 +108,29 @@ end
 ]]--
 baseSuits = {'Diamonds', 'Clubs', 'Hearts', 'Spades'}
 
----Returns all vanilla and modded suits. Args can be passed to have more control over the suits:
+---Returns all vanilla and modded suits. Arguments can be passed to have more control over the suits:
 ---- noModded: Exclude Modded suits
 ---- noVanilla: Exclude Vanilla suits
 ---- exotic: Include Halberds and Fleurons (Bunco)
+---- include_stars: Include Stars (Paperback)
+---- include_crowns: Include Crowns (Paperback)
 ---@param args table|nil
 ---@return table
 function get_all_suits(args)
-	if not args then args = { exotic = true } end
+	if not args then args = {
+		exotic = G.GAME and G.GAME.Exotic,
+		include_stars = PB_UTIL and (PB_UTIL.has_suit_in_deck('paperback_Stars', true) or PB_UTIL.spectrum_played()),
+		include_crowns = PB_UTIL and (PB_UTIL.has_suit_in_deck('paperback_Crowns', true) or PB_UTIL.spectrum_played())
+	} end
 	local suits = {}
 	for i=1, #SMODS.Suit.obj_buffer do
 		local suit = SMODS.Suit.obj_table[SMODS.Suit.obj_buffer[i]]
 		if (not args.noVanilla and findInTable(suit.key, baseSuits) > -1) or
-			(not args.noModded and
+			(not args.noModded and (
 				((suit.key == "bunc_Fleurons" or suit.key == "bunc_Halberds") and args.exotic)
-			)
+				or (suit.key == "paperback_Stars" and args.include_stars)
+				or (suit.key == "paperback_Crowns" and args.include_crowns)
+			))
 		then
 			table.insert(suits, suit.key)
 		end
@@ -132,7 +140,7 @@ end
 
 local baseRanks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'}
 
----Returns all vanilla and modded ranks. Args can be passed to have more control over the ranks:
+---Returns all vanilla and modded ranks. Arguments can be passed to have more control over the ranks:
 ---- blacklist: 		Manually excluded ranks
 ---- whitelist: 		Manually included ranks
 ---- noModded: 			Exclude Modded ranks
@@ -163,7 +171,7 @@ function get_all_ranks(args)
 			if not args.noModded then -- Modded
 				if
 					findInTable(rank.key, baseRanks) == -1
-					and ((findInTable(rank.key, counterparts) == -1 and not args.noCounterpart) or (findInTable(rank.key, counterparts) > -1 and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
+					and ((findInTable(rank.key, counterparts) == -1 and args.noCounterpart) or (findInTable(rank.key, counterparts) > -1 and args.onlyCounterpart) or (not args.noCounterpart and not args.onlyCounterpart))
 					and ((args.noFace and not rank.face) or (args.onlyFace and rank.face) or (not args.noFace and not args.onlyFace))
 				then
 					table.insert(ranks, rank.key)
@@ -210,12 +218,12 @@ function Card:change_suit(new_suit)
 end
 
 function create_card_in_deck(rank, suit)
-	local created_card, card = get_card_from_rank_suit(rank, suit), nil
+	local created_card = get_card_from_rank_suit(rank, suit)
 	if created_card then
 		G.E_MANAGER:add_event(Event({
 			func = function()
 				G.playing_card = (G.playing_card and G.playing_card + 1) or 1
-				card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
+				local card = Card(G.play.T.x + G.play.T.w/2, G.play.T.y, G.CARD_W, G.CARD_H, created_card, G.P_CENTERS.c_base, {playing_card = G.playing_card})
 				card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 				G.play:emplace(card)
 				table.insert(G.playing_cards, card)
@@ -230,8 +238,9 @@ function create_card_in_deck(rank, suit)
 		draw_card(G.play,G.deck, 90,'up', nil, card)
 		playing_card_joker_effects({true})
 		delay(0.2)
+		return true
 	end
-	return card
+	return false
 end
 
 function create_cards_in_deck(rank_list, suit_list, nb, args)
@@ -248,7 +257,7 @@ function create_cards_in_deck(rank_list, suit_list, nb, args)
 					card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 					G.play:emplace(card)
 					table.insert(G.playing_cards, card)
-					if args.cheater_add_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+					if args.cheater_add_seal and SMODS.pseudorandom_probability(card, 'cheater_add_seal', 1, 6) then
 						local seal = SMODS.poll_seal({guaranteed = true})
 						print(seal)
 						card:set_seal(seal, nil, true)
@@ -282,54 +291,29 @@ function prequire(m)
 	return err
 end
 
-function Showdown.versatility_description(ach)
-	ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}
-	ach.children.speech_bubble = UIBox{
-		definition = Showdown.speech_bubble('versatility_desc_bruh', 'quips', nil, true),
-		config = ach.config.speech_bubble_align
-	}
-	ach.children.speech_bubble:set_role{
-		role_type = 'Major',
-		xy_bond = 'Strong',
-		r_bond = 'Strong',
-		major = ach,
-	}
-	--[[
-	if not G.PROFILES[G.SETTINGS.profile].versatility then G.PROFILES[G.SETTINGS.profile].versatility = {} end
-	local no_versatile_deck = {}
-	local decks = {}
-	for k, v in pairs(G.P_CENTERS) do
-		if v.set == 'Back' and findInTable(v.name, G.PROFILES[G.SETTINGS.profile].versatility) == -1 then
-			decks[k] = v
+function get_highest_ranks_from_deck(number)
+	if G.deck then
+		local ranks = {}
+		for _, card in ipairs(G.deck.cards) do
+			local rank = card.base.value
+			if findInTable(rank, ranks) == -1 then table.insert(ranks, rank) end
 		end
-	end
-	table.sort(decks, function(a, b)
-		return a.order < b.order
-	end)
-	for k, v in pairs(decks) do
-		if v.unlocked then
-			table.insert(no_versatile_deck, { -- does not work
-				type = 'name_text',
-				set = 'Back',
-				key = k,
-			})
-		else
-			table.insert(no_versatile_deck, {
-				type = 'quips',
-				key = 'using_unknown_8', -- i reused a jean-paul quip lol
-			})
+		table.sort(ranks, function(a, b)
+			local rank_a, rank_b = SMODS.Ranks[a], SMODS.Ranks[b]
+			for _, next_rank in ipairs(rank_b.next) do
+				if next_rank == rank_a.key then
+					return true
+				end
+			end
+			return rank_a.sort_nominal > rank_b.sort_nominal
+		end)
+		if #ranks > number then
+			local total_ranks = {}
+			for i = 1, number do
+				table.insert(total_ranks, ranks[i])
+			end
+			return total_ranks
 		end
+		return ranks
 	end
-	ach.config.speech_bubble_align = {align='tm', offset = {x=0,y=0},parent = ach}
-	ach.children.speech_bubble = UIBox{
-		definition = Showdown.speech_bubble('versatility_desc', 'quips', nil, true, no_versatile_deck),
-		config = ach.config.speech_bubble_align
-	}
-	ach.children.speech_bubble:set_role{
-		role_type = 'Major',
-		xy_bond = 'Strong',
-		r_bond = 'Strong',
-		major = ach,
-	}
-	]]--
 end

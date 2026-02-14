@@ -10,7 +10,7 @@ local mist = {
 	can_use = function()
 		return #G.hand.cards >= 6
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		local temp_hand = {}
 		for k, v in ipairs(G.hand.cards) do temp_hand[#temp_hand+1] = v end
 		table.sort(temp_hand, function (a, b) return not a.playing_card or not b.playing_card or a.playing_card < b.playing_card end)
@@ -18,7 +18,7 @@ local mist = {
 		for i=1, self.config.change do flipCard(temp_hand[i], i, self.config.change) end
 		for i=1, self.config.change do
 			local rank = "Ace"
-			if pseudorandom("showdown_Probability") < G.GAME.probabilities.normal / 2 then rank = "showdown_Zero" end
+			if SMODS.pseudorandom_probability(card, 'showdown_Probability', 1, 2) then rank = "showdown_Zero" end
 			event({trigger = 'after', delay = 0.1, func = function()
 				assert(SMODS.change_base(temp_hand[i], nil, rank))
 			return true end })
@@ -40,7 +40,7 @@ local vision = {
 	can_use = function()
 		return #G.hand.cards and #G.hand.cards >= 1
     end,
-    use = function(self)
+    use = function(self, card, area, copier)
 		for i=1, #G.hand.cards do flipCard(G.hand.cards[i], i, #G.hand.cards) end
 		for i=1, #G.hand.cards do
 			event({trigger = 'after', delay = 0.1, func = function()
@@ -86,7 +86,7 @@ local blue_key = {
 	atlas = 'showdown_spectrals',
 	no_collection = true,
     pos = coordinate(3),
-	can_use = function(self)
+	can_use = function(self, card, area, copier)
 		local lockJ = next(find_joker('4_locks')) and find_joker('4_locks')[next(find_joker('4_locks'))]
 		return lockJ and not lockJ.ability.extra.locks[2]
     end,
@@ -100,10 +100,27 @@ local blue_key = {
 	end
 }
 
+local transformation = {
+	type = 'Consumable',
+	experimental = true,
+	order = 4,
+	key = 'transformation',
+	set = 'Spectral',
+	atlas = 'showdown_spectrals',
+    pos = coordinate(4),
+	config = { max_highlighted = 2, mod_conv = "m_showdown_chipped" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_chipped
+		return {vars = {self.config.max_highlighted}}
+	end,
+}
+
 return {
-	enabled = Showdown.config["Consumeables"]["Spectrals"],
+	enabled = Showdown.config["Consumables"]["Spectrals"],
 	list = function ()
-		local list = {}
+		local list = {
+			transformation,
+		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mist)
 			table.insert(list, vision)

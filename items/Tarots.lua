@@ -14,7 +14,7 @@ local reflection = {
 		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
             for i=1, #G.hand.highlighted do
 				local card = G.hand.highlighted[i]
-				if not SMODS.Ranks[card.base.value].counterpart then return false end
+				if card.base.value ~= nil and not SMODS.Ranks[card.base.value].counterpart then return false end
 			end
 			return true
         end
@@ -46,10 +46,7 @@ local vessel = {
     loc_vars = function(self) return {vars = {self.config.max_highlighted}} end,
     pos = coordinate(2),
 	can_use = function()
-		if G.hand and #G.hand.highlighted == 1 then
-            return true
-        end
-        return false
+		return G.hand and #G.hand.highlighted == 1
     end,
     use = function()
 		flipCard(G.hand.highlighted[1], nil, #G.hand.highlighted)
@@ -57,7 +54,7 @@ local vessel = {
 		event({trigger = 'after', delay = 0.1, func = function()
 			assert(SMODS.change_base(G.hand.highlighted[1], nil, "showdown_Zero"))
 		return true end })
-		if pseudorandom("showdown_Probability") < 4 / 5 then
+		if pseudorandom("showdown_Probability") < 2 / 3 then
 			local cen_pool = getEnhancements({"m_wild"})
 			event({trigger = 'after', delay = 0.1, func = function()
 				G.hand.highlighted[1]:set_ability(pseudorandom_element(cen_pool, pseudoseed('spe_card')), true);
@@ -185,6 +182,56 @@ local red_key_piece_2 = {
 	end
 }
 
+local inventor = {
+	type = 'Consumable',
+	order = 8,
+	key = 'inventor',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	config = { create = 1 },
+    loc_vars = function(self) return {vars = {self.config.create}} end,
+    pos = coordinate(9),
+	can_use = function(self, card)
+		return #G.consumeables.cards < G.consumeables.config.card_limit or card.area == G.consumeables
+    end,
+    use = function(self, card, area, copier)
+		for i = 1, math.min(card.ability.consumeable.create, G.consumeables.config.card_limit - #G.consumeables.cards) do
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.4,
+				func = function()
+					if G.consumeables.config.card_limit > #G.consumeables.cards then
+						play_sound("timpani")
+						local _card = create_card("Logic", G.consumeables, nil, nil, nil, nil, nil, "showdown_inventor")
+						_card:add_to_deck()
+						G.consumeables:emplace(_card)
+						card:juice_up(0.3, 0.5)
+					end
+					return true
+				end,
+			}))
+		end
+		delay(0.6)
+    end
+}
+
+local guard = {
+	type = 'Consumable',
+	order = 9,
+	key = 'guard',
+	set = 'Tarot',
+	atlas = 'showdown_tarots',
+	config = { max_highlighted = 1, mod_conv = "m_showdown_cut" },
+    loc_vars = function(self, info_queue)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_showdown_cut
+		return {vars = {self.config.max_highlighted}}
+	end,
+    pos = coordinate(10),
+	can_use = function(self)
+		return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
+    end
+}
+
 -- Bunco
 
 local randomExotics = {"bunc_Halberds", "bunc_Fleurons"}
@@ -200,16 +247,13 @@ local beast = {
     end,
 	config = {max_highlighted = 2},
     loc_vars = function(self, info_queue)
-		info_queue[#info_queue+1] = { key = 'exotic_cards', set = 'Other' }
+		info_queue[#info_queue+1] = { key = 'bunc_exotic_cards', set = 'Other' }
 		info_queue[#info_queue+1] = { key = 'counterpart_ranks', set = 'Other' }
         return {vars = {self.config.max_highlighted}}
     end,
     pos = coordinate(1),
 	can_use = function(self)
-		if G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1 then
-            return true
-        end
-        return false
+        return G.hand and #G.hand.highlighted <= self.config.max_highlighted and #G.hand.highlighted >= 1
     end,
     use = function()
 		enable_exotics()
@@ -230,7 +274,7 @@ local beast = {
 }
 
 return {
-	enabled = Showdown.config["Consumeables"]["Tarots"],
+	enabled = Showdown.config["Consumables"]["Tarots"],
 	list = function ()
 		local list = {}
 		if Showdown.config["Ranks"] then
@@ -240,21 +284,25 @@ return {
 				table.insert(list, beast)
 			end
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, genie)
 		end
 		if Showdown.config["Enhancements"] then
 			table.insert(list, lost)
 			table.insert(list, angel)
+			table.insert(list, guard)
 		end
 		if Showdown.config["Jokers"]["Final"] then
 			table.insert(list, red_key_piece_1)
 			table.insert(list, red_key_piece_2)
 		end
+		if Showdown.config["Consumables"]["Logics"] then
+			table.insert(list, inventor)
+		end
 		return list
 	end,
 	atlases = {
 		{key = "showdown_tarots", path = "Consumables/Tarots.png", px = 71, py = 95},
-		{key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95},
+		{key = "showdown_buncoTarots", path = "CrossMod/Bunco/Consumables/Tarots.png", px = 71, py = 95, mod_compat = "Bunco"},
 	},
 }

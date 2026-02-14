@@ -33,17 +33,6 @@ if G.jokers and G.jokers.cards then
 end
 '''
 
-# Baby Jimbo
-[[patches]]
-[patches.pattern]
-target = 'cardarea.lua'
-pattern = 'if self.cards[i] == card then'
-position = 'after'
-match_indent = true
-payload = '''
-G.GAME.latest_area_baby_jimbo = self
-'''
-
 # Check unlock for free item (one doller)
 [[patches]]
 [patches.pattern]
@@ -92,12 +81,12 @@ check_for_unlock({type = 'playing_card_added', card = c1})
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
-pattern = "for i=1, #pures do"
-position = "before"
+pattern = "-- TARGET: adding to hand effects"
+position = "after"
 match_indent = true
 payload = '''
-if next(find_joker('diplomatic_immunity')) and scoring_hand[1].debuff then
-    scoring_hand[1]:set_debuff(false)
+if next(find_joker('diplomatic_immunity')) and final_scoring_hand[1].debuff then
+    final_scoring_hand[1]:set_debuff(false)
 end
 '''
 
@@ -105,8 +94,8 @@ end
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/utils.lua"]'''
-pattern = "local eval, post = eval_card(card, context)"
-position = "before"
+pattern = "-- TARGET: card destroyed"
+position = "after"
 match_indent = true
 payload = '''
 if next(find_joker('diplomatic_immunity')) and (scoring_hand or context.cardarea.cards)[1] == card then
@@ -123,7 +112,7 @@ position = "before"
 match_indent = true
 payload = '''
 elseif self.config.center.name == "jean_paul" then
-    giveSpeech(self)
+    SMODS.giveSpeech(self)
 '''
 
 # Substitute Teacher, part 1/2
@@ -385,7 +374,7 @@ payload = '''
 [patches.pattern]
 target = "card.lua"
 match_indent = true
-pattern = "if pseudorandom(self.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel') < G.GAME.probabilities.normal/self.ability.extra.odds then"
+pattern = "if SMODS.pseudorandom_probability(self, self.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel', 1, self.ability.extra.odds) then"
 position = "after"
 payload = '''
 check_for_unlock({type = 'extinct', name = self.ability.name})
@@ -455,7 +444,7 @@ match_indent = true
 pattern = "if (self.ability.set == 'Planet' or (self.ability.set == 'Booster' and self.ability.name:find('Celestial'))) and #find_joker('Astronomer') > 0 then self.cost = 0 end"
 position = "after"
 payload = '''
-if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and (#find_joker('versatile_joker') > 0 or #find_joker('versatile_joker_all_in_one') > 0) and G.GAME.selected_back.name == 'Ghost Deck' then self.cost = 0 end
+if (self.ability.set == 'Spectral' or (self.ability.set == 'Booster' and self.ability.name:find('Spectral'))) and ((#find_joker('versatile_joker') > 0 and G.GAME.selected_back.name == 'Ghost Deck') or #find_joker('versatile_joker_all_in_one') > 0) then self.cost = 0 end
 '''
 
 # Joker on Joker stickers effects
@@ -562,11 +551,11 @@ end
 [[patches]]
 [patches.pattern]
 target = 'functions/common_events.lua'
-pattern = 'elseif not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman"))) and'
+pattern = 'elseif not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not SMODS.showman(v.key)) and'
 position = 'at'
 match_indent = true
 payload = '''
-elseif (not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not next(find_joker("Showman")))) or
+elseif (not (G.GAME.used_jokers[v.key] and not pool_opts.allow_duplicates and not SMODS.showman(v.key))) or
     (((next(find_joker("versatile_joker")) and G.GAME.selected_back.name == 'Engineer Deck') or next(find_joker("versatile_joker_all_in_one"))) and Showdown.tag_related_joker[v.key]) and
 '''
 
@@ -593,4 +582,404 @@ position = 'after'
 match_indent = true
 payload = '''
 G.GAME.money_gain_in_round = 0
+'''
+
+# Don't win again at ante 8 if already won with Ultimate Joker or Unschakled Joker
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''if G.GAME.round_resets.ante == G.GAME.win_ante and G.GAME.blind:get_type() == 'Boss' then'''
+position = 'at'
+match_indent = true
+payload = '''
+if G.GAME.round_resets.ante == G.GAME.win_ante and G.GAME.blind:get_type() == 'Boss' and not G.GAME.won then
+'''
+
+# Versatile Joker (Chess Deck), part 1/2
+[[patches]]
+[patches.pattern]
+target = 'blind.lua'
+match_indent = true
+pattern = "self.boss = blind and not not blind.boss"
+position = 'after'
+payload = '''
+self.chess_boss = blind and blind.chess_boss
+'''
+
+# Versatile Joker (Chess Deck), part 2/2
+[[patches]]
+[patches.pattern]
+target = 'blind.lua'
+match_indent = true
+pattern = "self.boss = blindTable.boss"
+position = 'after'
+payload = '''
+self.chess_boss = blindTable.chess_boss
+'''
+
+# Atom unlock
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/game_object.lua"]'
+match_indent = true
+pattern = "assert(SMODS.modify_rank(G.hand.highlighted[i], 1))"
+position = 'before'
+payload = '''
+check_for_unlock({type = 'modify_rank', card = G.hand.highlighted[i]})
+'''
+
+# Turbo, part 1/2
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "nominal_chips = self.base.nominal > 0 and self.base.nominal or nil,"
+position = "at"
+match_indent = true
+payload = '''
+nominal_chips = self.base.nominal > 0 and self.base.nominal * (SMODS.Ranks[self.base.value].counterpart and G.GAME.counterpart_turbo_boost or 1) or nil,
+'''
+
+# Turbo, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "return self.base.nominal + self.ability.bonus + (self.ability.perma_bonus or 0)"
+position = 'at'
+payload = '''
+local base_nominal = self.base.nominal + self.ability.bonus + (self.ability.perma_bonus or 0)
+return base_nominal * (SMODS.Ranks[self.base.value].counterpart and G.GAME.counterpart_turbo_boost or 1)
+'''
+
+# Mouthwash, part 1/2
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "for k, v in pairs(self.ability.debuff_sources or {}) do"
+position = 'before'
+payload = '''
+if self.ability.mouthwash_no_debuff then
+    if self.debuff then
+        self.debuff = false
+        if self.area == G.jokers then self:add_to_deck(true) end
+    end
+    return
+end
+'''
+
+# Mouthwash, part 2/2
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = "-- TARGET: main end_of_round evaluation"
+position = 'after'
+payload = '''
+for _, area in ipairs({ G.jokers.cards, G.consumeables.cards, G.playing_cards }) do
+    for _, _card in ipairs(area) do
+        if _card.ability.mouthwash_no_debuff then
+            _card.ability.mouthwash_no_debuff = nil
+        end
+    end
+end
+'''
+
+# O Fortuna unlock
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = "e.config.ref_table:use_consumeable(area)"
+position = 'before'
+payload = '''
+check_for_unlock({type = 'using_consumeable', card = e.config.ref_table})
+'''
+
+# What a Steel!
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = "self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-G.GAME.discount_percent)/100))"
+position = 'at'
+payload = '''
+local discount = G.GAME.discount_percent
+for _, joker in pairs(find_joker('what_a_steel')) do
+    discount = discount + joker.ability.extra.steel_tally
+end
+if discount >= 100 then check_for_unlock({type = 'metal_cap'}) end
+self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-discount)/100))
+'''
+
+# Nothing Matter, part 1/3
+[[patches]]
+[patches.pattern]
+target = 'cardarea.lua'
+match_indent = true
+pattern = '''
+if #self.highlighted >= self.config.highlighted_limit then
+    card:highlight(false)
+'''
+position = 'at'
+payload = '''
+if check_for_area_space(card, self) then
+    card:highlight(false)
+'''
+
+# Nothing Matter, part 2/3
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''if #G.hand.highlighted <= 0 or G.GAME.blind.block_play or #G.hand.highlighted > math.max(G.GAME.starting_params.play_limit, 1) then'''
+position = 'at'
+payload = '''
+if #G.hand.highlighted <= 0 or G.GAME.blind.block_play or play_check() then
+'''
+
+# Nothing Matter, part 3/3
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+match_indent = true
+pattern = '''if G.GAME.current_round.discards_left <= 0 or #G.hand.highlighted <= 0 or #G.hand.highlighted > math.max(G.GAME.starting_params.discard_limit, 0) then'''
+position = 'at'
+payload = '''
+if G.GAME.current_round.discards_left <= 0 or #G.hand.highlighted <= 0 or discard_check() then
+'''
+
+# Infection
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''if forced_key and not G.GAME.banned_keys[forced_key] then'''
+position = 'before'
+payload = '''
+if G.GAME.showdown_infection and pseudorandom('showdown_infection') < G.GAME.showdown_infection.rate / 100 then
+    forced_key = 'j_showdown_infection'
+end
+'''
+
+# Rules Card, part 1/?
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+match_indent = true
+pattern = '''
+G.playing_cards = {}
+'''
+position = 'before'
+payload = '''
+self.rules_card_jokers = CardArea(
+    0, 5,
+    CAI.joker_W,
+    CAI.joker_H, 
+    {card_limit = 1e308, type = 'joker'})
+'''
+
+# Rules Card, part 2/?
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''
+G.discard.T.y = 4.2
+'''
+position = 'before'
+payload = '''
+G.rules_card_jokers.T.x = G.hand.T.x - 0.1
+G.rules_card_jokers.T.y = -5
+G.rules_card_jokers:hard_set_VT()
+'''
+
+# Rules Card, part 3/?
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''
+for k, v in pairs(G.consumeables.cards) do
+'''
+position = 'before'
+payload = '''
+for k, v in pairs(G.rules_card_jokers.cards) do
+    if v and type(v) == 'table' and v.ability.name == name and (non_debuff or not v.debuff) then
+        table.insert(jokers, v)
+    end
+end
+'''
+
+# Rules Card, part 4/?
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''
+if (type(v) == "table") and v.is and v:is(CardArea) then
+'''
+position = 'at'
+payload = '''
+if (type(v) == "table") and v.is and v:is(CardArea) and v ~= G.rules_card_jokers then
+'''
+
+# Versatile Joker (Slotted Deck)
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+match_indent = true
+pattern = "self.sell_cost = math.max(1, math.floor(self.cost/2)) + (self.ability.extra_value or 0)"
+position = "before"
+payload = '''
+local voucher_booster_sale = 100
+if G and G.GAME and G.GAME.selected_back and G.GAME.selected_back.name == 'Slotted Deck' then
+    for _, joker in pairs(find_joker('versatile_joker')) do
+        voucher_booster_sale = math.max(0, voucher_booster_sale - joker.ability.extra.vouchers_booster_sale)
+    end
+end
+for _, joker in pairs(find_joker('versatile_joker_all_in_one')) do
+    voucher_booster_sale = math.max(0, voucher_booster_sale - joker.ability.extra.vouchers_booster_sale)
+end
+if (self.ability.set == 'Booster' or self.ability.set == 'Voucher') then self.cost = math.max(1, math.floor(self.cost * (voucher_booster_sale / 100))) end
+'''
+
+# 
+[[patches]]
+[patches.pattern]
+target = '''game.lua'''
+pattern = "c_face_cards_played = 0,"
+position = "after"
+match_indent = true
+payload = '''
+c_cards_retriggered = 0,
+'''
+
+# 
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+pattern = "eval = eval.extra"
+position = "after"
+match_indent = true
+payload = '''
+inc_career_stat('c_cards_retriggered', 1)
+'''
+
+# Fixes the position of the speech bubble when Partners is installed
+# Thanks to xianyutucizaituci on discord for finding this patch!
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS partner "partner.lua"]'''
+pattern = "if self.children.speech_bubble then"
+position = "at"
+match_indent = true
+payload = '''
+if self.children.speech_bubble and self.config.speech_bubble_align and not self.hasSpeech then
+'''
+
+# money context for Soul of Avarice
+[[patches]]
+[patches.pattern]
+target = '''functions/common_events.lua'''
+pattern = "inc_career_stat('c_dollars_earned', mod)"
+position = "after"
+match_indent = true
+payload = '''
+for i = 1, #G.jokers.cards do
+    G.jokers.cards[i]:calculate_joker({ ease_money = true, amount = mod })
+end
+'''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 1/3
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "if not G.GAME.won and not G.GAME.seeded and not G.GAME.challenge then"
+position = "before"
+match_indent = true
+payload = '''
+local jokers = {}
+if G.jokers then
+    for _, _card in ipairs(G.jokers.cards) do
+        table.insert(jokers, _card.ability.name)
+    end
+end
+check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+'''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 2/3
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false"
+position = "after"
+match_indent = true
+payload = '''
+local jokers = {}
+if G.jokers then
+    for _, _card in ipairs(G.jokers.cards) do
+        table.insert(jokers, _card.ability.name)
+    end
+end
+check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+'''
+
+# Unlock check for Soul of Avarice, Soul of Malice and Soul of Fortune, part 3/3
+[[patches]]
+[patches.pattern]
+target = '''functions/UI_definitions.lua'''
+pattern = "G.FUNCS.DT_lose_game = function() if G.STAGE == G.STAGES.RUN then G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false end end"
+position = "at"
+match_indent = true
+payload = '''
+G.FUNCS.DT_lose_game = function()
+    if G.STAGE == G.STAGES.RUN then
+        G.STATE = G.STATES.GAME_OVER
+        G.STATE_COMPLETE = false
+        local jokers = {}
+        if G.jokers then
+            for _, _card in ipairs(G.jokers.cards) do
+                table.insert(jokers, _card.ability.name)
+            end
+        end
+        check_for_unlock({type = 'lose_game', dollars = G.GAME and G.GAME.dollars or 0, jokers = jokers, last_hand_debuffed = G.GAME and G.GAME.last_hand_debuffed or false})
+    end
+end
+'''
+
+# Unlock check for Soul of Fortune, part 1/2
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "-- TARGET: effects after hand evaluation"
+position = "after"
+match_indent = true
+payload = '''
+G.GAME.last_hand_debuffed = true
+for _, _card in pairs(G.play.cards) do
+    G.GAME.last_hand_debuffed = G.GAME.last_hand_debuffed and _card.debuff
+end
+'''
+
+# Unlock check for Soul of Fortune, part 2/2
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "for i=1, hand_count do --draw cards from deck"
+position = "after"
+match_indent = true
+payload = '''
+G.GAME.last_hand_debuffed = false
+'''
+
+# Blinking Block changing colour
+[[patches]]
+[patches.pattern]
+target = '''functions/state_events.lua'''
+pattern = "-- TARGET: main end_of_round evaluation"
+position = "after"
+match_indent = true
+payload = '''
+change_blinking_block_states()
 '''

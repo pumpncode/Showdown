@@ -3,7 +3,7 @@ version = "1.0.0"
 dump_lua = true
 priority = 1
 
-# Alternative stake stickers, part 2/14
+# Alternative stake stickers, part 1/16
 [[patches]]
 [patches.pattern]
 target = '''card.lua'''
@@ -11,10 +11,10 @@ pattern = '''if self.sticker or ((self.sticker_run and self.sticker_run~='NONE')
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] and self.sticker_run_alt and self.sticker_run_alt ~= 'NONE' and G.SETTINGS.run_stake_stickers then loc_vars = loc_vars or {}; loc_vars.sticker_run_alt = self.sticker_run_alt end
+if Showdown.has_stakes and self.sticker_run_alt and self.sticker_run_alt ~= 'NONE' and G.SETTINGS.run_stake_stickers then loc_vars = loc_vars or {}; loc_vars.sticker_run_alt = self.sticker_run_alt end
 '''
 
-# Alternative stake stickers, part 3/14
+# Alternative stake stickers, part 2/16
 [[patches]]
 [patches.pattern]
 target = '''functions/common_events.lua'''
@@ -22,10 +22,10 @@ pattern = '''if specific_vars and specific_vars.sticker then info_queue[#info_qu
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] and specific_vars and specific_vars.sticker_run_alt then info_queue[#info_queue+1] = {key = string.lower(specific_vars.sticker_run_alt)..'_sticker', set = 'Other'} end
+if Showdown.has_stakes and specific_vars and specific_vars.sticker_run_alt then info_queue[#info_queue+1] = {key = string.lower(specific_vars.sticker_run_alt)..'_sticker', set = 'Other'} end
 '''
 
-# Alternative stake stickers, part 4/14
+# Alternative stake stickers, part 3/16
 [[patches]]
 [patches.pattern]
 target = '''functions/common_events.lua'''
@@ -36,7 +36,7 @@ payload = '''
 if not ((specific_vars and not (specific_vars.sticker or specific_vars.sticker_run_alt)) and (card_type == 'Default' or card_type == 'Enhanced')) then
 '''
 
-# Alternative stake stickers, part 5/14
+# Alternative stake stickers, part 4/16
 [[patches]]
 [patches.pattern]
 target = '''card.lua'''
@@ -44,33 +44,12 @@ pattern = '''if self.ability.consumeable and self.ability.consumeable.max_highli
 position = "before"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] and self.ability.set == 'Joker' and not self.sticker_run_alt then
+if Showdown.has_stakes and self.ability.set == 'Joker' and not self.sticker_run_alt then
     self.sticker_run_alt = Showdown.get_joker_win_sticker_alt(self.config.center) or 'NONE'
 end
 '''
 
-# Alternative stake stickers, part 6/14
-[[patches]]
-[patches.pattern]
-target = '''card.lua'''
-pattern = '''
-elseif (self.sticker_run and G.shared_stickers[self.sticker_run]) and G.SETTINGS.run_stake_stickers then
-    G.shared_stickers[self.sticker_run].role.draw_major = self
-    G.shared_stickers[self.sticker_run]:draw_shader('dissolve', nil, nil, nil, self.children.center)
-    G.shared_stickers[self.sticker_run]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
-end
-'''
-position = "after"
-match_indent = true
-payload = '''
-if Showdown.config["Stakes"] and (self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt]) and G.SETTINGS.run_stake_stickers then
-    G.shared_stickers[self.sticker_run_alt].role.draw_major = self
-    G.shared_stickers[self.sticker_run_alt]:draw_shader('dissolve', nil, nil, nil, self.children.center)
-    G.shared_stickers[self.sticker_run_alt]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
-end
-'''
-
-# Alternative stake stickers, part 7/14
+# Alternative stake stickers, part 5/16
 [[patches]]
 [patches.pattern]
 target = '''functions/button_callbacks.lua'''
@@ -78,10 +57,10 @@ pattern = '''card.sticker = get_joker_win_sticker(center)'''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
 '''
 
-# Alternative stake stickers, part 8/14
+# Alternative stake stickers, part 6/16
 [[patches]]
 [patches.pattern]
 target = '''functions/UI_definitions.lua'''
@@ -89,10 +68,10 @@ pattern = '''card.sticker = get_joker_win_sticker(center)'''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
 '''
 
-# Alternative stake stickers, part 9/14
+# Alternative stake stickers, part 7/16
 [[patches]]
 [patches.pattern]
 target = '''functions/button_callbacks.lua'''
@@ -102,11 +81,11 @@ match_indent = true
 payload = '''
 if G.sticker_card then
     G.sticker_card.sticker = get_deck_win_sticker(G.GAME.viewed_back.effect.center)
-    if Showdown.config["Stakes"] then G.sticker_card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
+    if Showdown.has_stakes then G.sticker_card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
 end
 '''
 
-# Alternative stake stickers, part 10/14
+# Alternative stake stickers, part 8/16
 [[patches]]
 [patches.pattern]
 target = '''functions/UI_definitions.lua'''
@@ -117,11 +96,11 @@ payload = '''
 if i == 52 then
     G.sticker_card = card
     card.sticker = get_deck_win_sticker(G.GAME.viewed_back.effect.center)
-    if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
+    if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
 end
 '''
 
-# Alternative stake stickers, part 11/14
+# Alternative stake stickers, part 9/16
 [[patches]]
 [patches.pattern]
 target = '''functions/UI_definitions.lua'''
@@ -132,11 +111,11 @@ payload = '''
 if i == 10 then
     G.sticker_card = card
     card.sticker = get_deck_win_sticker(G.GAME.viewed_back.effect.center)
-    if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
+    if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.GAME.viewed_back.effect.center) end
 end
 '''
 
-# Alternative stake stickers, part 12/14
+# Alternative stake stickers, part 10/16
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/ui.lua"]'''
@@ -146,11 +125,11 @@ match_indent = true
 payload = '''
 modify_card = function(card, center)
     card.sticker = get_joker_win_sticker(center)
-    if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
+    if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_joker_win_sticker_alt(center) end
 end,
 '''
 
-# Alternative stake stickers, part 13/14
+# Alternative stake stickers, part 11/16
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/overrides.lua"]'''
@@ -161,7 +140,7 @@ payload = '''
 if (v.stake_level or 0) > (_stake and G.P_STAKES[_stake].stake_level or 0) and not v.alternate then
 '''
 
-# Alternative stake stickers, part 14/14
+# Alternative stake stickers, part 12/16
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/overrides.lua"]'''
@@ -182,25 +161,61 @@ for key, _ in pairs(G.PROFILES[G.SETTINGS.profile].deck_usage[_center.key].wins_
 end
 '''
 
-# Alternative stake stickers, part 15/14
+# Alternative stake stickers, part 13/16
 [[patches]]
 [patches.pattern]
 target = '''card.lua'''
-pattern = '''
-if self.sticker and G.shared_stickers[self.sticker] then
-    G.shared_stickers[self.sticker].role.draw_major = self
-    G.shared_stickers[self.sticker]:draw_shader('dissolve', nil, nil, true, self.children.center)
-    if self.sticker == 'Gold' then G.shared_stickers[self.sticker]:draw_shader('voucher', nil, self.ARGS.send_to_shader, true, self.children.center) end
-end
+pattern = '''if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or ((self.sticker_run and self.sticker_run ~= 'NONE') and G.SETTINGS.run_stake_stickers) or (self.ability.set == 'Spectral') or self.debuff or self.greyed or (self.ability.name == 'The Soul') or (self.ability.set == 'Voucher') or (self.ability.set == 'Booster') or self.config.center.soul_pos or self.config.center.demo then'''
+position = "at"
+match_indent = true
+payload = '''
+if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or (((self.sticker_run and self.sticker_run ~= 'NONE') or (self.sticker_run_alt and self.sticker_run_alt ~= 'NONE')) and G.SETTINGS.run_stake_stickers) or (self.ability.set == 'Spectral') or self.debuff or self.greyed or (self.ability.name == 'The Soul') or (self.ability.set == 'Voucher') or (self.ability.set == 'Booster') or self.config.center.soul_pos or self.config.center.demo then
 '''
+
+# Alternative stake stickers, part 14/16
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+pattern = '''for k, v in pairs(SMODS.Stickers) do'''
 position = "before"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] and self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt] then
+if Showdown.has_stakes and self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt] and G.SETTINGS.run_stake_stickers then
+    G.shared_stickers[self.sticker_run_alt].role.draw_major = self
+    G.shared_stickers[self.sticker_run_alt]:draw_shader('dissolve', nil, nil, nil, self.children.center)
+    G.shared_stickers[self.sticker_run_alt]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
+end
+'''
+
+# Alternative stake stickers, part 15/16
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+pattern = '''
+if stake.shiny then G.shared_stickers[self.sticker]:draw_shader('voucher', nil, self.ARGS.send_to_shader, true, self.children.center, nil, self.sticker_rotation, sticker_offset.x, sticker_offset.y) end
+        end
+'''
+position = "after"
+match_indent = true
+payload = '''
+if Showdown.has_stakes and self.sticker_run_alt and G.shared_stickers[self.sticker_run_alt] then
     G.shared_stickers[self.sticker_run_alt].role.draw_major = self
     local sticker_run_alt_offset = self.sticker_run_alt_offset or {}
     G.shared_stickers[self.sticker_run_alt]:draw_shader('dissolve', nil, nil, true, self.children.center, nil, self.sticker_rotation, sticker_run_alt_offset.x, sticker_run_alt_offset.y)
-    --if self.sticker_run_alt == 'showdown_diamond' then G.shared_stickers[self.sticker_run_alt]:draw_shader('voucher', nil, self.ARGS.send_to_shader, true, self.children.center) end
+    if self.sticker_run_alt == 'showdown_diamond' then G.shared_stickers[self.sticker_run_alt]:draw_shader('voucher', nil, self.ARGS.send_to_shader, true, self.children.center) end
+end
+'''
+
+# Alternative stake stickers, part 16/16 (need to be finished)
+[[patches]]
+[patches.pattern]
+target = '''functions/misc_functions.lua'''
+pattern = '''G.PROFILES[G.SETTINGS.profile].joker_usage[v.config.center_key].wins_by_key[SMODS.stake_from_index(G.GAME.stake)] = (G.PROFILES[G.SETTINGS.profile].joker_usage[v.config.center_key].wins_by_key[SMODS.stake_from_index(G.GAME.stake)] or 0) + 1'''
+position = "after"
+match_indent = true
+payload = '''
+if G.P_CENTER_POOLS.Stake[G.GAME.stake].alternate then
+    --
 end
 '''
 
@@ -252,7 +267,7 @@ pattern = '''card.sticker = get_sleeve_win_sticker(sleeve_center.key)'''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_sleeve_win_sticker_alt(sleeve_center.key) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_sleeve_win_sticker_alt(sleeve_center.key) end
 '''
 
 ## Galdur
@@ -265,7 +280,7 @@ pattern = '''card.sticker = get_deck_win_sticker(G.P_CENTER_POOLS.Back[count])''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.P_CENTER_POOLS.Back[count]) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(G.P_CENTER_POOLS.Back[count]) end
 '''
 
 # Alt stake stickers on Galdur deck screen, part 2/2
@@ -276,7 +291,7 @@ pattern = '''card.sticker = get_deck_win_sticker(_deck.effect.center)'''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(_deck.effect.center) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(_deck.effect.center) end
 '''
 
 ## Card Sleeves X Galdur (best of both world lol)
@@ -289,5 +304,5 @@ pattern = '''card.sticker = get_deck_win_sticker(selected_deck_center)'''
 position = "after"
 match_indent = true
 payload = '''
-if Showdown.config["Stakes"] then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(selected_deck_center) end
+if Showdown.has_stakes then card.sticker_run_alt = Showdown.get_deck_win_sticker_alt(selected_deck_center) end
 '''

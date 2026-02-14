@@ -16,7 +16,6 @@ if (SMODS.Ranks[v.value].counterpart and SMODS.Ranks[v.value].counterpart.is) or
 end
 '''
 
-# ?????
 # Calculus deck forces first booster in shop to be a Calculus booster, part 1/2
 [[patches]]
 [patches.pattern]
@@ -37,26 +36,6 @@ position = "at"
 match_indent = true
 payload = '''
 if not G.GAME.first_booster_calculus and not G.GAME.first_shop_buffoon and not G.GAME.banned_keys['p_buffoon_normal_1'] then
-'''
-
-# Cheater deck card destruction
-[[patches]]
-[patches.pattern]
-target = '''=[SMODS _ "src/utils.lua"]'''
-pattern = "if scoring_hand and SMODS.has_enhancement(card, 'm_glass') and not card.debuff and pseudorandom('glass') < G.GAME.probabilities.normal/(card.ability.name == 'Glass Card' and card.ability.extra or G.P_CENTERS.m_glass.config.extra) then"
-position = "before"
-match_indent = true
-payload = '''
-if
-    scoring_hand
-    and G.GAME.showdown_cheater
-    and not card.debuff
-    and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
-    and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not card:get_seal())) -- This is for the Cheater Sleeve
-    and pseudorandom('cheater') < G.GAME.probabilities.normal/4
-then
-    destroyed = true
-end
 '''
 
 # Cheater deck card creation
@@ -110,4 +89,25 @@ else
     _pool[#_pool + 1] = v.key
     _pool_size = _pool_size + 1
 end
+'''
+
+
+# One of a Kind deck (tag card)
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = '''function G.UIDEF.use_and_sell_buttons(card)'''
+position = 'after'
+match_indent = true
+payload = '''
+
+if card.area and card.area == G.pack_cards and card.ability.tag_card then
+    return {
+        n = G.UIT.ROOT, config = {padding = 0, colour = G.C.CLEAR}, nodes = {
+            {n = G.UIT.R, config = {ref_table = card, r = 0.08, padding = 0.1, align = "bm", minw = 0.5 * card.T.w - 0.15, maxw = 0.9 * card.T.w - 0.15, minh = 0.3 * card.T.h, hover = true, shadow = true, colour = G.C.UI.BACKGROUND_INACTIVE, one_press = true, button = 'use_tag_card', func = 'can_use_tag_card'}, nodes = {
+                {n=G.UIT.T, config={text = localize('b_select'), colour = G.C.UI.TEXT_LIGHT, scale = 0.45, shadow = true}}
+        }},
+    }}
+end
+
 '''

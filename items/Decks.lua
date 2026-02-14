@@ -7,13 +7,13 @@ local mirror = {
 	pos = coordinate(1),
 	config = { unlock_stake = "stake_showdown_ruby" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -71,7 +71,7 @@ local starter = {
 		end
 	end,
 	apply = function(self, back)
-		if G.GAME.selected_sleeve and G.GAME.selected_sleeve ~= 'sleeve_showdown_Starter' then
+		if (G.GAME.selected_sleeve and G.GAME.selected_sleeve ~= 'sleeve_showdown_Starter') or not G.GAME.selected_sleeve then
 			G.GAME.starting_params.dollars = -5
 			give_starter()
 		end
@@ -105,7 +105,7 @@ local cheater = {
 				nbCards = nbCards + joker.ability.extra.extra_card
 			end
 			local ranks = get_all_ranks({onlyFace = true, whitelist = {"showdown_Zero"}})
-			local suits = get_all_suits({exotic = G.GAME and G.GAME.Exotic})
+			local suits = get_all_suits()
 			local cards = {}
 			for _=1, nbCards do
 				local rank, suit = pseudorandom_element(ranks, pseudoseed('create_card')), pseudorandom_element(suits, pseudoseed('create_card'))
@@ -118,7 +118,7 @@ local cheater = {
 							_card:start_materialize({G.C.SECONDARY_SET.Enhanced})
 							G.play:emplace(_card)
 							table.insert(G.playing_cards, _card)
-							if G.GAME.cheater_seal and pseudorandom('cheater_add_seal') < G.GAME.probabilities.normal/6 then
+							if G.GAME.cheater_seal and SMODS.pseudorandom_probability(card, 'cheater_add_seal', 1, 6) then
 								_card:set_seal(SMODS.poll_seal({guaranteed = true}), nil, true)
 							end
 							cards[#cards+1] = _card
@@ -141,6 +141,15 @@ local cheater = {
 					return true
 			end}))
 			delay(0.2)
+		elseif
+			context.destroying_card
+			and context.cardarea == G.play
+			and not context.destroy_card.debuff
+			and not (next(find_joker('versatile_joker')) or next(find_joker('versatile_joker_all_in_one')))
+			and (not G.GAME.cheater_seal or (G.GAME.cheater_seal and not context.destroy_card:get_seal())) -- This is for the Cheater Sleeve
+			and SMODS.pseudorandom_probability(card, 'cheater', 1, 4)
+		then
+            return { remove = true }
 		end
 	end,
 	apply = function(self, back)
@@ -178,13 +187,13 @@ local engineer = {
 	pos = coordinate(5),
 	config = { unlock_stake = "stake_showdown_onyx" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -204,13 +213,13 @@ local chess = {
 	pos = coordinate(6),
 	config = { unlock_stake = "stake_showdown_topaz" },
 	locked_loc_vars = function(self, info_queue, card)
-		if not Showdown.config["Stakes"] then return { key = 'b_showdown_deactivated' } end
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
 		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
 		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
 	end,
 	unlocked = false,
 	check_for_unlock = function (self, args)
-		if not Showdown.config["Stakes"] then return end
+		if not Showdown.has_stakes then return end
 		local win_stake = get_deck_win_stake()
 		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
 			unlock_card(self)
@@ -221,27 +230,107 @@ local chess = {
 	end
 }
 
+local slotted = {
+	type = 'Back',
+	experimental = true,
+	order = 7,
+	name = "Slotted Deck",
+	key = "Slotted",
+	atlas = "showdown_decks",
+	pos = coordinate(7),
+	config = { unlock_stake = "stake_showdown_sapphire" },
+	locked_loc_vars = function(self, info_queue, card)
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if not Showdown.has_stakes then return end
+		local win_stake = get_deck_win_stake()
+		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
+			unlock_card(self)
+		end
+	end,
+	apply = function(self, back)
+		SMODS.change_voucher_limit(1)
+		SMODS.change_booster_limit(1)
+		change_shop_size(-1)
+	end
+}
+
+local one_of_a_kind = {
+	type = 'Back',
+	experimental = true,
+	order = 8,
+	name = "One of a Kind Deck",
+	key = "one_of_a_kind",
+	atlas = "showdown_decks",
+	pos = coordinate(8),
+	config = { unlock_stake = "stake_showdown_emerald" },
+	locked_loc_vars = function(self, info_queue, card)
+		if not Showdown.has_stakes then return { key = 'b_showdown_deactivated' } end
+		local stake_idx = Showdown.get_stake_index(self.config.unlock_stake)
+		return { vars = { localize{type = 'name_text', set = 'Stake', key = G.P_CENTER_POOLS.Stake[stake_idx].key}, colours = { get_stake_col(stake_idx) } } }
+	end,
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if not Showdown.has_stakes then return end
+		local win_stake = get_deck_win_stake()
+		if args.type == 'win_stake' and win_stake >= Showdown.get_stake_index(self.config.unlock_stake) and win_stake <= Showdown.get_stake_index('stake_showdown_diamond') then
+			unlock_card(self)
+		end
+	end,
+	apply = function(self, back)
+		SMODS.change_booster_limit(5)
+		G.GAME.showdown_one_of_a_kind = true
+	end
+}
+
+local radar = {
+	type = 'Back',
+	experimental = true,
+	order = 9,
+	name = "Radar Deck",
+	key = "Radar",
+	atlas = "showdown_deck_radar",
+	pos = { x = 0, y = 0 },
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		--unlock_card(self)
+	end,
+	apply = function(self, back)
+		--
+	end
+}
+
 return {
 	enabled = Showdown.config["Decks"],
 	list = function()
 		local list = {
 			starter,
-			chess,
+			slotted,
+			one_of_a_kind,
+			radar,
 		}
 		if Showdown.config["Ranks"] then
 			table.insert(list, mirror)
 			table.insert(list, cheater)
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			table.insert(list, calculus)
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			table.insert(list, engineer)
 		end
+		if Showdown.config["Blinds"] then
+			table.insert(list, chess)
+		end
 		return list
 	end,
 	atlases = {
 		{key = "showdown_decks", path = "Decks.png", px = 71, py = 95},
+		{key = "showdown_deck_radar", path = "DeckRadar.png", px = 71, py = 95},
 	},
 	order = 2,
 	exec = function()
@@ -301,9 +390,116 @@ return {
 			end
 			Showdown.tag_related_joker['j_showdown_versatile'] = G.GAME.selected_back.name == 'Anaglyph Deck' and G.GAME.showdown_engineer
 		end
+
+        local updateRef = Game.update
+        local radar_dt = 0
+        function Game:update(dt)
+            updateRef(self, dt)
+            radar_dt = radar_dt + dt
+            if G.P_CENTERS and G.P_CENTERS.b_showdown_Radar and radar_dt > 0.04 then
+                radar_dt = 0
+                local obj = G.P_CENTERS.b_showdown_Radar
+				obj.pos.x = obj.pos.x + 1
+				if obj.pos.y <= 4 and obj.pos.x == 10 then
+					obj.pos.x = 0
+					obj.pos.y = obj.pos.y + 1
+				elseif obj.pos.y == 5 and obj.pos.x == 6 then
+					obj.pos.x = 0
+					obj.pos.y = 0
+				end
+            end
+			for _, v in pairs(G.I.CARD) do
+				if v.children.back and v.children.back.atlas.name == "showdown_deck_radar" then
+					v.children.back:set_sprite_pos(G.P_CENTERS.b_showdown_Radar.pos or G.P_CENTERS["b_red"].pos)
+				end
+			end
+        end
+
+		function Card:create_tag_card() -- Thanks Bunco
+			self = Card(self.T.x, self.T.y, 0.8*G.CARD_W, 0.8*G.CARD_W, nil, G.P_CENTERS.c_base)
+
+			local tag = G.P_TAGS[get_next_tag_key()]
+
+			-- Tag appearance
+
+    		local tag_sprite = Sprite(0, 0, 0.8, 0.8, G.ASSET_ATLAS[tag.atlas or "tags"], tag.pos)
+			self.children.center = tag_sprite
+			self.children.center.states.hover = self.states.hover
+			self.children.center.states.click = self.states.click
+			self.children.center.states.drag = self.states.drag
+			self.children.center.states.collide.can = false
+			self.children.center:set_role({role_type = 'Glued', major = self, draw_major = self,
+			xy_bond = 'Strong',
+			wh_bond = 'Strong',
+			r_bond = 'Strong',
+			scale_bond = 'Strong'})
+
+			self.children.back = self.children.center
+
+			self.ability.tag_card = {tag = tag}
+
+			tag_sprite.hover = function(_self)
+				if not G.CONTROLLER.dragging.target or G.CONTROLLER.using_touch then
+					if not _self.hovering and _self.states.visible then
+						_self.hovering = true
+						if _self == tag_sprite then
+							_self.hover_tilt = 3
+							_self:juice_up(0.05, 0.02)
+							play_sound('paper1', math.random()*0.1 + 0.55, 0.42)
+							play_sound('tarot2', math.random()*0.1 + 0.55, 0.09)
+						end
+
+						self.ability.tag_card.tag:get_uibox_table(tag_sprite)
+						_self.config.h_popup = G.UIDEF.card_h_popup(_self)
+						_self.config.h_popup_config = (_self.T.x > G.ROOM.T.w*0.4) and
+							{align =  'cl', offset = {x=-0.1,y=0},parent = _self} or
+							{align =  'cr', offset = {x=0.1,y=0},parent = _self}
+						Node.hover(_self)
+						if _self.children.alert then
+							_self.children.alert:remove()
+							_self.children.alert = nil
+							if self.ability.tag_card.tag.key and tag then tag.alerted = true end
+							G:save_progress()
+						end
+					end
+				end
+			end
+			tag_sprite.stop_hover = function(_self) _self.hovering = false; Node.stop_hover(_self); _self.hover_tilt = 0 end
+
+			return self
+		end
+
+		G.FUNCS.can_use_tag_card = function(e)
+			e.config.colour = G.C.GREEN
+			e.config.button = 'use_tag_card'
+		end
+
+		G.FUNCS.use_tag_card = function(e)
+			local card = e.config.ref_table
+
+			add_tag(card.ability.tag_card.tag.key)
+
+			play_sound('other1')
+
+			e.config.button = nil
+
+			G.FUNCS.end_consumeable(nil, 0.2)
+		end
 		
         Showdown.versatile['Starter Deck'] = { desc = 'j_showdown_versatile_joker_starter', pos = coordinate(20), blueprint = false }
-        Showdown.versatile['Chess Deck'] = { desc = 'j_showdown_versatile_joker_chess', pos = coordinate(23), blueprint = false }
+		Showdown.versatile['Slotted Deck'] = { desc = 'j_showdown_versatile_joker_slotted', pos = coordinate(26), blueprint = false, add_to_deck = function(self, card, from_debuff)
+			G.E_MANAGER:add_event(Event({func = function()
+                for _, v in pairs(G.I.CARD) do
+                    if v.set_cost then v:set_cost() end
+                end
+            return true end }))
+        end, remove_from_deck = function(self, card, from_debuff)
+            G.E_MANAGER:add_event(Event({func = function()
+                for _, v in pairs(G.I.CARD) do
+                    if v.set_cost then v:set_cost() end
+                end
+            return true end }))
+        end }
 		if Showdown.config["Ranks"] then
 			Showdown.versatile['Mirror Deck'] = { desc = 'j_showdown_versatile_joker_mirror', pos = coordinate(18), blueprint = false, calculate = function(self, card, context)
 				if context.before and not context.blueprint then
@@ -312,15 +508,15 @@ return {
 						hazZero = hazZero or SMODS.is_zero(context.scoring_hand[i])
 					end
 					local enhancements = {}
-					for _, v in ipairs(G.hand.cards) do
-						if (v.config.center ~= G.P_CENTERS.c_base and (hazZero and v.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and findInTable(v.config.center, enhancements) == -1 then
-							table.insert(enhancements, v.config.center)
+					for _, _card in ipairs(G.hand.cards) do
+						if (_card.config.center ~= G.P_CENTERS.c_base and (hazZero and _card.config.center ~= G.P_CENTERS.m_wild or not hazZero)) and findInTable(_card.config.center, enhancements) == -1 then
+							table.insert(enhancements, _card.config.center)
 						end
 					end
 					if #enhancements > 0 then
 						for i=1, #context.scoring_hand do
 							local _card = context.scoring_hand[i]
-							if _card.config.center == G.P_CENTERS.c_base and not _card.debuff then
+							if _card.config.center == G.P_CENTERS.c_base and SMODS.is_counterpart(_card) and not _card.debuff then
 								_card:set_ability(pseudorandom_element(enhancements, pseudoseed('versatile_mirror')), nil, true)
 							end
 						end
@@ -329,7 +525,7 @@ return {
 			end }
 			Showdown.versatile['Cheater Deck'] = { desc = 'j_showdown_versatile_joker_cheater', pos = coordinate(21), blueprint = false }
 		end
-		if Showdown.config["Consumeables"]["Mathematics"] then
+		if Showdown.config["Consumables"]["Mathematics"] then
 			Showdown.versatile['Calculus Deck'] = { desc = 'j_showdown_versatile_joker_calculus', pos = coordinate(19), blueprint = true, calculate = function(self, card, context)
 				if context.using_consumeable and context.consumeable.ability.set == 'Mathematic' then
 					G.playing_card = (G.playing_card and G.playing_card + 1) or 1
@@ -345,6 +541,27 @@ return {
 		end
 		if Showdown.config["Tags"]["Switches"] then
 			Showdown.versatile['Engineer Deck'] = { desc = 'j_showdown_versatile_joker_engineer', pos = coordinate(22), blueprint = false }
+		end
+		if Showdown.config["Blinds"] then
+        	Showdown.versatile['Chess Deck'] = { desc = 'j_showdown_versatile_joker_chess', pos = coordinate(25), blueprint = false, add_to_deck = function(self, card, from_debuff)
+				if G.GAME.blind and G.GAME.blind.name ~= '' and G.GAME.blind.chess_boss and not G.GAME.blind.chess_boss.is_black and not G.GAME.blind.disabled then
+					G.GAME.blind:disable()
+					play_sound('timpani')
+					card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('ph_blind_disabled')})
+				end
+			end, calculate = function(self, card, context)
+				if context.setting_blind and not card.getting_sliced and not context.blueprint and context.blind.chess_boss and not context.blind.chess_boss.is_black then
+					G.E_MANAGER:add_event(Event({func = function()
+						G.E_MANAGER:add_event(Event({func = function()
+							G.GAME.blind:disable()
+							play_sound('timpani')
+							delay(0.4)
+							return true end }))
+						card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('ph_blind_disabled')})
+					return true end }))
+					return nil, true
+				end
+			end }
 		end
 
 		function Showdown.get_stake_index(stake)
